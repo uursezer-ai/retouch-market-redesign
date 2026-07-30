@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Retouch Market — AI plugins, Lightroom presets & LUTs</title>
+<meta name="description" content="AI photo editing plugins, Lightroom presets and video LUTs from working photographers. One-time purchase, macOS and Windows.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DESIGN TOKENS
+   One typeface. One accent. Everything below derives from here.
+   ============================================================ */
+:root{
+  /* --- BRAND --- */
+  --accent:#635BFF;          /* fills, marks, active states */
+  --accent-hover:#7A73FF;
+  --accent-text:#5A52E0;     /* accent on TEXT — 5.3:1 on tinted bands */
+  --accent-soft:#F1F0FE;
+
+  --font:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+         "Helvetica Neue", Arial, sans-serif;
+
+  /* surfaces */
+  --bg:#FFFFFF;
+  --bg-2:#F6F9FC;            /* the light band */
+  --surface:#FFFFFF;
+  --line:#E6EBF1;
+  --line-2:#D3DCE6;
+
+  /* ink */
+  --text:#0A2540;            /* headings */
+  --text-2:#425466;          /* body */
+  --text-3:#697386;          /* meta — 4.7:1 on both surfaces */
+
+  /* radii — one value per element type */
+  --r-card:12px;
+  --r-btn:999px;
+  --r-sm:8px;
+
+  /* shadows — tinted to the blue-grey surface, never flat grey */
+  --sh-sm:0 1px 3px rgba(50,50,93,.08), 0 1px 2px rgba(0,0,0,.03);
+  --sh-md:0 4px 14px rgba(50,50,93,.10), 0 1px 3px rgba(0,0,0,.04);
+  --sh-lg:0 22px 48px -14px rgba(50,50,93,.20), 0 8px 18px -10px rgba(0,0,0,.06);
+
+  --maxw:1180px;
+  --nav-h:58px;
+}
+
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text-2);
+  font-family:var(--font);font-size:16px;line-height:1.6;
+  letter-spacing:-.011em;-webkit-font-smoothing:antialiased;
+}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px}
+::selection{background:var(--accent-soft)}
+
+.wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.skip{position:absolute;left:-9999px}
+.skip:focus{left:24px;top:12px;z-index:99;background:var(--accent);color:#fff;padding:10px 18px;border-radius:var(--r-btn)}
+
+/* ---------- type ---------- */
+h1,h2,h3,h4{color:var(--text);margin:0;font-weight:600;letter-spacing:-.025em}
+h1{font-size:clamp(30px,3.5vw,46px);line-height:1.1;font-weight:700;letter-spacing:-.032em}
+h2{font-size:clamp(27px,3vw,38px);line-height:1.15;font-weight:700;letter-spacing:-.03em}
+h3{font-size:17px;line-height:1.35}
+.eyebrow{
+  margin:0 0 14px;font-size:13px;font-weight:600;line-height:1.4;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--accent-text);
+}
+.lede{margin:14px 0 0;font-size:17px;line-height:1.65;color:var(--text-2);max-width:56ch}
+.meta{font-size:13.5px;color:var(--text-3);margin:0}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  min-height:44px;padding:0 20px;border-radius:var(--r-btn);
+  font-size:15px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;
+  transition:background .16s ease, box-shadow .16s ease, border-color .16s ease, color .16s ease;
+}
+.btn--primary{background:var(--accent);color:#fff;box-shadow:var(--sh-sm)}
+.btn--primary:hover{background:var(--accent-hover);box-shadow:var(--sh-md)}
+.btn--ghost{background:var(--surface);color:var(--text);border:1px solid var(--line);box-shadow:var(--sh-sm)}
+.btn--ghost:hover{border-color:var(--line-2)}
+.btn--sm{min-height:38px;padding:0 16px;font-size:14px}
+.link{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:15px;font-weight:600;color:var(--accent-text);
+}
+.link svg{transition:transform .18s ease}
+.link:hover svg{transform:translateX(3px)}
+
+/* ============================================================
+   1 · TOP MENU
+   ============================================================ */
+.nav{
+  position:sticky;top:0;z-index:50;height:var(--nav-h);
+  background:rgba(255,255,255,.88);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+}
+.nav__in{display:flex;align-items:center;gap:24px;height:var(--nav-h)}
+.brand{display:flex;align-items:center;gap:9px;flex:none}
+.brand b{font-size:17px;font-weight:700;letter-spacing:-.03em;color:var(--text)}
+.nav__links{display:flex;align-items:center;gap:2px}
+.nav__links a{
+  padding:7px 11px;border-radius:var(--r-sm);font-size:14.5px;font-weight:500;
+  color:var(--text-2);transition:color .15s, background .15s;
+}
+.nav__links a:hover{color:var(--accent-text);background:var(--bg-2)}
+.nav__links a[aria-current="page"]{color:var(--text);font-weight:600}
+.nav__right{display:flex;align-items:center;gap:6px;margin-left:auto}
+.nav__plain{padding:7px 11px;border-radius:var(--r-sm);font-size:14.5px;font-weight:500;color:var(--text-2)}
+.nav__plain:hover{color:var(--accent-text);background:var(--bg-2)}
+.lang{
+  display:flex;align-items:center;gap:6px;padding:7px 11px;border-radius:var(--r-sm);
+  font-size:14.5px;font-weight:500;color:var(--text-2);
+}
+.lang:hover{color:var(--text);background:var(--bg-2)}
+.nav__toggle{display:none;width:42px;height:42px;align-items:center;justify-content:center;margin-left:auto;border-radius:var(--r-sm);color:var(--text)}
+.nav__panel{display:none}
+
+/* ============================================================
+   2 · MINI SLIDER  — short band, 4:5 media, no body copy
+   ============================================================ */
+/* A promo strip, not a hero. Height is set by a 400px 16:9 still (225px),
+   so the whole top zone stays under ~290px including the nav. */
+.slider{background:var(--surface);padding:26px 0}
+.slider__frame{position:relative}
+.slide{display:none;grid-template-columns:minmax(0,1fr) 400px;gap:48px;align-items:center}
+.slide.is-on{display:grid}
+.slide__copy{padding:0 0 22px;display:flex;flex-direction:column;justify-content:center}
+.slide__copy .eyebrow{font-size:11.5px;margin-bottom:9px}
+.slide__copy h1{font-size:clamp(23px,2.6vw,33px);line-height:1.18;max-width:23ch}
+.slide__actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}
+
+/* before / after — the one bold element on the page */
+.slide__media{align-self:center;border-radius:var(--r-card);overflow:hidden}
+.compare{
+  position:relative;overflow:hidden;aspect-ratio:16/9;width:100%;
+  background:var(--bg-2);touch-action:none;cursor:ew-resize;
+}
+.compare img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.compare__raw{clip-path:inset(0 calc(100% - var(--pos,54%)) 0 0);filter:saturate(.4) contrast(.87) brightness(1.07)}
+.compare__bar{
+  position:absolute;top:0;bottom:0;left:var(--pos,54%);width:2px;
+  background:#fff;transform:translateX(-1px);pointer-events:none;
+  box-shadow:0 0 0 1px rgba(10,37,64,.14);
+}
+.compare__grip{
+  position:absolute;top:50%;left:var(--pos,54%);
+  width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;
+  background:#fff;color:var(--text);display:grid;place-items:center;
+  box-shadow:var(--sh-md);pointer-events:none;
+}
+.tagpair{position:absolute;top:13px;left:13px;right:13px;display:flex;justify-content:space-between;pointer-events:none}
+.tag{
+  font-size:10.5px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;
+  padding:4px 9px;border-radius:var(--r-btn);
+  background:rgba(255,255,255,.92);backdrop-filter:blur(6px);
+  color:var(--text-2);box-shadow:var(--sh-sm);
+}
+.tag--on{background:var(--accent);color:#fff}
+
+.slider__dots{position:absolute;bottom:0;left:0;display:flex;align-items:center;gap:7px;padding:0}
+.dot{width:24px;height:3px;border-radius:2px;background:var(--line-2);transition:background .2s}
+.dot[aria-selected="true"]{background:var(--accent)}
+.dot:hover{background:var(--text-3)}
+
+/* ============================================================
+   3 · PARTNERS
+   ============================================================ */
+.partners{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.partners__in{display:flex;align-items:center;gap:40px;padding:18px 24px;max-width:var(--maxw);margin:0 auto}
+.partners__label{
+  flex:none;margin:0;font-size:12px;font-weight:600;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--text-3);line-height:1.5;
+}
+.partners__row{display:flex;flex-wrap:wrap;align-items:center;gap:16px 32px}
+.author{display:flex;align-items:center;gap:10px}
+.avatar{
+  width:28px;height:28px;border-radius:50%;flex:none;display:grid;place-items:center;
+  font-size:11px;font-weight:600;letter-spacing:.01em;color:var(--text-2);
+  background:var(--surface);border:1px solid var(--line);
+}
+.author__name{display:block;font-size:14.5px;font-weight:600;color:var(--text);line-height:1.3}
+.author__meta{display:block;font-size:12.5px;color:var(--text-3);line-height:1.4}
+
+/* ---------- section shell ---------- */
+.section{padding:88px 0}
+.section--tint{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.section__head{display:flex;align-items:flex-end;justify-content:space-between;gap:32px;margin-bottom:40px}
+[id]{scroll-margin-top:74px}
+
+/* ============================================================
+   4 · PLUGINS  — two ROWS: tabs on top, player underneath
+   ============================================================ */
+.ptabs{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;
+  border-bottom:1px solid var(--line);margin-bottom:28px;
+}
+.ptab{
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 13px;
+  text-align:left;padding:0 28px 18px 0;margin-bottom:-1px;
+  border-bottom:2px solid transparent;transition:border-color .18s ease;
+}
+.ptab__i{
+  grid-row:span 3;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  background:var(--bg-2);color:var(--text-3);font-size:12px;font-weight:700;
+  font-variant-numeric:tabular-nums;margin-top:2px;
+  transition:background .18s ease, color .18s ease;
+}
+.ptab__app{
+  display:block;font-size:11px;font-weight:600;line-height:1.5;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--text-3);
+  transition:color .18s ease;
+}
+.ptab__n{display:block;font-size:17px;font-weight:600;letter-spacing:-.02em;color:var(--text-3);margin-top:1px;transition:color .18s ease}
+.ptab__d{display:block;font-size:14.5px;line-height:1.5;color:var(--text-3);margin-top:5px;max-width:32ch;transition:color .18s ease}
+.ptab:hover .ptab__n{color:var(--accent-text)}
+.ptab[aria-selected="true"]{border-bottom-color:var(--accent)}
+.ptab[aria-selected="true"] .ptab__i{background:var(--accent);color:#fff}
+.ptab[aria-selected="true"] .ptab__app{color:var(--accent-text)}
+.ptab[aria-selected="true"] .ptab__n{color:var(--text)}
+.ptab[aria-selected="true"] .ptab__d{color:var(--text-2)}
+
+.panel{display:none}
+.panel.is-on{display:block}
+
+.player{
+  position:relative;aspect-ratio:16/9;border-radius:var(--r-card);overflow:hidden;
+  background:var(--bg-2);border:1px solid var(--line);box-shadow:var(--sh-md);
+}
+.player img{width:100%;height:100%;object-fit:cover}
+.player::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,rgba(10,37,64,.72) 0%,rgba(10,37,64,.28) 16%,transparent 38%);
+}
+.play{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;
+  width:64px;height:64px;border-radius:50%;background:#fff;color:var(--accent);
+  display:grid;place-items:center;box-shadow:var(--sh-lg);transition:transform .2s ease;
+}
+.play:hover{transform:translate(-50%,-50%) scale(1.06)}
+.player__cap{position:absolute;left:20px;bottom:16px;z-index:2;font-size:15px;font-weight:600;color:#fff}
+.player__dur{position:absolute;right:20px;bottom:16px;z-index:2;font-size:13px;font-weight:500;color:rgba(255,255,255,.8)}
+.player__note{
+  position:absolute;inset:auto 20px 52px 20px;z-index:3;display:none;margin:0;
+  font-size:12.5px;color:var(--text-2);padding:8px 12px;border-radius:var(--r-sm);
+  background:rgba(255,255,255,.95);border:1px dashed var(--line-2);
+}
+.player.is-noted .player__note{display:block}
+
+/* small square clips on a scroll rail */
+.strip{margin-top:28px}
+.strip__head{display:flex;align-items:center;justify-content:flex-end;margin-bottom:12px}
+.strip__head[hidden]{display:none}
+.strip__nav{display:flex;gap:8px}
+.arrow{
+  width:32px;height:32px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid var(--line);background:var(--surface);color:var(--text-2);
+  box-shadow:var(--sh-sm);transition:border-color .16s, color .16s, opacity .16s;
+}
+.arrow:hover{border-color:var(--line-2);color:var(--text)}
+.arrow[disabled]{opacity:.35;cursor:default;box-shadow:none}
+.rail{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-ms-overflow-style:none}
+.rail::-webkit-scrollbar{display:none}
+.clip{flex:0 0 92px;scroll-snap-align:start;display:block}
+.clip__img{
+  display:block;aspect-ratio:1/1;border-radius:var(--r-sm);overflow:hidden;
+  background:var(--bg-2);border:1px solid var(--line);
+  transition:border-color .18s ease, box-shadow .18s ease;
+}
+.clip:hover .clip__img{border-color:var(--line-2);box-shadow:var(--sh-sm)}
+.clip__img img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease}
+.clip:hover .clip__img img{transform:scale(1.06)}
+.compat{margin:28px 0 0;font-size:13.5px;color:var(--text-3);border-top:1px solid var(--line);padding-top:18px}
+
+/* ============================================================
+   5 · PRESETS
+   ============================================================ */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.card{
+  display:flex;flex-direction:column;background:var(--surface);
+  border:1px solid var(--line);border-radius:var(--r-card);overflow:hidden;
+  transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.card:hover{transform:translateY(-3px);box-shadow:var(--sh-lg);border-color:var(--line-2)}
+.card__img{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--bg-2)}
+.card__img img{width:100%;height:100%;object-fit:cover;transition:transform .5s ease}
+.card:hover .card__img img{transform:scale(1.04)}
+.chip{
+  position:absolute;top:14px;left:14px;font-size:11px;font-weight:600;
+  letter-spacing:.07em;text-transform:uppercase;padding:5px 10px;
+  border-radius:var(--r-btn);background:rgba(255,255,255,.94);
+  color:var(--accent-text);box-shadow:var(--sh-sm);backdrop-filter:blur(6px);
+}
+.card__body{display:flex;flex-direction:column;flex:1;gap:10px;padding:18px}
+.card__by{display:flex;align-items:center;gap:8px}
+.card__by .avatar{width:24px;height:24px;font-size:10px;background:var(--bg-2)}
+.card__by span{font-size:13px;font-weight:500;color:var(--text-3)}
+.card__t{font-size:17px;line-height:1.35}
+.card__foot{margin-top:auto;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;padding-top:6px}
+.rate{display:flex;align-items:center;gap:5px;font-size:13.5px;font-weight:500;color:var(--text);font-variant-numeric:tabular-nums}
+.rate svg{color:var(--text-3);flex:none}
+.rate i{font-style:normal;font-weight:400;color:var(--text-3)}
+.price{display:flex;align-items:baseline;gap:7px;font-variant-numeric:tabular-nums}
+.price b{font-size:18px;font-weight:700;letter-spacing:-.02em;color:var(--text)}
+.price s{font-size:13.5px;color:var(--text-3)}
+.presets__more{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:44px}
+
+/* ============================================================
+   6 · HOW TO INSTALL
+   ============================================================ */
+.install{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:48px;align-items:center}
+.os{display:inline-flex;gap:4px;padding:4px;border-radius:var(--r-btn);background:var(--bg-2);border:1px solid var(--line);margin-bottom:24px}
+.os button{padding:7px 16px;border-radius:var(--r-btn);font-size:13.5px;font-weight:600;color:var(--text-3)}
+.os button[aria-pressed="true"]{background:var(--surface);color:var(--text);box-shadow:var(--sh-sm)}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:22px}
+.steps li{display:grid;grid-template-columns:auto 1fr;gap:2px 14px}
+.steps .n{
+  grid-row:span 2;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;
+  background:var(--accent-soft);color:var(--accent-text);
+  font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px;
+}
+.steps h3{font-size:16px}
+.steps p{margin:4px 0 0;font-size:14.5px;color:var(--text-2);line-height:1.6;max-width:46ch}
+.install__link{margin-top:26px}
+
+/* ============================================================
+   7 · FAQ
+   ============================================================ */
+.faq{max-width:760px;margin:0 auto}
+.faq__head{text-align:center;margin-bottom:40px}
+.faq__head .lede{margin-left:auto;margin-right:auto;text-align:center}
+.qa{border-top:1px solid var(--line)}
+.qa:last-of-type{border-bottom:1px solid var(--line)}
+.qa__q{
+  width:100%;display:flex;align-items:center;justify-content:space-between;gap:24px;
+  text-align:left;padding:22px 2px;font-size:16.5px;font-weight:600;
+  letter-spacing:-.02em;color:var(--text);
+}
+.qa__q:hover{color:var(--accent-text)}
+.qa__q svg{flex:none;color:var(--text-3);transition:transform .25s ease, color .18s}
+.qa[data-open="true"] .qa__q svg{transform:rotate(180deg);color:var(--accent)}
+.qa__a{display:none;padding:0 2px 24px}
+.qa__a p{margin:0;font-size:15.5px;line-height:1.7;color:var(--text-2);max-width:64ch}
+.qa[data-open="true"] .qa__a{display:block}
+.faq__foot{text-align:center;margin:36px 0 0;font-size:15px;color:var(--text-3)}
+.faq__foot a{color:var(--accent-text);font-weight:600}
+
+/* ============================================================
+   8 · FOOTER
+   ============================================================ */
+.footer{border-top:1px solid var(--line);padding:64px 0 32px}
+.footer__top{display:grid;grid-template-columns:minmax(0,1.5fr) repeat(3,minmax(0,1fr));gap:40px}
+.footer__intro p{margin:16px 0 20px;font-size:14.5px;line-height:1.65;color:var(--text-3);max-width:34ch}
+.fcol h4{margin:0 0 14px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-3)}
+.fcol ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.fcol a{font-size:14.5px;color:var(--text-2)}
+.fcol a:hover{color:var(--accent-text)}
+.footer__bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;margin-top:52px;padding-top:22px;border-top:1px solid var(--line)}
+.footer__bar p{margin:0;font-size:13px;color:var(--text-3)}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width:1080px){
+  .slide{grid-template-columns:minmax(0,1fr) 330px;gap:32px}
+}
+@media (max-width:1000px){
+  .nav__links,.nav__right{display:none}
+  .nav__toggle{display:flex}
+  .nav__panel.is-on{
+    display:block;position:absolute;top:var(--nav-h);left:0;right:0;
+    background:var(--surface);border-bottom:1px solid var(--line);
+    padding:12px 24px 22px;box-shadow:var(--sh-md);
+  }
+  .nav__panel a{display:block;padding:12px 0;font-size:16px;font-weight:500;color:var(--text-2);border-bottom:1px solid var(--line)}
+  .nav__panel .btn{width:100%;margin-top:18px}
+  .ptabs{grid-template-columns:1fr;border-bottom:0}
+  .ptab{padding:16px 14px 16px 12px;border-bottom:1px solid var(--line);margin-bottom:0;border-left:2px solid transparent}
+  .ptab[aria-selected="true"]{border-bottom-color:var(--line);border-left-color:var(--accent);background:var(--bg-2)}
+  .ptab__d{max-width:none}
+}
+@media (max-width:860px){
+  .slide.is-on{grid-template-columns:1fr;gap:20px}
+  .slide__copy{padding:0 0 30px;order:2}
+  .slide__media{order:1}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .install{grid-template-columns:1fr;gap:32px}
+  .footer__top{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .section{padding:64px 0}
+  .section__head{flex-direction:column;align-items:flex-start;gap:20px}
+}
+@media (max-width:600px){
+  .wrap{padding:0 18px}
+  .partners__in{flex-direction:column;align-items:flex-start;gap:18px;padding:22px 18px}
+  .cards{grid-template-columns:1fr}
+  .clip{flex:0 0 84px}
+  .slide__actions .btn{width:100%}
+  .section{padding:52px 0}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{transition-duration:.001ms !important;animation-duration:.001ms !important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<!-- ========== 1 · TOP MENU ========== -->
+<header class="nav">
+  <div class="wrap nav__in">
+    <a class="brand" href="#" aria-label="Retouch Market home">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+        <rect width="26" height="26" rx="7" fill="#635BFF"/>
+        <circle cx="13" cy="13" r="6.1" stroke="#fff" stroke-width="1.8"/>
+        <circle cx="16.3" cy="9.7" r="1.5" fill="#fff"/>
+      </svg>
+      <b>Retouch Market</b>
+    </a>
+    <nav class="nav__links" aria-label="Main">
+      <a href="#" aria-current="page">Home</a>
+      <a href="#plugins">Plugins</a>
+      <a href="#presets">Presets</a>
+      <a href="#">LUTs</a>
+      <a href="#">Full Pack</a>
+      <a href="#">Blog</a>
+    </nav>
+    <div class="nav__right">
+      <button class="lang">EN
+        <svg width="9" height="6" viewBox="0 0 9 6" fill="none" aria-hidden="true"><path d="M1 1l3.5 3.5L8 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </button>
+      <a class="nav__plain" href="#">Invite &amp; earn</a>
+      <a class="btn btn--primary btn--sm" href="#">Get the Full Pack</a>
+    </div>
+    <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel" aria-label="Open menu">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="none" aria-hidden="true"><path d="M0 1h18M0 6h18M0 11h18" stroke="currentColor" stroke-width="1.6"/></svg>
+    </button>
+  </div>
+  <div class="nav__panel" id="navPanel">
+    <a href="#plugins">Plugins</a>
+    <a href="#presets">Presets</a>
+    <a href="#">LUTs</a>
+    <a href="#">Full Pack</a>
+    <a href="#">Blog</a>
+    <a class="btn btn--primary" href="#">Get the Full Pack</a>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- ========== 2 · MINI SLIDER ========== -->
+<section class="slider" aria-label="Featured">
+  <div class="wrap">
+    <div class="slider__frame">
+
+      <div class="slide is-on" data-slide="0" role="group" aria-label="1 of 3">
+        <div class="slide__copy">
+          <p class="eyebrow">Full Pack</p>
+          <h1>Every plugin and preset we make, in one bundle.</h1>
+          <div class="slide__actions">
+            <a class="btn btn--primary" href="#">View the Full Pack</a>
+            <a class="btn btn--ghost" href="#install">See how it installs</a>
+          </div>
+        </div>
+        <div class="slide__media"><div class="compare" data-compare tabindex="0" role="slider" aria-label="Drag to compare raw and graded" aria-valuemin="0" aria-valuemax="100" aria-valuenow="54">
+          <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75" alt="Portrait graded with a Retouch Market preset" onerror="this.style.display='none'">
+          <img class="compare__raw" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" onerror="this.style.display='none'">
+          <div class="tagpair"><span class="tag">Raw</span><span class="tag tag--on">Graded</span></div>
+          <div class="compare__bar"></div>
+          <div class="compare__grip" aria-hidden="true">
+            <svg width="15" height="9" viewBox="0 0 15 9" fill="none"><path d="M5.5 1L2 4.5 5.5 8M9.5 1L13 4.5 9.5 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="slide" data-slide="1" role="group" aria-label="2 of 3" hidden>
+        <div class="slide__copy">
+          <p class="eyebrow">RetouchX</p>
+          <h1>Retouch forty portraits in a single pass.</h1>
+          <div class="slide__actions">
+            <a class="btn btn--primary" href="#plugins">Watch RetouchX work</a>
+            <a class="btn btn--ghost" href="#">Read the release notes</a>
+          </div>
+        </div>
+        <div class="slide__media"><div class="compare" data-compare tabindex="0" role="slider" aria-label="Drag to compare raw and retouched" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+          <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="Portrait retouched with RetouchX" onerror="this.style.display='none'">
+          <img class="compare__raw" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" onerror="this.style.display='none'">
+          <div class="tagpair"><span class="tag">Raw</span><span class="tag tag--on">Retouched</span></div>
+          <div class="compare__bar"></div>
+          <div class="compare__grip" aria-hidden="true">
+            <svg width="15" height="9" viewBox="0 0 15 9" fill="none"><path d="M5.5 1L2 4.5 5.5 8M9.5 1L13 4.5 9.5 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="slide" data-slide="2" role="group" aria-label="3 of 3" hidden>
+        <div class="slide__copy">
+          <p class="eyebrow">Presets</p>
+          <h1>One look, carried across a whole feed.</h1>
+          <div class="slide__actions">
+            <a class="btn btn--primary" href="#presets">Browse the presets</a>
+            <a class="btn btn--ghost" href="#">Compare packs</a>
+          </div>
+        </div>
+        <div class="slide__media"><div class="compare" data-compare tabindex="0" role="slider" aria-label="Drag to compare raw and graded" aria-valuemin="0" aria-valuemax="100" aria-valuenow="58">
+          <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=750&amp;q=75" alt="Photos sharing one graded look" onerror="this.style.display='none'">
+          <img class="compare__raw" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" onerror="this.style.display='none'">
+          <div class="tagpair"><span class="tag">Raw</span><span class="tag tag--on">Graded</span></div>
+          <div class="compare__bar"></div>
+          <div class="compare__grip" aria-hidden="true">
+            <svg width="15" height="9" viewBox="0 0 15 9" fill="none"><path d="M5.5 1L2 4.5 5.5 8M9.5 1L13 4.5 9.5 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+        </div></div>
+      </div>
+
+      <div class="slider__dots" role="tablist" aria-label="Choose a slide">
+        <button class="dot" role="tab" aria-selected="true" aria-label="Slide 1: Full Pack"></button>
+        <button class="dot" role="tab" aria-selected="false" aria-label="Slide 2: RetouchX"></button>
+        <button class="dot" role="tab" aria-selected="false" aria-label="Slide 3: Presets"></button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 3 · PARTNERS ========== -->
+<section class="partners" aria-label="Partners">
+  <div class="partners__in">
+    <p class="partners__label">Partners</p>
+    <div class="partners__row">
+      <span class="author"><span class="avatar">UŞ</span><span><span class="author__name">Uğur Sezer</span><span class="author__meta">3 packs</span></span></span>
+      <span class="author"><span class="avatar">UD</span><span><span class="author__name">Uğur Demir</span><span class="author__meta">Jardin</span></span></span>
+      <span class="author"><span class="avatar">UK</span><span><span class="author__name">Umut Kaçar</span><span class="author__meta">Olbia LUTs</span></span></span>
+      <span class="author"><span class="avatar">MG</span><span><span class="author__name">Mücahit Güney</span><span class="author__meta">Doré</span></span></span>
+      <span class="author"><span class="avatar">MS</span><span><span class="author__name">Melih Süren</span><span class="author__meta">Mely</span></span></span>
+      <span class="author"><span class="avatar">AT</span><span><span class="author__name">Adam Tahirov</span><span class="author__meta">Onyx</span></span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 4 · PLUGINS ========== -->
+<section class="section" id="plugins">
+  <div class="wrap">
+    <div class="section__head">
+      <div>
+        <p class="eyebrow">Plugins</p>
+        <h2>Three tools that sit inside the apps you already use.</h2>
+        <p class="lede">Pick one to watch it run, then browse the shorter clips underneath.</p>
+      </div>
+      <a class="link" href="#">All plugin details
+        <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <div class="ptabs" role="tablist" aria-label="Plugins" id="pluginTabs">
+      <button class="ptab" role="tab" aria-selected="true" aria-controls="pp-0" id="pt-0">
+        <span class="ptab__i" aria-hidden="true">1</span>
+        <span class="ptab__app">For Photoshop</span>
+        <span class="ptab__n">RetouchX</span>
+        <span class="ptab__d">Batch and auto retouch across a whole gallery.</span>
+      </button>
+      <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-1" id="pt-1" tabindex="-1">
+        <span class="ptab__i" aria-hidden="true">2</span>
+        <span class="ptab__app">For Lightroom Classic &amp; Camera Raw</span>
+        <span class="ptab__n">Lightroom AI Color</span>
+        <span class="ptab__d">Colour grading that takes taps, not hours.</span>
+      </button>
+      <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-2" id="pt-2" tabindex="-1">
+        <span class="ptab__i" aria-hidden="true">3</span>
+        <span class="ptab__app">For Photoshop</span>
+        <span class="ptab__n">US Photoshop Plugin</span>
+        <span class="ptab__d">The heavy Photoshop routines, in one click.</span>
+      </button>
+    </div>
+
+    <!-- panel 1 -->
+    <div class="panel is-on" id="pp-0" role="tabpanel" aria-labelledby="pt-0">
+      <div class="player">
+        <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="RetouchX walkthrough" onerror="this.style.display='none'">
+        <button class="play" aria-label="Play the RetouchX walkthrough">
+          <svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg>
+        </button>
+        <span class="player__cap">RetouchX — 40 portraits, one pass</span>
+        <span class="player__dur tnum">4:12</span>
+        <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+      </div>
+      <div class="strip">
+        <div class="strip__head">
+          <div class="strip__nav">
+            <button class="arrow" data-dir="-1" aria-label="Scroll left"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="arrow" data-dir="1" aria-label="Scroll right"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+        <div class="rail">
+          <a class="clip" href="#" title="Setting up a batch queue — 1:12"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=384&amp;q=75" alt="Setting up a batch queue" loading="lazy" onerror="this.style.display='none'"></span></a>
+          <a class="clip" href="#" title="Keeping skin texture — 0:48"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=384&amp;q=75" alt="Keeping skin texture" loading="lazy" onerror="this.style.display='none'"></span></a>
+          <a class="clip" href="#" title="Eyes, teeth and lips — 2:04"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=384&amp;q=75" alt="Eyes, teeth and lips" loading="lazy" onerror="this.style.display='none'"></span></a>
+          <a class="clip" href="#" title="Reviewing before export — 1:33"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=384&amp;q=75" alt="Reviewing before export" loading="lazy" onerror="this.style.display='none'"></span></a>
+          <a class="clip" href="#" title="Masking hair edges — 1:57"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=384&amp;q=75" alt="Masking hair edges" loading="lazy" onerror="this.style.display='none'"></span></a>
+          <a class="clip" href="#" title="Saving your own recipe — 2:26"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=384&amp;q=75" alt="Saving your own recipe" loading="lazy" onerror="this.style.display='none'"></span></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- panel 2 -->
+    <div class="panel" id="pp-1" role="tabpanel" aria-labelledby="pt-1" hidden>
+      <div class="player">
+        <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="Lightroom AI Color walkthrough" loading="lazy" onerror="this.style.display='none'">
+        <button class="play" aria-label="Play the Lightroom AI Color walkthrough">
+          <svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg>
+        </button>
+        <span class="player__cap">Lightroom AI Color — grade a gallery in taps</span>
+        <span class="player__dur tnum">3:26</span>
+        <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+      </div>
+      <div class="strip">
+        <div class="strip__head">
+          <div class="strip__nav">
+            <button class="arrow" data-dir="-1" aria-label="Scroll left"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="arrow" data-dir="1" aria-label="Scroll right"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+        <div class="rail">
+          <a class="clip" href="#" title="Matching a reference frame — 1:05"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=384&amp;q=75" alt="Matching a reference frame" loading="lazy" onerror="this.style.display='none'"></span></a>
+          <a class="clip" href="#" title="Building your own look — 2:19"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=384&amp;q=75" alt="Building your own look" loading="lazy" onerror="this.style.display='none'"></span></a>
+          <a class="clip" href="#" title="Syncing across a shoot — 0:52"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=384&amp;q=75" alt="Syncing across a shoot" loading="lazy" onerror="this.style.display='none'"></span></a>
+          <a class="clip" href="#" title="Protecting skin tones — 1:41"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=384&amp;q=75" alt="Protecting skin tones" loading="lazy" onerror="this.style.display='none'"></span></a>
+          <a class="clip" href="#" title="Split toning shadows — 1:28"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=384&amp;q=75" alt="Split toning shadows" loading="lazy" onerror="this.style.display='none'"></span></a>
+          <a class="clip" href="#" title="Exporting a preset pack — 2:11"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=384&amp;q=75" alt="Exporting a preset pack" loading="lazy" onerror="this.style.display='none'"></span></a>
+        </div>
+      </div>
+    </div>
+
+    <!-- panel 3 -->
+    <div class="panel" id="pp-2" role="tabpanel" aria-labelledby="pt-2" hidden>
+      <div class="player">
+        <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" alt="US Photoshop Plugin walkthrough" loading="lazy" onerror="this.style.display='none'">
+        <button class="play" aria-label="Play the US Photoshop Plugin walkthrough">
+          <svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg>
+        </button>
+        <span class="player__cap">US Photoshop Plugin — the panel tour</span>
+        <span class="player__dur tnum">5:03</span>
+        <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+      </div>
+      <div class="strip">
+        <div class="strip__head">
+          <div class="strip__nav">
+            <button class="arrow" data-dir="-1" aria-label="Scroll left"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="arrow" data-dir="1" aria-label="Scroll right"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+        <div class="rail">
+          <a class="clip" href="#" title="Frequency separation — 2:37"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=384&amp;q=75" alt="Frequency separation" loading="lazy" onerror="this.style.display='none'"></span></a>
+          <a class="clip" href="#" title="Dodge and burn layers — 1:58"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=384&amp;q=75" alt="Dodge and burn layers" loading="lazy" onerror="this.style.display='none'"></span></a>
+          <a class="clip" href="#" title="Saved liquify shapes — 1:14"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=384&amp;q=75" alt="Saved liquify shapes" loading="lazy" onerror="this.style.display='none'"></span></a>
+          <a class="clip" href="#" title="Export sizes for Instagram — 0:44"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=384&amp;q=75" alt="Export sizes for Instagram" loading="lazy" onerror="this.style.display='none'"></span></a>
+          <a class="clip" href="#" title="Cleaning up backgrounds — 3:02"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=384&amp;q=75" alt="Cleaning up backgrounds" loading="lazy" onerror="this.style.display='none'"></span></a>
+          <a class="clip" href="#" title="Sharpening for print — 1:49"><span class="clip__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=384&amp;q=75" alt="Sharpening for print" loading="lazy" onerror="this.style.display='none'"></span></a>
+        </div>
+      </div>
+    </div>
+
+    <p class="compat">Works with Lightroom Classic &amp; CC · Camera Raw · Photoshop — macOS (Intel and Apple silicon) and Windows 10 / 11 · 12+ languages</p>
+  </div>
+</section>
+
+<!-- ========== 5 · PRESETS ========== -->
+<section class="section section--tint" id="presets">
+  <div class="wrap">
+    <div class="section__head">
+      <div>
+        <p class="eyebrow">Presets</p>
+        <h2>Twelve packs. Pick your palette.</h2>
+        <p class="lede">Every pack ships as XMP for desktop and DNG for Lightroom mobile, with a sample gallery so you can see it on real skin first.</p>
+      </div>
+      <a class="link" href="#">View store
+        <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <div class="cards">
+      <a class="card" href="#">
+        <span class="card__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75" alt="Sample graded with Lora Presets" loading="lazy" onerror="this.style.display='none'"><span class="chip">Bestseller</span></span>
+        <span class="card__body">
+          <span class="card__by"><span class="avatar">UŞ</span><span>Uğur Sezer</span></span>
+          <h3 class="card__t">Lora Presets</h3>
+          <span class="card__foot">
+            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.9 <i>(1,309)</i></span>
+            <span class="price"><b>$59</b><s>$119</s></span>
+          </span>
+        </span>
+      </a>
+      <a class="card" href="#">
+        <span class="card__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="Sample graded with Solis Presets" loading="lazy" onerror="this.style.display='none'"><span class="chip">Most saved</span></span>
+        <span class="card__body">
+          <span class="card__by"><span class="avatar">UŞ</span><span>Uğur Sezer</span></span>
+          <h3 class="card__t">Solis Presets</h3>
+          <span class="card__foot">
+            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.9 <i>(6,669)</i></span>
+            <span class="price"><b>$59</b><s>$119</s></span>
+          </span>
+        </span>
+      </a>
+      <a class="card" href="#">
+        <span class="card__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75" alt="Sample graded with Terra Presets" loading="lazy" onerror="this.style.display='none'"></span>
+        <span class="card__body">
+          <span class="card__by"><span class="avatar">UŞ</span><span>Uğur Sezer</span></span>
+          <h3 class="card__t">Terra Presets</h3>
+          <span class="card__foot">
+            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.9 <i>(5,464)</i></span>
+            <span class="price"><b>$59</b><s>$119</s></span>
+          </span>
+        </span>
+      </a>
+      <a class="card" href="#">
+        <span class="card__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75" alt="Sample graded with Doré Presets" loading="lazy" onerror="this.style.display='none'"></span>
+        <span class="card__body">
+          <span class="card__by"><span class="avatar">MG</span><span>Mücahit Güney</span></span>
+          <h3 class="card__t">Doré Presets</h3>
+          <span class="card__foot">
+            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.8 <i>(299)</i></span>
+            <span class="price"><b>$59</b><s>$119</s></span>
+          </span>
+        </span>
+      </a>
+      <a class="card" href="#">
+        <span class="card__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=750&amp;q=75" alt="Sample graded with Mely Presets" loading="lazy" onerror="this.style.display='none'"></span>
+        <span class="card__body">
+          <span class="card__by"><span class="avatar">MS</span><span>Melih Süren</span></span>
+          <h3 class="card__t">Mely Presets</h3>
+          <span class="card__foot">
+            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.8 <i>(467)</i></span>
+            <span class="price"><b>$59</b><s>$119</s></span>
+          </span>
+        </span>
+      </a>
+      <a class="card" href="#">
+        <span class="card__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=750&amp;q=75" alt="Sample graded with Onyx Presets" loading="lazy" onerror="this.style.display='none'"></span>
+        <span class="card__body">
+          <span class="card__by"><span class="avatar">AT</span><span>Adam Tahirov</span></span>
+          <h3 class="card__t">Onyx Presets</h3>
+          <span class="card__foot">
+            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.9 <i>(451)</i></span>
+            <span class="price"><b>$59</b><s>$119</s></span>
+          </span>
+        </span>
+      </a>
+      <a class="card" href="#">
+        <span class="card__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=750&amp;q=75" alt="Sample graded with Jardin Presets" loading="lazy" onerror="this.style.display='none'"></span>
+        <span class="card__body">
+          <span class="card__by"><span class="avatar">UD</span><span>Uğur Demir</span></span>
+          <h3 class="card__t">Jardin Presets</h3>
+          <span class="card__foot">
+            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.9 <i>(1,071)</i></span>
+            <span class="price"><b>$59</b><s>$119</s></span>
+          </span>
+        </span>
+      </a>
+      <a class="card" href="#">
+        <span class="card__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=750&amp;q=75" alt="Sample graded with Olbia LUTs" loading="lazy" onerror="this.style.display='none'"><span class="chip">New</span></span>
+        <span class="card__body">
+          <span class="card__by"><span class="avatar">UK</span><span>Umut Kaçar</span></span>
+          <h3 class="card__t">Olbia LUTs</h3>
+          <span class="card__foot">
+            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.9 <i>(420)</i></span>
+            <span class="price"><b>$59</b><s>$119</s></span>
+          </span>
+        </span>
+      </a>
+      <a class="card" href="#">
+        <span class="card__img"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=750&amp;q=75" alt="Sample graded with the demo presets" loading="lazy" onerror="this.style.display='none'"></span>
+        <span class="card__body">
+          <span class="card__by"><span class="avatar">RM</span><span>Retouch Market</span></span>
+          <h3 class="card__t">Demo Presets</h3>
+          <span class="card__foot">
+            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.7 <i>(180)</i></span>
+            <span class="price"><b>Free</b></span>
+          </span>
+        </span>
+      </a>
+    </div>
+
+    <div class="presets__more">
+      <p class="meta tnum">Showing 9 of 12 packs</p>
+      <a class="btn btn--ghost" href="#">View all 12 in the store</a>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 6 · HOW TO INSTALL ========== -->
+<section class="section" id="install">
+  <div class="wrap">
+    <div class="section__head">
+      <div>
+        <p class="eyebrow">Installing</p>
+        <h2>From download to first edit in two minutes.</h2>
+      </div>
+    </div>
+
+    <div class="install">
+      <div class="player">
+        <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" alt="Install walkthrough" loading="lazy" onerror="this.style.display='none'">
+        <button class="play" aria-label="Play the install walkthrough">
+          <svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg>
+        </button>
+        <span class="player__cap">Installing plugins and presets</span>
+        <span class="player__dur tnum">2:08</span>
+        <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+      </div>
+
+      <div>
+        <div class="os" role="group" aria-label="Choose your system">
+          <button aria-pressed="true">macOS</button>
+          <button aria-pressed="false">Windows</button>
+        </div>
+        <ol class="steps">
+          <li><span class="n">1</span><h3>Download your files</h3><p>After checkout everything lands in your account library as one zip.</p></li>
+          <li><span class="n">2</span><h3>Run the installer</h3><p>Plugins install themselves. Presets go in through File → Import Profiles &amp; Presets.</p></li>
+          <li><span class="n">3</span><h3>Restart and edit</h3><p>Reopen Lightroom or Photoshop. The panel appears under Retouch Market.</p></li>
+        </ol>
+        <a class="link install__link" href="#">Read the written guide
+          <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== 7 · FAQ ========== -->
+<section class="section section--tint">
+  <div class="wrap">
+    <div class="faq">
+      <div class="faq__head">
+        <p class="eyebrow">Questions</p>
+        <h2>Before you buy</h2>
+        <p class="lede">The six things people ask us most. Anything else, support answers within a day.</p>
+      </div>
+
+      <div id="faqList">
+        <div class="qa" data-open="true">
+          <button class="qa__q" aria-expanded="true">Which apps do these work with?
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </button>
+          <div class="qa__a"><p>Lightroom Classic, Lightroom CC, Camera Raw and Photoshop. Presets come as XMP for desktop and DNG for Lightroom mobile, so one purchase covers both.</p></div>
+        </div>
+        <div class="qa">
+          <button class="qa__q" aria-expanded="false">Is it a subscription?
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </button>
+          <div class="qa__a"><p>No. You pay once and the files are yours, updates included. There is nothing to cancel.</p></div>
+        </div>
+        <div class="qa">
+          <button class="qa__q" aria-expanded="false">Will the plugins run on my machine?
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </button>
+          <div class="qa__a"><p>Yes on macOS with Intel or Apple silicon, and on Windows 10 and 11. The interface is available in Turkish, English and ten more languages.</p></div>
+        </div>
+        <div class="qa">
+          <button class="qa__q" aria-expanded="false">Do presets work on any photo?
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </button>
+          <div class="qa__a"><p>They are built for portrait, wedding, maternity and newborn work. Apply the look, then nudge exposure and white balance for your light — that is the intended workflow, not a workaround.</p></div>
+        </div>
+        <div class="qa">
+          <button class="qa__q" aria-expanded="false">How do I get my files?
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </button>
+          <div class="qa__a"><p>Instantly. The download link appears on the confirmation screen and stays in your account library, so you can re-download after a new laptop.</p></div>
+        </div>
+        <div class="qa">
+          <button class="qa__q" aria-expanded="false">What if something will not install?
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </button>
+          <div class="qa__a"><p>Send us a screenshot and we will get it running or refund you. Digital purchases otherwise follow the distance sales contract linked in the footer.</p></div>
+        </div>
+      </div>
+
+      <p class="faq__foot">Still stuck? <a href="#">Email support</a> — one working day, usually less.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ========== 8 · FOOTER ========== -->
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__top">
+      <div class="footer__intro">
+        <a class="brand" href="#">
+          <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true">
+            <rect width="26" height="26" rx="7" fill="#635BFF"/>
+            <circle cx="13" cy="13" r="6.1" stroke="#fff" stroke-width="1.8"/>
+            <circle cx="16.3" cy="9.7" r="1.5" fill="#fff"/>
+          </svg>
+          <b>Retouch Market</b>
+        </a>
+        <p>AI plugins, Lightroom presets and video LUTs, made by photographers who still shoot.</p>
+        <button class="lang" style="padding-left:0">EN
+          <svg width="9" height="6" viewBox="0 0 9 6" fill="none" aria-hidden="true"><path d="M1 1l3.5 3.5L8 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div class="fcol">
+        <h4>Products</h4>
+        <ul>
+          <li><a href="#">All products</a></li>
+          <li><a href="#">Full Pack</a></li>
+          <li><a href="#plugins">Plugins</a></li>
+          <li><a href="#presets">Presets</a></li>
+          <li><a href="#">LUTs</a></li>
+        </ul>
+      </div>
+      <div class="fcol">
+        <h4>Learn</h4>
+        <ul>
+          <li><a href="#install">How to install</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Training videos</a></li>
+          <li><a href="#">Invite &amp; earn</a></li>
+        </ul>
+      </div>
+      <div class="fcol">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Privacy policy</a></li>
+          <li><a href="#">Distance sales contract</a></li>
+          <li><a href="#">Delivery &amp; returns</a></li>
+          <li><a href="#">Terms and conditions</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bar">
+      <p>© 2026 Retouch Market. All rights reserved.</p>
+      <p>10,000+ photographers · macOS &amp; Windows · 12+ languages</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---- mobile nav ---- */
+  var nt=document.getElementById('navToggle'), np=document.getElementById('navPanel');
+  nt.addEventListener('click',function(){
+    var open=np.classList.toggle('is-on');
+    nt.setAttribute('aria-expanded',String(open));
+  });
+
+  /* ---- before / after ---- */
+  function setPos(el,pct){
+    pct=Math.max(2,Math.min(98,pct));
+    el.style.setProperty('--pos',pct+'%');
+    el.setAttribute('aria-valuenow',Math.round(pct));
+  }
+  document.querySelectorAll('[data-compare]').forEach(function(el){
+    var dragging=false;
+    function at(e){var r=el.getBoundingClientRect();setPos(el,((e.clientX-r.left)/r.width)*100);}
+    el.addEventListener('pointerdown',function(e){dragging=true;el.setPointerCapture(e.pointerId);at(e);});
+    el.addEventListener('pointermove',function(e){if(dragging)at(e);});
+    el.addEventListener('pointerup',function(){dragging=false;});
+    el.addEventListener('pointercancel',function(){dragging=false;});
+    el.addEventListener('keydown',function(e){
+      var cur=parseFloat(el.getAttribute('aria-valuenow'))||54;
+      if(e.key==='ArrowLeft'){setPos(el,cur-4);e.preventDefault();}
+      if(e.key==='ArrowRight'){setPos(el,cur+4);e.preventDefault();}
+    });
+  });
+
+  /* ---- mini slider ---- */
+  var slides=[].slice.call(document.querySelectorAll('.slide')),
+      dots=[].slice.call(document.querySelectorAll('.dot')),
+      idx=0, timer=null,
+      still=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function show(i){
+    idx=(i+slides.length)%slides.length;
+    slides.forEach(function(s,n){
+      var on=n===idx;
+      s.classList.toggle('is-on',on);
+      if(on){s.removeAttribute('hidden');}else{s.setAttribute('hidden','');}
+    });
+    dots.forEach(function(d,n){d.setAttribute('aria-selected',String(n===idx));});
+  }
+  function start(){ if(still)return; stop(); timer=setInterval(function(){show(idx+1);},7000); }
+  function stop(){ if(timer){clearInterval(timer);timer=null;} }
+  dots.forEach(function(d,n){d.addEventListener('click',function(){show(n);start();});});
+  var frame=document.querySelector('.slider__frame');
+  frame.addEventListener('pointerenter',stop);
+  frame.addEventListener('pointerleave',start);
+  frame.addEventListener('focusin',stop);
+  start();
+
+  /* ---- plugin tabs (rows: tabs above, player below) ---- */
+  var tabs=[].slice.call(document.querySelectorAll('#pluginTabs .ptab'));
+  function selectTab(i){
+    tabs.forEach(function(tab,n){
+      var on=n===i;
+      tab.setAttribute('aria-selected',String(on));
+      tab.tabIndex=on?0:-1;
+      var panel=document.getElementById(tab.getAttribute('aria-controls'));
+      panel.classList.toggle('is-on',on);
+      if(on){panel.removeAttribute('hidden');}else{panel.setAttribute('hidden','');}
+    });
+    syncRails();
+  }
+  tabs.forEach(function(tab,i){
+    tab.addEventListener('click',function(){selectTab(i);});
+    tab.addEventListener('keydown',function(e){
+      var next=null;
+      if(e.key==='ArrowRight'||e.key==='ArrowDown')next=(i+1)%tabs.length;
+      if(e.key==='ArrowLeft'||e.key==='ArrowUp')next=(i-1+tabs.length)%tabs.length;
+      if(next!==null){selectTab(next);tabs[next].focus();e.preventDefault();}
+    });
+  });
+
+  /* ---- clip rails: arrows + disabled states ---- */
+  var rails=[].slice.call(document.querySelectorAll('.strip'));
+  function syncRails(){
+    rails.forEach(function(strip){
+      var rail=strip.querySelector('.rail');
+      var max=rail.scrollWidth-rail.clientWidth-1;
+      var head=strip.querySelector('.strip__head');
+      /* no overflow means no controls at all — and no empty row where they were */
+      if(max<=0){ head.setAttribute('hidden',''); return; }
+      head.removeAttribute('hidden');
+      strip.querySelectorAll('.arrow').forEach(function(btn){
+        var dir=parseInt(btn.getAttribute('data-dir'),10);
+        var atEnd=dir<0 ? rail.scrollLeft<=1 : rail.scrollLeft>=max;
+        if(atEnd){btn.setAttribute('disabled','');}else{btn.removeAttribute('disabled');}
+      });
+    });
+  }
+  rails.forEach(function(strip){
+    var rail=strip.querySelector('.rail');
+    strip.querySelectorAll('.arrow').forEach(function(btn){
+      btn.addEventListener('click',function(){
+        var card=rail.querySelector('.clip');
+        var step=(card?card.offsetWidth:92)+10;
+        rail.scrollBy({left:step*4*parseInt(btn.getAttribute('data-dir'),10),behavior:still?'auto':'smooth'});
+      });
+    });
+    rail.addEventListener('scroll',syncRails,{passive:true});
+  });
+  window.addEventListener('resize',syncRails);
+  syncRails();
+
+  /* ---- play buttons (mockup annotation) ---- */
+  document.querySelectorAll('.play').forEach(function(btn){
+    btn.addEventListener('click',function(){btn.closest('.player').classList.toggle('is-noted');});
+  });
+
+  /* ---- OS toggle ---- */
+  document.querySelectorAll('.os').forEach(function(group){
+    var btns=[].slice.call(group.querySelectorAll('button'));
+    btns.forEach(function(b){
+      b.addEventListener('click',function(){
+        btns.forEach(function(x){x.setAttribute('aria-pressed',String(x===b));});
+      });
+    });
+  });
+
+  /* ---- FAQ ---- */
+  document.querySelectorAll('#faqList .qa').forEach(function(qa){
+    var q=qa.querySelector('.qa__q');
+    q.addEventListener('click',function(){
+      var wasOpen=qa.getAttribute('data-open')==='true';
+      document.querySelectorAll('#faqList .qa').forEach(function(o){
+        o.setAttribute('data-open','false');
+        o.querySelector('.qa__q').setAttribute('aria-expanded','false');
+      });
+      if(!wasOpen){qa.setAttribute('data-open','true');q.setAttribute('aria-expanded','true');}
+    });
+  });
+})();
+</script>
+</body>
+</html>
