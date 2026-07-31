@@ -436,7 +436,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .ptabs{
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-3);
   position:absolute;top:var(--s-5);left:0;right:0;z-index:3;
-  padding-inline:var(--inset);
+  /* the same 20px clear of the video's edge on all three sides — flush with
+     the left and right borders the cards look like they have fallen off it,
+     and they sit right on the corner radius */
+  padding-inline:calc(var(--inset) + var(--s-5));
 }
 .ptab{
   position:relative;
