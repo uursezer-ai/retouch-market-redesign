@@ -460,8 +460,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .ptab[aria-selected="true"] .ptab__icon{background:var(--accent);color:var(--fg-on-accent);border-color:var(--accent)}
 .ptab__body{display:flex;flex-direction:column;min-width:0}
-.ptab__n{font-size:var(--fs-6);font-weight:var(--fw-semibold);letter-spacing:var(--tr-heading);color:var(--fg);line-height:1.3}
-.ptab__app{margin-top:2px;font-size:var(--fs-3);color:var(--fg-body);line-height:1.4}
+/* the app line is the card's eyebrow, so it sits above the name it labels.
+   Muted rather than accent — the icon and the selected border already carry
+   accent, and three accent eyebrows at once would spend it for nothing. */
+.ptab__app{
+  font-size:var(--fs-1);font-weight:var(--fw-semibold);line-height:1.4;
+  letter-spacing:var(--tr-caps);text-transform:uppercase;color:var(--fg-muted);
+}
+.ptab[aria-selected="true"] .ptab__app{color:var(--accent-700)}
+.ptab__n{margin-top:var(--s-1);font-size:var(--fs-6);font-weight:var(--fw-semibold);letter-spacing:var(--tr-heading);color:var(--fg);line-height:1.3}
 .ptab__meta{margin-top:var(--s-2);font-size:var(--fs-1);color:var(--fg-muted);line-height:1.4}
 
 .panel{display:none}
@@ -1059,25 +1066,25 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <button class="ptab" role="tab" aria-selected="true" aria-controls="pp-0 pi-0" id="pt-0">
         <span class="ptab__icon" aria-hidden="true">Ps</span>
         <span class="ptab__body">
+          <span class="ptab__app">For Photoshop &amp; Desktop</span>
           <span class="ptab__n">RetouchX</span>
-          <span class="ptab__app">For Photoshop and desktop</span>
-          <span class="ptab__meta">Plugin 1 of 3 · In the Full Pack</span>
+          <span class="ptab__meta">Plugin 1 of 3 · In the Pack</span>
         </span>
       </button>
       <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-1 pi-1" id="pt-1" tabindex="-1">
         <span class="ptab__icon" aria-hidden="true">LrC</span>
         <span class="ptab__body">
-          <span class="ptab__n">Lightroom AI Color</span>
           <span class="ptab__app">For Lightroom Classic</span>
-          <span class="ptab__meta">Plugin 2 of 3 · In the Full Pack</span>
+          <span class="ptab__n">Lightroom AI Color</span>
+          <span class="ptab__meta">Plugin 2 of 3 · In the Pack</span>
         </span>
       </button>
       <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-2 pi-2" id="pt-2" tabindex="-1">
         <span class="ptab__icon" aria-hidden="true">Ps</span>
         <span class="ptab__body">
-          <span class="ptab__n">US Photoshop Plugin</span>
           <span class="ptab__app">For Photoshop</span>
-          <span class="ptab__meta">Plugin 3 of 3 · In the Full Pack</span>
+          <span class="ptab__n">US Photoshop Plugin</span>
+          <span class="ptab__meta">Plugin 3 of 3 · In the Pack</span>
         </span>
       </button>
     </div>
