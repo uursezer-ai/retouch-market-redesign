@@ -77,6 +77,7 @@
   --fs-10:38px;  /* h2 ceiling                    */
   --fs-11:48px;
   --fs-12:58px;  /* h1 ceiling — the page's peak  */
+  --h1-size:clamp(38px,5vw,58px);
 
   /* ── Line heights — bigger text, tighter leading ────────────── */
   --lh-display:1.06;
@@ -160,7 +161,7 @@ li{list-style:none}
 h1,h2,h3,h4{color:var(--fg);margin:0;font-weight:var(--fw-semibold);letter-spacing:var(--tr-heading);text-wrap:balance}
 
 h1{
-  font-size:clamp(38px,5vw,var(--fs-12));
+  font-size:var(--h1-size);
   line-height:var(--lh-display);
   font-weight:var(--fw-bold);
   letter-spacing:var(--tr-display);
@@ -237,7 +238,53 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .nav__links a:hover{color:var(--fg);background:var(--surface-sunken)}
 .nav__links a[aria-current="page"]{color:var(--fg);font-weight:var(--fw-semibold)}
 
-.nav__right{display:flex;align-items:center;gap:var(--s-2);margin-left:auto}
+.nav__right{display:flex;align-items:center;gap:var(--s-3);margin-left:auto}
+
+/* search */
+.search{position:relative;display:flex;align-items:center;flex:none}
+.search svg{position:absolute;left:var(--s-3);color:var(--fg-faint);pointer-events:none}
+.search input{
+  width:196px;height:36px;padding:0 var(--s-3) 0 34px;
+  border:1px solid var(--border);border-radius:var(--r-control);
+  background:var(--surface-sunken);color:var(--fg);
+  font:inherit;font-size:var(--fs-3);
+  transition:background var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease), width var(--dur-2) var(--ease);
+}
+.search input::placeholder{color:var(--fg-muted)}
+.search input:focus{outline:none;background:var(--surface);border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-bg)}
+.search input:focus + svg,.search input:focus ~ svg{color:var(--fg-body)}
+.search input::-webkit-search-cancel-button{-webkit-appearance:none}
+
+/* language: flag + code, current one raised */
+.langsw{
+  display:inline-flex;gap:2px;padding:2px;flex:none;
+  border-radius:var(--r-control);background:var(--surface-sunken);border:1px solid var(--border);
+}
+.langsw button{
+  display:inline-flex;align-items:center;gap:var(--s-2);
+  padding:0 var(--s-2);height:30px;border-radius:6px;
+  font-size:var(--fs-2);font-weight:var(--fw-semibold);color:var(--fg-muted);
+  transition:background var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+}
+.langsw button:hover{color:var(--fg)}
+.langsw button[aria-pressed="true"]{background:var(--surface);color:var(--fg);box-shadow:var(--sh-1)}
+.flag{display:block;width:20px;height:14px;border-radius:2px;flex:none;box-shadow:0 0 0 1px rgba(10,37,64,.10)}
+
+/* cart */
+.cart{
+  position:relative;display:grid;place-items:center;flex:none;
+  width:40px;height:40px;border-radius:var(--r-control);color:var(--fg-body);
+  transition:background var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+}
+.cart:hover{background:var(--surface-sunken);color:var(--fg)}
+/* corner badge — border-box so the ring and padding stay inside 18px
+   instead of pushing it out to the width of the icon itself */
+.cart__n{
+  position:absolute;top:2px;right:2px;min-width:18px;height:18px;padding:0 3px;
+  border-radius:var(--r-full);background:var(--accent);color:var(--fg-on-accent);
+  font-size:10px;font-weight:var(--fw-bold);line-height:14px;text-align:center;
+  border:2px solid var(--bg);box-sizing:border-box;font-variant-numeric:tabular-nums;
+}
 .nav__plain{
   padding:var(--s-2) var(--s-3);border-radius:var(--r-control);
   font-size:var(--fs-4);font-weight:var(--fw-medium);color:var(--fg-body);
@@ -275,7 +322,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   gap:var(--s-10);align-items:center;
 }
 .slide__copy .eyebrow{margin-bottom:var(--s-4)}
-.slide h1{margin:0;max-width:16ch}
+/* exactly three lines of the base size are reserved whatever the headline
+   runs to, so the slide never changes height between slides. JS steps the
+   font down when a headline would need a fourth line. */
+/* the width cap lives on the box, in terms of the BASE size — if it sat on
+   the h1 as 16ch it would shrink in step with the font and the line count
+   would never drop */
+.slide__title{
+  min-height:calc(var(--h1-size) * var(--lh-display) * 3);
+  max-width:calc(var(--h1-size) * 8.8);
+  display:flex;align-items:flex-start;
+}
+.slide h1{margin:0;max-width:none}
 .hero__actions{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-7)}
 
 /* the hero image: a plain 16:9 frame, no overlay, no shadow */
@@ -289,7 +347,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* ── slide controls ─────────────────────────────────────────────── */
 .hero__nav{
   display:flex;align-items:center;gap:var(--s-5);
-  margin-top:var(--s-7);padding-top:var(--s-5);border-top:1px solid var(--border);
+  margin-top:var(--s-6);
 }
 .hero__count{
   font-size:var(--fs-2);font-weight:var(--fw-semibold);color:var(--fg-muted);
@@ -656,7 +714,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 @media (max-width:1000px){
   .nav__links,.nav__right{display:none}
+  .cart{margin-left:auto}
   .nav__toggle{display:flex}
+  .search--panel{display:block;margin-bottom:var(--s-2)}
+  .search--panel input{width:100%;height:42px;font-size:var(--fs-4)}
+  .search--panel svg{top:50%;margin-top:-7px}
+  .nav__panel .langsw{margin-top:var(--s-5)}
   .nav__panel.is-on{
     display:block;position:absolute;top:var(--nav-h);left:0;right:0;
     background:var(--surface);border-bottom:1px solid var(--border);
@@ -670,7 +733,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .slide.is-on{grid-template-columns:1fr;gap:var(--s-6)}
   .slide__media{order:1}
   .slide__copy{order:2}
-  .slide h1{max-width:20ch}
+  .slide__title{max-width:calc(var(--h1-size) * 11)}
   .ptabs{grid-template-columns:1fr;border-bottom:0}
   .ptab{padding:var(--s-4) var(--s-4) var(--s-4) var(--s-3);border-bottom:1px solid var(--border);margin-bottom:0;border-left:2px solid transparent}
   .ptab[aria-selected="true"]{border-bottom-color:var(--border);border-left-color:var(--accent);background:var(--bg-subtle)}
@@ -724,35 +787,45 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <b>Retouch Market</b>
     </a>
     <nav class="nav__links" aria-label="Main">
-      <a href="#" aria-current="page">Home</a>
       <a href="#plugins">Plugins</a>
       <a href="#presets">Presets</a>
       <a href="#">LUTs</a>
-      <a href="#">Full Pack</a>
       <a href="#tutorials">Tutorials</a>
-      <a href="#">Blog</a>
     </nav>
     <div class="nav__right">
-      <button class="lang" aria-label="Change language, current language English">EN
-        <svg width="9" height="6" viewBox="0 0 9 6" fill="none" aria-hidden="true"><path d="M1 1l3.5 3.5L8 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-      </button>
+      <form class="search" role="search" onsubmit="return false">
+        <label class="vh" for="navSearch">Search products</label>
+        <input id="navSearch" type="search" placeholder="Search products" autocomplete="off">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.2" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </form>
       <a class="nav__plain" href="#">Invite &amp; earn</a>
-      <span class="nav__sep" aria-hidden="true"></span>
-      <a class="btn btn--primary btn--sm" href="#">Get the Full Pack</a>
+      <div class="langsw" role="group" aria-label="Language">
+        <button type="button" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#E30A17"/><circle cx="12" cy="10" r="5" fill="#fff"/><circle cx="13.6" cy="10" r="4" fill="#E30A17"/><path d="M19.5 7.4l.61 1.76 1.86.04-1.48 1.12.54 1.78-1.53-1.06-1.53 1.06.54-1.78-1.48-1.12 1.86-.04z" fill="#fff"/></svg>TR</button>
+        <button type="button" aria-pressed="true"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#012169"/><path d="M0 0l30 20M30 0L0 20" stroke="#fff" stroke-width="4"/><path d="M0 0l30 20M30 0L0 20" stroke="#C8102E" stroke-width="2"/><path d="M15 0v20M0 10h30" stroke="#fff" stroke-width="6.6"/><path d="M15 0v20M0 10h30" stroke="#C8102E" stroke-width="4"/></svg>EN</button>
+      </div>
     </div>
+    <a class="cart" href="#" aria-label="Basket, 2 items">
+      <svg width="19" height="19" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="cart__n tnum" aria-hidden="true">2</span>
+    </a>
     <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel" aria-label="Open menu">
       <svg width="18" height="12" viewBox="0 0 18 12" fill="none" aria-hidden="true"><path d="M0 1h18M0 6h18M0 11h18" stroke="currentColor" stroke-width="1.6"/></svg>
     </button>
   </div>
   <div class="nav__panel" id="navPanel">
+    <form class="search search--panel" role="search" onsubmit="return false">
+      <label class="vh" for="panelSearch">Search products</label>
+      <input id="panelSearch" type="search" placeholder="Search products" autocomplete="off">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="7" cy="7" r="5.2" stroke="currentColor" stroke-width="1.6"/><path d="M11 11l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </form>
     <a href="#plugins">Plugins</a>
     <a href="#presets">Presets</a>
     <a href="#">LUTs</a>
-    <a href="#">Full Pack</a>
     <a href="#tutorials">Tutorials</a>
-    <a href="#">Blog</a>
     <a href="#">Invite &amp; earn</a>
-    <a class="btn btn--primary" href="#">Get the Full Pack</a>
+    <div class="langsw" role="group" aria-label="Language">
+      <button type="button" aria-pressed="false"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#E30A17"/><circle cx="12" cy="10" r="5" fill="#fff"/><circle cx="13.6" cy="10" r="4" fill="#E30A17"/><path d="M19.5 7.4l.61 1.76 1.86.04-1.48 1.12.54 1.78-1.53-1.06-1.53 1.06.54-1.78-1.48-1.12 1.86-.04z" fill="#fff"/></svg>TR</button>
+      <button type="button" aria-pressed="true"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#012169"/><path d="M0 0l30 20M30 0L0 20" stroke="#fff" stroke-width="4"/><path d="M0 0l30 20M30 0L0 20" stroke="#C8102E" stroke-width="2"/><path d="M15 0v20M0 10h30" stroke="#fff" stroke-width="6.6"/><path d="M15 0v20M0 10h30" stroke="#C8102E" stroke-width="4"/></svg>EN</button>
+    </div>
   </div>
 </header>
 
@@ -765,7 +838,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="slide is-on" role="group" aria-roledescription="slide" aria-label="1 of 3">
         <div class="slide__copy">
           <p class="eyebrow">Announcement</p>
-          <h1 id="heroTitle">Finish the edit before the shoot gets cold.</h1>
+          <div class="slide__title"><h1 id="heroTitle">Finish the edit before the shoot gets cold.</h1></div>
           <div class="hero__actions">
             <a class="btn btn--primary btn--lg" href="#">Get the Full Pack — $59</a>
           </div>
@@ -779,7 +852,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="slide" role="group" aria-roledescription="slide" aria-label="2 of 3" hidden>
         <div class="slide__copy">
           <p class="eyebrow">Plugins</p>
-          <h1>Retouch forty portraits in a single pass.</h1>
+          <div class="slide__title"><h1>Retouch forty portraits in a single pass.</h1></div>
           <div class="hero__actions">
             <a class="btn btn--primary btn--lg" href="#plugins">Watch RetouchX work</a>
           </div>
@@ -793,7 +866,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="slide" role="group" aria-roledescription="slide" aria-label="3 of 3" hidden>
         <div class="slide__copy">
           <p class="eyebrow">Tutorials</p>
-          <h1>Learn the technique, not just where to click.</h1>
+          <div class="slide__title"><h1>Learn the technique, not just where to click.</h1></div>
           <div class="hero__actions">
             <a class="btn btn--primary btn--lg" href="#tutorials">Browse the tutorials</a>
           </div>
@@ -1424,6 +1497,34 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     nt.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
   });
 
+  /* ---- keep every headline inside three lines ----
+     The reserved box is three lines of the base size. If a headline needs a
+     fourth, step the size down until it fits, so the slide height never
+     moves between slides. */
+  function fitTitle(h1){
+    if(!h1) return;
+    h1.style.fontSize = '';
+    var size = parseFloat(getComputedStyle(h1).fontSize);
+    var guard = 40;
+    while(guard-- > 0 && size > 22){
+      var lh = parseFloat(getComputedStyle(h1).lineHeight) || size * 1.06;
+      if(h1.scrollHeight <= Math.ceil(lh * 3) + 1) break;
+      size -= 1;
+      h1.style.fontSize = size + 'px';
+    }
+  }
+  function fitAllTitles(){
+    document.querySelectorAll('.slide h1').forEach(function(h1){
+      var slide = h1.closest('.slide'), was = slide.hasAttribute('hidden');
+      /* measure hidden slides too, without letting them flash */
+      if(was){ slide.style.visibility='hidden'; slide.style.position='absolute';
+               slide.style.display='grid'; slide.removeAttribute('hidden'); }
+      fitTitle(h1);
+      if(was){ slide.setAttribute('hidden',''); slide.style.visibility='';
+               slide.style.position=''; slide.style.display=''; }
+    });
+  }
+
   /* ---- hero slider ---- */
   var hero = document.getElementById('hero');
   if(hero){
@@ -1465,6 +1566,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     hero.addEventListener('focusout', function(){ if(!hero.contains(document.activeElement)) heroHold(false); });
     document.addEventListener('visibilitychange', function(){ heroHold(document.hidden); });
     heroShow(0);
+    fitAllTitles();
+    window.addEventListener('resize', fitAllTitles);
+    if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitAllTitles);
   }
 
   /* ---- generic tab wiring: one implementation, two call sites ---- */
@@ -1533,6 +1637,20 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   /* ---- play buttons (mockup annotation) ---- */
   document.querySelectorAll('.play').forEach(function(btn){
     btn.addEventListener('click', function(){ btn.closest('.player').classList.toggle('is-noted'); });
+  });
+
+  /* ---- language switch ---- */
+  document.querySelectorAll('.langsw').forEach(function(group){
+    var btns = [].slice.call(group.querySelectorAll('button'));
+    btns.forEach(function(b){
+      b.addEventListener('click', function(){
+        /* every switch on the page shows the same language */
+        var code = b.textContent.trim();
+        document.querySelectorAll('.langsw button').forEach(function(x){
+          x.setAttribute('aria-pressed', String(x.textContent.trim() === code));
+        });
+      });
+    });
   });
 
   /* ---- OS toggle ---- */
