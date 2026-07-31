@@ -412,8 +412,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .section{padding:var(--section-y) 0}
 .section--tint{background:var(--bg-subtle);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
 .section__head{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s-8);margin-bottom:var(--s-7)}
-.section__head h2{max-width:22ch}
-.section__head .lede{max-width:58ch}
+.section__head h2{max-width:24ch}
+.section__head .lede{max-width:42ch}
 [id]{scroll-margin-top:calc(var(--nav-h) + var(--s-4))}
 
 /* ════════════════════════════════════════════════════════════════
@@ -835,7 +835,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   pointer-events:none;
 }
 .cta h2{position:relative;max-width:24ch;margin:0 auto}
-.cta .lede{position:relative;margin:var(--s-5) auto 0;max-width:48ch}
+.cta .lede{position:relative;margin:var(--s-5) auto 0;max-width:42ch}
 .cta__actions{position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:var(--s-3);margin-top:var(--s-7)}
 .cta__note{position:relative;margin:var(--s-5) 0 0;font-size:var(--fs-2);color:var(--fg-muted)}
 
@@ -963,6 +963,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   /* the wordmark alone needs ~140px; below this the bar cannot hold brand,
      icons and the menu button, so the mark carries the brand on its own */
   .brand b{display:none}
+  /* every section head is eyebrow / heading / one supporting line. On the
+     narrowest phones still in use the heading steps down a notch rather than
+     breaking that shape */
+  h2{font-size:24px}
+  /* the closing panel pays for its own padding twice, so it needs both */
+  .cta{padding-inline:var(--s-4)}
+  .cta h2{font-size:22px}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -1115,7 +1122,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <div>
         <p class="eyebrow">Plugins</p>
         <h2>3 Plugins in 1 Pack</h2>
-        <p class="lede">A complete retouching and colour workflow for Photoshop, Lightroom Classic.</p>
+        <p class="lede">Photoshop and Lightroom Classic.</p>
       </div>
       <a class="link" href="#">All plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
@@ -1451,8 +1458,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="section__head" data-reveal>
       <div>
         <p class="eyebrow">Presets &amp; LUTs</p>
-        <h2>Twelve packs. Pick your palette.</h2>
-        <p class="lede">Every pack ships as XMP for desktop and DNG for Lightroom mobile, with a sample gallery so you can see it on real skin first.</p>
+        <h2>Twelve preset packs</h2>
+        <p class="lede">XMP for desktop, DNG for mobile.</p>
       </div>
       <div class="sort">
         <button class="sort__btn" type="button" id="sortBtn" aria-expanded="false" aria-haspopup="true" aria-controls="sortMenu">
@@ -1631,8 +1638,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="section__head" data-reveal>
       <div>
         <p class="eyebrow">Tutorials</p>
-        <h2>Learn the technique, not just where to click.</h2>
-        <p class="lede">The edits people ask us about most, broken down in about a minute each. Same cuts we post as Reels, watched 18 million times so far.</p>
+        <h2>Learn the technique</h2>
+        <p class="lede">Real edits, a minute each.</p>
       </div>
       <a class="link" href="#">All 40 tutorials
         <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1745,8 +1752,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="section__head" data-reveal>
       <div>
         <p class="eyebrow">Installing</p>
-        <h2>From download to first edit in two minutes.</h2>
-        <p class="lede">Nothing to configure and no licence server to phone home to. Pick your system and follow three steps.</p>
+        <h2>Set up in two minutes</h2>
+        <p class="lede">No licence server, nothing to set up.</p>
       </div>
       <a class="link" href="#">Read the written guide
         <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1806,7 +1813,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <div class="faq__head" data-reveal>
         <p class="eyebrow">Questions</p>
         <h2>Before you buy</h2>
-        <p class="lede">The six things people ask us most. Anything else, support answers within a working day.</p>
+        <p class="lede">The six things people ask us most.</p>
         <a class="link faq__support" href="#">Email support
           <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
@@ -1858,13 +1865,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 <section class="section" aria-labelledby="ctaTitle">
   <div class="wrap">
     <div class="cta" data-reveal>
-      <h2 id="ctaTitle">Everything we make, for the price of one pack.</h2>
-      <p class="lede">Three plugins, twelve preset and LUT packs, every future release included.</p>
+      <p class="eyebrow">Full pack</p>
+      <h2 id="ctaTitle">Everything in one pack</h2>
+      <p class="lede">Three plugins, twelve packs.</p>
       <div class="cta__actions">
         <a class="btn btn--primary btn--lg" href="#">Get the Full Pack — $59</a>
         <a class="btn btn--secondary btn--lg" href="#presets">Browse single packs</a>
       </div>
-      <p class="cta__note">One-time purchase · instant download · help-or-refund if it will not install</p>
+      <p class="cta__note">One-time purchase · instant download · every future release included · help-or-refund if it will not install</p>
     </div>
   </div>
 </section>
