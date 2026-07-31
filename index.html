@@ -406,13 +406,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .proof__row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-4) var(--s-8);min-width:0}
 .author{flex:none}
 .author{display:flex;align-items:center;gap:var(--s-3)}
+.avatar img{width:100%;height:100%;object-fit:cover}
 .avatar{
-  width:32px;height:32px;border-radius:var(--r-full);flex:none;display:grid;place-items:center;
+  width:44px;height:44px;border-radius:var(--r-full);flex:none;display:grid;place-items:center;
+  overflow:hidden;
   font-size:var(--fs-1);font-weight:var(--fw-semibold);color:var(--fg-body);
   background:var(--surface);border:1px solid var(--border);
 }
-.author__name{display:block;font-size:var(--fs-3);font-weight:var(--fw-semibold);color:var(--fg);line-height:1.35}
-.author__meta{display:block;font-size:var(--fs-2);color:var(--fg-muted);line-height:1.4}
+.author__txt{display:flex;flex-direction:column;gap:3px;min-width:0}
+.author__name{font-size:var(--fs-4);font-weight:var(--fw-semibold);color:var(--fg);line-height:1.3;white-space:nowrap}
+.author__meta{display:flex;align-items:center;gap:5px;font-size:var(--fs-3);color:var(--fg-muted);line-height:1.3}
+.author__meta svg{flex:none;color:var(--fg-faint)}
 
 /* ════════════════════════════════════════════════════════════════
    SECTION SHELL — identical rhythm and head structure everywhere
@@ -925,13 +929,51 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     </dl>
     <div class="proof__partners">
       <p class="proof__label">Partners</p>
+      <!-- avatars are initials for now — drop each partner's image in as
+           <img src="…" alt=""> inside .avatar when you have the URLs -->
       <div class="proof__row">
-        <span class="author"><span class="avatar">UŞ</span><span><span class="author__name">Uğur Sezer</span><span class="author__meta">3 packs</span></span></span>
-        <span class="author"><span class="avatar">UD</span><span><span class="author__name">Uğur Demir</span><span class="author__meta">Jardin</span></span></span>
-        <span class="author"><span class="avatar">UK</span><span><span class="author__name">Umut Kaçar</span><span class="author__meta">Olbia LUTs</span></span></span>
-        <span class="author"><span class="avatar">MG</span><span><span class="author__name">Mücahit Güney</span><span class="author__meta">Doré</span></span></span>
-        <span class="author"><span class="avatar">MS</span><span><span class="author__name">Melih Süren</span><span class="author__meta">Mely</span></span></span>
-        <span class="author"><span class="avatar">AT</span><span><span class="author__name">Adam Tahirov</span><span class="author__meta">Onyx</span></span></span>
+        <span class="author">
+          <span class="avatar">DV</span>
+          <span class="author__txt">
+            <span class="author__name">Düğünümüz Var</span>
+            <span class="author__meta"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="4.4" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.2 12.4c0-2.4 2.1-3.9 4.8-3.9s4.8 1.5 4.8 3.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span class="tnum">1.2M</span></span>
+          </span>
+        </span>
+        <span class="author">
+          <span class="avatar">ZF</span>
+          <span class="author__txt">
+            <span class="author__name">Zarif Film</span>
+            <span class="author__meta"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="4.4" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.2 12.4c0-2.4 2.1-3.9 4.8-3.9s4.8 1.5 4.8 3.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span class="tnum">200K</span></span>
+          </span>
+        </span>
+        <span class="author">
+          <span class="avatar">UD</span>
+          <span class="author__txt">
+            <span class="author__name">Uğur Demir</span>
+            <span class="author__meta"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="4.4" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.2 12.4c0-2.4 2.1-3.9 4.8-3.9s4.8 1.5 4.8 3.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span class="tnum">55K</span></span>
+          </span>
+        </span>
+        <span class="author">
+          <span class="avatar">E</span>
+          <span class="author__txt">
+            <span class="author__name">Ekrulila</span>
+            <span class="author__meta"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="4.4" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.2 12.4c0-2.4 2.1-3.9 4.8-3.9s4.8 1.5 4.8 3.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span class="tnum">54K</span></span>
+          </span>
+        </span>
+        <span class="author">
+          <span class="avatar">CC</span>
+          <span class="author__txt">
+            <span class="author__name">Celal Canik</span>
+            <span class="author__meta"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="4.4" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.2 12.4c0-2.4 2.1-3.9 4.8-3.9s4.8 1.5 4.8 3.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span class="tnum">93K</span></span>
+          </span>
+        </span>
+        <span class="author">
+          <span class="avatar">MG</span>
+          <span class="author__txt">
+            <span class="author__name">Mucahit Güney</span>
+            <span class="author__meta"><svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><circle cx="7" cy="4.4" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M2.2 12.4c0-2.4 2.1-3.9 4.8-3.9s4.8 1.5 4.8 3.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg><span class="tnum">278K</span></span>
+          </span>
+        </span>
       </div>
     </div>
   </div>
