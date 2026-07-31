@@ -591,10 +591,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .presets__more{display:flex;flex-direction:column;align-items:center;gap:var(--s-4);margin-top:var(--s-7)}
 
 /* ── walkthrough player — used by the install section ─────────── */
+/* same shell as a preset card: thin border, 12px corner, no resting shadow,
+   shadow on hover — so the two listings read as one system */
 .player{
   position:relative;aspect-ratio:16/9;border-radius:var(--r-card);overflow:hidden;
-  background:var(--surface-sunken);border:1px solid var(--border);box-shadow:var(--sh-2);
+  background:var(--surface-sunken);border:1px solid var(--border);
+  transition:box-shadow var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease);
 }
+.player:hover{box-shadow:var(--sh-3);border-color:var(--border-strong)}
 .player img{width:100%;height:100%;object-fit:cover}
 .player::after{
   content:"";position:absolute;inset:0;pointer-events:none;
@@ -1015,7 +1019,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <a class="link" href="#">All plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
 
-    <div class="pstage" data-reveal>
+    <div data-reveal>
       <div class="panel is-on" id="pp-0" role="tabpanel" aria-labelledby="pt-0">
         <div class="player">
           <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
