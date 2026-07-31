@@ -431,31 +431,29 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    left edge as the video under it at every width */
 .pstage{
   position:relative;
+  /* switching plugin scrolls here — the tabs stay in shot with the new video
+     under them, clear of the sticky bar */
+  scroll-margin-top:calc(var(--nav-h) + var(--s-4));
   --inset:max(calc(var(--gutter) + var(--s-5)), calc((100% - var(--container)) / 2 + var(--gutter)));
 }
+/* above the video, not on it. Pick the plugin, then watch its clips — and
+   nothing covers the frame you came to look at. */
 .ptabs{
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-3);
-  position:absolute;top:var(--s-5);left:0;right:0;z-index:3;
-  /* the same 20px clear of the video's edge on all three sides — flush with
-     the left and right borders the cards look like they have fallen off it,
-     and they sit right on the corner radius */
-  padding-inline:calc(var(--inset) + var(--s-5));
+  padding-inline:var(--inset);margin-bottom:var(--s-5);
 }
 .ptab{
   position:relative;
   display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-4);align-items:center;
   text-align:left;padding:var(--s-4) var(--s-7) var(--s-4) var(--s-4);border-radius:var(--r-card);
   border:1px solid var(--border);
-  /* frosted rather than solid, so a card reads as sitting on the video —
-     same treatment the Bestseller chip uses on a preset photo */
-  background:rgba(255,255,255,.93);backdrop-filter:blur(10px);box-shadow:var(--sh-2);
+  background:var(--surface);
   transition:border-color var(--dur-2) var(--ease), background var(--dur-2) var(--ease),
              box-shadow var(--dur-2) var(--ease);
 }
-.ptab:hover{border-color:var(--border-strong);background:rgba(255,255,255,.98)}
+.ptab:hover{border-color:var(--border-strong)}
 .ptab[aria-selected="true"]{
-  border-color:var(--accent);box-shadow:0 0 0 1px var(--accent), var(--sh-2);
-  background:rgba(255,255,255,.98);
+  border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-bg);
 }
 /* the position in the set, quiet in the corner — it labels the card, it is
    not the thing you read first */
@@ -927,12 +925,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
   /* swipe carries the row on a phone, so the arrows step aside */
   .deck__arrows{display:none}
-  /* one card per row will not fit over the video — the tabs drop back into
-     the flow underneath it */
-  .ptabs{position:static;grid-template-columns:1fr;gap:var(--s-2);margin-top:var(--s-5);padding-inline:var(--gutter)}
-  .ptab{background:var(--surface);backdrop-filter:none;box-shadow:none}
-  .ptab:hover,.ptab[aria-selected="true"]{background:var(--accent-bg)}
-  .ptab[aria-selected="true"]{box-shadow:0 0 0 1px var(--accent)}
+  .ptabs{grid-template-columns:1fr;gap:var(--s-2);padding-inline:var(--gutter)}
       .install{grid-template-columns:1fr;gap:var(--s-8)}
   .footer__top{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-8)}
   .section__head{flex-direction:column;align-items:flex-start;gap:var(--s-5)}
@@ -1136,6 +1129,35 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   </div>
 
   <div class="pstage" data-reveal>
+    <div class="ptabs" role="tablist" aria-label="Plugins" id="pluginTabs">
+      <button class="ptab" role="tab" aria-selected="true" aria-controls="pp-0" id="pt-0">
+        <span class="ptab__no" aria-hidden="true">1</span>
+        <span class="ptab__box"><img src="images/box-retouchx.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+        <span class="ptab__body">
+          <span class="ptab__kicker">For Photoshop &amp; Desktop</span>
+          <span class="ptab__n">RetouchX</span>
+          <span class="ptab__what">Batch retouching, one pass</span>
+        </span>
+      </button>
+      <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-1" id="pt-1" tabindex="-1">
+        <span class="ptab__no" aria-hidden="true">2</span>
+        <span class="ptab__box"><img src="images/box-lightroom-ai-color.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+        <span class="ptab__body">
+          <span class="ptab__kicker">For Lightroom Classic</span>
+          <span class="ptab__n">Lightroom AI Color</span>
+          <span class="ptab__what">One grade across a shoot</span>
+        </span>
+      </button>
+      <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-2" id="pt-2" tabindex="-1">
+        <span class="ptab__no" aria-hidden="true">3</span>
+        <span class="ptab__box"><img src="images/box-us-photoshop-plugin.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+        <span class="ptab__body">
+          <span class="ptab__kicker">For Photoshop</span>
+          <span class="ptab__n">US Photoshop Plugin</span>
+          <span class="ptab__what">Every routine, prebuilt</span>
+        </span>
+      </button>
+    </div>
       <div class="panel is-on" id="pp-0" role="tabpanel" aria-labelledby="pt-0">
         <div class="deck" data-deck role="group" aria-roledescription="carousel" aria-label="RetouchX walkthroughs">
           <div class="deck__track" data-deck-track>
@@ -1400,35 +1422,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           </div>
         </div>
       </div>
-    <div class="ptabs" role="tablist" aria-label="Plugins" id="pluginTabs">
-      <button class="ptab" role="tab" aria-selected="true" aria-controls="pp-0" id="pt-0">
-        <span class="ptab__no" aria-hidden="true">1</span>
-        <span class="ptab__box"><img src="images/box-retouchx.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-        <span class="ptab__body">
-          <span class="ptab__kicker">For Photoshop &amp; Desktop</span>
-          <span class="ptab__n">RetouchX</span>
-          <span class="ptab__what">Batch retouching, one pass</span>
-        </span>
-      </button>
-      <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-1" id="pt-1" tabindex="-1">
-        <span class="ptab__no" aria-hidden="true">2</span>
-        <span class="ptab__box"><img src="images/box-lightroom-ai-color.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-        <span class="ptab__body">
-          <span class="ptab__kicker">For Lightroom Classic</span>
-          <span class="ptab__n">Lightroom AI Color</span>
-          <span class="ptab__what">One grade across a shoot</span>
-        </span>
-      </button>
-      <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-2" id="pt-2" tabindex="-1">
-        <span class="ptab__no" aria-hidden="true">3</span>
-        <span class="ptab__box"><img src="images/box-us-photoshop-plugin.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-        <span class="ptab__body">
-          <span class="ptab__kicker">For Photoshop</span>
-          <span class="ptab__n">US Photoshop Plugin</span>
-          <span class="ptab__what">Every routine, prebuilt</span>
-        </span>
-      </button>
-    </div>
   </div>
 </section>
 
@@ -2207,7 +2200,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     decks.forEach(function(d){ if(d.el === live) d.reset(); else d.refresh(); });
     /* start the new walkthrough from its top rather than wherever the last
        one left the page */
-    var shown = document.querySelector('.panel.is-on .deck');
+    var shown = document.querySelector('.pstage');
     if(shown){
       /* the reveal animation holds this block 14px low until it fires, and
          scrollIntoView would measure that offset and land short — settle it
