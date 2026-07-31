@@ -431,7 +431,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* product tabs above one large player, that product's videos in a vertical
    list beside it — the playlist column stretches to the player's height and
    scrolls inside itself. */
-.ptabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-3);margin-bottom:var(--s-5)}
+/* the walkthrough leads; the tabs sit under it, reading as the product row
+   as much as a control; the copy for whichever is selected comes last */
+.pstage{
+  padding:var(--s-5);border-radius:var(--r-panel);
+  background:var(--bg-subtle);border:1px solid var(--border);
+}
+.pinfo{display:none}
+.pinfo.is-on{display:block}
+.ptabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-3);margin:var(--s-5) 0}
 .ptab{
   display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-3);align-items:center;
   text-align:left;padding:var(--s-3) var(--s-4);border-radius:var(--r-card);
@@ -488,8 +496,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
 .pshow__info{
   display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) auto;
-  gap:var(--s-8);align-items:start;margin-top:var(--s-6);padding-top:var(--s-6);
-  border-top:1px solid var(--border);
+  gap:var(--s-8);align-items:start;
 }
 .pshow__act{display:flex;flex-direction:column;align-items:flex-end;gap:var(--s-3);text-align:right}
 .plugin__badge--icon{padding:0}
@@ -513,13 +520,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   text-transform:uppercase;color:var(--fg-muted);
 }
 
-/* ── compatibility: a spec table, not a run-on sentence ───────── */
-.specs{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-6);
-  margin-top:var(--s-7);padding-top:var(--s-6);border-top:1px solid var(--border);
-}
-.spec dt{font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);text-transform:uppercase;color:var(--fg-muted)}
-.spec dd{margin-top:var(--s-2);font-size:var(--fs-4);line-height:var(--lh-normal);color:var(--fg-body)}
 
 /* ── horizontal shelf: used by the tutorials rail ──────────────── */
 .strip{margin-top:var(--s-6)}
@@ -820,7 +820,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .install{grid-template-columns:1fr;gap:var(--s-8)}
   .footer__top{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-8)}
   .section__head{flex-direction:column;align-items:flex-start;gap:var(--s-5)}
-  .specs{grid-template-columns:1fr;gap:var(--s-5)}
   /* still three across; each stat turns vertical so nothing wraps */
   .proof__stats{gap:var(--s-3)}
   .pstat{flex-direction:column;align-items:center;text-align:center;gap:2px}
@@ -1065,31 +1064,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       </a>
     </div>
 
-    <div class="ptabs" role="tablist" aria-label="Plugins" id="pluginTabs" data-reveal>
-      <button class="ptab" role="tab" aria-selected="true" aria-controls="pp-0" id="pt-0">
-        <span class="ptab__badges"><span class="plugin__badge" aria-hidden="true">Ps</span><span class="plugin__badge plugin__badge--icon" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="9.4" rx="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M8 11.4v3M5.4 14.4h5.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></span>
-        <span class="ptab__txt">
-          <span class="ptab__n">RetouchX</span>
-          <span class="ptab__app">For Photoshop &amp; desktop</span>
-        </span>
-      </button>
-      <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-1" id="pt-1" tabindex="-1">
-        <span class="ptab__badges"><span class="plugin__badge" aria-hidden="true">LrC</span></span>
-        <span class="ptab__txt">
-          <span class="ptab__n">Lightroom AI Color</span>
-          <span class="ptab__app">For Lightroom Classic</span>
-        </span>
-      </button>
-      <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-2" id="pt-2" tabindex="-1">
-        <span class="ptab__badges"><span class="plugin__badge" aria-hidden="true">Ps</span></span>
-        <span class="ptab__txt">
-          <span class="ptab__n">US Photoshop Plugin</span>
-          <span class="ptab__app">For Photoshop</span>
-        </span>
-      </button>
-    </div>
-
-    <div class="panel is-on" id="pp-0" role="tabpanel" aria-labelledby="pt-0">
+    <div class="pstage" data-reveal>
+      <div class="panel is-on" id="pp-0" role="tabpanel" aria-labelledby="pt-0">
       <div class="watch">
         <div class="player">
           <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
@@ -1134,20 +1110,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           </div>
         </div>
       </div>
-      <div class="pshow__info">
-        <div class="pshow__id">
-          <p class="plugin__app"><span class="plugin__badge" aria-hidden="true">Ps</span><span class="plugin__badge plugin__badge--icon" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="9.4" rx="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M8 11.4v3M5.4 14.4h5.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>For Photoshop &amp; desktop</p>
-          <h3>RetouchX</h3>
-          <p class="plugin__desc">Batch and auto retouch across a whole gallery.</p>
-        </div>
-        <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Queue an entire shoot in one pass</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Smooths skin without killing texture</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Save and reuse your own recipes</li></ul>
-        <div class="pshow__act">
-          <span class="plugin__inc">In the Full Pack</span>
-          <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        </div>
       </div>
-    </div>
-    <div class="panel" id="pp-1" role="tabpanel" aria-labelledby="pt-1" hidden>
+      <div class="panel" id="pp-1" role="tabpanel" aria-labelledby="pt-1" hidden>
       <div class="watch">
         <div class="player">
           <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
@@ -1192,20 +1156,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           </div>
         </div>
       </div>
-      <div class="pshow__info">
-        <div class="pshow__id">
-          <p class="plugin__app"><span class="plugin__badge" aria-hidden="true">LrC</span>For Lightroom Classic</p>
-          <h3>Lightroom AI Color</h3>
-          <p class="plugin__desc">Colour grading that takes taps, not hours.</p>
-        </div>
-        <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Match the grade to a reference frame</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Sync one look across a whole shoot</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Holds skin tones while it works</li></ul>
-        <div class="pshow__act">
-          <span class="plugin__inc">In the Full Pack</span>
-          <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        </div>
       </div>
-    </div>
-    <div class="panel" id="pp-2" role="tabpanel" aria-labelledby="pt-2" hidden>
+      <div class="panel" id="pp-2" role="tabpanel" aria-labelledby="pt-2" hidden>
       <div class="watch">
         <div class="player">
           <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
@@ -1250,7 +1202,64 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           </div>
         </div>
       </div>
-      <div class="pshow__info">
+      </div>
+    </div>
+
+    <div class="ptabs" role="tablist" aria-label="Plugins" id="pluginTabs" data-reveal>
+      <button class="ptab" role="tab" aria-selected="true" aria-controls="pp-0 pi-0" id="pt-0">
+        <span class="ptab__badges"><span class="plugin__badge" aria-hidden="true">Ps</span><span class="plugin__badge plugin__badge--icon" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="9.4" rx="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M8 11.4v3M5.4 14.4h5.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></span>
+        <span class="ptab__txt">
+          <span class="ptab__n">RetouchX</span>
+          <span class="ptab__app">For Photoshop &amp; desktop</span>
+        </span>
+      </button>
+      <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-1 pi-1" id="pt-1" tabindex="-1">
+        <span class="ptab__badges"><span class="plugin__badge" aria-hidden="true">LrC</span></span>
+        <span class="ptab__txt">
+          <span class="ptab__n">Lightroom AI Color</span>
+          <span class="ptab__app">For Lightroom Classic</span>
+        </span>
+      </button>
+      <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-2 pi-2" id="pt-2" tabindex="-1">
+        <span class="ptab__badges"><span class="plugin__badge" aria-hidden="true">Ps</span></span>
+        <span class="ptab__txt">
+          <span class="ptab__n">US Photoshop Plugin</span>
+          <span class="ptab__app">For Photoshop</span>
+        </span>
+      </button>
+    </div>
+
+    <div>
+      <div class="pinfo is-on" id="pi-0">
+        <div class="pshow__info">
+        <div class="pshow__id">
+          <p class="plugin__app"><span class="plugin__badge" aria-hidden="true">Ps</span><span class="plugin__badge plugin__badge--icon" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="9.4" rx="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M8 11.4v3M5.4 14.4h5.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>For Photoshop &amp; desktop</p>
+          <h3>RetouchX</h3>
+          <p class="plugin__desc">Batch and auto retouch across a whole gallery.</p>
+        </div>
+        <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Queue an entire shoot in one pass</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Smooths skin without killing texture</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Save and reuse your own recipes</li></ul>
+        <div class="pshow__act">
+          <span class="plugin__inc">In the Full Pack</span>
+          <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+      </div>
+      <div class="pinfo" id="pi-1" hidden>
+        <div class="pshow__info">
+        <div class="pshow__id">
+          <p class="plugin__app"><span class="plugin__badge" aria-hidden="true">LrC</span>For Lightroom Classic</p>
+          <h3>Lightroom AI Color</h3>
+          <p class="plugin__desc">Colour grading that takes taps, not hours.</p>
+        </div>
+        <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Match the grade to a reference frame</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Sync one look across a whole shoot</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Holds skin tones while it works</li></ul>
+        <div class="pshow__act">
+          <span class="plugin__inc">In the Full Pack</span>
+          <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        </div>
+      </div>
+      </div>
+      <div class="pinfo" id="pi-2" hidden>
+        <div class="pshow__info">
         <div class="pshow__id">
           <p class="plugin__app"><span class="plugin__badge" aria-hidden="true">Ps</span>For Photoshop</p>
           <h3>US Photoshop Plugin</h3>
@@ -1262,22 +1271,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
       </div>
+      </div>
     </div>
 
-    <dl class="specs">
-      <div class="spec">
-        <dt>Works with</dt>
-        <dd>Lightroom Classic · Photoshop · standalone desktop app</dd>
-      </div>
-      <div class="spec">
-        <dt>Platforms</dt>
-        <dd>macOS (Intel and Apple silicon) · Windows 10 and 11</dd>
-      </div>
-      <div class="spec">
-        <dt>Interface</dt>
-        <dd>English, Turkish and ten more languages</dd>
-      </div>
-    </dl>
   </div>
 </section>
 
@@ -1881,9 +1877,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       var on = n === i;
       tab.setAttribute('aria-selected', String(on));
       tab.tabIndex = on ? 0 : -1;
-      var panel = document.getElementById(tab.getAttribute('aria-controls'));
-      panel.classList.toggle('is-on', on);
-      if(on){ panel.removeAttribute('hidden'); } else { panel.setAttribute('hidden',''); }
+      /* a tab drives two blocks now: the stage above it and the copy below */
+      tab.getAttribute('aria-controls').split(/\s+/).forEach(function(id){
+        var panel = document.getElementById(id);
+        if(!panel) return;
+        panel.classList.toggle('is-on', on);
+        if(on){ panel.removeAttribute('hidden'); } else { panel.setAttribute('hidden',''); }
+      });
     });
   }
   ptabs.forEach(function(tab, i){
