@@ -117,7 +117,7 @@
   --container:1200px;
   --gutter:var(--s-6);
   --nav-h:64px;
-  --section-y:var(--s-12);
+  --section-y:var(--s-10);
 
   /* ── Motion ─────────────────────────────────────────────────── */
   --ease:cubic-bezier(.16,.72,.3,1);
@@ -265,7 +265,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    2 · HERO — the single dominant zone of the page
    One H1. One primary CTA. The comparison is the visual anchor.
    ════════════════════════════════════════════════════════════════ */
-.hero{padding:var(--s-11) 0 var(--s-12);background:var(--bg);position:relative;overflow:hidden}
+.hero{padding:var(--s-9) 0 var(--s-10);background:var(--bg);position:relative;overflow:hidden}
 .hero::before{
   content:"";position:absolute;top:-340px;right:-160px;width:720px;height:720px;
   background:radial-gradient(closest-side, rgba(99,91,255,.10), transparent 72%);
@@ -299,7 +299,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    no matter how many lines a label takes */
 .stats{
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;
-  gap:var(--s-6);margin-top:var(--s-9);padding-top:var(--s-7);border-top:1px solid var(--border);
+  gap:var(--s-6);margin-top:var(--s-7);padding-top:var(--s-6);border-top:1px solid var(--border);
 }
 .stat b{
   display:block;font-size:var(--fs-8);font-weight:var(--fw-bold);
@@ -312,7 +312,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* ── the framed before/after — the hero's single visual anchor ── */
 .showcase__frame{
   position:relative;border-radius:var(--r-panel);overflow:hidden;
-  border:1px solid var(--border);background:var(--surface-sunken);box-shadow:var(--sh-3);
+  border:1px solid var(--border);background:var(--surface-sunken);
 }
 
 .compare{
@@ -366,7 +366,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    ════════════════════════════════════════════════════════════════ */
 .section{padding:var(--section-y) 0}
 .section--tint{background:var(--bg-subtle);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.section__head{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s-8);margin-bottom:var(--s-9)}
+.section__head{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s-8);margin-bottom:var(--s-7)}
 .section__head h2{max-width:22ch}
 .section__head .lede{max-width:58ch}
 [id]{scroll-margin-top:calc(var(--nav-h) + var(--s-4))}
@@ -445,7 +445,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .player.is-noted .player__note{display:block}
 
 /* ── clip rail: labelled, not just a wall of squares ──────────── */
-.strip{margin-top:var(--s-7)}
+.strip{margin-top:var(--s-6)}
 .strip__head{display:flex;align-items:center;justify-content:space-between;gap:var(--s-4);margin-bottom:var(--s-4)}
 .strip__title{margin:0;font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);text-transform:uppercase;color:var(--fg-muted)}
 .strip__nav{display:flex;gap:var(--s-2)}
@@ -480,7 +480,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* ── compatibility: a spec table, not a run-on sentence ───────── */
 .specs{
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-6);
-  margin-top:var(--s-9);padding-top:var(--s-6);border-top:1px solid var(--border);
+  margin-top:var(--s-7);padding-top:var(--s-6);border-top:1px solid var(--border);
 }
 .spec dt{font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);text-transform:uppercase;color:var(--fg-muted)}
 .spec dd{margin-top:var(--s-2);font-size:var(--fs-4);line-height:var(--lh-normal);color:var(--fg-body)}
@@ -490,7 +490,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    rail above it: that one is product walkthroughs, this is technique.
    Reuses .strip / .rail / .arrow so the scroll behaviour is identical.
    ════════════════════════════════════════════════════════════════ */
-.reel{flex:0 0 204px;scroll-snap-align:start;display:block}
+.reel{flex:0 0 176px;scroll-snap-align:start;display:block}
 .reel__thumb{
   position:relative;display:block;aspect-ratio:9/16;overflow:hidden;
   border-radius:var(--r-card);background:var(--surface-sunken);
@@ -530,7 +530,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .reel__cat{display:block;margin-top:var(--s-1);font-size:var(--fs-2);color:var(--fg-muted)}
 .reels__foot{
   display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s-4);
-  margin-top:var(--s-8);padding-top:var(--s-6);border-top:1px solid var(--border);
+  margin-top:var(--s-7);padding-top:var(--s-5);border-top:1px solid var(--border);
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -543,7 +543,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   transition:transform var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease);
 }
 .card:hover{transform:translateY(-3px);box-shadow:var(--sh-3);border-color:var(--border-strong)}
-.card__img{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--surface-sunken)}
+.card__img{position:relative;aspect-ratio:1/1;overflow:hidden;background:var(--surface-sunken)}
 .card__img img{width:100%;height:100%;object-fit:cover;transition:transform var(--dur-3) var(--ease)}
 .card:hover .card__img img{transform:scale(1.04)}
 .chip{
@@ -564,14 +564,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .price{display:flex;align-items:baseline;gap:var(--s-2);font-variant-numeric:tabular-nums}
 .price b{font-size:var(--fs-5);font-weight:var(--fw-bold);letter-spacing:var(--tr-heading);color:var(--fg)}
 .price s{font-size:var(--fs-2);color:var(--fg-muted)}
-.presets__more{display:flex;flex-direction:column;align-items:center;gap:var(--s-4);margin-top:var(--s-9)}
+.presets__more{display:flex;flex-direction:column;align-items:center;gap:var(--s-4);margin-top:var(--s-7)}
 
 /* ════════════════════════════════════════════════════════════════
    6 · HOW TO INSTALL
    ════════════════════════════════════════════════════════════════ */
 .install{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:var(--s-10);align-items:center}
 .os{
-  display:inline-flex;gap:var(--s-1);padding:var(--s-1);margin-bottom:var(--s-7);
+  display:inline-flex;gap:var(--s-1);padding:var(--s-1);margin-bottom:var(--s-6);
   border-radius:var(--r-control);background:var(--surface-sunken);border:1px solid var(--border);
 }
 .os button{
@@ -581,7 +581,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .os button:hover{color:var(--fg)}
 .os button[aria-pressed="true"]{background:var(--surface);color:var(--fg);box-shadow:var(--sh-1)}
-.steps{display:flex;flex-direction:column;gap:var(--s-6)}
+.steps{display:flex;flex-direction:column;gap:var(--s-5)}
 .steps li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 var(--s-4)}
 .steps .n{
   grid-row:span 2;width:28px;height:28px;border-radius:var(--r-full);display:grid;place-items:center;
@@ -590,7 +590,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .steps h3{font-size:var(--fs-5)}
 .steps p{margin:var(--s-1) 0 0;font-size:var(--fs-3);line-height:var(--lh-normal);color:var(--fg-body);max-width:48ch}
-.install__link{margin-top:var(--s-8)}
+.install__link{margin-top:var(--s-7)}
 
 /* ════════════════════════════════════════════════════════════════
    7 · FAQ — left-aligned like every other section, sticky head
@@ -605,13 +605,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .qa__h{margin:0;font:inherit;letter-spacing:inherit}
 .qa__q{
   width:100%;display:flex;align-items:center;justify-content:space-between;gap:var(--s-6);
-  text-align:left;padding:var(--s-5) 0;font-size:var(--fs-5);font-weight:var(--fw-semibold);
+  text-align:left;padding:var(--s-4) 0;font-size:var(--fs-5);font-weight:var(--fw-semibold);
   letter-spacing:var(--tr-heading);color:var(--fg);
 }
 .qa__q:hover{color:var(--accent-fg)}
 .qa__q svg{flex:none;color:var(--fg-faint);transition:transform var(--dur-2) var(--ease), color var(--dur-1) var(--ease)}
 .qa[data-open="true"] .qa__q svg{transform:rotate(180deg);color:var(--accent)}
-.qa__a{display:none;padding:0 var(--s-8) var(--s-6) 0}
+.qa__a{display:none;padding:0 var(--s-8) var(--s-5) 0}
 .qa__a p{margin:0;font-size:var(--fs-4);line-height:var(--lh-relaxed);color:var(--fg-body);max-width:62ch}
 .qa[data-open="true"] .qa__a{display:block}
 
@@ -620,7 +620,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    ════════════════════════════════════════════════════════════════ */
 .cta{
   position:relative;overflow:hidden;text-align:center;
-  padding:var(--s-11) var(--s-8);border-radius:var(--r-panel);
+  padding:var(--s-10) var(--s-8);border-radius:var(--r-panel);
   background:var(--accent-bg);border:1px solid var(--accent-border);
 }
 .cta::before{
@@ -630,13 +630,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .cta h2{position:relative;max-width:24ch;margin:0 auto}
 .cta .lede{position:relative;margin:var(--s-5) auto 0;max-width:48ch}
-.cta__actions{position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:var(--s-3);margin-top:var(--s-8)}
+.cta__actions{position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:var(--s-3);margin-top:var(--s-7)}
 .cta__note{position:relative;margin:var(--s-5) 0 0;font-size:var(--fs-2);color:var(--fg-muted)}
 
 /* ════════════════════════════════════════════════════════════════
    10 · FOOTER
    ════════════════════════════════════════════════════════════════ */
-.footer{border-top:1px solid var(--border);padding:var(--s-11) 0 var(--s-8)}
+.footer{border-top:1px solid var(--border);padding:var(--s-10) 0 var(--s-7)}
 .footer__top{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));gap:var(--s-8)}
 .footer__intro p{margin:var(--s-4) 0 var(--s-5);font-size:var(--fs-3);line-height:var(--lh-normal);color:var(--fg-muted);max-width:36ch}
 .social{display:flex;gap:var(--s-2);margin-bottom:var(--s-5)}
@@ -652,7 +652,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .fcol a:hover{color:var(--accent-fg)}
 .footer__bar{
   display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s-4);
-  margin-top:var(--s-10);padding-top:var(--s-6);border-top:1px solid var(--border);
+  margin-top:var(--s-8);padding-top:var(--s-6);border-top:1px solid var(--border);
 }
 .footer__bar p{margin:0;font-size:var(--fs-2);color:var(--fg-muted)}
 
@@ -693,7 +693,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .faq__head .lede{max-width:60ch}
 }
 @media (max-width:860px){
-  :root{--section-y:var(--s-11)}
+  :root{--section-y:var(--s-9)}
   .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
   .install{grid-template-columns:1fr;gap:var(--s-8)}
   .footer__top{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-8)}
@@ -703,11 +703,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .proof__label{max-width:none}
 }
 @media (max-width:600px){
-  :root{--gutter:var(--s-5);--section-y:var(--s-10)}
+  :root{--gutter:var(--s-5);--section-y:var(--s-8)}
   .hero{padding:var(--s-9) 0 var(--s-10)}
   .cards{grid-template-columns:1fr}
   .clip{flex:0 0 152px}
-  .reel{flex:0 0 158px}
+  .reel{flex:0 0 148px}
   .reels__foot .btn{width:100%}
   .stats{gap:var(--s-6)}
   .stat b{font-size:var(--fs-7)}
