@@ -266,11 +266,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    One H1. One primary CTA. The comparison is the visual anchor.
    ════════════════════════════════════════════════════════════════ */
 .hero{padding:var(--s-9) 0 var(--s-10);background:var(--bg);position:relative;overflow:hidden}
-.hero::before{
-  content:"";position:absolute;top:-340px;right:-160px;width:720px;height:720px;
-  background:radial-gradient(closest-side, rgba(99,91,255,.10), transparent 72%);
-  pointer-events:none;
-}
 .hero__grid{
   position:relative;display:grid;
   grid-template-columns:minmax(0,1fr) minmax(0,600px);
@@ -290,56 +285,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .badge:hover svg{transform:translateX(2px)}
 
 .hero h1{margin:var(--s-6) 0 0;max-width:16ch}
-.hero .lede{margin-top:var(--s-5);font-size:var(--fs-7);max-width:46ch}
 .hero__actions{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-8)}
 
-/* proof stats — value big, label small */
-/* three fixed columns: the row never wraps to a second line, and because
-   every stat is now the same shape (value, then label) the numbers align
-   no matter how many lines a label takes */
-.stats{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;
-  gap:var(--s-6);margin-top:var(--s-7);padding-top:var(--s-6);border-top:1px solid var(--border);
-}
-.stat b{
-  display:block;font-size:var(--fs-8);font-weight:var(--fw-bold);
-  letter-spacing:var(--tr-heading);color:var(--fg);line-height:1.1;
-  font-variant-numeric:tabular-nums;
-}
-.stat span{display:block;margin-top:var(--s-1);font-size:var(--fs-2);color:var(--fg-muted)}
-.stat .stat__stars{display:inline-flex;align-items:center;gap:1px;color:var(--star);margin-left:var(--s-2);vertical-align:middle}
-
-/* ── the framed before/after — the hero's single visual anchor ── */
+/* ── the hero image: a plain 16:9 frame, no overlay, no shadow ── */
 .showcase__frame{
-  position:relative;border-radius:var(--r-panel);overflow:hidden;
-  border:1px solid var(--border);background:var(--surface-sunken);
+  position:relative;aspect-ratio:16/9;overflow:hidden;
+  border-radius:var(--r-panel);border:1px solid var(--border);
+  background:var(--surface-sunken);
 }
-
-.compare{
-  position:relative;overflow:hidden;aspect-ratio:16/9;width:100%;
-  background:var(--surface-sunken);touch-action:none;cursor:ew-resize;
-}
-.compare img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.compare__raw{clip-path:inset(0 calc(100% - var(--pos,54%)) 0 0);filter:saturate(.4) contrast(.87) brightness(1.07)}
-.compare__bar{
-  position:absolute;top:0;bottom:0;left:var(--pos,54%);width:2px;
-  background:#fff;transform:translateX(-1px);pointer-events:none;
-  box-shadow:0 0 0 1px rgba(10,37,64,.14);
-}
-.compare__grip{
-  position:absolute;top:50%;left:var(--pos,54%);
-  width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:var(--r-full);
-  background:#fff;color:var(--fg);display:grid;place-items:center;
-  box-shadow:var(--sh-2);pointer-events:none;
-}
-.tagpair{position:absolute;top:var(--s-3);left:var(--s-3);right:var(--s-3);display:flex;justify-content:space-between;pointer-events:none}
-.tag{
-  font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);
-  text-transform:uppercase;padding:var(--s-1) var(--s-3);border-radius:var(--r-full);
-  background:rgba(255,255,255,.94);backdrop-filter:blur(6px);
-  color:var(--fg-body);box-shadow:var(--sh-1);
-}
-.tag--on{background:var(--accent);color:var(--fg-on-accent)}
+.showcase__frame img{width:100%;height:100%;object-fit:cover}
 
 /* ════════════════════════════════════════════════════════════════
    3 · CREATOR PROOF BAND
@@ -709,8 +663,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .clip{flex:0 0 152px}
   .reel{flex:0 0 148px}
   .reels__foot .btn{width:100%}
-  .stats{gap:var(--s-6)}
-  .stat b{font-size:var(--fs-7)}
   .hero__actions .btn,.cta__actions .btn{width:100%}
   .cta{padding:var(--s-9) var(--s-5)}
   .qa__a{padding-right:0}
@@ -788,39 +740,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <a class="btn btn--primary btn--lg" href="#">Get the Full Pack — $59</a>
       </div>
 
-      <dl class="stats">
-        <div class="stat">
-          <b class="tnum">10,000+</b>
-          <span>photographers editing with it</span>
-        </div>
-        <div class="stat">
-          <b class="tnum">4.9<span class="stat__stars" aria-hidden="true">
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>
-          </span></b>
-          <span>across 15,000+ pack reviews</span>
-        </div>
-        <div class="stat">
-          <b class="tnum">12</b>
-          <span>preset and LUT packs</span>
-        </div>
-      </dl>
     </div>
 
     <div class="hero__media" data-reveal>
       <div class="showcase__frame">
-        <div class="compare" data-compare tabindex="0" role="slider" aria-label="Drag to compare raw and graded" aria-valuemin="0" aria-valuemax="100" aria-valuenow="54">
-          <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="Portrait graded with a Retouch Market preset" onerror="this.style.display='none'">
-          <img class="compare__raw" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="" aria-hidden="true" onerror="this.style.display='none'">
-          <div class="tagpair"><span class="tag">Raw</span><span class="tag tag--on">Graded</span></div>
-          <div class="compare__bar"></div>
-          <div class="compare__grip" aria-hidden="true">
-            <svg width="15" height="9" viewBox="0 0 15 9" fill="none"><path d="M5.5 1L2 4.5 5.5 8M9.5 1L13 4.5 9.5 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </div>
-        </div>
+        <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="Portrait edited with Retouch Market plugins and presets" onerror="this.style.display='none'">
       </div>
     </div>
 
@@ -1420,26 +1344,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     var open = np.classList.toggle('is-on');
     nt.setAttribute('aria-expanded', String(open));
     nt.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-  });
-
-  /* ---- before / after ---- */
-  function setPos(el, pct){
-    pct = Math.max(2, Math.min(98, pct));
-    el.style.setProperty('--pos', pct + '%');
-    el.setAttribute('aria-valuenow', Math.round(pct));
-  }
-  document.querySelectorAll('[data-compare]').forEach(function(el){
-    var dragging = false;
-    function at(e){ var r = el.getBoundingClientRect(); setPos(el, ((e.clientX - r.left) / r.width) * 100); }
-    el.addEventListener('pointerdown', function(e){ dragging = true; el.setPointerCapture(e.pointerId); at(e); });
-    el.addEventListener('pointermove', function(e){ if(dragging) at(e); });
-    el.addEventListener('pointerup', function(){ dragging = false; });
-    el.addEventListener('pointercancel', function(){ dragging = false; });
-    el.addEventListener('keydown', function(e){
-      var cur = parseFloat(el.getAttribute('aria-valuenow')) || 54;
-      if(e.key === 'ArrowLeft'){ setPos(el, cur - 4); e.preventDefault(); }
-      if(e.key === 'ArrowRight'){ setPos(el, cur + 4); e.preventDefault(); }
-    });
   });
 
   /* ---- generic tab wiring: one implementation, two call sites ---- */
