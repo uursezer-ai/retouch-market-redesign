@@ -353,8 +353,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .showcase__frame img{width:100%;height:100%;object-fit:cover}
 
 /* ── slide controls ─────────────────────────────────────────────── */
+/* three columns so the dots land in the middle of the copy column and the
+   arrows at its bottom right — the same shape every other row on the page
+   uses to say "this scrolls" */
 .hero__nav{
-  display:flex;align-items:center;gap:var(--s-5);
+  display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:var(--s-4);
   margin-top:var(--s-6);
 }
 .hero__count{
@@ -372,7 +375,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .dot[aria-current="true"] i{transform:scaleX(1)}
 /* while autoplay runs the fill doubles as a progress bar */
 @keyframes heroFill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-.hero__arrows{display:flex;gap:var(--s-2);margin-left:auto}
+.hero__arrows{display:flex;gap:var(--s-2);justify-content:flex-end}
 
 /* ════════════════════════════════════════════════════════════════
    3 · AUTHORITY BAND — the numbers on their own, straight under the hero.
@@ -557,9 +560,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
 /* ── horizontal shelf: used by the tutorials rail ──────────────── */
 .strip{margin-top:var(--s-6)}
-.strip__head{display:flex;align-items:center;justify-content:space-between;gap:var(--s-4);margin-bottom:var(--s-4)}
-.strip__title{margin:0;font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);text-transform:uppercase;color:var(--fg-muted)}
-.strip__nav{display:flex;gap:var(--s-2)}
+/* Same control bar as the walkthrough deck, and for the same reason: the way
+   through a row is centred where the eye is, and the arrows sit bottom right
+   of the content. A shelf scrolls continuously rather than slide by slide, so
+   its indicator is a track and a thumb — the thumb's width is how much of the
+   row fits on screen, its position is where you are. */
+.strip__bar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:var(--s-4);margin-top:var(--s-5)}
+.strip__nav{display:flex;gap:var(--s-2);justify-content:flex-end}
+.progress{
+  display:block;width:180px;height:4px;border-radius:var(--r-full);
+  background:var(--n-200);overflow:hidden;
+}
+.progress i{
+  display:block;height:100%;width:30%;border-radius:var(--r-full);background:var(--accent);
+  transform:translateX(0);transition:transform var(--dur-1) linear;
+}
 .arrow{
   width:32px;height:32px;border-radius:var(--r-full);display:grid;place-items:center;
   border:1px solid var(--border);background:var(--surface);color:var(--fg-body);
@@ -702,6 +717,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .price{display:flex;align-items:baseline;gap:var(--s-2);font-variant-numeric:tabular-nums}
 .price b{font-size:var(--fs-5);font-weight:var(--fw-bold);letter-spacing:var(--tr-heading);color:var(--fg)}
 .price s{font-size:var(--fs-2);color:var(--fg-muted)}
+.follow{display:flex;gap:var(--s-3);flex-wrap:wrap}
 .presets__more{display:flex;flex-direction:column;align-items:center;gap:var(--s-4);margin-top:var(--s-7)}
 
 /* ── walkthrough player — used by the install section ─────────── */
@@ -929,6 +945,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .hero{padding:var(--s-9) 0 var(--s-10)}
   .cards{grid-template-columns:1fr}
   .deck{--deck-gap:var(--s-3)}
+  .progress{width:120px}
   /* four columns on a 390px screen: the label drops to 11px and the padding
      to 4px so "Photographers" still fits on one line */
   .proof__in{padding:var(--s-5) 0}
@@ -949,6 +966,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   /* the wordmark alone needs ~140px; below this the bar cannot hold brand,
      icons and the menu button, so the mark carries the brand on its own */
   .brand b{display:none}
+  .progress{width:96px}
   /* every section head is eyebrow / heading / one supporting line. On the
      narrowest phones still in use the heading steps down a notch rather than
      breaking that shape */
@@ -1601,17 +1619,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <h2>Learn the technique</h2>
         <p class="lede">Real edits, a minute each.</p>
       </div>
-      <a class="btn btn--secondary" href="#"><svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="9" r="3.6" stroke="currentColor" stroke-width="1.6"/><circle cx="13.4" cy="4.6" r="1.05" fill="currentColor"/></svg>Watch every tutorial on Instagram</a>
+      <div class="follow">
+        <a class="btn btn--secondary" href="#" aria-label="Watch every tutorial on Instagram"><svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="9" r="3.6" stroke="currentColor" stroke-width="1.6"/><circle cx="13.4" cy="4.6" r="1.05" fill="currentColor"/></svg>Instagram</a>
+        <a class="btn btn--secondary" href="#" aria-label="Watch every tutorial on YouTube"><svg width="19" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true"><rect x="1" y="1" width="18" height="12" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M8.4 4.4l4.4 2.6-4.4 2.6V4.4z" fill="currentColor"/></svg>YouTube</a>
+      </div>
     </div>
 
     <div class="strip" data-reveal>
-      <div class="strip__head">
-        <p class="strip__title">Most watched</p>
-        <div class="strip__nav">
-          <button class="arrow" data-dir="-1" aria-label="Scroll tutorials left"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <button class="arrow" data-dir="1" aria-label="Scroll tutorials right"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        </div>
-      </div>
       <div class="rail">
 
         <a class="reel" href="#" aria-label="Skin that still looks like skin">
@@ -1678,6 +1692,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           </span>
         </a>
 
+      </div>
+      <div class="strip__bar">
+        <span aria-hidden="true"></span>
+        <span class="progress" aria-hidden="true"><i></i></span>
+        <div class="strip__nav">
+          <button class="arrow" type="button" data-dir="-1" aria-label="Scroll tutorials left"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="arrow" type="button" data-dir="1" aria-label="Scroll tutorials right"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
       </div>
     </div>
   </div>
@@ -1986,15 +2008,23 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     rails.forEach(function(strip){
       var rail = strip.querySelector('.rail');
       var max = rail.scrollWidth - rail.clientWidth - 1;
-      var head = strip.querySelector('.strip__nav');
+      var bar = strip.querySelector('.strip__bar');
       /* no overflow means no controls at all */
-      if(max <= 0){ head.style.visibility = 'hidden'; return; }
-      head.style.visibility = 'visible';
+      if(max <= 0){ if(bar) bar.style.visibility = 'hidden'; return; }
+      if(bar) bar.style.visibility = 'visible';
       strip.querySelectorAll('.arrow').forEach(function(btn){
         var dir = parseInt(btn.getAttribute('data-dir'), 10);
         var atEnd = dir < 0 ? rail.scrollLeft <= 1 : rail.scrollLeft >= max;
         if(atEnd){ btn.setAttribute('disabled',''); } else { btn.removeAttribute('disabled'); }
       });
+      /* the thumb is as wide a share of the track as the visible row is of
+         the whole row, and slides across the space that leaves */
+      var thumb = strip.querySelector('.progress i');
+      if(thumb){
+        var share = Math.max(.12, rail.clientWidth / rail.scrollWidth);
+        thumb.style.width = (share * 100) + '%';
+        thumb.style.transform = 'translateX(' + (rail.scrollLeft / max) * ((1 / share) - 1) * 100 + '%)';
+      }
     });
   }
   rails.forEach(function(strip){
