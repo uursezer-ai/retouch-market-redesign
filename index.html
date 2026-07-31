@@ -460,58 +460,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .panel{display:none}
 .panel.is-on{display:block}
 
-.watch{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:var(--s-5)}
-/* the box is taken out of flow so the row's height comes from the player,
-   not from the list — otherwise the column just grows and never scrolls */
-.playlist{position:relative;min-height:0}
-.playlist__box{position:absolute;inset:0;display:grid;grid-template-rows:auto minmax(0,1fr);gap:var(--s-3)}
-.playlist__head{
-  margin:0;font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);
-  text-transform:uppercase;color:var(--fg-muted);
-}
-.playlist__scroll{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-2);align-content:start;
-  overflow-y:auto;min-height:0;padding-right:var(--s-1);
-  scrollbar-width:thin;scrollbar-color:var(--border-strong) transparent;
-}
-.playlist__scroll::-webkit-scrollbar{width:6px}
-.playlist__scroll::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:3px}
-/* covers only — the title rides on aria-label and the native tooltip */
-.pclip{display:block;padding:0;border-radius:var(--r-control);position:relative}
-.pclip__thumb{
-  display:block;width:100%;aspect-ratio:16/9;overflow:hidden;
-  border-radius:var(--r-control);border:1px solid var(--border);background:var(--surface-sunken);
-  transition:border-color var(--dur-1) var(--ease), box-shadow var(--dur-1) var(--ease);
-}
-.pclip__thumb img{width:100%;height:100%;object-fit:cover;transition:transform var(--dur-3) var(--ease)}
-.pclip:hover .pclip__thumb{border-color:var(--border-strong)}
-.pclip:hover .pclip__thumb img{transform:scale(1.06)}
-.pclip[aria-current="true"] .pclip__thumb{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
-/* the playing cover is marked, the rest sit back */
-.pclip::after{
-  content:"";position:absolute;inset:0;border-radius:var(--r-control);pointer-events:none;
-  background:rgba(10,37,64,.28);opacity:1;transition:opacity var(--dur-1) var(--ease);
-}
-.pclip:hover::after,.pclip[aria-current="true"]::after{opacity:0}
-
 .pshow__info{
   display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr) auto;
   gap:var(--s-8);align-items:start;
 }
 .pshow__act{display:flex;flex-direction:column;align-items:flex-end;gap:var(--s-3);text-align:right}
 .plugin__badge--icon{padding:0}
-.plugin__app{
-  display:flex;align-items:center;gap:var(--s-2);margin:0;
-  font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);
-  text-transform:uppercase;color:var(--fg-muted);
-}
 .plugin__badge{
   display:grid;place-items:center;min-width:26px;height:26px;padding:0 5px;border-radius:6px;flex:none;
   background:var(--accent-bg);color:var(--accent-700);border:1px solid var(--accent-border);
   font-size:11px;font-weight:var(--fw-bold);letter-spacing:0;text-transform:none;
 }
-.pshow__id h3{margin:var(--s-3) 0 0;font-size:var(--fs-8)}
-.plugin__desc{margin:var(--s-3) 0 0;font-size:var(--fs-4);line-height:var(--lh-normal);color:var(--fg-body)}
+.plugin__desc{margin:0;font-size:var(--fs-5);line-height:var(--lh-normal);color:var(--fg-body)}
 .plugin__feats{display:flex;flex-direction:column;gap:var(--s-3);margin:0}
 .plugin__feats li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-3);align-items:start;font-size:var(--fs-4);line-height:var(--lh-snug);color:var(--fg-body)}
 .plugin__feats svg{color:var(--accent);margin-top:5px}
@@ -812,9 +772,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   :root{--section-y:var(--s-9)}
   .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
   .ptabs{grid-template-columns:1fr;gap:var(--s-2)}
-  .watch{grid-template-columns:1fr;gap:var(--s-4)}
-  .playlist__box{position:static;inset:auto}
-  .playlist__scroll{max-height:300px}
   .pshow__info{grid-template-columns:1fr;gap:var(--s-5)}
   .pshow__act{align-items:flex-start;text-align:left}
   .install{grid-template-columns:1fr;gap:var(--s-8)}
@@ -911,7 +868,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           <button type="button" role="menuitemradio" data-lang="en" aria-current="true"><svg class="flag" viewBox="0 0 30 20" aria-hidden="true"><rect width="30" height="20" fill="#012169"/><path d="M0 0l30 20M30 0L0 20" stroke="#fff" stroke-width="4"/><path d="M0 0l30 20M30 0L0 20" stroke="#C8102E" stroke-width="2"/><path d="M15 0v20M0 10h30" stroke="#fff" stroke-width="6.6"/><path d="M15 0v20M0 10h30" stroke="#C8102E" stroke-width="4"/></svg>English<svg class="langpick__check" width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
       </div>
-  </div>
   </div>
   <div class="searchbar" id="searchBar">
     <form class="wrap searchbar__in" role="search" onsubmit="return false">
@@ -1059,14 +1015,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <h2>Three plugins. Three different jobs.</h2>
         <p class="lede">Each one installs into an app you already own and does one job properly. All three come with the Full Pack.</p>
       </div>
-      <a class="link" href="#">All plugin details
-        <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
+      <a class="link" href="#">All plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
 
     <div class="pstage" data-reveal>
       <div class="panel is-on" id="pp-0" role="tabpanel" aria-labelledby="pt-0">
-      <div class="watch">
         <div class="player">
           <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
           <button class="play" aria-label="Play the RetouchX walkthrough"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
@@ -1074,45 +1027,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           <span class="player__dur tnum">4:12</span>
           <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
         </div>
-        <div class="playlist">
-          <div class="playlist__box">
-            <p class="playlist__head">7 videos</p>
-            <div class="playlist__scroll">
-            <button class="pclip" aria-label="Play: RetouchX — 40 portraits, one pass (4:12)" title="RetouchX — 40 portraits, one pass · 4:12" type="button" aria-current="true"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" data-cap="RetouchX — 40 portraits, one pass" data-dur="4:12">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Setting up a batch queue (1:12)" title="Setting up a batch queue · 1:12" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" data-cap="Setting up a batch queue" data-dur="1:12">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Keeping skin texture (0:48)" title="Keeping skin texture · 0:48" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" data-cap="Keeping skin texture" data-dur="0:48">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Eyes, teeth and lips (2:04)" title="Eyes, teeth and lips · 2:04" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" data-cap="Eyes, teeth and lips" data-dur="2:04">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Reviewing before export (1:33)" title="Reviewing before export · 1:33" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=1080&amp;q=75" data-cap="Reviewing before export" data-dur="1:33">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Masking hair edges (1:57)" title="Masking hair edges · 1:57" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" data-cap="Masking hair edges" data-dur="1:57">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Saving your own recipe (2:26)" title="Saving your own recipe · 2:26" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" data-cap="Saving your own recipe" data-dur="2:26">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-          </div>
-          </div>
-        </div>
-      </div>
       </div>
       <div class="panel" id="pp-1" role="tabpanel" aria-labelledby="pt-1" hidden>
-      <div class="watch">
         <div class="player">
           <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
           <button class="play" aria-label="Play the Lightroom AI Color walkthrough"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
@@ -1120,45 +1036,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           <span class="player__dur tnum">3:26</span>
           <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
         </div>
-        <div class="playlist">
-          <div class="playlist__box">
-            <p class="playlist__head">7 videos</p>
-            <div class="playlist__scroll">
-            <button class="pclip" aria-label="Play: Lightroom AI Color — grade a gallery in taps (3:26)" title="Lightroom AI Color — grade a gallery in taps · 3:26" type="button" aria-current="true"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" data-cap="Lightroom AI Color — grade a gallery in taps" data-dur="3:26">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Matching a reference frame (1:05)" title="Matching a reference frame · 1:05" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" data-cap="Matching a reference frame" data-dur="1:05">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Building your own look (2:19)" title="Building your own look · 2:19" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" data-cap="Building your own look" data-dur="2:19">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Syncing across a shoot (0:52)" title="Syncing across a shoot · 0:52" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" data-cap="Syncing across a shoot" data-dur="0:52">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Protecting skin tones (1:41)" title="Protecting skin tones · 1:41" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=1080&amp;q=75" data-cap="Protecting skin tones" data-dur="1:41">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Split toning shadows (1:28)" title="Split toning shadows · 1:28" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" data-cap="Split toning shadows" data-dur="1:28">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Exporting a preset pack (2:11)" title="Exporting a preset pack · 2:11" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" data-cap="Exporting a preset pack" data-dur="2:11">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-          </div>
-          </div>
-        </div>
-      </div>
       </div>
       <div class="panel" id="pp-2" role="tabpanel" aria-labelledby="pt-2" hidden>
-      <div class="watch">
         <div class="player">
           <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
           <button class="play" aria-label="Play the US Photoshop Plugin walkthrough"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
@@ -1166,46 +1045,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           <span class="player__dur tnum">5:03</span>
           <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
         </div>
-        <div class="playlist">
-          <div class="playlist__box">
-            <p class="playlist__head">7 videos</p>
-            <div class="playlist__scroll">
-            <button class="pclip" aria-label="Play: US Photoshop Plugin — the panel tour (5:03)" title="US Photoshop Plugin — the panel tour · 5:03" type="button" aria-current="true"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" data-cap="US Photoshop Plugin — the panel tour" data-dur="5:03">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Frequency separation (2:37)" title="Frequency separation · 2:37" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" data-cap="Frequency separation" data-dur="2:37">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Dodge and burn layers (1:58)" title="Dodge and burn layers · 1:58" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" data-cap="Dodge and burn layers" data-dur="1:58">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Saved liquify shapes (1:14)" title="Saved liquify shapes · 1:14" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=1080&amp;q=75" data-cap="Saved liquify shapes" data-dur="1:14">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Export sizes for Instagram (0:44)" title="Export sizes for Instagram · 0:44" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" data-cap="Export sizes for Instagram" data-dur="0:44">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Cleaning up backgrounds (3:02)" title="Cleaning up backgrounds · 3:02" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" data-cap="Cleaning up backgrounds" data-dur="3:02">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-            <button class="pclip" aria-label="Play: Sharpening for print (1:49)" title="Sharpening for print · 1:49" type="button" aria-current="false"
-              data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" data-cap="Sharpening for print" data-dur="1:49">
-              <span class="pclip__thumb"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-            </button>
-          </div>
-          </div>
-        </div>
-      </div>
       </div>
     </div>
 
-    <div class="ptabs" role="tablist" aria-label="Plugins" id="pluginTabs" data-reveal>
+    <div class="ptabs" role="tablist" aria-label="Plugins" id="pluginTabs">
       <button class="ptab" role="tab" aria-selected="true" aria-controls="pp-0 pi-0" id="pt-0">
         <span class="ptab__badges"><span class="plugin__badge" aria-hidden="true">Ps</span><span class="plugin__badge plugin__badge--icon" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="9.4" rx="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M8 11.4v3M5.4 14.4h5.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span></span>
         <span class="ptab__txt">
@@ -1229,51 +1072,36 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       </button>
     </div>
 
-    <div>
       <div class="pinfo is-on" id="pi-0">
         <div class="pshow__info">
-        <div class="pshow__id">
-          <p class="plugin__app"><span class="plugin__badge" aria-hidden="true">Ps</span><span class="plugin__badge plugin__badge--icon" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="9.4" rx="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M8 11.4v3M5.4 14.4h5.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>For Photoshop &amp; desktop</p>
-          <h3>RetouchX</h3>
           <p class="plugin__desc">Batch and auto retouch across a whole gallery.</p>
+          <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Queue an entire shoot in one pass</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Smooths skin without killing texture</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Save and reuse your own recipes</li></ul>
+          <div class="pshow__act">
+            <span class="plugin__inc">In the Full Pack</span>
+            <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
         </div>
-        <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Queue an entire shoot in one pass</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Smooths skin without killing texture</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Save and reuse your own recipes</li></ul>
-        <div class="pshow__act">
-          <span class="plugin__inc">In the Full Pack</span>
-          <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        </div>
-      </div>
       </div>
       <div class="pinfo" id="pi-1" hidden>
         <div class="pshow__info">
-        <div class="pshow__id">
-          <p class="plugin__app"><span class="plugin__badge" aria-hidden="true">LrC</span>For Lightroom Classic</p>
-          <h3>Lightroom AI Color</h3>
           <p class="plugin__desc">Colour grading that takes taps, not hours.</p>
+          <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Match the grade to a reference frame</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Sync one look across a whole shoot</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Holds skin tones while it works</li></ul>
+          <div class="pshow__act">
+            <span class="plugin__inc">In the Full Pack</span>
+            <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
         </div>
-        <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Match the grade to a reference frame</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Sync one look across a whole shoot</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Holds skin tones while it works</li></ul>
-        <div class="pshow__act">
-          <span class="plugin__inc">In the Full Pack</span>
-          <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        </div>
-      </div>
       </div>
       <div class="pinfo" id="pi-2" hidden>
         <div class="pshow__info">
-        <div class="pshow__id">
-          <p class="plugin__app"><span class="plugin__badge" aria-hidden="true">Ps</span>For Photoshop</p>
-          <h3>US Photoshop Plugin</h3>
           <p class="plugin__desc">The heavy Photoshop routines, in one click.</p>
-        </div>
-        <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Frequency separation, set up for you</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Dodge and burn layers, prebuilt</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Liquify shapes you can save</li></ul>
-        <div class="pshow__act">
-          <span class="plugin__inc">In the Full Pack</span>
-          <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Frequency separation, set up for you</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Dodge and burn layers, prebuilt</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Liquify shapes you can save</li></ul>
+          <div class="pshow__act">
+            <span class="plugin__inc">In the Full Pack</span>
+            <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          </div>
         </div>
       </div>
-      </div>
-    </div>
-
   </div>
 </section>
 
@@ -1893,25 +1721,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       if(e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (i + 1) % ptabs.length;
       if(e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   next = (i - 1 + ptabs.length) % ptabs.length;
       if(next !== null){ selectPlugin(next); ptabs[next].focus(); e.preventDefault(); }
-    });
-  });
-
-  /* ---- playlist: a clip loads into the player beside it ---- */
-  document.querySelectorAll('.watch').forEach(function(watch){
-    var player = watch.querySelector('.player'),
-        img = player.querySelector('img'),
-        cap = player.querySelector('.player__cap'),
-        dur = player.querySelector('.player__dur'),
-        clips = [].slice.call(watch.querySelectorAll('.pclip'));
-    clips.forEach(function(clip){
-      clip.addEventListener('click', function(){
-        clips.forEach(function(x){ x.setAttribute('aria-current', String(x === clip)); });
-        img.src = clip.getAttribute('data-src');
-        img.style.display = '';
-        cap.textContent = clip.getAttribute('data-cap');
-        dur.textContent = clip.getAttribute('data-dur');
-        player.classList.remove('is-noted');
-      });
     });
   });
 
