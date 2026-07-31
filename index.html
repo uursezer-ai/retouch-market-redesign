@@ -497,19 +497,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
 /* ── what the selected plugin does ── */
 .pinfo{display:none}
+/* three columns of roughly equal mass: what it does, how it works, what you
+   get. No rule above it — the tab row already separates this from the video. */
 .pinfo.is-on{
-  display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:var(--s-9);
-  align-items:start;margin-top:var(--s-7);padding-top:var(--s-7);border-top:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-7);
+  align-items:start;margin-top:var(--s-8);
 }
-.pinfo__t{font-size:var(--fs-8);line-height:var(--lh-tight);max-width:16ch}
-.pinfo__desc{margin:0;font-size:var(--fs-5);line-height:var(--lh-relaxed);color:var(--fg-body);max-width:56ch}
-.plugin__feats{display:flex;flex-direction:column;gap:var(--s-3);margin:var(--s-6) 0 0}
+.pinfo__t{margin:0;font-size:var(--fs-8);line-height:var(--lh-tight)}
+.pinfo__desc{margin:0;font-size:var(--fs-5);line-height:var(--lh-relaxed);color:var(--fg-body)}
+.plugin__feats{display:flex;flex-direction:column;gap:var(--s-3);margin:0}
 .plugin__feats li{
   display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-3);align-items:start;
   font-size:var(--fs-4);line-height:var(--lh-snug);color:var(--fg-body);
 }
 .plugin__feats svg{color:var(--accent);margin-top:5px}
-.pinfo__body .link{margin-top:var(--s-6)}
+.pinfo__more .link{margin-top:var(--s-5)}
 
 /* ── horizontal shelf: used by the tutorials rail ──────────────── */
 .strip{margin-top:var(--s-6)}
@@ -1223,24 +1225,24 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
       <div class="pinfo is-on" id="pi-0">
         <h3 class="pinfo__t">Retouch an entire gallery in a single pass.</h3>
-        <div class="pinfo__body">
-          <p class="pinfo__desc">Point it at a folder and it works the whole set — skin, eyes, teeth, stray hairs — and stops before it starts flattening texture.</p>
+        <p class="pinfo__desc">Point it at a folder and it works the whole set — skin, eyes, teeth, stray hairs — and stops before it starts flattening texture.</p>
+        <div class="pinfo__more">
           <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Queue an entire shoot in one pass</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Smooths skin without killing texture</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Save and reuse your own recipes</li></ul>
           <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
       </div>
       <div class="pinfo" id="pi-1" hidden>
         <h3 class="pinfo__t">Grade a whole shoot to one look.</h3>
-        <div class="pinfo__body">
-          <p class="pinfo__desc">Match one frame you like, then push that grade across the set. Skin tones hold while everything around them moves.</p>
+        <p class="pinfo__desc">Match one frame you like, then push that grade across the set. Skin tones hold while everything around them moves.</p>
+        <div class="pinfo__more">
           <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Match the grade to a reference frame</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Sync one look across a whole shoot</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Holds skin tones while it works</li></ul>
           <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
       </div>
       <div class="pinfo" id="pi-2" hidden>
         <h3 class="pinfo__t">Every heavy Photoshop routine, one click away.</h3>
-        <div class="pinfo__body">
-          <p class="pinfo__desc">Frequency separation, dodge and burn, liquify shapes — the set-up you rebuild on every job, already built and waiting in the panel.</p>
+        <p class="pinfo__desc">Frequency separation, dodge and burn, liquify shapes — the set-up you rebuild on every job, already built and waiting in the panel.</p>
+        <div class="pinfo__more">
           <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Frequency separation, set up for you</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Dodge and burn layers, prebuilt</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Liquify shapes you can save</li></ul>
           <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
