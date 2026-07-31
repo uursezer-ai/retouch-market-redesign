@@ -450,7 +450,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .player__dur{
   position:absolute;right:var(--s-5);bottom:var(--s-4);z-index:2;
   font-size:var(--fs-2);font-weight:var(--fw-medium);color:#fff;
-  padding:var(--s-1) var(--s-2);border-radius:6px;background:rgba(10,37,64,.5);
+  padding:var(--s-1) var(--s-2);border-radius:6px;background:rgba(10,37,64,.72);
 }
 .player__note{
   position:absolute;inset:auto var(--s-5) 56px var(--s-5);z-index:3;display:none;margin:0;
@@ -484,7 +484,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .clip__img img{width:100%;height:100%;object-fit:cover;transition:transform var(--dur-3) var(--ease)}
 .clip:hover .clip__img img{transform:scale(1.05)}
 .clip__t{
-  display:block;margin-top:var(--s-3);font-size:var(--fs-3);font-weight:var(--fw-medium);
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  margin-top:var(--s-3);min-height:calc(2 * var(--lh-snug) * var(--fs-3));
+  font-size:var(--fs-3);font-weight:var(--fw-medium);
   line-height:var(--lh-snug);color:var(--fg);
 }
 .clip:hover .clip__t{color:var(--accent-fg)}
@@ -497,6 +499,54 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .spec dt{font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);text-transform:uppercase;color:var(--fg-muted)}
 .spec dd{margin-top:var(--s-2);font-size:var(--fs-4);line-height:var(--lh-normal);color:var(--fg-body)}
+
+/* ════════════════════════════════════════════════════════════════
+   TUTORIALS — vertical 9:16 shelf, deliberately unlike the plugin
+   rail above it: that one is product walkthroughs, this is technique.
+   Reuses .strip / .rail / .arrow so the scroll behaviour is identical.
+   ════════════════════════════════════════════════════════════════ */
+.reel{flex:0 0 204px;scroll-snap-align:start;display:block}
+.reel__thumb{
+  position:relative;display:block;aspect-ratio:9/16;overflow:hidden;
+  border-radius:var(--r-card);background:var(--surface-sunken);
+  border:1px solid var(--border);
+  transition:border-color var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease);
+}
+.reel:hover .reel__thumb{border-color:var(--border-strong);box-shadow:var(--sh-2)}
+.reel__thumb img{width:100%;height:100%;object-fit:cover;transition:transform var(--dur-3) var(--ease)}
+.reel:hover .reel__thumb img{transform:scale(1.05)}
+.reel__thumb::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,rgba(10,37,64,.78) 0%,rgba(10,37,64,.22) 26%,transparent 48%);
+}
+/* the view count is the whole point of this section — give it the weight */
+.reel__views{
+  position:absolute;left:var(--s-3);bottom:var(--s-3);z-index:2;
+  display:flex;align-items:center;gap:var(--s-2);
+  font-size:var(--fs-4);font-weight:var(--fw-bold);color:#fff;
+  letter-spacing:var(--tr-heading);font-variant-numeric:tabular-nums;
+}
+.reel__views svg{flex:none;opacity:.9}
+.reel__dur{
+  position:absolute;top:var(--s-3);right:var(--s-3);z-index:2;
+  font-size:var(--fs-1);font-weight:var(--fw-medium);color:#fff;
+  /* .72 keeps white legible even if the frame behind it is blown out */
+  padding:2px var(--s-2);border-radius:6px;background:rgba(10,37,64,.72);
+  backdrop-filter:blur(4px);font-variant-numeric:tabular-nums;
+}
+/* reserve two lines so every category label in the shelf sits on one baseline */
+.reel__t{
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  margin-top:var(--s-3);min-height:calc(2 * var(--lh-snug) * var(--fs-3));
+  font-size:var(--fs-3);font-weight:var(--fw-medium);
+  line-height:var(--lh-snug);color:var(--fg);
+}
+.reel:hover .reel__t{color:var(--accent-fg)}
+.reel__cat{display:block;margin-top:var(--s-1);font-size:var(--fs-2);color:var(--fg-muted)}
+.reels__foot{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s-4);
+  margin-top:var(--s-8);padding-top:var(--s-6);border-top:1px solid var(--border);
+}
 
 /* ════════════════════════════════════════════════════════════════
    5 · PRESETS
@@ -581,7 +631,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .qa[data-open="true"] .qa__a{display:block}
 
 /* ════════════════════════════════════════════════════════════════
-   8 · CLOSING CTA — the page needs a last beat before the footer
+   9 · CLOSING CTA — the page needs a last beat before the footer
    ════════════════════════════════════════════════════════════════ */
 .cta{
   position:relative;overflow:hidden;text-align:center;
@@ -599,7 +649,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .cta__note{position:relative;margin:var(--s-5) 0 0;font-size:var(--fs-2);color:var(--fg-muted)}
 
 /* ════════════════════════════════════════════════════════════════
-   9 · FOOTER
+   10 · FOOTER
    ════════════════════════════════════════════════════════════════ */
 .footer{border-top:1px solid var(--border);padding:var(--s-11) 0 var(--s-8)}
 .footer__top{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));gap:var(--s-8)}
@@ -674,6 +724,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .hero{padding:var(--s-9) 0 var(--s-10)}
   .cards{grid-template-columns:1fr}
   .clip{flex:0 0 152px}
+  .reel{flex:0 0 158px}
+  .reels__foot .btn{width:100%}
   .stats{gap:var(--s-6)}
   .stat b{font-size:var(--fs-7)}
   .hero__actions .btn,.cta__actions .btn{width:100%}
@@ -707,6 +759,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <a href="#presets">Presets</a>
       <a href="#">LUTs</a>
       <a href="#">Full Pack</a>
+      <a href="#tutorials">Tutorials</a>
       <a href="#">Blog</a>
     </nav>
     <div class="nav__right">
@@ -726,6 +779,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <a href="#presets">Presets</a>
     <a href="#">LUTs</a>
     <a href="#">Full Pack</a>
+    <a href="#tutorials">Tutorials</a>
     <a href="#">Blog</a>
     <a href="#">Invite &amp; earn</a>
     <a class="btn btn--primary" href="#">Get the Full Pack</a>
@@ -1118,8 +1172,124 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   </div>
 </section>
 
-<!-- ══════════ 6 · HOW TO INSTALL ══════════ -->
-<section class="section" id="install">
+<!-- ══════════ 6 · TUTORIALS ══════════
+     PLACEHOLDER DATA: titles, durations and view counts below are stand-ins.
+     Swap in the real Reels — and their real numbers — before this goes live. -->
+<section class="section" id="tutorials">
+  <div class="wrap">
+    <div class="section__head" data-reveal>
+      <div>
+        <p class="eyebrow">Tutorials</p>
+        <h2>Learn the technique, not just where to click.</h2>
+        <p class="lede">The edits people ask us about most, broken down in about a minute each. Same cuts we post as Reels, watched 18 million times so far.</p>
+      </div>
+      <a class="link" href="#">All 40 tutorials
+        <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <div class="strip" data-reveal>
+      <div class="strip__head">
+        <p class="strip__title">Most watched</p>
+        <div class="strip__nav">
+          <button class="arrow" data-dir="-1" aria-label="Scroll tutorials left"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="arrow" data-dir="1" aria-label="Scroll tutorials right"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+      </div>
+      <div class="rail">
+
+        <a class="reel" href="#">
+          <span class="reel__thumb">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <span class="reel__dur tnum">1:04</span>
+            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>4.2M<span class="vh"> views</span></span>
+          </span>
+          <span class="reel__t">Skin that still looks like skin</span>
+          <span class="reel__cat">Retouching</span>
+        </a>
+
+        <a class="reel" href="#">
+          <span class="reel__thumb">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <span class="reel__dur tnum">0:48</span>
+            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>2.8M<span class="vh"> views</span></span>
+          </span>
+          <span class="reel__t">Fixing mixed lighting in one pass</span>
+          <span class="reel__cat">Colour</span>
+        </a>
+
+        <a class="reel" href="#">
+          <span class="reel__thumb">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <span class="reel__dur tnum">1:12</span>
+            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>1.9M<span class="vh"> views</span></span>
+          </span>
+          <span class="reel__t">Why your whites keep going grey</span>
+          <span class="reel__cat">Colour</span>
+        </a>
+
+        <a class="reel" href="#">
+          <span class="reel__thumb">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <span class="reel__dur tnum">0:56</span>
+            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>1.6M<span class="vh"> views</span></span>
+          </span>
+          <span class="reel__t">One preset across five skin tones</span>
+          <span class="reel__cat">Presets</span>
+        </a>
+
+        <a class="reel" href="#">
+          <span class="reel__thumb">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <span class="reel__dur tnum">1:21</span>
+            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>1.2M<span class="vh"> views</span></span>
+          </span>
+          <span class="reel__t">Culling 800 frames without losing the day</span>
+          <span class="reel__cat">Workflow</span>
+        </a>
+
+        <a class="reel" href="#">
+          <span class="reel__thumb">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <span class="reel__dur tnum">1:08</span>
+            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>980K<span class="vh"> views</span></span>
+          </span>
+          <span class="reel__t">The dodge and burn shortcut nobody uses</span>
+          <span class="reel__cat">Retouching</span>
+        </a>
+
+        <a class="reel" href="#">
+          <span class="reel__thumb">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <span class="reel__dur tnum">0:52</span>
+            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>870K<span class="vh"> views</span></span>
+          </span>
+          <span class="reel__t">Matching two cameras in one pass</span>
+          <span class="reel__cat">Colour</span>
+        </a>
+
+        <a class="reel" href="#">
+          <span class="reel__thumb">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <span class="reel__dur tnum">1:15</span>
+            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>740K<span class="vh"> views</span></span>
+          </span>
+          <span class="reel__t">Stop over-sharpening portraits</span>
+          <span class="reel__cat">Retouching</span>
+        </a>
+
+      </div>
+    </div>
+
+    <div class="reels__foot">
+      <p class="meta">Free to watch · no account needed · a new one most weeks</p>
+      <a class="btn btn--secondary" href="#">Watch the whole collection</a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 7 · HOW TO INSTALL ══════════ -->
+<section class="section section--tint" id="install">
   <div class="wrap">
     <div class="section__head" data-reveal>
       <div>
@@ -1158,8 +1328,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   </div>
 </section>
 
-<!-- ══════════ 7 · FAQ ══════════ -->
-<section class="section section--tint" id="faq">
+<!-- ══════════ 8 · FAQ ══════════ -->
+<section class="section" id="faq">
   <div class="wrap">
     <div class="faq">
       <div class="faq__head" data-reveal>
@@ -1213,7 +1383,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   </div>
 </section>
 
-<!-- ══════════ 8 · CLOSING CTA ══════════ -->
+<!-- ══════════ 9 · CLOSING CTA ══════════ -->
 <section class="section" aria-labelledby="ctaTitle">
   <div class="wrap">
     <div class="cta" data-reveal>
@@ -1230,7 +1400,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
 </main>
 
-<!-- ══════════ 9 · FOOTER ══════════ -->
+<!-- ══════════ 10 · FOOTER ══════════ -->
 <footer class="footer">
   <div class="wrap">
     <div class="footer__top">
@@ -1275,7 +1445,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           <li><a href="#install">How to install</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li><a href="#">Blog</a></li>
-          <li><a href="#">Training videos</a></li>
+          <li><a href="#tutorials">Training videos</a></li>
           <li><a href="#">Invite &amp; earn</a></li>
         </ul>
       </div>
@@ -1404,8 +1574,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     var rail = strip.querySelector('.rail');
     strip.querySelectorAll('.arrow').forEach(function(btn){
       btn.addEventListener('click', function(){
-        var card = rail.querySelector('.clip');
-        var step = (card ? card.offsetWidth : 176) + 16;
+        /* measure whatever this rail actually holds — clips and reels differ in width */
+        var card = rail.firstElementChild;
+        var gap = parseFloat(getComputedStyle(rail).columnGap) || 16;
+        var step = (card ? card.offsetWidth : 176) + gap;
         rail.scrollBy({left: step * 2 * parseInt(btn.getAttribute('data-dir'), 10), behavior: still ? 'auto' : 'smooth'});
       });
     });
