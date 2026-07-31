@@ -2078,8 +2078,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     document.addEventListener('keydown', function(e){ if(e.key === 'Escape') sortClose(); });
   }
 
-  /* ---- hover scrub over a pack's sample shots ---- */
-  document.querySelectorAll('[data-scrub]').forEach(function(box){
+  /* ---- hover scrub over a pack's sample shots ----
+     Listen on the card, not the image. The title's stretched link covers the
+     whole card, so pointer events land on that overlay and bubble through the
+     body — they never reach .card__img at all. */
+  document.querySelectorAll('.card').forEach(function(card){
+    var box = card.querySelector('[data-scrub]');
+    if(!box) return;
     var shots = [].slice.call(box.querySelectorAll('img')),
         segs  = [].slice.call(box.querySelectorAll('.card__seg i')),
         cur = 0;
@@ -2090,13 +2095,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       cur = i;
       shots[i].classList.add('is-on'); segs[i].classList.add('is-on');
     }
-    box.addEventListener('pointermove', function(e){
+    card.addEventListener('pointermove', function(e){
       if(e.pointerType === 'touch') return;   /* a tap should open the pack, not scrub */
       var r = box.getBoundingClientRect();
+      if(e.clientY < r.top || e.clientY > r.bottom) return;  /* only while over the sample */
       var i = Math.floor(((e.clientX - r.left) / r.width) * shots.length);
       show(Math.max(0, Math.min(shots.length - 1, i)));
     });
-    box.addEventListener('pointerleave', function(){ show(0); });
+    card.addEventListener('pointerleave', function(){ show(0); });
   });
 
   /* ---- OS toggle ---- */
