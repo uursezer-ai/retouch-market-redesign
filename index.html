@@ -262,32 +262,23 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .nav__panel{display:none}
 
 /* ════════════════════════════════════════════════════════════════
-   2 · HERO — the single dominant zone of the page
-   One H1. One primary CTA. The comparison is the visual anchor.
+   2 · HERO SLIDER
+   One slide visible at a time. The eyebrow is a single word naming what
+   the slide is about; the dots, counter and arrows make the slide count
+   obvious at a glance rather than after a 6-second wait.
    ════════════════════════════════════════════════════════════════ */
-.hero{padding:var(--s-9) 0 var(--s-10);background:var(--bg);position:relative;overflow:hidden}
-.hero__grid{
-  position:relative;display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(0,600px);
+.hero{padding:var(--s-9) 0 var(--s-8);background:var(--bg);position:relative}
+
+.slide{display:none}
+.slide.is-on{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,600px);
   gap:var(--s-10);align-items:center;
 }
+.slide__copy .eyebrow{margin-bottom:var(--s-4)}
+.slide h1{margin:0;max-width:16ch}
+.hero__actions{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-7)}
 
-.badge{
-  display:inline-flex;align-items:center;gap:var(--s-2);
-  height:30px;padding:0 var(--s-3) 0 var(--s-2);border-radius:var(--r-full);
-  background:var(--accent-bg);border:1px solid var(--accent-border);
-  font-size:var(--fs-2);font-weight:var(--fw-semibold);color:var(--accent-700);
-  transition:background var(--dur-1) var(--ease);
-}
-.badge:hover{background:var(--accent-100)}
-.badge__dot{width:6px;height:6px;border-radius:var(--r-full);background:var(--accent);flex:none;margin-left:var(--s-1)}
-.badge svg{color:var(--accent-600);transition:transform var(--dur-2) var(--ease)}
-.badge:hover svg{transform:translateX(2px)}
-
-.hero h1{margin:var(--s-6) 0 0;max-width:16ch}
-.hero__actions{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-8)}
-
-/* ── the hero image: a plain 16:9 frame, no overlay, no shadow ── */
+/* the hero image: a plain 16:9 frame, no overlay, no shadow */
 .showcase__frame{
   position:relative;aspect-ratio:16/9;overflow:hidden;
   border-radius:var(--r-panel);border:1px solid var(--border);
@@ -295,13 +286,50 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .showcase__frame img{width:100%;height:100%;object-fit:cover}
 
+/* ── slide controls ─────────────────────────────────────────────── */
+.hero__nav{
+  display:flex;align-items:center;gap:var(--s-5);
+  margin-top:var(--s-7);padding-top:var(--s-5);border-top:1px solid var(--border);
+}
+.hero__count{
+  font-size:var(--fs-2);font-weight:var(--fw-semibold);color:var(--fg-muted);
+  font-variant-numeric:tabular-nums;flex:none;
+}
+.hero__count b{color:var(--fg)}
+.dots{display:flex;align-items:center;gap:var(--s-2)}
+.dot{
+  width:36px;height:4px;border-radius:2px;overflow:hidden;flex:none;
+  background:var(--n-300);transition:background var(--dur-1) var(--ease);
+}
+.dot:hover{background:var(--n-400)}
+.dot i{display:block;height:100%;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:left}
+.dot[aria-current="true"] i{transform:scaleX(1)}
+/* while autoplay runs the fill doubles as a progress bar */
+@keyframes heroFill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.hero__arrows{display:flex;gap:var(--s-2);margin-left:auto}
+
 /* ════════════════════════════════════════════════════════════════
-   3 · CREATOR PROOF BAND
+   3 · AUTHORITY BAND — scale and names in one beat, right under the
+   hero. Numbers alone read as marketing; names alone do not show
+   reach. Split across two bands they both get weaker.
    ════════════════════════════════════════════════════════════════ */
 .proof{background:var(--bg-subtle);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
-.proof__in{display:flex;align-items:center;gap:var(--s-9);padding:var(--s-5) var(--gutter);max-width:var(--container);margin:0 auto}
+.proof__in{padding:var(--s-6) 0}
+.proof__stats{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-6);
+  padding-bottom:var(--s-5);margin-bottom:var(--s-5);border-bottom:1px solid var(--border);
+}
+.pstat{display:flex;align-items:baseline;gap:var(--s-3);flex-wrap:wrap}
+.pstat b{
+  font-size:var(--fs-8);font-weight:var(--fw-bold);letter-spacing:var(--tr-heading);
+  color:var(--fg);line-height:1.1;font-variant-numeric:tabular-nums;
+}
+.pstat span{font-size:var(--fs-3);color:var(--fg-muted)}
+.pstat .stars{display:inline-flex;align-items:center;gap:1px;color:var(--star);vertical-align:middle}
+
+.proof__partners{display:flex;align-items:center;gap:var(--s-8)}
 .proof__label{
-  flex:none;margin:0;max-width:14ch;
+  flex:none;margin:0;
   font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);
   text-transform:uppercase;color:var(--fg-muted);line-height:1.5;
 }
@@ -623,7 +651,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    RESPONSIVE
    ════════════════════════════════════════════════════════════════ */
 @media (max-width:1100px){
-  .hero__grid{grid-template-columns:minmax(0,1fr) minmax(0,480px);gap:var(--s-8)}
+  .slide.is-on{grid-template-columns:minmax(0,1fr) minmax(0,480px);gap:var(--s-8)}
   .install,.faq{gap:var(--s-8)}
 }
 @media (max-width:1000px){
@@ -636,8 +664,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   }
   .nav__panel a{display:block;padding:var(--s-3) 0;font-size:var(--fs-5);font-weight:var(--fw-medium);color:var(--fg-body);border-bottom:1px solid var(--border)}
   .nav__panel .btn{width:100%;margin-top:var(--s-5)}
-  .hero__grid{grid-template-columns:1fr;gap:var(--s-9)}
-  .hero h1{max-width:20ch}
+  /* mobile order: image, then headline, then button — the sample photo is
+     the pitch for a preset pack, and 16:9 stays short enough that the
+     headline and CTA still land in the first screen */
+  .slide.is-on{grid-template-columns:1fr;gap:var(--s-6)}
+  .slide__media{order:1}
+  .slide__copy{order:2}
+  .slide h1{max-width:20ch}
   .ptabs{grid-template-columns:1fr;border-bottom:0}
   .ptab{padding:var(--s-4) var(--s-4) var(--s-4) var(--s-3);border-bottom:1px solid var(--border);margin-bottom:0;border-left:2px solid transparent}
   .ptab[aria-selected="true"]{border-bottom-color:var(--border);border-left-color:var(--accent);background:var(--bg-subtle)}
@@ -653,8 +686,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .footer__top{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-8)}
   .section__head{flex-direction:column;align-items:flex-start;gap:var(--s-5)}
   .specs{grid-template-columns:1fr;gap:var(--s-5)}
-  .proof__in{flex-direction:column;align-items:flex-start;gap:var(--s-5)}
-  .proof__label{max-width:none}
+  .proof__stats{grid-template-columns:1fr;gap:var(--s-3)}
+  .proof__partners{flex-direction:column;align-items:flex-start;gap:var(--s-4)}
 }
 @media (max-width:600px){
   :root{--gutter:var(--s-5);--section-y:var(--s-8)}
@@ -664,6 +697,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .reel{flex:0 0 148px}
   .reels__foot .btn{width:100%}
   .hero__actions .btn,.cta__actions .btn{width:100%}
+  .hero__nav{gap:var(--s-4)}
+  .dot{width:28px}
   .cta{padding:var(--s-9) var(--s-5)}
   .qa__a{padding-right:0}
 }
@@ -723,45 +758,88 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
 <main id="main">
 
-<!-- ══════════ 2 · HERO ══════════ -->
-<section class="hero" aria-labelledby="heroTitle">
-  <div class="wrap hero__grid">
-
-    <div class="hero__copy" data-reveal>
-      <a class="badge" href="#plugins">
-        <span class="badge__dot" aria-hidden="true"></span>
-        New — RetouchX batch engine
-        <svg width="11" height="9" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-
-      <h1 id="heroTitle">Finish the edit before the shoot gets cold.</h1>
-
-      <div class="hero__actions">
-        <a class="btn btn--primary btn--lg" href="#">Get the Full Pack — $59</a>
-      </div>
-
+<!-- ══════════ 2 · HERO SLIDER ══════════ -->
+<section class="hero" id="hero" aria-roledescription="carousel" aria-label="Featured">
+  <div class="wrap">
+    <div class="hero__slides" id="heroSlides">
+      <article class="slide is-on" role="group" aria-roledescription="slide" aria-label="1 of 3">
+        <div class="slide__copy">
+          <p class="eyebrow">Announcement</p>
+          <h1 id="heroTitle">Finish the edit before the shoot gets cold.</h1>
+          <div class="hero__actions">
+            <a class="btn btn--primary btn--lg" href="#">Get the Full Pack — $59</a>
+          </div>
+        </div>
+        <div class="slide__media">
+          <div class="showcase__frame">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="Portrait edited with Retouch Market plugins and presets" onerror="this.style.display='none'">
+          </div>
+        </div>
+      </article>
+      <article class="slide" role="group" aria-roledescription="slide" aria-label="2 of 3" hidden>
+        <div class="slide__copy">
+          <p class="eyebrow">Plugins</p>
+          <h1>Retouch forty portraits in a single pass.</h1>
+          <div class="hero__actions">
+            <a class="btn btn--primary btn--lg" href="#plugins">Watch RetouchX work</a>
+          </div>
+        </div>
+        <div class="slide__media">
+          <div class="showcase__frame">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="RetouchX running a batch retouch across a gallery" loading="lazy" onerror="this.style.display='none'">
+          </div>
+        </div>
+      </article>
+      <article class="slide" role="group" aria-roledescription="slide" aria-label="3 of 3" hidden>
+        <div class="slide__copy">
+          <p class="eyebrow">Tutorials</p>
+          <h1>Learn the technique, not just where to click.</h1>
+          <div class="hero__actions">
+            <a class="btn btn--primary btn--lg" href="#tutorials">Browse the tutorials</a>
+          </div>
+        </div>
+        <div class="slide__media">
+          <div class="showcase__frame">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=1080&amp;q=75" alt="Frames sharing one graded look" loading="lazy" onerror="this.style.display='none'">
+          </div>
+        </div>
+      </article>
     </div>
 
-    <div class="hero__media" data-reveal>
-      <div class="showcase__frame">
-        <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="Portrait edited with Retouch Market plugins and presets" onerror="this.style.display='none'">
+    <div class="hero__nav">
+      <p class="hero__count" aria-hidden="true"><b id="heroIdx">01</b> / 03</p>
+      <div class="dots" id="heroDots">
+          <button class="dot" aria-current="true" aria-label="Go to slide 1: Announcement"><i></i></button>
+          <button class="dot" aria-current="false" aria-label="Go to slide 2: Plugins"><i></i></button>
+          <button class="dot" aria-current="false" aria-label="Go to slide 3: Tutorials"><i></i></button>
+      </div>
+      <div class="hero__arrows">
+        <button class="arrow" data-hero="-1" aria-label="Previous slide"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <button class="arrow" data-hero="1" aria-label="Next slide"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </div>
     </div>
-
   </div>
 </section>
 
-<!-- ══════════ 3 · CREATOR PROOF ══════════ -->
-<section class="proof" aria-label="Creators">
-  <div class="proof__in">
-    <p class="proof__label">Packs built by</p>
-    <div class="proof__row">
-      <span class="author"><span class="avatar">UŞ</span><span><span class="author__name">Uğur Sezer</span><span class="author__meta">3 packs</span></span></span>
-      <span class="author"><span class="avatar">UD</span><span><span class="author__name">Uğur Demir</span><span class="author__meta">Jardin</span></span></span>
-      <span class="author"><span class="avatar">UK</span><span><span class="author__name">Umut Kaçar</span><span class="author__meta">Olbia LUTs</span></span></span>
-      <span class="author"><span class="avatar">MG</span><span><span class="author__name">Mücahit Güney</span><span class="author__meta">Doré</span></span></span>
-      <span class="author"><span class="avatar">MS</span><span><span class="author__name">Melih Süren</span><span class="author__meta">Mely</span></span></span>
-      <span class="author"><span class="avatar">AT</span><span><span class="author__name">Adam Tahirov</span><span class="author__meta">Onyx</span></span></span>
+<!-- ══════════ 3 · AUTHORITY BAND ══════════
+     PLACEHOLDER DATA: swap these three numbers for the real ones. -->
+<section class="proof" aria-label="Partners and reach">
+  <div class="wrap proof__in">
+    <dl class="proof__stats">
+      <div class="pstat"><b class="tnum">10,000+</b><span>photographers editing with it</span></div>
+      <div class="pstat"><b class="tnum">4.9</b><span class="stars" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg></span><span>across 15,000+ reviews</span></div>
+      <div class="pstat"><b class="tnum">12</b><span>preset and LUT packs</span></div>
+    </dl>
+    <div class="proof__partners">
+      <p class="proof__label">Partners</p>
+      <div class="proof__row">
+        <span class="author"><span class="avatar">UŞ</span><span><span class="author__name">Uğur Sezer</span><span class="author__meta">3 packs</span></span></span>
+        <span class="author"><span class="avatar">UD</span><span><span class="author__name">Uğur Demir</span><span class="author__meta">Jardin</span></span></span>
+        <span class="author"><span class="avatar">UK</span><span><span class="author__name">Umut Kaçar</span><span class="author__meta">Olbia LUTs</span></span></span>
+        <span class="author"><span class="avatar">MG</span><span><span class="author__name">Mücahit Güney</span><span class="author__meta">Doré</span></span></span>
+        <span class="author"><span class="avatar">MS</span><span><span class="author__name">Melih Süren</span><span class="author__meta">Mely</span></span></span>
+        <span class="author"><span class="avatar">AT</span><span><span class="author__name">Adam Tahirov</span><span class="author__meta">Onyx</span></span></span>
+      </div>
     </div>
   </div>
 </section>
@@ -1345,6 +1423,49 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     nt.setAttribute('aria-expanded', String(open));
     nt.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
   });
+
+  /* ---- hero slider ---- */
+  var hero = document.getElementById('hero');
+  if(hero){
+    var hSlides = [].slice.call(hero.querySelectorAll('.slide')),
+        hDots   = [].slice.call(hero.querySelectorAll('.dot')),
+        hCount  = document.getElementById('heroIdx'),
+        hIdx = 0, hTimer = null, HERO_MS = 6000, hHold = false;
+
+    function heroShow(i){
+      hIdx = (i + hSlides.length) % hSlides.length;
+      hSlides.forEach(function(sl, n){
+        var on = n === hIdx;
+        sl.classList.toggle('is-on', on);
+        if(on){ sl.removeAttribute('hidden'); } else { sl.setAttribute('hidden',''); }
+      });
+      hDots.forEach(function(d, n){ d.setAttribute('aria-current', String(n === hIdx)); });
+      hCount.textContent = ('0' + (hIdx + 1)).slice(-2);
+      heroTick();
+    }
+    /* restart the active dot's fill so it tracks the countdown */
+    function heroTick(){
+      clearTimeout(hTimer); hTimer = null;
+      var fill = hDots[hIdx].querySelector('i');
+      fill.style.animation = 'none';
+      void fill.offsetWidth;
+      if(still || hHold) return;
+      fill.style.animation = 'heroFill ' + HERO_MS + 'ms linear forwards';
+      hTimer = setTimeout(function(){ heroShow(hIdx + 1); }, HERO_MS);
+    }
+    function heroHold(state){ hHold = state; heroTick(); }
+
+    hDots.forEach(function(d, n){ d.addEventListener('click', function(){ heroShow(n); }); });
+    hero.querySelectorAll('[data-hero]').forEach(function(btn){
+      btn.addEventListener('click', function(){ heroShow(hIdx + parseInt(btn.getAttribute('data-hero'), 10)); });
+    });
+    hero.addEventListener('pointerenter', function(){ heroHold(true); });
+    hero.addEventListener('pointerleave', function(){ heroHold(false); });
+    hero.addEventListener('focusin',  function(){ heroHold(true); });
+    hero.addEventListener('focusout', function(){ if(!hero.contains(document.activeElement)) heroHold(false); });
+    document.addEventListener('visibilitychange', function(){ heroHold(document.hidden); });
+    heroShow(0);
+  }
 
   /* ---- generic tab wiring: one implementation, two call sites ---- */
   function wireTabs(tabs, onSelect){
