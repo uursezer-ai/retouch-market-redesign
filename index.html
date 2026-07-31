@@ -440,39 +440,45 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .pinfo{display:none}
 .pinfo.is-on{display:block}
 .ptabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-3);margin:var(--s-5) 0}
-/* Shopify's app-card shape: one icon, large, on the left; identity first and
-   largest; each line below it a step smaller. No line is set in caps — a
-   25-character sentence in capitals is not a label, and three casings in one
-   card is what made this read as assembled rather than designed. */
+/* packshot left, then three steps down: what it belongs to, what it is,
+   what it runs in. The app row is icons only, so the plain-language version
+   rides along visually hidden for screen readers. */
+.ptabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-3);margin:var(--s-5) 0}
 .ptab{
   display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-4);align-items:center;
-  text-align:left;padding:var(--s-4);border-radius:var(--r-card);
+  text-align:left;padding:var(--s-4);border-radius:var(--r-panel);
   border:1px solid var(--border);background:var(--surface);
   transition:border-color var(--dur-2) var(--ease), background var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease);
 }
 .ptab:hover{border-color:var(--border-strong)}
 .ptab[aria-selected="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-bg)}
-/* packshot, not a monogram — box renders are portrait, so the plate is 3:4
-   and contains rather than crops, whatever background the render carries */
 .ptab__box{
-  width:56px;aspect-ratio:3/4;border-radius:var(--r-control);flex:none;
-  display:grid;place-items:center;overflow:hidden;
-  background:var(--surface-sunken);border:1px solid var(--border);
-  transition:border-color var(--dur-2) var(--ease);
+  width:64px;aspect-ratio:3/4;border-radius:var(--r-control);flex:none;
+  display:grid;place-items:center;overflow:hidden;background:var(--surface-sunken);
 }
 .ptab__box img{width:100%;height:100%;object-fit:contain}
-.ptab[aria-selected="true"] .ptab__box{border-color:var(--accent-border)}
-.ptab__body{display:flex;flex-direction:column;min-width:0}
-/* the app line is the card's eyebrow, so it sits above the name it labels.
-   Muted rather than accent — the icon and the selected border already carry
-   accent, and three accent eyebrows at once would spend it for nothing. */
-.ptab__app{
-  font-size:var(--fs-1);font-weight:var(--fw-semibold);line-height:1.4;
-  letter-spacing:var(--tr-caps);text-transform:uppercase;color:var(--fg-muted);
+.ptab__body{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.ptab__kicker{
+  display:flex;align-items:center;gap:6px;
+  font-size:var(--fs-2);font-weight:var(--fw-semibold);color:var(--accent-fg);line-height:1.4;
 }
-.ptab[aria-selected="true"] .ptab__app{color:var(--accent-700)}
-.ptab__n{margin-top:var(--s-1);font-size:var(--fs-6);font-weight:var(--fw-semibold);letter-spacing:var(--tr-heading);color:var(--fg);line-height:1.3}
-.ptab__meta{margin-top:var(--s-2);font-size:var(--fs-1);color:var(--fg-muted);line-height:1.4}
+.ptab__num{
+  display:grid;place-items:center;width:18px;height:18px;border-radius:var(--r-full);
+  background:var(--accent);color:var(--fg-on-accent);
+  font-size:11px;font-weight:var(--fw-bold);line-height:1;font-variant-numeric:tabular-nums;
+}
+.ptab__n{
+  margin-top:var(--s-1);font-size:var(--fs-7);font-weight:var(--fw-semibold);
+  letter-spacing:var(--tr-heading);color:var(--fg);line-height:1.25;
+}
+.ptab__apps{display:flex;gap:6px;margin-top:var(--s-3)}
+.ptab__app{
+  display:grid;place-items:center;min-width:28px;height:28px;padding:0 5px;
+  border-radius:6px;border:1px solid var(--border-strong);color:var(--fg-muted);
+  font-size:11px;font-weight:var(--fw-bold);letter-spacing:-.01em;
+  transition:border-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
+}
+.ptab[aria-selected="true"] .ptab__app{border-color:var(--accent-border);color:var(--accent-700)}
 
 .panel{display:none}
 .panel.is-on{display:block}
@@ -1070,27 +1076,27 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <!-- PLACEHOLDER: swap for the RetouchX box render -->
         <span class="ptab__box"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
         <span class="ptab__body">
-          <span class="ptab__app">For Photoshop &amp; Desktop</span>
+          <span class="ptab__kicker">Plugin Pack <span aria-hidden="true">•</span> Plugin <span class="ptab__num">1</span></span>
           <span class="ptab__n">RetouchX</span>
-          <span class="ptab__meta">Plugin 1 of 3 · In the Pack</span>
+          <span class="ptab__apps"><span class="ptab__app" aria-hidden="true">Ps</span><span class="ptab__app" aria-hidden="true"><svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="1" y="2.2" width="14" height="9.2" rx="1.6" stroke="currentColor" stroke-width="1.4"/><path d="M8 11.4v3M5.4 14.4h5.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span><span class="vh">For Photoshop and desktop</span></span>
         </span>
       </button>
       <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-1 pi-1" id="pt-1" tabindex="-1">
         <!-- PLACEHOLDER: swap for the Lightroom AI Color box render -->
         <span class="ptab__box"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
         <span class="ptab__body">
-          <span class="ptab__app">For Lightroom Classic</span>
+          <span class="ptab__kicker">Plugin Pack <span aria-hidden="true">•</span> Plugin <span class="ptab__num">2</span></span>
           <span class="ptab__n">Lightroom AI Color</span>
-          <span class="ptab__meta">Plugin 2 of 3 · In the Pack</span>
+          <span class="ptab__apps"><span class="ptab__app" aria-hidden="true">LrC</span><span class="vh">For Lightroom Classic</span></span>
         </span>
       </button>
       <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-2 pi-2" id="pt-2" tabindex="-1">
         <!-- PLACEHOLDER: swap for the US Photoshop Plugin box render -->
         <span class="ptab__box"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
         <span class="ptab__body">
-          <span class="ptab__app">For Photoshop</span>
+          <span class="ptab__kicker">Plugin Pack <span aria-hidden="true">•</span> Plugin <span class="ptab__num">3</span></span>
           <span class="ptab__n">US Photoshop Plugin</span>
-          <span class="ptab__meta">Plugin 3 of 3 · In the Pack</span>
+          <span class="ptab__apps"><span class="ptab__app" aria-hidden="true">Ps</span><span class="vh">For Photoshop</span></span>
         </span>
       </button>
     </div>
