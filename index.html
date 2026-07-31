@@ -581,15 +581,63 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   margin-top:var(--s-7);padding-top:var(--s-5);border-top:1px solid var(--border);
 }
 
+/* ── collection sort, the way a storefront does it ─────────────── */
+.sort{position:relative;flex:none}
+.sort__btn{
+  display:inline-flex;align-items:center;gap:var(--s-2);height:40px;padding:0 var(--s-4);
+  border-radius:var(--r-control);border:1px solid var(--border-strong);background:var(--surface);
+  font-size:var(--fs-4);font-weight:var(--fw-medium);color:var(--fg-body);
+  transition:border-color var(--dur-1) var(--ease);
+}
+.sort__btn b{font-weight:var(--fw-semibold);color:var(--fg)}
+.sort__btn:hover{border-color:var(--n-400)}
+.sort__btn .chev{color:var(--fg-faint);transition:transform var(--dur-2) var(--ease)}
+.sort__btn[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.sort__menu{
+  position:absolute;top:calc(100% + 6px);right:0;z-index:60;min-width:190px;padding:var(--s-1);
+  border-radius:var(--r-control);background:var(--surface);border:1px solid var(--border);box-shadow:var(--sh-2);
+}
+.sort__menu[hidden]{display:none}
+.sort__menu button{
+  display:block;width:100%;text-align:left;padding:var(--s-2) var(--s-3);border-radius:6px;
+  font-size:var(--fs-4);font-weight:var(--fw-medium);color:var(--fg-body);
+  transition:background var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+}
+.sort__menu button:hover{background:var(--surface-sunken);color:var(--fg)}
+.sort__menu button[aria-current="true"]{color:var(--accent-700);font-weight:var(--fw-semibold)}
+
 /* ════════════════════════════════════════════════════════════════
    5 · PRESETS
    ════════════════════════════════════════════════════════════════ */
 .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-6)}
+/* the title's link is stretched over the whole card, so the card is one
+   target and the add button can sit above it as a second, separate one —
+   a button nested inside a link would not be valid or operable */
 .card{
-  display:flex;flex-direction:column;background:var(--surface);
+  position:relative;display:flex;flex-direction:column;background:var(--surface);
   border:1px solid var(--border);border-radius:var(--r-card);overflow:hidden;
   transition:transform var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease);
 }
+.card__t a{color:inherit}
+.card__t a::after{content:"";position:absolute;inset:0;z-index:1}
+.card:focus-within{border-color:var(--border-strong)}
+
+/* Shopify's quick add: hidden until the card is hovered on pointer devices,
+   always shown where there is no hover */
+.card__add{
+  position:absolute;left:var(--s-3);right:var(--s-3);bottom:var(--s-5);z-index:3;
+  display:flex;align-items:center;justify-content:center;gap:var(--s-2);
+  height:40px;border-radius:var(--r-control);
+  background:var(--surface);color:var(--fg);border:1px solid var(--border-strong);
+  font-size:var(--fs-4);font-weight:var(--fw-semibold);box-shadow:var(--sh-1);
+  opacity:0;transform:translateY(6px);
+  transition:opacity var(--dur-1) var(--ease), transform var(--dur-1) var(--ease),
+             background var(--dur-1) var(--ease), color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
+}
+.card:hover .card__add,.card__add:focus-visible{opacity:1;transform:none}
+.card__add:hover{background:var(--accent);color:var(--fg-on-accent);border-color:var(--accent)}
+.card__add.is-added{background:var(--accent);color:var(--fg-on-accent);border-color:var(--accent)}
+@media (hover:none){.card__add{opacity:1;transform:none}}
 .card:hover{transform:translateY(-3px);box-shadow:var(--sh-3);border-color:var(--border-strong)}
 /* hover scrub: sweeping across the image steps through that pack's samples,
    one segment of width per shot */
@@ -1257,147 +1305,166 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <h2>Twelve packs. Pick your palette.</h2>
         <p class="lede">Every pack ships as XMP for desktop and DNG for Lightroom mobile, with a sample gallery so you can see it on real skin first.</p>
       </div>
-      <a class="link" href="#">View store
+      <div class="sort">
+        <button class="sort__btn" type="button" id="sortBtn" aria-expanded="false" aria-haspopup="true" aria-controls="sortMenu">
+          Sort: <b id="sortNow">Most popular</b>
+          <svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" aria-hidden="true"><path d="M1 1l3.5 3.5L8 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <div class="sort__menu" id="sortMenu" role="menu" hidden>
+          <button type="button" role="menuitemradio" data-sort="popular" aria-current="true">Most popular</button>
+          <button type="button" role="menuitemradio" data-sort="added" aria-current="false">Newest</button>
+        </div>
+      </div>
+      <a class="vh" href="#">View store
         <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
     </div>
 
-    <div class="cards" data-reveal>
-      <a class="card" href="#">
+    <div class="cards" id="presetGrid" data-reveal>
+      <article class="card" data-popular="1" data-added="9">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75" alt="Sample graded with Lora Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
           <span class="chip">Bestseller</span>
+          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
+          <button class="card__add" type="button" aria-label="Add Lora Presets to basket"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add to cart</button>
         </span>
-        <span class="card__body">
+        <div class="card__body">
           <span class="card__by"><span class="avatar">UŞ</span><span>Uğur Sezer</span></span>
-          <h3 class="card__t">Lora Presets</h3>
+          <h3 class="card__t"><a href="#">Lora Presets</a></h3>
           <span class="card__foot">
             <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.9 <i>(1,309)</i></span>
             <span class="price"><b>$59</b><s>$119</s></span>
           </span>
-        </span>
-      </a>
-      <a class="card" href="#">
+        </div>
+      </article>
+      <article class="card" data-popular="2" data-added="8">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75" alt="Sample graded with Solis Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
           <span class="chip">Most saved</span>
+          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
+          <button class="card__add" type="button" aria-label="Add Solis Presets to basket"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add to cart</button>
         </span>
-        <span class="card__body">
+        <div class="card__body">
           <span class="card__by"><span class="avatar">UŞ</span><span>Uğur Sezer</span></span>
-          <h3 class="card__t">Solis Presets</h3>
+          <h3 class="card__t"><a href="#">Solis Presets</a></h3>
           <span class="card__foot">
             <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.9 <i>(6,669)</i></span>
             <span class="price"><b>$59</b><s>$119</s></span>
           </span>
-        </span>
-      </a>
-      <a class="card" href="#">
+        </div>
+      </article>
+      <article class="card" data-popular="3" data-added="7">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75" alt="Sample graded with Terra Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
           
+          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
+          <button class="card__add" type="button" aria-label="Add Terra Presets to basket"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add to cart</button>
         </span>
-        <span class="card__body">
+        <div class="card__body">
           <span class="card__by"><span class="avatar">UŞ</span><span>Uğur Sezer</span></span>
-          <h3 class="card__t">Terra Presets</h3>
+          <h3 class="card__t"><a href="#">Terra Presets</a></h3>
           <span class="card__foot">
             <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.9 <i>(5,464)</i></span>
             <span class="price"><b>$59</b><s>$119</s></span>
           </span>
-        </span>
-      </a>
-      <a class="card" href="#">
-        <span class="card__img" data-scrub>
-          <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75" alt="Sample graded with Doré Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
-          
-        </span>
-        <span class="card__body">
-          <span class="card__by"><span class="avatar">MG</span><span>Mücahit Güney</span></span>
-          <h3 class="card__t">Doré Presets</h3>
-          <span class="card__foot">
-            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.8 <i>(299)</i></span>
-            <span class="price"><b>$59</b><s>$119</s></span>
-          </span>
-        </span>
-      </a>
-      <a class="card" href="#">
-        <span class="card__img" data-scrub>
-          <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=750&amp;q=75" alt="Sample graded with Mely Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
-          
-        </span>
-        <span class="card__body">
-          <span class="card__by"><span class="avatar">MS</span><span>Melih Süren</span></span>
-          <h3 class="card__t">Mely Presets</h3>
-          <span class="card__foot">
-            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.8 <i>(467)</i></span>
-            <span class="price"><b>$59</b><s>$119</s></span>
-          </span>
-        </span>
-      </a>
-      <a class="card" href="#">
-        <span class="card__img" data-scrub>
-          <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75" alt="Sample graded with Onyx Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
-          
-        </span>
-        <span class="card__body">
-          <span class="card__by"><span class="avatar">AT</span><span>Adam Tahirov</span></span>
-          <h3 class="card__t">Onyx Presets</h3>
-          <span class="card__foot">
-            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.9 <i>(451)</i></span>
-            <span class="price"><b>$59</b><s>$119</s></span>
-          </span>
-        </span>
-      </a>
-      <a class="card" href="#">
+        </div>
+      </article>
+      <article class="card" data-popular="4" data-added="3">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75" alt="Sample graded with Jardin Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
           
+          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
+          <button class="card__add" type="button" aria-label="Add Jardin Presets to basket"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add to cart</button>
         </span>
-        <span class="card__body">
+        <div class="card__body">
           <span class="card__by"><span class="avatar">UD</span><span>Uğur Demir</span></span>
-          <h3 class="card__t">Jardin Presets</h3>
+          <h3 class="card__t"><a href="#">Jardin Presets</a></h3>
           <span class="card__foot">
             <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.9 <i>(1,071)</i></span>
             <span class="price"><b>$59</b><s>$119</s></span>
           </span>
+        </div>
+      </article>
+      <article class="card" data-popular="5" data-added="5">
+        <span class="card__img" data-scrub>
+          <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=750&amp;q=75" alt="Sample graded with Mely Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
+          
+          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
+          <button class="card__add" type="button" aria-label="Add Mely Presets to basket"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add to cart</button>
         </span>
-      </a>
-      <a class="card" href="#">
+        <div class="card__body">
+          <span class="card__by"><span class="avatar">MS</span><span>Melih Süren</span></span>
+          <h3 class="card__t"><a href="#">Mely Presets</a></h3>
+          <span class="card__foot">
+            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.8 <i>(467)</i></span>
+            <span class="price"><b>$59</b><s>$119</s></span>
+          </span>
+        </div>
+      </article>
+      <article class="card" data-popular="6" data-added="4">
+        <span class="card__img" data-scrub>
+          <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75" alt="Sample graded with Onyx Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
+          
+          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
+          <button class="card__add" type="button" aria-label="Add Onyx Presets to basket"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add to cart</button>
+        </span>
+        <div class="card__body">
+          <span class="card__by"><span class="avatar">AT</span><span>Adam Tahirov</span></span>
+          <h3 class="card__t"><a href="#">Onyx Presets</a></h3>
+          <span class="card__foot">
+            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.9 <i>(451)</i></span>
+            <span class="price"><b>$59</b><s>$119</s></span>
+          </span>
+        </div>
+      </article>
+      <article class="card" data-popular="7" data-added="6">
+        <span class="card__img" data-scrub>
+          <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75" alt="Sample graded with Doré Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
+          
+          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
+          <button class="card__add" type="button" aria-label="Add Doré Presets to basket"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add to cart</button>
+        </span>
+        <div class="card__body">
+          <span class="card__by"><span class="avatar">MG</span><span>Mücahit Güney</span></span>
+          <h3 class="card__t"><a href="#">Doré Presets</a></h3>
+          <span class="card__foot">
+            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.8 <i>(299)</i></span>
+            <span class="price"><b>$59</b><s>$119</s></span>
+          </span>
+        </div>
+      </article>
+      <article class="card" data-popular="8" data-added="1">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75" alt="Sample graded with Olbia LUTs" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
           <span class="chip">New</span>
+          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
+          <button class="card__add" type="button" aria-label="Add Olbia LUTs to basket"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add to cart</button>
         </span>
-        <span class="card__body">
+        <div class="card__body">
           <span class="card__by"><span class="avatar">UK</span><span>Umut Kaçar</span></span>
-          <h3 class="card__t">Olbia LUTs</h3>
+          <h3 class="card__t"><a href="#">Olbia LUTs</a></h3>
           <span class="card__foot">
             <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.9 <i>(420)</i></span>
             <span class="price"><b>$59</b><s>$119</s></span>
           </span>
-        </span>
-      </a>
-      <a class="card" href="#">
+        </div>
+      </article>
+      <article class="card" data-popular="9" data-added="2">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75" alt="Sample graded with Demo Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
           
+          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
+          <button class="card__add" type="button" aria-label="Add Demo Presets to basket"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add to cart</button>
         </span>
-        <span class="card__body">
+        <div class="card__body">
           <span class="card__by"><span class="avatar">RM</span><span>Retouch Market</span></span>
-          <h3 class="card__t">Demo Presets</h3>
+          <h3 class="card__t"><a href="#">Demo Presets</a></h3>
           <span class="card__foot">
             <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.7 <i>(180)</i></span>
             <span class="price"><b>Free</b></span>
           </span>
-        </span>
-      </a>
+        </div>
+      </article>
     </div>
 
     <div class="presets__more">
@@ -1518,7 +1585,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
     <div class="reels__foot">
       <p class="meta">Free to watch · no account needed · a new one most weeks</p>
-      <a class="btn btn--secondary" href="#">Watch the whole collection</a>
+      <a class="btn btn--secondary" href="#"><svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="9" r="3.6" stroke="currentColor" stroke-width="1.6"/><circle cx="13.4" cy="4.6" r="1.05" fill="currentColor"/></svg>Watch every tutorial on Instagram</a>
     </div>
   </div>
 </section>
@@ -1967,6 +2034,51 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     langCloseAll();
     if(sBar.classList.contains('is-on')) searchOpen(false);
   });
+
+  /* ---- add to basket ---- */
+  var basketCount = document.querySelector('.cart__n');
+  document.querySelectorAll('.card__add').forEach(function(btn){
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      if(btn.classList.contains('is-added')) return;
+      btn.classList.add('is-added');
+      btn.textContent = 'Added';
+      if(basketCount) basketCount.textContent = String((parseInt(basketCount.textContent, 10) || 0) + 1);
+    });
+  });
+
+  /* ---- collection sort ---- */
+  var sortBtn = document.getElementById('sortBtn'),
+      sortMenu = document.getElementById('sortMenu'),
+      sortNow = document.getElementById('sortNow'),
+      grid = document.getElementById('presetGrid');
+  if(sortBtn && grid){
+    function sortClose(){ sortBtn.setAttribute('aria-expanded','false'); sortMenu.setAttribute('hidden',''); }
+    sortBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      var open = sortBtn.getAttribute('aria-expanded') === 'true';
+      if(open){ sortClose(); }
+      else { sortBtn.setAttribute('aria-expanded','true'); sortMenu.removeAttribute('hidden'); }
+    });
+    sortMenu.addEventListener('click', function(e){ e.stopPropagation(); });
+    sortMenu.querySelectorAll('button').forEach(function(opt){
+      opt.addEventListener('click', function(){
+        var key = opt.getAttribute('data-sort');
+        sortMenu.querySelectorAll('button').forEach(function(x){
+          x.setAttribute('aria-current', String(x === opt));
+        });
+        sortNow.textContent = opt.textContent.trim();
+        /* re-append in order — the rank lives on each card as a data attribute */
+        [].slice.call(grid.children)
+          .sort(function(a, b){ return a.getAttribute('data-' + key) - b.getAttribute('data-' + key); })
+          .forEach(function(card){ grid.appendChild(card); });
+        sortClose();
+        sortBtn.focus();
+      });
+    });
+    document.addEventListener('click', sortClose);
+    document.addEventListener('keydown', function(e){ if(e.key === 'Escape') sortClose(); });
+  }
 
   /* ---- hover scrub over a pack's sample shots ---- */
   document.querySelectorAll('[data-scrub]').forEach(function(box){
