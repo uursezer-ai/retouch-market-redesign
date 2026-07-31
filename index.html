@@ -458,15 +458,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .ptab__box img{width:100%;height:100%;object-fit:contain}
 .ptab__body{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+/* accent gets one job in this card: marking the selected tab. A solid accent
+   disc on every tab was louder than the selection itself, so the ordinal is
+   neutral until its tab is chosen. */
 .ptab__kicker{
   display:flex;align-items:center;gap:6px;
-  font-size:var(--fs-2);font-weight:var(--fw-semibold);color:var(--accent-fg);line-height:1.4;
+  font-size:var(--fs-2);font-weight:var(--fw-semibold);color:var(--fg-muted);line-height:1.4;
 }
+.ptab[aria-selected="true"] .ptab__kicker{color:var(--accent-700)}
 .ptab__num{
-  display:grid;place-items:center;width:18px;height:18px;border-radius:var(--r-full);
-  background:var(--accent);color:var(--fg-on-accent);
+  display:grid;place-items:center;width:19px;height:19px;border-radius:var(--r-full);
+  background:var(--surface-sunken);color:var(--fg-body);border:1px solid var(--border);
   font-size:11px;font-weight:var(--fw-bold);line-height:1;font-variant-numeric:tabular-nums;
+  transition:background var(--dur-2) var(--ease), color var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease);
 }
+.ptab[aria-selected="true"] .ptab__num{background:var(--surface);color:var(--accent-700);border-color:var(--accent-border)}
 .ptab__n{
   margin-top:var(--s-1);font-size:var(--fs-7);font-weight:var(--fw-semibold);
   letter-spacing:var(--tr-heading);color:var(--fg);line-height:1.25;
@@ -1073,8 +1079,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
     <div class="ptabs" role="tablist" aria-label="Plugins" id="pluginTabs">
       <button class="ptab" role="tab" aria-selected="true" aria-controls="pp-0 pi-0" id="pt-0">
-        <!-- PLACEHOLDER: swap for the RetouchX box render -->
-        <span class="ptab__box"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+        <!-- box render for RetouchX box render -->
+        <span class="ptab__box"><img src="images/box-retouchx.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
         <span class="ptab__body">
           <span class="ptab__kicker">Plugin Pack <span aria-hidden="true">•</span> Plugin <span class="ptab__num">1</span></span>
           <span class="ptab__n">RetouchX</span>
@@ -1082,8 +1088,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </span>
       </button>
       <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-1 pi-1" id="pt-1" tabindex="-1">
-        <!-- PLACEHOLDER: swap for the Lightroom AI Color box render -->
-        <span class="ptab__box"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+        <!-- box render for Lightroom AI Color box render -->
+        <span class="ptab__box"><img src="images/box-lightroom-ai-color.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
         <span class="ptab__body">
           <span class="ptab__kicker">Plugin Pack <span aria-hidden="true">•</span> Plugin <span class="ptab__num">2</span></span>
           <span class="ptab__n">Lightroom AI Color</span>
@@ -1091,8 +1097,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </span>
       </button>
       <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-2 pi-2" id="pt-2" tabindex="-1">
-        <!-- PLACEHOLDER: swap for the US Photoshop Plugin box render -->
-        <span class="ptab__box"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+        <!-- box render for US Photoshop Plugin box render -->
+        <span class="ptab__box"><img src="images/box-us-photoshop-plugin.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
         <span class="ptab__body">
           <span class="ptab__kicker">Plugin Pack <span aria-hidden="true">•</span> Plugin <span class="ptab__num">3</span></span>
           <span class="ptab__n">US Photoshop Plugin</span>
