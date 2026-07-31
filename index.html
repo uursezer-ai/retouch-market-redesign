@@ -467,12 +467,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .playlist{position:relative;min-height:0}
 /* out of flow, so the row's height is set by the player and the list scrolls */
 .playlist__box{
-  position:absolute;inset:0;display:grid;grid-template-rows:auto minmax(0,1fr);gap:var(--s-2);
+  position:absolute;inset:0;display:grid;grid-template-rows:minmax(0,1fr);
   padding:var(--s-2);border-radius:var(--r-card);border:1px solid var(--border);background:var(--surface);
-}
-.playlist__head{
-  margin:0;font-size:var(--fs-1);font-weight:var(--fw-semibold);line-height:1.4;
-  letter-spacing:var(--tr-caps);text-transform:uppercase;color:var(--fg-muted);
 }
 .playlist__scroll{
   display:flex;flex-direction:column;gap:var(--s-2);
@@ -505,7 +501,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .pinfo__t{margin:0;font-size:var(--fs-8);line-height:var(--lh-tight)}
 .pinfo__desc{margin:0;font-size:var(--fs-5);line-height:var(--lh-relaxed);color:var(--fg-body)}
-.plugin__feats{display:flex;flex-direction:column;gap:var(--s-3);margin:0}
+/* height is reserved for five rows even though three are written, so the
+   block does not resize between plugins and has room to grow */
+.plugin__feats{
+  display:flex;flex-direction:column;gap:var(--s-3);margin:0;
+  min-height:calc(5 * var(--fs-4) * var(--lh-snug) + 4 * var(--s-3));
+}
 .plugin__feats li{
   display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-3);align-items:start;
   font-size:var(--fs-4);line-height:var(--lh-snug);color:var(--fg-body);
@@ -1067,7 +1068,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           </div>
           <div class="playlist">
             <div class="playlist__box">
-              <p class="playlist__head">7 videos</p>
               <div class="playlist__scroll">
               <button class="pclip" type="button" aria-current="true" title="RetouchX — 40 portraits, one pass · 4:12" aria-label="Play: RetouchX — 40 portraits, one pass (4:12)"
                 data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" data-cap="RetouchX — 40 portraits, one pass" data-dur="4:12">
@@ -1113,7 +1113,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           </div>
           <div class="playlist">
             <div class="playlist__box">
-              <p class="playlist__head">7 videos</p>
               <div class="playlist__scroll">
               <button class="pclip" type="button" aria-current="true" title="Lightroom AI Color — grade a gallery in taps · 3:26" aria-label="Play: Lightroom AI Color — grade a gallery in taps (3:26)"
                 data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" data-cap="Lightroom AI Color — grade a gallery in taps" data-dur="3:26">
@@ -1159,7 +1158,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           </div>
           <div class="playlist">
             <div class="playlist__box">
-              <p class="playlist__head">7 videos</p>
               <div class="playlist__scroll">
               <button class="pclip" type="button" aria-current="true" title="US Photoshop Plugin — the panel tour · 5:03" aria-label="Play: US Photoshop Plugin — the panel tour (5:03)"
                 data-src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" data-cap="US Photoshop Plugin — the panel tour" data-dur="5:03">
@@ -1228,7 +1226,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <p class="pinfo__desc">Point it at a folder and it works the whole set — skin, eyes, teeth, stray hairs — and stops before it starts flattening texture.</p>
         <div class="pinfo__more">
           <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Queue an entire shoot in one pass</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Smooths skin without killing texture</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Save and reuse your own recipes</li></ul>
-          <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a class="link" href="#">Show more <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
       </div>
       <div class="pinfo" id="pi-1" hidden>
@@ -1236,7 +1234,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <p class="pinfo__desc">Match one frame you like, then push that grade across the set. Skin tones hold while everything around them moves.</p>
         <div class="pinfo__more">
           <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Match the grade to a reference frame</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Sync one look across a whole shoot</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Holds skin tones while it works</li></ul>
-          <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a class="link" href="#">Show more <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
       </div>
       <div class="pinfo" id="pi-2" hidden>
@@ -1244,7 +1242,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <p class="pinfo__desc">Frequency separation, dodge and burn, liquify shapes — the set-up you rebuild on every job, already built and waiting in the panel.</p>
         <div class="pinfo__more">
           <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Frequency separation, set up for you</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Dodge and burn layers, prebuilt</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Liquify shapes you can save</li></ul>
-          <a class="link" href="#">Plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <a class="link" href="#">Show more <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
         </div>
       </div>
   </div>
