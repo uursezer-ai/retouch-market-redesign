@@ -424,50 +424,29 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    modes. A shared player behind tabs made them read as features of the
    same thing; separate cards let you compare them at a glance.
    ════════════════════════════════════════════════════════════════ */
-.plugins{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-6)}
-.plugin{
-  display:flex;flex-direction:column;background:var(--surface);
-  border:1px solid var(--border);border-radius:var(--r-card);overflow:hidden;
-  transition:box-shadow var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease);
-}
-.plugin:hover{box-shadow:var(--sh-2);border-color:var(--border-strong)}
-.plugin__media{
-  position:relative;display:block;aspect-ratio:16/9;overflow:hidden;
-  background:var(--surface-sunken);border-bottom:1px solid var(--border);
-}
-.plugin__media img{width:100%;height:100%;object-fit:cover;transition:transform var(--dur-3) var(--ease)}
-.plugin:hover .plugin__media img{transform:scale(1.04)}
-.plugin__media::after{
-  content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(to top,rgba(10,37,64,.42),transparent 52%);
-}
-.plugin__play{
-  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;
-  width:46px;height:46px;border-radius:var(--r-full);background:#fff;color:var(--accent);
-  display:grid;place-items:center;padding-left:3px;box-shadow:var(--sh-2);
-  transition:transform var(--dur-2) var(--ease);
-}
-.plugin:hover .plugin__play{transform:translate(-50%,-50%) scale(1.08)}
-.plugin__dur{
-  position:absolute;right:var(--s-3);bottom:var(--s-3);z-index:2;
-  font-size:var(--fs-1);font-weight:var(--fw-medium);color:#fff;
-  padding:2px var(--s-2);border-radius:6px;background:rgba(10,37,64,.72);
-}
-.plugin__body{display:flex;flex-direction:column;flex:1;padding:var(--s-5)}
+/* the walkthrough is the point of this section, so it gets two of the three
+   columns; the product it belongs to sits in the third. Rows alternate so
+   three products read as three, not as one thing repeating. */
+.pshow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-8);align-items:center}
+.pshow + .pshow{margin-top:var(--s-9);padding-top:var(--s-9);border-top:1px solid var(--border)}
+.pshow__media{grid-column:span 2}
+.plugin__badge--icon{padding:0}
+.pshow--flip .pshow__media{order:2}
+.pshow--flip .pshow__info{order:1}
 .plugin__app{
   display:flex;align-items:center;gap:var(--s-2);margin:0;
   font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);
   text-transform:uppercase;color:var(--fg-muted);
 }
 .plugin__badge{
-  display:grid;place-items:center;width:24px;height:24px;border-radius:6px;flex:none;
+  display:grid;place-items:center;min-width:26px;height:26px;padding:0 5px;border-radius:6px;flex:none;
   background:var(--accent-bg);color:var(--accent-700);border:1px solid var(--accent-border);
   font-size:11px;font-weight:var(--fw-bold);letter-spacing:0;text-transform:none;
 }
-.plugin h3{margin:var(--s-3) 0 0;font-size:var(--fs-7)}
-.plugin__desc{margin:var(--s-2) 0 0;font-size:var(--fs-3);line-height:var(--lh-normal);color:var(--fg-body)}
-.plugin__feats{display:flex;flex-direction:column;gap:var(--s-2);margin:var(--s-5) 0 0}
-.plugin__feats li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-3);align-items:start;font-size:var(--fs-3);line-height:var(--lh-snug);color:var(--fg-body)}
+.pshow__info h3{margin:var(--s-3) 0 0;font-size:var(--fs-8)}
+.plugin__desc{margin:var(--s-3) 0 0;font-size:var(--fs-4);line-height:var(--lh-normal);color:var(--fg-body)}
+.plugin__feats{display:flex;flex-direction:column;gap:var(--s-3);margin:var(--s-5) 0 0}
+.plugin__feats li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-3);align-items:start;font-size:var(--fs-4);line-height:var(--lh-snug);color:var(--fg-body)}
 .plugin__feats svg{color:var(--accent);margin-top:5px}
 .plugin__foot{
   margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:var(--s-3);
@@ -486,6 +465,25 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .spec dt{font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);text-transform:uppercase;color:var(--fg-muted)}
 .spec dd{margin-top:var(--s-2);font-size:var(--fs-4);line-height:var(--lh-normal);color:var(--fg-body)}
+
+/* ── horizontal shelf: used by the tutorials rail ──────────────── */
+.strip{margin-top:var(--s-6)}
+.strip__head{display:flex;align-items:center;justify-content:space-between;gap:var(--s-4);margin-bottom:var(--s-4)}
+.strip__title{margin:0;font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);text-transform:uppercase;color:var(--fg-muted)}
+.strip__nav{display:flex;gap:var(--s-2)}
+.arrow{
+  width:32px;height:32px;border-radius:var(--r-full);display:grid;place-items:center;
+  border:1px solid var(--border);background:var(--surface);color:var(--fg-body);
+  box-shadow:var(--sh-1);
+  transition:border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease), opacity var(--dur-1) var(--ease);
+}
+.arrow:hover{border-color:var(--border-strong);color:var(--fg)}
+.arrow[disabled]{opacity:.35;cursor:default;box-shadow:none}
+.rail{
+  display:flex;gap:var(--s-4);overflow-x:auto;scroll-snap-type:x mandatory;
+  scrollbar-width:none;-ms-overflow-style:none;padding-bottom:var(--s-1);
+}
+.rail::-webkit-scrollbar{display:none}
 
 /* ════════════════════════════════════════════════════════════════
    TUTORIALS — vertical 9:16 shelf, deliberately unlike the plugin
@@ -742,6 +740,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 @media (max-width:860px){
   :root{--section-y:var(--s-9)}
   .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  /* three narrow columns cannot hold the product copy — stack, video first */
+  .pshow{grid-template-columns:1fr;gap:var(--s-6)}
+  .pshow__media,.pshow--flip .pshow__media{grid-column:auto;order:1}
+  .pshow__info,.pshow--flip .pshow__info{order:2}
+  .pshow + .pshow{margin-top:var(--s-8);padding-top:var(--s-8)}
   .install{grid-template-columns:1fr;gap:var(--s-8)}
   .footer__top{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-8)}
   .section__head{flex-direction:column;align-items:flex-start;gap:var(--s-5)}
@@ -931,15 +934,19 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       </a>
     </div>
 
-    <div class="plugins" data-reveal>
-      <article class="plugin">
-        <a class="plugin__media" href="#" aria-label="Play the RetouchX walkthrough">
-          <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
-          <span class="plugin__play" aria-hidden="true"><svg width="13" height="15" viewBox="0 0 17 19" fill="currentColor"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></span>
-          <span class="plugin__dur tnum">4:12</span>
-        </a>
-        <div class="plugin__body">
-          <p class="plugin__app"><span class="plugin__badge" aria-hidden="true">Ps</span>For Photoshop</p>
+    <div data-reveal>
+      <div class="pshow">
+        <div class="pshow__media">
+          <div class="player">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <button class="play" aria-label="Play the RetouchX walkthrough"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
+            <span class="player__cap">RetouchX — 40 portraits, one pass</span>
+            <span class="player__dur tnum">4:12</span>
+            <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+          </div>
+        </div>
+        <div class="pshow__info">
+          <p class="plugin__app"><span class="plugin__badge" aria-hidden="true">Ps</span><span class="plugin__badge plugin__badge--icon" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 16 16" fill="none"><rect x="1" y="2" width="14" height="9.4" rx="1.6" stroke="currentColor" stroke-width="1.5"/><path d="M8 11.4v3M5.4 14.4h5.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>For Photoshop &amp; desktop</p>
           <h3>RetouchX</h3>
           <p class="plugin__desc">Batch and auto retouch across a whole gallery.</p>
           <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Queue an entire shoot in one pass</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Smooths skin without killing texture</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Save and reuse your own recipes</li></ul>
@@ -948,15 +955,19 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <a class="link" href="#">6 clips <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           </div>
         </div>
-      </article>
-      <article class="plugin">
-        <a class="plugin__media" href="#" aria-label="Play the Lightroom AI Color walkthrough">
-          <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=750&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
-          <span class="plugin__play" aria-hidden="true"><svg width="13" height="15" viewBox="0 0 17 19" fill="currentColor"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></span>
-          <span class="plugin__dur tnum">3:26</span>
-        </a>
-        <div class="plugin__body">
-          <p class="plugin__app"><span class="plugin__badge" aria-hidden="true">Lr</span>Lightroom Classic &amp; Camera Raw</p>
+      </div>
+      <div class="pshow pshow--flip">
+        <div class="pshow__media">
+          <div class="player">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <button class="play" aria-label="Play the Lightroom AI Color walkthrough"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
+            <span class="player__cap">Lightroom AI Color — grade a gallery in taps</span>
+            <span class="player__dur tnum">3:26</span>
+            <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+          </div>
+        </div>
+        <div class="pshow__info">
+          <p class="plugin__app"><span class="plugin__badge" aria-hidden="true">LrC</span>For Lightroom Classic</p>
           <h3>Lightroom AI Color</h3>
           <p class="plugin__desc">Colour grading that takes taps, not hours.</p>
           <ul class="plugin__feats"><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Match the grade to a reference frame</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Sync one look across a whole shoot</li><li><svg width="12" height="10" viewBox="0 0 12 10" fill="none" aria-hidden="true"><path d="M1 5l3.4 3.4L11 1.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Holds skin tones while it works</li></ul>
@@ -965,14 +976,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <a class="link" href="#">6 clips <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           </div>
         </div>
-      </article>
-      <article class="plugin">
-        <a class="plugin__media" href="#" aria-label="Play the US Photoshop Plugin walkthrough">
-          <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
-          <span class="plugin__play" aria-hidden="true"><svg width="13" height="15" viewBox="0 0 17 19" fill="currentColor"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></span>
-          <span class="plugin__dur tnum">5:03</span>
-        </a>
-        <div class="plugin__body">
+      </div>
+      <div class="pshow">
+        <div class="pshow__media">
+          <div class="player">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <button class="play" aria-label="Play the US Photoshop Plugin walkthrough"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
+            <span class="player__cap">US Photoshop Plugin — the panel tour</span>
+            <span class="player__dur tnum">5:03</span>
+            <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+          </div>
+        </div>
+        <div class="pshow__info">
           <p class="plugin__app"><span class="plugin__badge" aria-hidden="true">Ps</span>For Photoshop</p>
           <h3>US Photoshop Plugin</h3>
           <p class="plugin__desc">The heavy Photoshop routines, in one click.</p>
@@ -982,13 +997,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <a class="link" href="#">6 clips <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           </div>
         </div>
-      </article>
+      </div>
     </div>
 
     <dl class="specs">
       <div class="spec">
         <dt>Works with</dt>
-        <dd>Lightroom Classic &amp; CC · Camera Raw · Photoshop</dd>
+        <dd>Lightroom Classic · Photoshop · standalone desktop app</dd>
       </div>
       <div class="spec">
         <dt>Platforms</dt>
@@ -1335,7 +1350,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           <h3 class="qa__h"><button class="qa__q" aria-expanded="true">Which apps do these work with?
             <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
           </button></h3>
-          <div class="qa__a"><p>Lightroom Classic, Lightroom CC, Camera Raw and Photoshop. Presets come as XMP for desktop and DNG for Lightroom mobile, so one purchase covers both.</p></div>
+          <div class="qa__a"><p>The plugins run in Lightroom Classic and Photoshop, and RetouchX also runs as a standalone desktop app. Presets come as XMP for desktop and DNG for Lightroom mobile, so one purchase covers both.</p></div>
         </div>
         <div class="qa">
           <h3 class="qa__h"><button class="qa__q" aria-expanded="false">Is it a subscription?
@@ -1705,8 +1720,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       entries.forEach(function(entry){
         if(entry.isIntersecting){ entry.target.classList.add('is-in'); io.unobserve(entry.target); }
       });
-    }, {rootMargin:'0px 0px -10% 0px', threshold:.08});
+    }, {rootMargin:'0px 0px -10% 0px', threshold:0});
     targets.forEach(function(el){ io.observe(el); });
+    /* Safety net. A layout bug once made a section taller than the page and
+       the observer never fired for anything after it, so the rest of the
+       page stayed invisible. Content must never depend on this working. */
+    setTimeout(function(){ targets.forEach(function(el){ el.classList.add('is-in'); }); }, 2500);
   }
 })();
 </script>
