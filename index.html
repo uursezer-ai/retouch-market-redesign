@@ -468,12 +468,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .panel{display:none}
 .panel.is-on{display:block}
 .deck{
-  --peek:104px;
+  --deck-gap:var(--s-4);
   /* switching plugin scrolls the new deck here — clear of the sticky bar */
   scroll-margin-top:calc(var(--nav-h) + var(--s-4));
 }
+/* The track runs the full width of the page, not the content column. The
+   active video is inset to the column so it lines up with the heading and
+   the tabs, and the videos either side carry on past the screen edge rather
+   than being chopped off against an invisible container. */
 .deck__track{
-  display:flex;gap:var(--s-4);
+  /* the column's own left edge — half the leftover page plus the gutter — with
+     a floor so the neighbours stay wide enough to aim at on smaller screens */
+  --inset:max(calc(var(--gutter) + var(--s-5)), calc((100% - var(--container)) / 2 + var(--gutter)));
+  display:flex;gap:var(--deck-gap);
+  padding-inline:var(--inset);
+  scroll-padding-inline:var(--inset);
   overflow-x:auto;overscroll-behavior-x:contain;
   scroll-snap-type:x mandatory;
   /* a scroll container with no visible bar still needs room for the focus
@@ -482,12 +491,22 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   scrollbar-width:none;-ms-overflow-style:none;
 }
 .deck__track::-webkit-scrollbar{display:none}
-.deck__pane{flex:0 0 calc(100% - var(--peek));min-width:0;scroll-snap-align:start}
-/* the last pane can never reach the left edge, so snap it by its right edge
-   instead — otherwise a mandatory snap bounces back off the end */
-.deck__pane:last-child{scroll-snap-align:end}
+/* 100% of the track's content box — which is the column width, since the
+   padding above is exactly the gutter either side */
+.deck__pane{flex:0 0 100%;min-width:0;scroll-snap-align:start}
+/* the neighbours are the control for stepping one video left or right */
+.deck__pane:not(.is-on){cursor:pointer}
+/* the neighbours show their picture and nothing else — half a caption and a
+   stray duration read as debris rather than as the next video */
+.deck__pane:not(.is-on) .play,
+.deck__pane:not(.is-on) .player__cap,
+.deck__pane:not(.is-on) .player__dur{opacity:0;pointer-events:none}
+.deck__pane .play{transition:opacity var(--dur-2) var(--ease), transform var(--dur-2) var(--ease)}
+.deck__pane .player__cap,.deck__pane .player__dur{transition:opacity var(--dur-2) var(--ease)}
 
-.deck__bar{display:flex;align-items:center;justify-content:center;gap:var(--s-3);margin-top:var(--s-5)}
+.deck__bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin-top:var(--s-5)}
+.deck__ctrl{display:flex;align-items:center;justify-content:center;gap:var(--s-3)}
+.deck__arrows{display:flex;gap:var(--s-2);justify-content:flex-end}
 .deck__dots{
   display:flex;align-items:center;gap:var(--s-2);
   padding:var(--s-3) var(--s-4);border-radius:var(--r-full);
@@ -708,7 +727,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   transition:box-shadow var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease);
 }
 .player:hover{box-shadow:var(--sh-3);border-color:var(--border-strong)}
-.player img{width:100%;height:100%;object-fit:cover}
+/* the media is a still today and an MP4 or GIF the moment one is dropped in
+   — a <video> with a poster covers all three without a layout change */
+.player img,.player video{display:block;width:100%;height:100%;object-fit:cover}
 .player::after{
   content:"";position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(to top,rgba(10,37,64,.74) 0%,rgba(10,37,64,.30) 18%,transparent 42%);
@@ -887,7 +908,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   :root{--section-y:var(--s-9)}
   .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
   .ptabs{grid-template-columns:1fr;gap:var(--s-2)}
-  .deck{--peek:72px}
+  /* swipe carries the row on a phone, so the arrows step aside */
+  .deck__arrows{display:none}
   /* three columns of copy get too narrow to read below this — stack them and
      let the feature list find its own height */
   .pinfo.is-on{grid-template-columns:1fr;gap:var(--s-5);margin-top:var(--s-7)}
@@ -917,7 +939,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   :root{--gutter:var(--s-5);--section-y:var(--s-8)}
   .hero{padding:var(--s-9) 0 var(--s-10)}
   .cards{grid-template-columns:1fr}
-  .deck{--peek:32px}
+  .deck{--deck-gap:var(--s-3)}
   .clip{flex:0 0 152px}
   .reel{flex:0 0 148px}
   .reels__foot .btn{width:100%}
@@ -1137,85 +1159,94 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <a class="link" href="#">All plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
 
-    <div data-reveal>
+  </div>
+
+  <div data-reveal>
       <div class="panel is-on" id="pp-0" role="tabpanel" aria-labelledby="pt-0">
         <div class="deck" data-deck role="group" aria-roledescription="carousel" aria-label="RetouchX walkthroughs">
           <div class="deck__track" data-deck-track>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="RetouchX — 40 portraits, one pass — video 1 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/retouchx-01.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: RetouchX — 40 portraits, one pass (4:12)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">RetouchX — 40 portraits, one pass</span>
                 <span class="player__dur tnum">4:12</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/retouchx-01.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Setting up a batch queue — video 2 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/retouchx-02.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Setting up a batch queue (1:12)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Setting up a batch queue</span>
                 <span class="player__dur tnum">1:12</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/retouchx-02.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Keeping skin texture — video 3 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/retouchx-03.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Keeping skin texture (0:48)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Keeping skin texture</span>
                 <span class="player__dur tnum">0:48</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/retouchx-03.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Eyes, teeth and lips — video 4 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/retouchx-04.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Eyes, teeth and lips (2:04)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Eyes, teeth and lips</span>
                 <span class="player__dur tnum">2:04</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/retouchx-04.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Reviewing before export — video 5 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/retouchx-05.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Reviewing before export (1:33)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Reviewing before export</span>
                 <span class="player__dur tnum">1:33</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/retouchx-05.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Masking hair edges — video 6 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/retouchx-06.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Masking hair edges (1:57)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Masking hair edges</span>
                 <span class="player__dur tnum">1:57</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/retouchx-06.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Saving your own recipe — video 7 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/retouchx-07.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Saving your own recipe (2:26)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Saving your own recipe</span>
                 <span class="player__dur tnum">2:26</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/retouchx-07.mp4 in to replace this still.</p>
               </div>
             </div>
           </div>
-          <div class="deck__bar">
-            <div class="deck__dots">
-            <button class="deck__dot" type="button" aria-current="true" aria-label="Go to video 1 of 7: RetouchX — 40 portraits, one pass"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 2 of 7: Setting up a batch queue"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 3 of 7: Keeping skin texture"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 4 of 7: Eyes, teeth and lips"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 5 of 7: Reviewing before export"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 6 of 7: Masking hair edges"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 7 of 7: Saving your own recipe"><i></i></button>
+          <div class="deck__bar wrap">
+            <span aria-hidden="true"></span>
+            <div class="deck__ctrl">
+              <div class="deck__dots">
+                <button class="deck__dot" type="button" aria-current="true" aria-label="Go to video 1 of 7: RetouchX — 40 portraits, one pass"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 2 of 7: Setting up a batch queue"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 3 of 7: Keeping skin texture"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 4 of 7: Eyes, teeth and lips"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 5 of 7: Reviewing before export"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 6 of 7: Masking hair edges"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 7 of 7: Saving your own recipe"><i></i></button>
+              </div>
+              <button class="deck__play is-playing" type="button" data-deck-toggle aria-label="Pause the RetouchX carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
             </div>
-            <button class="deck__play is-playing" type="button" data-deck-toggle aria-label="Pause the RetouchX carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
+            <div class="deck__arrows">
+              <button class="arrow" type="button" data-deck-step="-1" aria-label="Previous video"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button class="arrow" type="button" data-deck-step="1" aria-label="Next video"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
           </div>
         </div>
       </div>
@@ -1224,79 +1255,86 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           <div class="deck__track" data-deck-track>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Lightroom AI Color — grade a gallery in taps — video 1 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-01.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Lightroom AI Color — grade a gallery in taps (3:26)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Lightroom AI Color — grade a gallery in taps</span>
                 <span class="player__dur tnum">3:26</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/lightroom-ai-color-01.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Matching a reference frame — video 2 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-02.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Matching a reference frame (1:05)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Matching a reference frame</span>
                 <span class="player__dur tnum">1:05</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/lightroom-ai-color-02.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Building your own look — video 3 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-03.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Building your own look (2:19)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Building your own look</span>
                 <span class="player__dur tnum">2:19</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/lightroom-ai-color-03.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Syncing across a shoot — video 4 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-04.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Syncing across a shoot (0:52)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Syncing across a shoot</span>
                 <span class="player__dur tnum">0:52</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/lightroom-ai-color-04.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Protecting skin tones — video 5 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-05.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Protecting skin tones (1:41)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Protecting skin tones</span>
                 <span class="player__dur tnum">1:41</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/lightroom-ai-color-05.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Split toning shadows — video 6 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-06.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Split toning shadows (1:28)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Split toning shadows</span>
                 <span class="player__dur tnum">1:28</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/lightroom-ai-color-06.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Exporting a preset pack — video 7 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-07.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Exporting a preset pack (2:11)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Exporting a preset pack</span>
                 <span class="player__dur tnum">2:11</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/lightroom-ai-color-07.mp4 in to replace this still.</p>
               </div>
             </div>
           </div>
-          <div class="deck__bar">
-            <div class="deck__dots">
-            <button class="deck__dot" type="button" aria-current="true" aria-label="Go to video 1 of 7: Lightroom AI Color — grade a gallery in taps"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 2 of 7: Matching a reference frame"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 3 of 7: Building your own look"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 4 of 7: Syncing across a shoot"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 5 of 7: Protecting skin tones"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 6 of 7: Split toning shadows"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 7 of 7: Exporting a preset pack"><i></i></button>
+          <div class="deck__bar wrap">
+            <span aria-hidden="true"></span>
+            <div class="deck__ctrl">
+              <div class="deck__dots">
+                <button class="deck__dot" type="button" aria-current="true" aria-label="Go to video 1 of 7: Lightroom AI Color — grade a gallery in taps"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 2 of 7: Matching a reference frame"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 3 of 7: Building your own look"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 4 of 7: Syncing across a shoot"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 5 of 7: Protecting skin tones"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 6 of 7: Split toning shadows"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 7 of 7: Exporting a preset pack"><i></i></button>
+              </div>
+              <button class="deck__play is-playing" type="button" data-deck-toggle aria-label="Pause the Lightroom AI Color carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
             </div>
-            <button class="deck__play is-playing" type="button" data-deck-toggle aria-label="Pause the Lightroom AI Color carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
+            <div class="deck__arrows">
+              <button class="arrow" type="button" data-deck-step="-1" aria-label="Previous video"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button class="arrow" type="button" data-deck-step="1" aria-label="Next video"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
           </div>
         </div>
       </div>
@@ -1305,83 +1343,92 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           <div class="deck__track" data-deck-track>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="US Photoshop Plugin — the panel tour — video 1 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/us-photoshop-plugin-01.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: US Photoshop Plugin — the panel tour (5:03)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">US Photoshop Plugin — the panel tour</span>
                 <span class="player__dur tnum">5:03</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/us-photoshop-plugin-01.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Frequency separation — video 2 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/us-photoshop-plugin-02.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Frequency separation (2:37)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Frequency separation</span>
                 <span class="player__dur tnum">2:37</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/us-photoshop-plugin-02.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Dodge and burn layers — video 3 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/us-photoshop-plugin-03.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Dodge and burn layers (1:58)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Dodge and burn layers</span>
                 <span class="player__dur tnum">1:58</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/us-photoshop-plugin-03.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Saved liquify shapes — video 4 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/us-photoshop-plugin-04.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Saved liquify shapes (1:14)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Saved liquify shapes</span>
                 <span class="player__dur tnum">1:14</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/us-photoshop-plugin-04.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Export sizes for Instagram — video 5 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/us-photoshop-plugin-05.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Export sizes for Instagram (0:44)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Export sizes for Instagram</span>
                 <span class="player__dur tnum">0:44</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/us-photoshop-plugin-05.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Cleaning up backgrounds — video 6 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/us-photoshop-plugin-06.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Cleaning up backgrounds (3:02)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Cleaning up backgrounds</span>
                 <span class="player__dur tnum">3:02</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/us-photoshop-plugin-06.mp4 in to replace this still.</p>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Sharpening for print — video 7 of 7">
               <div class="player">
-                <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+                <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/us-photoshop-plugin-07.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Sharpening for print (1:49)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__cap">Sharpening for print</span>
                 <span class="player__dur tnum">1:49</span>
-                <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <p class="player__note">Mockup: drop videos/us-photoshop-plugin-07.mp4 in to replace this still.</p>
               </div>
             </div>
           </div>
-          <div class="deck__bar">
-            <div class="deck__dots">
-            <button class="deck__dot" type="button" aria-current="true" aria-label="Go to video 1 of 7: US Photoshop Plugin — the panel tour"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 2 of 7: Frequency separation"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 3 of 7: Dodge and burn layers"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 4 of 7: Saved liquify shapes"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 5 of 7: Export sizes for Instagram"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 6 of 7: Cleaning up backgrounds"><i></i></button>
-            <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 7 of 7: Sharpening for print"><i></i></button>
+          <div class="deck__bar wrap">
+            <span aria-hidden="true"></span>
+            <div class="deck__ctrl">
+              <div class="deck__dots">
+                <button class="deck__dot" type="button" aria-current="true" aria-label="Go to video 1 of 7: US Photoshop Plugin — the panel tour"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 2 of 7: Frequency separation"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 3 of 7: Dodge and burn layers"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 4 of 7: Saved liquify shapes"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 5 of 7: Export sizes for Instagram"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 6 of 7: Cleaning up backgrounds"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 7 of 7: Sharpening for print"><i></i></button>
+              </div>
+              <button class="deck__play is-playing" type="button" data-deck-toggle aria-label="Pause the US Photoshop Plugin carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
             </div>
-            <button class="deck__play is-playing" type="button" data-deck-toggle aria-label="Pause the US Photoshop Plugin carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
+            <div class="deck__arrows">
+              <button class="arrow" type="button" data-deck-step="-1" aria-label="Previous video"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+              <button class="arrow" type="button" data-deck-step="1" aria-label="Next video"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+  </div>
+
+  <div class="wrap">
 
     <div class="ptabs" role="tablist" aria-label="Plugins" id="pluginTabs">
       <button class="ptab" role="tab" aria-selected="true" aria-controls="pp-0 pi-0" id="pt-0">
@@ -2060,12 +2107,29 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         dots   = [].slice.call(deck.querySelectorAll('.deck__dot')),
         toggle = deck.querySelector('[data-deck-toggle]'),
         panel  = deck.closest('.panel'),
+        arrows = [].slice.call(deck.querySelectorAll('[data-deck-step]')),
         idx = 0, timer = null, raf = 0, settle = null, auto = false,
         playing = !still, near = false, seen = false;
 
-    function held(){
-      return still || !playing || near || !seen || document.hidden ||
-             (panel && panel.hasAttribute('hidden'));
+    /* on screen, on the live tab, and not switched off */
+    function awake(){
+      return playing && seen && !document.hidden && !(panel && panel.hasAttribute('hidden'));
+    }
+    /* hovering holds the countdown but not the video itself — you paused to
+       watch, not to stop it */
+    function held(){ return still || near || !awake(); }
+    /* whichever video is in the middle plays; the rest rewind and wait */
+    function reel(){
+      panes.forEach(function(pane, n){
+        var v = pane.querySelector('video');
+        if(!v) return;
+        if(n === idx && awake() && !still){
+          var p = v.play();
+          if(p && p.catch) p.catch(function(){});
+        } else if(!v.paused){
+          v.pause(); v.currentTime = 0;
+        }
+      });
     }
     /* restart the active dot's fill so it tracks the countdown */
     function tick(){
@@ -2080,6 +2144,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     function mark(i){
       idx = i;
       dots.forEach(function(d, n){ d.setAttribute('aria-current', String(n === i)); });
+      panes.forEach(function(p, n){ p.classList.toggle('is-on', n === i); });
+      reel();
       tick();
     }
     function go(i){
@@ -2092,8 +2158,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       track.scrollTo({left: track.scrollLeft + shift, behavior: still ? 'auto' : 'smooth'});
       mark(i);
     }
+    /* the snap line: the track's left edge plus its inset, which is where a
+       snapped pane's own left edge sits */
+    function snapline(){
+      return track.getBoundingClientRect().left + parseFloat(getComputedStyle(track).paddingLeft);
+    }
     function nearest(){
-      var edge = track.getBoundingClientRect().left, best = 0, gap = Infinity;
+      var edge = snapline(), best = 0, gap = Infinity;
       panes.forEach(function(p, n){
         var d = Math.abs(p.getBoundingClientRect().left - edge);
         if(d < gap){ gap = d; best = n; }
@@ -2113,11 +2184,24 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     }, {passive:true});
 
     dots.forEach(function(d, n){ d.addEventListener('click', function(){ go(n); }); });
+    arrows.forEach(function(a){
+      var step = parseInt(a.getAttribute('data-deck-step'), 10);
+      a.addEventListener('click', function(){ go((idx + step + panes.length) % panes.length); });
+    });
+    /* the video showing at either edge steps you onto it */
+    panes.forEach(function(pane, n){
+      pane.addEventListener('click', function(e){
+        if(n === idx) return;
+        e.preventDefault(); e.stopPropagation();
+        go(n);
+      }, true);
+    });
     toggle.addEventListener('click', function(){
       playing = !playing;
       toggle.classList.toggle('is-playing', playing);
       toggle.setAttribute('aria-label', (playing ? 'Pause' : 'Play') +
         toggle.getAttribute('aria-label').replace(/^(Pause|Play)/, ''));
+      reel();
       tick();
     });
 
@@ -2130,14 +2214,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     });
     if(window.IntersectionObserver){
       new IntersectionObserver(function(rows){
-        seen = rows[0].isIntersecting; tick();
+        seen = rows[0].isIntersecting; refresh();
       }, {threshold:.35}).observe(deck);
     } else { seen = true; }
 
-    return {el: deck, tick: tick, reset: function(){ track.scrollLeft = 0; mark(0); }};
+    function refresh(){ reel(); tick(); }
+    mark(0);
+    return {el: deck, refresh: refresh, reset: function(){ track.scrollLeft = 0; mark(0); }};
   });
   document.addEventListener('visibilitychange', function(){
-    decks.forEach(function(d){ d.tick(); });
+    decks.forEach(function(d){ d.refresh(); });
   });
 
   /* ---- plugin tabs ---- */
@@ -2158,7 +2244,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     /* the new deck starts on its first video, not wherever the last plugin's
        row happened to be left */
     var live = document.querySelector('.panel.is-on [data-deck]');
-    decks.forEach(function(d){ if(d.el === live) d.reset(); else d.tick(); });
+    decks.forEach(function(d){ if(d.el === live) d.reset(); else d.refresh(); });
     /* start the new walkthrough from its top rather than wherever the last
        one left the page */
     var shown = document.querySelector('.panel.is-on .deck');
