@@ -273,7 +273,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .hero__grid{
   position:relative;display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(0,540px);
+  grid-template-columns:minmax(0,1fr) minmax(0,600px);
   gap:var(--s-10);align-items:center;
 }
 
@@ -292,43 +292,31 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .hero h1{margin:var(--s-6) 0 0;max-width:16ch}
 .hero .lede{margin-top:var(--s-5);font-size:var(--fs-7);max-width:46ch}
 .hero__actions{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-8)}
-.hero__note{margin:var(--s-4) 0 0;font-size:var(--fs-2);color:var(--fg-muted)}
 
 /* proof stats — value big, label small */
-/* bottom-aligned so the numbers and their labels line up across all three,
-   even though the rating carries an extra row of stars above it */
-.stats{display:flex;flex-wrap:wrap;align-items:flex-end;gap:var(--s-7);margin-top:var(--s-9);padding-top:var(--s-7);border-top:1px solid var(--border)}
+/* three fixed columns: the row never wraps to a second line, and because
+   every stat is now the same shape (value, then label) the numbers align
+   no matter how many lines a label takes */
+.stats{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;
+  gap:var(--s-6);margin-top:var(--s-9);padding-top:var(--s-7);border-top:1px solid var(--border);
+}
 .stat b{
   display:block;font-size:var(--fs-8);font-weight:var(--fw-bold);
   letter-spacing:var(--tr-heading);color:var(--fg);line-height:1.1;
   font-variant-numeric:tabular-nums;
 }
 .stat span{display:block;margin-top:var(--s-1);font-size:var(--fs-2);color:var(--fg-muted)}
-.stat .stat__stars{display:flex;align-items:center;gap:2px;color:var(--star);margin:0 0 var(--s-2)}
+.stat .stat__stars{display:inline-flex;align-items:center;gap:1px;color:var(--star);margin-left:var(--s-2);vertical-align:middle}
 
-/* ── showcase: segmented tabs → framed media → caption ────────── */
-.showcase{display:flex;flex-direction:column;gap:var(--s-4)}
-.seg{
-  display:inline-flex;gap:var(--s-1);padding:var(--s-1);align-self:flex-start;
-  border-radius:var(--r-control);background:var(--surface-sunken);border:1px solid var(--border);
-}
-.seg button{
-  padding:var(--s-2) var(--s-3);border-radius:6px;
-  font-size:var(--fs-3);font-weight:var(--fw-semibold);color:var(--fg-muted);
-  transition:background var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
-}
-.seg button:hover{color:var(--fg)}
-.seg button[aria-selected="true"]{background:var(--surface);color:var(--fg);box-shadow:var(--sh-1)}
-
+/* ── the framed before/after — the hero's single visual anchor ── */
 .showcase__frame{
   position:relative;border-radius:var(--r-panel);overflow:hidden;
   border:1px solid var(--border);background:var(--surface-sunken);box-shadow:var(--sh-3);
 }
-.shot{display:none}
-.shot.is-on{display:block}
 
 .compare{
-  position:relative;overflow:hidden;aspect-ratio:4/3;width:100%;
+  position:relative;overflow:hidden;aspect-ratio:16/9;width:100%;
   background:var(--surface-sunken);touch-action:none;cursor:ew-resize;
 }
 .compare img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
@@ -352,9 +340,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   color:var(--fg-body);box-shadow:var(--sh-1);
 }
 .tag--on{background:var(--accent);color:var(--fg-on-accent)}
-
-.showcase__foot{display:flex;align-items:center;justify-content:space-between;gap:var(--s-4);min-height:24px}
-.showcase__cap{margin:0;font-size:var(--fs-3);color:var(--fg-muted)}
 
 /* ════════════════════════════════════════════════════════════════
    3 · CREATOR PROOF BAND
@@ -684,8 +669,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    RESPONSIVE
    ════════════════════════════════════════════════════════════════ */
 @media (max-width:1100px){
-  .hero__grid{grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:var(--s-8)}
-  .hero .lede{font-size:var(--fs-6)}
+  .hero__grid{grid-template-columns:minmax(0,1fr) minmax(0,480px);gap:var(--s-8)}
   .install,.faq{gap:var(--s-8)}
 }
 @media (max-width:1000px){
@@ -700,7 +684,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .nav__panel .btn{width:100%;margin-top:var(--s-5)}
   .hero__grid{grid-template-columns:1fr;gap:var(--s-9)}
   .hero h1{max-width:20ch}
-  .hero .lede{max-width:60ch}
   .ptabs{grid-template-columns:1fr;border-bottom:0}
   .ptab{padding:var(--s-4) var(--s-4) var(--s-4) var(--s-3);border-bottom:1px solid var(--border);margin-bottom:0;border-left:2px solid transparent}
   .ptab[aria-selected="true"]{border-bottom-color:var(--border);border-left-color:var(--accent);background:var(--bg-subtle)}
@@ -801,13 +784,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
       <h1 id="heroTitle">Finish the edit before the shoot gets cold.</h1>
 
-      <p class="lede">AI plugins, Lightroom presets and video LUTs built by photographers who still shoot. One purchase, yours for good, on every machine you own.</p>
-
       <div class="hero__actions">
         <a class="btn btn--primary btn--lg" href="#">Get the Full Pack — $59</a>
-        <a class="btn btn--secondary btn--lg" href="#plugins">See it run</a>
       </div>
-      <p class="hero__note">One-time purchase · macOS &amp; Windows · updates included</p>
 
       <dl class="stats">
         <div class="stat">
@@ -815,14 +794,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           <span>photographers editing with it</span>
         </div>
         <div class="stat">
-          <span class="stat__stars" aria-hidden="true">
-            <svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>
-            <svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>
-            <svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>
-            <svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>
-            <svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>
-          </span>
-          <b class="tnum">4.9</b>
+          <b class="tnum">4.9<span class="stat__stars" aria-hidden="true">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>
+          </span></b>
           <span>across 15,000+ pack reviews</span>
         </div>
         <div class="stat">
@@ -833,59 +811,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     </div>
 
     <div class="hero__media" data-reveal>
-      <div class="showcase">
-
-        <div class="seg" role="tablist" aria-label="Choose what to preview">
-          <button role="tab" aria-selected="true" aria-controls="shot-0" id="segt-0">Full Pack</button>
-          <button role="tab" aria-selected="false" aria-controls="shot-1" id="segt-1" tabindex="-1">RetouchX</button>
-          <button role="tab" aria-selected="false" aria-controls="shot-2" id="segt-2" tabindex="-1">Presets</button>
-        </div>
-
-        <div class="showcase__frame">
-          <div class="shot is-on" id="shot-0" role="tabpanel" aria-labelledby="segt-0">
-            <div class="compare" data-compare tabindex="0" role="slider" aria-label="Drag to compare raw and graded" aria-valuemin="0" aria-valuemax="100" aria-valuenow="54">
-              <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75" alt="Portrait graded with a Retouch Market preset" onerror="this.style.display='none'">
-              <img class="compare__raw" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" onerror="this.style.display='none'">
-              <div class="tagpair"><span class="tag">Raw</span><span class="tag tag--on">Graded</span></div>
-              <div class="compare__bar"></div>
-              <div class="compare__grip" aria-hidden="true">
-                <svg width="15" height="9" viewBox="0 0 15 9" fill="none"><path d="M5.5 1L2 4.5 5.5 8M9.5 1L13 4.5 9.5 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </div>
-            </div>
-          </div>
-
-          <div class="shot" id="shot-1" role="tabpanel" aria-labelledby="segt-1" hidden>
-            <div class="compare" data-compare tabindex="0" role="slider" aria-label="Drag to compare raw and retouched" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
-              <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="Portrait retouched with RetouchX" loading="lazy" onerror="this.style.display='none'">
-              <img class="compare__raw" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-              <div class="tagpair"><span class="tag">Raw</span><span class="tag tag--on">Retouched</span></div>
-              <div class="compare__bar"></div>
-              <div class="compare__grip" aria-hidden="true">
-                <svg width="15" height="9" viewBox="0 0 15 9" fill="none"><path d="M5.5 1L2 4.5 5.5 8M9.5 1L13 4.5 9.5 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </div>
-            </div>
-          </div>
-
-          <div class="shot" id="shot-2" role="tabpanel" aria-labelledby="segt-2" hidden>
-            <div class="compare" data-compare tabindex="0" role="slider" aria-label="Drag to compare raw and graded" aria-valuemin="0" aria-valuemax="100" aria-valuenow="58">
-              <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=750&amp;q=75" alt="Photos sharing one graded look" loading="lazy" onerror="this.style.display='none'">
-              <img class="compare__raw" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-              <div class="tagpair"><span class="tag">Raw</span><span class="tag tag--on">Graded</span></div>
-              <div class="compare__bar"></div>
-              <div class="compare__grip" aria-hidden="true">
-                <svg width="15" height="9" viewBox="0 0 15 9" fill="none"><path d="M5.5 1L2 4.5 5.5 8M9.5 1L13 4.5 9.5 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </div>
-            </div>
+      <div class="showcase__frame">
+        <div class="compare" data-compare tabindex="0" role="slider" aria-label="Drag to compare raw and graded" aria-valuemin="0" aria-valuemax="100" aria-valuenow="54">
+          <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="Portrait graded with a Retouch Market preset" onerror="this.style.display='none'">
+          <img class="compare__raw" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="" aria-hidden="true" onerror="this.style.display='none'">
+          <div class="tagpair"><span class="tag">Raw</span><span class="tag tag--on">Graded</span></div>
+          <div class="compare__bar"></div>
+          <div class="compare__grip" aria-hidden="true">
+            <svg width="15" height="9" viewBox="0 0 15 9" fill="none"><path d="M5.5 1L2 4.5 5.5 8M9.5 1L13 4.5 9.5 8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </div>
         </div>
-
-        <div class="showcase__foot">
-          <p class="showcase__cap" id="showcaseCap">Every plugin and preset we make, in one bundle.</p>
-          <a class="link" href="#" id="showcaseLink">Full Pack
-            <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          </a>
-        </div>
-
       </div>
     </div>
 
@@ -1531,22 +1466,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       });
     });
     return select;
-  }
-
-  /* ---- hero showcase: media switches, the H1 stays put ---- */
-  var SHOWCASE = [
-    {cap:'Every plugin and preset we make, in one bundle.', label:'Full Pack'},
-    {cap:'Forty portraits retouched in a single pass.',      label:'RetouchX'},
-    {cap:'One look, carried across a whole feed.',           label:'Presets'}
-  ];
-  var segTabs = [].slice.call(document.querySelectorAll('.seg [role="tab"]'));
-  var cap = document.getElementById('showcaseCap');
-  var capLink = document.getElementById('showcaseLink');
-  if(segTabs.length){
-    wireTabs(segTabs, function(i){
-      cap.textContent = SHOWCASE[i].cap;
-      capLink.childNodes[0].nodeValue = SHOWCASE[i].label + ' ';
-    });
   }
 
   /* ---- plugin tabs ---- */
