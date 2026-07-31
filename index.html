@@ -624,6 +624,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .player{
   position:relative;aspect-ratio:16/9;border-radius:var(--r-card);overflow:hidden;
   background:var(--surface-sunken);border:1px solid var(--border);
+  /* switching plugin scrolls the new player here — clear of the sticky bar
+     with a little air above it */
+  scroll-margin-top:calc(var(--nav-h) + var(--s-4));
   transition:box-shadow var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease);
 }
 .player:hover{box-shadow:var(--sh-3);border-color:var(--border-strong)}
@@ -1745,6 +1748,23 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         if(on){ panel.removeAttribute('hidden'); } else { panel.setAttribute('hidden',''); }
       });
     });
+    /* start the new walkthrough from its top rather than wherever the last
+       one left the page */
+    var shown = document.querySelector('.panel.is-on .player');
+    if(shown){
+      /* the reveal animation holds this block 14px low until it fires, and
+         scrollIntoView would measure that offset and land short — settle it
+         first, without animating */
+      var host = shown.closest('[data-reveal]');
+      if(host && !host.classList.contains('is-in')){
+        var keep = host.style.transition;
+        host.style.transition = 'none';
+        host.classList.add('is-in');
+        void host.offsetWidth;
+        host.style.transition = keep;
+      }
+      shown.scrollIntoView({block:'start', behavior: still ? 'auto' : 'smooth'});
+    }
   }
   ptabs.forEach(function(tab, i){
     tab.addEventListener('click', function(){ selectPlugin(i); });
@@ -1752,7 +1772,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       var next = null;
       if(e.key === 'ArrowRight' || e.key === 'ArrowDown') next = (i + 1) % ptabs.length;
       if(e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   next = (i - 1 + ptabs.length) % ptabs.length;
-      if(next !== null){ selectPlugin(next); ptabs[next].focus(); e.preventDefault(); }
+      /* preventScroll: focusing the tab would otherwise scroll it back into
+         view and undo the jump to the player */
+      if(next !== null){ selectPlugin(next); ptabs[next].focus({preventScroll:true}); e.preventDefault(); }
     });
   });
 
