@@ -452,11 +452,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .ptab:hover{border-color:var(--border-strong)}
 .ptab[aria-selected="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-bg)}
-.ptab__box{
-  width:64px;aspect-ratio:3/4;border-radius:var(--r-control);flex:none;
-  display:grid;place-items:center;overflow:hidden;background:var(--surface-sunken);
-}
-.ptab__box img{width:100%;height:100%;object-fit:contain}
+/* the renders are transparent PNGs with their own shadow, so they sit on the
+   card directly — no plate. Height follows the artwork rather than a fixed
+   ratio, which is what was cropping the bottom off the box. */
+.ptab__box{width:60px;flex:none}
+.ptab__box img{display:block;width:100%;height:auto}
 .ptab__body{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
 /* accent gets one job in this card: marking the selected tab. A solid accent
    disc on every tab was louder than the selection itself, so the ordinal is
