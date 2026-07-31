@@ -445,20 +445,23 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    25-character sentence in capitals is not a label, and three casings in one
    card is what made this read as assembled rather than designed. */
 .ptab{
-  display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-4);align-items:start;
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-4);align-items:center;
   text-align:left;padding:var(--s-4);border-radius:var(--r-card);
   border:1px solid var(--border);background:var(--surface);
   transition:border-color var(--dur-2) var(--ease), background var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease);
 }
 .ptab:hover{border-color:var(--border-strong)}
 .ptab[aria-selected="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-bg)}
-.ptab__icon{
-  width:44px;height:44px;border-radius:10px;display:grid;place-items:center;flex:none;
-  background:var(--accent-bg);color:var(--accent-700);border:1px solid var(--accent-border);
-  font-size:var(--fs-3);font-weight:var(--fw-bold);letter-spacing:-.015em;
-  transition:background var(--dur-2) var(--ease), color var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease);
+/* packshot, not a monogram — box renders are portrait, so the plate is 3:4
+   and contains rather than crops, whatever background the render carries */
+.ptab__box{
+  width:56px;aspect-ratio:3/4;border-radius:var(--r-control);flex:none;
+  display:grid;place-items:center;overflow:hidden;
+  background:var(--surface-sunken);border:1px solid var(--border);
+  transition:border-color var(--dur-2) var(--ease);
 }
-.ptab[aria-selected="true"] .ptab__icon{background:var(--accent);color:var(--fg-on-accent);border-color:var(--accent)}
+.ptab__box img{width:100%;height:100%;object-fit:contain}
+.ptab[aria-selected="true"] .ptab__box{border-color:var(--accent-border)}
 .ptab__body{display:flex;flex-direction:column;min-width:0}
 /* the app line is the card's eyebrow, so it sits above the name it labels.
    Muted rather than accent — the icon and the selected border already carry
@@ -1064,7 +1067,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
     <div class="ptabs" role="tablist" aria-label="Plugins" id="pluginTabs">
       <button class="ptab" role="tab" aria-selected="true" aria-controls="pp-0 pi-0" id="pt-0">
-        <span class="ptab__icon" aria-hidden="true">Ps</span>
+        <!-- PLACEHOLDER: swap for the RetouchX box render -->
+        <span class="ptab__box"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
         <span class="ptab__body">
           <span class="ptab__app">For Photoshop &amp; Desktop</span>
           <span class="ptab__n">RetouchX</span>
@@ -1072,7 +1076,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </span>
       </button>
       <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-1 pi-1" id="pt-1" tabindex="-1">
-        <span class="ptab__icon" aria-hidden="true">LrC</span>
+        <!-- PLACEHOLDER: swap for the Lightroom AI Color box render -->
+        <span class="ptab__box"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
         <span class="ptab__body">
           <span class="ptab__app">For Lightroom Classic</span>
           <span class="ptab__n">Lightroom AI Color</span>
@@ -1080,7 +1085,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </span>
       </button>
       <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-2 pi-2" id="pt-2" tabindex="-1">
-        <span class="ptab__icon" aria-hidden="true">Ps</span>
+        <!-- PLACEHOLDER: swap for the US Photoshop Plugin box render -->
+        <span class="ptab__box"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
         <span class="ptab__body">
           <span class="ptab__app">For Photoshop</span>
           <span class="ptab__n">US Photoshop Plugin</span>
