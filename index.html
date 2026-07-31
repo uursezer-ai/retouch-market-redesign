@@ -381,17 +381,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    ════════════════════════════════════════════════════════════════ */
 .proof{background:var(--bg-subtle);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
 .proof__in{padding:var(--s-6) 0}
+/* three equal thirds that stay on one row at every width — the stat stacks
+   value over label rather than the row breaking apart */
 .proof__stats{
   display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-6);
   padding-bottom:var(--s-5);margin-bottom:var(--s-5);border-bottom:1px solid var(--border);
 }
-.pstat{display:flex;align-items:baseline;gap:var(--s-3);flex-wrap:wrap}
+.pstat{display:flex;align-items:baseline;gap:var(--s-3);min-width:0}
 .pstat b{
+  display:flex;align-items:center;gap:var(--s-2);white-space:nowrap;
   font-size:var(--fs-8);font-weight:var(--fw-bold);letter-spacing:var(--tr-heading);
   color:var(--fg);line-height:1.1;font-variant-numeric:tabular-nums;
 }
-.pstat span{font-size:var(--fs-3);color:var(--fg-muted)}
-.pstat .stars{display:inline-flex;align-items:center;gap:1px;color:var(--star);vertical-align:middle}
+.pstat span{font-size:var(--fs-3);color:var(--fg-muted);white-space:nowrap}
+.pstat .stars{display:inline-flex;align-items:center;gap:1px;color:var(--star)}
+.pstat .stars svg{width:13px;height:13px;flex:none}
 
 .proof__partners{display:flex;align-items:center;gap:var(--s-8)}
 .proof__label{
@@ -399,7 +403,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);
   text-transform:uppercase;color:var(--fg-muted);line-height:1.5;
 }
-.proof__row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-4) var(--s-8)}
+.proof__row{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-4) var(--s-8);min-width:0}
+.author{flex:none}
 .author{display:flex;align-items:center;gap:var(--s-3)}
 .avatar{
   width:32px;height:32px;border-radius:var(--r-full);flex:none;display:grid;place-items:center;
@@ -743,8 +748,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .footer__top{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-8)}
   .section__head{flex-direction:column;align-items:flex-start;gap:var(--s-5)}
   .specs{grid-template-columns:1fr;gap:var(--s-5)}
-  .proof__stats{grid-template-columns:1fr;gap:var(--s-3)}
-  .proof__partners{flex-direction:column;align-items:flex-start;gap:var(--s-4)}
+  /* still three across; each stat turns vertical so nothing wraps */
+  .proof__stats{gap:var(--s-3)}
+  .pstat{flex-direction:column;align-items:flex-start;gap:2px}
+  .pstat b{font-size:var(--fs-6)}
+  .pstat .stars svg{width:10px;height:10px}
+  .pstat span{font-size:var(--fs-2)}
+  .proof__partners{flex-direction:column;align-items:flex-start;gap:var(--s-3)}
+  /* partners scroll sideways instead of stacking */
+  .proof__row{
+    flex-wrap:nowrap;overflow-x:auto;gap:var(--s-6);width:100%;
+    scroll-snap-type:x proximity;scrollbar-width:none;-ms-overflow-style:none;
+    padding-bottom:var(--s-1);
+  }
+  .proof__row::-webkit-scrollbar{display:none}
+  .author{scroll-snap-align:start}
 }
 @media (max-width:600px){
   :root{--gutter:var(--s-5);--section-y:var(--s-8)}
@@ -758,6 +776,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .dot{width:28px}
   .cta{padding:var(--s-9) var(--s-5)}
   .qa__a{padding-right:0}
+}
+@media (max-width:380px){
+  /* the wordmark alone needs ~140px; below this the bar cannot hold brand,
+     icons and the menu button, so the mark carries the brand on its own */
+  .brand b{display:none}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -896,9 +919,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 <section class="proof" aria-label="Partners and reach">
   <div class="wrap proof__in">
     <dl class="proof__stats">
-      <div class="pstat"><b class="tnum">10,000+</b><span>photographers editing with it</span></div>
-      <div class="pstat"><b class="tnum">4.9</b><span class="stars" aria-hidden="true"><svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg width="13" height="13" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg></span><span>across 15,000+ reviews</span></div>
-      <div class="pstat"><b class="tnum">12</b><span>preset and LUT packs</span></div>
+      <div class="pstat"><b class="tnum">10,000+</b><span>photographers</span></div>
+      <div class="pstat"><b class="tnum">4.8<span class="stars" aria-hidden="true"><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg></span></b><span>15,000+ reviews</span></div>
+      <div class="pstat"><b class="tnum">12</b><span>languages</span></div>
     </dl>
     <div class="proof__partners">
       <p class="proof__label">Partners</p>
