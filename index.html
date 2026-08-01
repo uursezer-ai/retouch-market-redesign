@@ -77,7 +77,7 @@
   --fs-10:38px;  /* h2 ceiling                    */
   --fs-11:48px;
   --fs-12:58px;  /* h1 ceiling — the page's peak  */
-  --h1-size:clamp(38px,5vw,58px);
+  --h1-size:clamp(38px,5.6vw,76px);
 
   /* ── Line heights — bigger text, tighter leading ────────────── */
   --lh-display:1.06;
@@ -326,7 +326,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
 .slide{display:none}
 .slide.is-on{
-  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,600px);
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,540px);
   gap:var(--s-10);align-items:center;
 }
 .slide__copy .eyebrow{margin-bottom:var(--s-4)}
@@ -449,7 +449,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .ptab{
   position:relative;
   display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-4);align-items:center;
-  text-align:left;padding:var(--s-3) var(--s-7) var(--s-3) var(--s-4);border-radius:var(--r-card);
+  text-align:left;padding:var(--s-3) var(--s-8) var(--s-3) var(--s-4);border-radius:var(--r-card);
   border:1px solid var(--border);
   background:var(--surface);
   transition:border-color var(--dur-2) var(--ease), background var(--dur-2) var(--ease),
@@ -461,12 +461,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 /* the position in the set, quiet in the corner — it labels the card, it is
    not the thing you read first */
+/* a counter in a ring rather than a loose numeral. On an unselected card it
+   is a quiet grey chip on white; on the selected one it turns and sits white
+   inside an accent ring, so it reads against that card's tinted background
+   instead of dissolving into it */
 .ptab__no{
   position:absolute;top:var(--s-3);right:var(--s-3);
-  font-size:var(--fs-2);font-weight:var(--fw-medium);line-height:1;
-  color:var(--fg-muted);font-variant-numeric:tabular-nums;
+  display:grid;place-items:center;width:26px;height:26px;border-radius:var(--r-full);
+  border:1px solid var(--border);background:var(--surface-sunken);color:var(--fg-muted);
+  font-size:var(--fs-2);font-weight:var(--fw-bold);line-height:1;font-variant-numeric:tabular-nums;
+  transition:border-color var(--dur-2) var(--ease), background var(--dur-2) var(--ease),
+             color var(--dur-2) var(--ease);
 }
-.ptab[aria-selected="true"] .ptab__no{color:var(--accent-fg)}
+.ptab[aria-selected="true"] .ptab__no{
+  border-color:var(--accent-border);background:#fff;color:var(--accent-fg);
+}
 /* the box was sized when the card carried three lines and it, not the text,
    was setting the card's height — 115px for 46px of type. It is measured by
    height now, a little taller than the two lines beside it, so the card is
@@ -1026,7 +1035,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    ════════════════════════════════════════════════════════════════ */
 @media (max-width:1100px){
   .rail{--per-view:5}
-  .slide.is-on{grid-template-columns:minmax(0,1fr) minmax(0,480px);gap:var(--s-8)}
+  .slide.is-on{grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:var(--s-8)}
   .install,.faq{gap:var(--s-8)}
 }
 @media (max-width:1000px){
@@ -2220,7 +2229,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     if(!h1) return;
     h1.style.fontSize = '';
     var size = parseFloat(getComputedStyle(h1).fontSize);
-    var guard = 40;
+    /* enough steps to walk the whole range: the base size is 76 now, so 40
+       tries stopped at 36px with a long headline still on a fourth line */
+    var guard = 90;
     while(guard-- > 0 && size > 22){
       var lh = parseFloat(getComputedStyle(h1).lineHeight) || size * 1.06;
       if(h1.scrollHeight <= Math.ceil(lh * 3) + 1) break;
@@ -2232,16 +2243,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     document.querySelectorAll('.slide h1').forEach(function(h1){
       var slide = h1.closest('.slide'), was = slide.hasAttribute('hidden');
       /* measure hidden slides too, without letting them flash */
-      /* pinned to the slider's own box: left/right nail it to the width the
-         slide will really have, or a hidden one is measured wider than it
-         ends up and the headline is left a line too big */
+      /* measured under the rules it will actually be shown with: pinned to the
+         slider's own box, and wearing is-on — inline display:grid alone leaves
+         out the two-column template, so the headline was measured across the
+         whole slider instead of the copy column and never shrank */
       if(was){ slide.style.visibility='hidden'; slide.style.position='absolute';
                slide.style.left='0'; slide.style.right='0'; slide.style.top='0';
-               slide.style.display='grid'; slide.removeAttribute('hidden'); }
+               slide.classList.add('is-on'); slide.removeAttribute('hidden'); }
       fitTitle(h1);
-      if(was){ slide.setAttribute('hidden',''); slide.style.visibility='';
-               slide.style.position=''; slide.style.left=''; slide.style.right='';
-               slide.style.top=''; slide.style.display=''; }
+      if(was){ slide.setAttribute('hidden',''); slide.classList.remove('is-on');
+               slide.style.visibility=''; slide.style.position='';
+               slide.style.left=''; slide.style.right=''; slide.style.top=''; }
     });
   }
 
