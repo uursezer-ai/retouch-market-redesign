@@ -327,8 +327,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .slide{display:none}
 .slide.is-on{
   display:grid;grid-template-columns:minmax(0,1fr) minmax(0,540px);
-  gap:var(--s-10);align-items:center;
+  gap:var(--s-10);align-items:stretch;
 }
+/* the button and the video end on the same line: the copy is a column with the
+   actions pushed to its foot, and the frame is parked at the foot of its own
+   column. Whatever slack the two columns differ by now falls above the video
+   instead of splitting either side of it. */
+.slide__copy{display:flex;flex-direction:column}
+.slide__media{display:flex;flex-direction:column;justify-content:flex-end}
 .slide__copy .eyebrow{margin-bottom:var(--s-4)}
 /* exactly three lines of the base size are reserved whatever the headline
    runs to, so the slide never changes height between slides. JS steps the
@@ -343,7 +349,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   display:flex;align-items:flex-start;
 }
 .slide h1{margin:0;max-width:none}
-.hero__actions{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:var(--s-7)}
+/* margin-top:auto, not a fixed step: the gap under the headline is whatever is
+   left over, and it collapses to the floor below when nothing is left */
+.hero__actions{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:auto;padding-top:var(--s-4)}
 
 /* the hero image: a plain 16:9 frame, no overlay, no shadow */
 .showcase__frame{
@@ -459,14 +467,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .ptab[aria-selected="true"]{
   border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-bg);
 }
-/* the position in the set, quiet in the corner — it labels the card, it is
-   not the thing you read first */
+/* the position in the set, quiet in the bottom corner — it labels the card, it
+   is not the thing you read first, so it sits below the name rather than
+   competing with it at the top of the card */
 /* a counter in a ring rather than a loose numeral. On an unselected card it
    is a quiet grey chip on white; on the selected one it turns and sits white
    inside an accent ring, so it reads against that card's tinted background
    instead of dissolving into it */
 .ptab__no{
-  position:absolute;top:var(--s-3);right:var(--s-3);
+  position:absolute;bottom:var(--s-3);right:var(--s-3);
   display:grid;place-items:center;width:26px;height:26px;border-radius:var(--r-full);
   border:1px solid var(--border);background:var(--surface-sunken);color:var(--fg-muted);
   font-size:var(--fs-2);font-weight:var(--fw-bold);line-height:1;font-variant-numeric:tabular-nums;
@@ -707,11 +716,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   margin:0;min-height:calc(2 * var(--lh-snug) * var(--fs-4));
   font-size:var(--fs-4);font-weight:var(--fw-semibold);line-height:var(--lh-snug);color:var(--fg);
 }
-/* the two products that did the work are the useful part of the credit, so
-   they are the links */
-.ba__by{margin:var(--s-1) 0 0;font-size:var(--fs-2);line-height:var(--lh-snug);color:var(--fg-muted)}
-.ba__by a{color:var(--accent-fg);text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px;text-decoration-color:var(--accent-border)}
-.ba__by a:hover{text-decoration-color:var(--accent)}
 
 /* ════════════════════════════════════════════════════════════════
    TUTORIALS — vertical 9:16 shelf, deliberately unlike the plugin
@@ -1228,7 +1232,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="slide" role="group" aria-roledescription="slide" aria-label="3 of 3" hidden>
         <div class="slide__copy">
           <p class="eyebrow">Tutorials</p>
-          <div class="slide__title"><h1>Learn the technique, not just where to click.</h1></div>
+          <div class="slide__title"><h1>Learn the technique, not the clicks.</h1></div>
           <div class="hero__actions">
             <a class="btn btn--primary btn--lg" href="#tutorials">Browse the tutorials</a>
           </div>
@@ -1784,7 +1788,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             </div>
             <div class="bacard__body" id="baCap-0">
               <p class="ba__t">Natural Retouch. Timeless Color.</p>
-              <p class="ba__by">Edited with <a href="#plugins">US Photoshop Plugin</a> + <a href="#presets">Solis Preset Pack</a></p>
             </div>
           </article>
         </div>
@@ -1801,7 +1804,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             </div>
             <div class="bacard__body" id="baCap-1">
               <p class="ba__t">Clean skin, texture kept.</p>
-              <p class="ba__by">Edited with <a href="#plugins">RetouchX Plugin</a> + <a href="#presets">Lora Preset Pack</a></p>
             </div>
           </article>
         </div>
@@ -1818,7 +1820,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             </div>
             <div class="bacard__body" id="baCap-2">
               <p class="ba__t">One look across the gallery.</p>
-              <p class="ba__by">Edited with <a href="#plugins">Lightroom Ai Color Plugin</a> + <a href="#presets">Terra Preset Pack</a></p>
             </div>
           </article>
         </div>
@@ -1835,7 +1836,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             </div>
             <div class="bacard__body" id="baCap-3">
               <p class="ba__t">Warm light, honest tones.</p>
-              <p class="ba__by">Edited with <a href="#plugins">Lightroom Ai Color Plugin</a> + <a href="#presets">Jardin Preset Pack</a></p>
             </div>
           </article>
         </div>
@@ -1852,7 +1852,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             </div>
             <div class="bacard__body" id="baCap-4">
               <p class="ba__t">Studio finish, nothing plastic.</p>
-              <p class="ba__by">Edited with <a href="#plugins">RetouchX Plugin</a> + <a href="#presets">Onyx Preset Pack</a></p>
             </div>
           </article>
         </div>
@@ -1869,7 +1868,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             </div>
             <div class="bacard__body" id="baCap-5">
               <p class="ba__t">Whites that stay white.</p>
-              <p class="ba__by">Edited with <a href="#plugins">Lightroom Ai Color Plugin</a> + <a href="#presets">Olbia LUTs</a></p>
             </div>
           </article>
         </div>
@@ -2239,7 +2237,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       h1.style.fontSize = size + 'px';
     }
   }
+  /* One size for every slide, not one each: whatever the longest headline can
+     manage, they all use. Otherwise slide 1 sits at 76px next to a slide 3 at
+     66 and the slider looks like it changes its mind between slides. */
   function fitAllTitles(){
+    var sizes = [];
+    measure(function(h1){ fitTitle(h1); sizes.push(parseFloat(getComputedStyle(h1).fontSize)); });
+    var common = Math.min.apply(null, sizes);
+    measure(function(h1){ h1.style.fontSize = common + 'px'; });
+  }
+  function measure(fn){
     document.querySelectorAll('.slide h1').forEach(function(h1){
       var slide = h1.closest('.slide'), was = slide.hasAttribute('hidden');
       /* measure hidden slides too, without letting them flash */
@@ -2250,7 +2257,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       if(was){ slide.style.visibility='hidden'; slide.style.position='absolute';
                slide.style.left='0'; slide.style.right='0'; slide.style.top='0';
                slide.classList.add('is-on'); slide.removeAttribute('hidden'); }
-      fitTitle(h1);
+      fn(h1);
       if(was){ slide.setAttribute('hidden',''); slide.classList.remove('is-on');
                slide.style.visibility=''; slide.style.position='';
                slide.style.left=''; slide.style.right=''; slide.style.top=''; }
