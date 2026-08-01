@@ -1228,27 +1228,26 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    column is easier to read than a caption. Either side changes the other:
    both are drawn from one state.
    ════════════════════════════════════════════════════════════════ */
-.offer{display:grid;gap:var(--s-7)}
+.offer{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:var(--s-9);align-items:start}
+.offer__side{min-width:0;display:flex;flex-direction:column}
 
-/* the switch: a track with the chosen one lifted out of it */
+/* the switch is the install section's control, not a shape of its own: same
+   track, same lift on the chosen one. It sits over the column it governs and
+   takes its width, so it reads as that column's heading rather than as a
+   third thing floating above both. */
 .seg{
-  display:inline-grid;grid-auto-flow:column;gap:var(--s-1);
-  padding:var(--s-1);border-radius:var(--r-full);justify-self:start;
-  background:var(--surface-sunken);border:1px solid var(--border);
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-1);
+  padding:var(--s-1);margin-bottom:var(--s-4);
+  border-radius:var(--r-control);background:var(--surface-sunken);border:1px solid var(--border);
 }
 .seg__b{
-  display:flex;flex-direction:column;align-items:center;gap:1px;
-  padding:var(--s-3) var(--s-7);border-radius:var(--r-full);
-  color:var(--fg-muted);
-  transition:background var(--dur-2) var(--ease), color var(--dur-2) var(--ease),
-             box-shadow var(--dur-2) var(--ease);
+  padding:var(--s-3) var(--s-4);border-radius:6px;
+  font-size:var(--fs-4);font-weight:var(--fw-semibold);color:var(--fg-muted);
+  transition:background var(--dur-1) var(--ease), color var(--dur-1) var(--ease),
+             box-shadow var(--dur-1) var(--ease);
 }
-.seg__b b{font-size:var(--fs-5);font-weight:var(--fw-bold);letter-spacing:-.01em}
-.seg__b span{font-size:var(--fs-2)}
 .seg__b:hover{color:var(--fg)}
-.seg__b[aria-selected="true"]{background:var(--surface);color:var(--fg);box-shadow:var(--sh-2)}
-
-.offer__body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:var(--s-9);align-items:start}
+.seg__b[aria-selected="true"]{background:var(--surface);color:var(--fg);box-shadow:var(--sh-1)}
 
 /* the bundle as boxes */
 .picks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:1fr;gap:var(--s-4)}
@@ -1266,7 +1265,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .pick__body{padding:var(--s-3) var(--s-4) var(--s-4);display:flex;flex-direction:column;gap:2px;min-width:0}
 .pick__n{
   font-size:var(--fs-3);font-weight:var(--fw-semibold);color:var(--fg);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
 }
 .pick__p{font-size:var(--fs-2);color:var(--fg-muted);font-variant-numeric:tabular-nums}
 .pick.is-free .pick__p{color:var(--accent-fg);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps)}
@@ -1292,6 +1291,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .pick--empty{
   border:1.5px dashed var(--border-strong);background:transparent;box-shadow:none;
   align-items:center;justify-content:center;text-align:center;
+  /* so a bundle with nothing in it yet still holds its footprint; 1fr rows
+     take over the moment one of the places is filled */
+  aspect-ratio:4/5;
   color:var(--fg-muted);cursor:pointer;
 }
 .pick--empty:hover{border-color:var(--accent);color:var(--accent-fg);background:var(--accent-bg)}
@@ -1313,6 +1315,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   border:1px solid var(--border);background:var(--surface);
 }
 .slot--empty{border-style:dashed;background:transparent}
+.slot--empty .slot__shot{border-style:dashed;background:transparent}
 .slot__no{
   display:grid;place-items:center;width:24px;height:24px;border-radius:var(--r-full);
   background:var(--surface-sunken);color:var(--fg-muted);
@@ -1368,7 +1371,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .sum__v b{font-size:var(--fs-9);font-weight:var(--fw-bold);color:var(--fg);letter-spacing:var(--tr-heading)}
 .sum__save{margin:0;font-size:var(--fs-3);color:var(--fg-body)}
 .sum__save b{color:var(--accent-fg);font-variant-numeric:tabular-nums}
-.offer__side{min-width:0}
 .offer__go{width:100%}
 /* an incomplete bundle cannot be bought, and says so rather than failing on
    the next screen */
@@ -1436,7 +1438,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 @media (max-width:1000px){
   .deck.deck--v{--v-per:2}
-  .offer__body{grid-template-columns:1fr;gap:var(--s-7)}
+  .offer{grid-template-columns:1fr;gap:var(--s-7)}
   .deck.deck--ba{--ba-per:2}
   .rail{--per-view:4}
   .nav__links{display:none}
@@ -1489,8 +1491,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   /* two boxes across, and the switch takes the whole width. Stacked, a
      stadium reads as two pills that have come apart — it squares off */
   .picks{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-3)}
-  .seg{display:grid;grid-auto-flow:row;justify-self:stretch;border-radius:var(--r-card)}
-  .seg__b{padding:var(--s-3) var(--s-4);border-radius:calc(var(--r-card) - 3px)}
+  .seg{margin-bottom:var(--s-3)}
   .slot{grid-template-columns:auto minmax(0,1fr) auto auto;gap:var(--s-2)}
   .slot__shot{display:none}
   .sum__v b{font-size:var(--fs-8)}
@@ -2965,19 +2966,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     </div>
 
     <div class="offer" data-offer data-reveal>
-      <div class="seg" role="tablist" aria-label="Bundle size">
+      <div class="picks" data-picks aria-live="polite"></div>
+
+      <div class="offer__side">
+        <div class="seg" role="tablist" aria-label="Bundle size">
         <button class="seg__b" type="button" role="tab" data-deal="3" aria-selected="true">
-          <b>Get 3, Pay 2</b><span>Starter bundle</span>
+          Get 3, Pay 2
         </button>
         <button class="seg__b" type="button" role="tab" data-deal="5" aria-selected="false">
-          <b>Get 5, Pay 3</b><span>Best value</span>
+          Get 5, Pay 3
         </button>
-      </div>
+        </div>
 
-      <div class="offer__body">
-        <div class="picks" data-picks aria-live="polite"></div>
-
-        <div class="offer__side">
           <ol class="slots" data-slots></ol>
           <div class="sum">
             <div class="sum__row">
@@ -2987,8 +2987,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <p class="sum__save" data-note></p>
           </div>
           <button class="btn btn--primary btn--lg offer__go" type="button" data-go disabled></button>
-          <p class="offer__fine">One-time purchase · instant download · every future release included · 14-day help-or-refund</p>
-        </div>
+        <p class="offer__fine">One-time purchase · instant download · every future release included · 14-day help-or-refund</p>
       </div>
     </div>
   </div>
