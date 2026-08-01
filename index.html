@@ -1259,20 +1259,20 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .offer2__glow{
   position:absolute;inset:-20% -10%;z-index:-1;pointer-events:none;
   background:
-    radial-gradient(46% 52% at 12% 84%, rgba(140,88,255,.22) 0%, rgba(140,88,255,0) 70%),
-    radial-gradient(40% 44% at 86% 14%, rgba(56,92,235,.18) 0%, rgba(56,92,235,0) 72%);
+    radial-gradient(46% 52% at 12% 84%, rgba(140,88,255,.12) 0%, rgba(140,88,255,0) 70%),
+    radial-gradient(40% 44% at 86% 14%, rgba(56,92,235,.10) 0%, rgba(56,92,235,0) 72%);
   animation:bandDrift 34s var(--ease) infinite alternate;
 }
 .offer2__glow::before{
   content:"";position:absolute;inset:0;
   background:
-    radial-gradient(620px circle at var(--px) var(--py), rgba(92,72,255,.20), transparent 60%),
-    radial-gradient(520px circle at calc(var(--px) - 38%) calc(var(--py) + 38%), rgba(39,98,220,.14), transparent 62%);
+    radial-gradient(620px circle at var(--px) var(--py), rgba(92,72,255,.10), transparent 60%),
+    radial-gradient(520px circle at calc(var(--px) - 38%) calc(var(--py) + 38%), rgba(39,98,220,.07), transparent 62%);
 }
 .offer2__glow::after{
   content:"";position:absolute;left:6%;top:16%;
   width:420px;height:420px;border-radius:50%;
-  background:rgb(92,70,255);opacity:.15;filter:blur(80px);
+  background:rgb(92,70,255);opacity:.08;filter:blur(90px);
   transform:translate(var(--gx,0px), var(--gy,0px));
   transition:transform .15s ease-out;
 }
@@ -1300,14 +1300,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .oswitch__b{
   /* equal halves: sized to content, the white one moved and changed width
      every time you switched, which read as the control wobbling */
-  flex:1 1 0;min-width:152px;padding:var(--s-3) var(--s-4);border-radius:8px;
+  flex:1 1 0;min-width:152px;height:48px;padding:0 var(--s-4);border-radius:8px;
   display:flex;flex-direction:column;justify-content:center;
   font-size:var(--fs-4);font-weight:var(--fw-semibold);color:var(--fg-muted);
   transition:background var(--dur-1) var(--ease), color var(--dur-1) var(--ease),
              box-shadow var(--dur-1) var(--ease);
 }
 .oswitch__b span{
-  display:block;margin-top:3px;
+  display:block;margin-top:1px;
   font-size:var(--fs-1);font-weight:var(--fw-medium);letter-spacing:var(--tr-caps);
   text-transform:uppercase;opacity:.72;
 }
@@ -1329,23 +1329,36 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .prod:hover{border-color:var(--accent-border);transform:translateY(-3px)}
 @property --ring{syntax:"<angle>";initial-value:0deg;inherits:false}
-.prod.is-free{border-color:var(--accent-border);box-shadow:0 10px 35px rgba(105,87,255,.14)}
+.prod.is-free{
+  border-color:var(--accent-border);
+  animation:freeLift 3.2s var(--ease) infinite alternate;
+}
 .prod.is-free::after{
   content:"";position:absolute;inset:-1px;z-index:2;pointer-events:none;
   border-radius:calc(var(--r-card) + 1px);padding:1.5px;
-  /* the sweep sits on a solid accent line rather than fading to nothing —
-     a border that half disappears once a turn reads as a glitch, not as light */
+  /* the sweep sits on a solid accent line rather than fading to nothing — a
+     border that half disappears once a turn reads as a glitch, not as light.
+     The head of it is short and near white, so what travels is a highlight
+     rather than a slow change of colour. */
   background:conic-gradient(from var(--ring),
-    rgba(129,117,255,.45) 0deg, rgba(129,117,255,.45) 150deg,
-    rgba(167,162,255,.78) 214deg, #CFCBFF 258deg, #8F87FF 298deg,
-    rgba(129,117,255,.58) 332deg, rgba(129,117,255,.45) 360deg);
+    rgba(129,117,255,.52) 0deg, rgba(129,117,255,.52) 138deg,
+    rgba(174,168,255,.88) 206deg, #FFFFFF 244deg, #D6D2FF 262deg,
+    #8F87FF 296deg, rgba(129,117,255,.66) 330deg, rgba(129,117,255,.52) 360deg);
   -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor;mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite:exclude;
-  animation:freeRing 6s linear infinite;
+  animation:freeRing 3.2s linear infinite;
 }
 @keyframes freeRing{to{--ring:360deg}}
-@media (prefers-reduced-motion:reduce){.prod.is-free::after{animation:none}}
+/* and the box breathes under it, on the same beat */
+@keyframes freeLift{
+  from{box-shadow:0 10px 30px rgba(105,87,255,.12)}
+  to  {box-shadow:0 14px 46px rgba(105,87,255,.30)}
+}
+@media (prefers-reduced-motion:reduce){
+  .prod.is-free::after{animation:none}
+  .prod.is-free{animation:none}
+}
 .prod__shot{position:relative;display:block;aspect-ratio:4/5;overflow:hidden;border-radius:10px;background:var(--surface-sunken)}
 .prod__shot img{width:100%;height:100%;object-fit:cover;display:block}
 /* a box render, not a photograph — it needs air rather than a crop */
@@ -3101,7 +3114,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </p>
         <div class="oact">
           <span class="oact__row">
-            <button class="btn btn--secondary" type="button" data-customize aria-expanded="false" aria-controls="bundlePicker">Customize bundle</button>
+            <button class="btn btn--secondary btn--lg" type="button" data-customize aria-expanded="false" aria-controls="bundlePicker">Customize bundle</button>
             <button class="btn btn--primary btn--lg obuy" type="button" data-go disabled></button>
           </span>
           <p class="onote" data-note></p>
