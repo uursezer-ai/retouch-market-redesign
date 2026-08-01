@@ -420,6 +420,47 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 [id]{scroll-margin-top:calc(var(--nav-h) + var(--s-4))}
 
 /* ════════════════════════════════════════════════════════════════
+   4 · BRAND FILM
+   One frame, edge to edge, and nothing peeking beside it — this is the only
+   place on the page that should feel like cinema rather than a catalogue.
+   It sits between the numbers and the products because its job is "why we
+   are different", and that argument belongs before the catalogue, not after
+   it: claim, scale, why, what.
+
+   No autoplay. A brand film is watched with sound, and a muted loop in the
+   background turns it into wallpaper. Nothing from YouTube is fetched until
+   the poster is clicked either — no third-party script on a page nobody has
+   asked to watch a video on.
+   ════════════════════════════════════════════════════════════════ */
+.film{padding:0 var(--gutter)}
+.film__frame{
+  position:relative;width:min(100%,1600px);margin-inline:auto;
+  aspect-ratio:16/9;overflow:hidden;border-radius:var(--r-panel);
+  background:var(--n-900);border:1px solid var(--border);
+}
+.film__poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.film__frame::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(to top,rgba(10,37,64,.55) 0%,transparent 38%);
+}
+.film__play{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;
+  width:88px;height:88px;border-radius:var(--r-full);background:#fff;color:var(--accent);
+  display:grid;place-items:center;box-shadow:var(--sh-3);
+  transition:transform var(--dur-2) var(--ease);
+}
+.film__play:hover{transform:translate(-50%,-50%) scale(1.06)}
+.film__play svg{margin-left:5px}
+.film__dur{
+  position:absolute;right:var(--s-6);bottom:var(--s-6);z-index:2;
+  font-size:var(--fs-2);font-weight:var(--fw-medium);color:#fff;
+  padding:var(--s-1) var(--s-3);border-radius:6px;background:rgba(10,37,64,.72);
+}
+/* once it is playing the frame is the player and nothing else */
+.film__frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.film__frame.is-live::after,.film__frame.is-live .film__dur{display:none}
+
+/* ════════════════════════════════════════════════════════════════
    4 · PLUGINS
    Every value below comes from the scale already in use on this page:
    eyebrows 12/600/uppercase/0.9px like every other label, product names
@@ -605,6 +646,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    being rebuilt in script.
    ════════════════════════════════════════════════════════════════ */
 .deck--ba{--ba-per:3}
+/* this row has no slides to count, it scrolls by the cardful — so the same
+   track-and-thumb the tutorials shelf uses, leading the row with the arrows
+   at its far end */
+.deck__bar--ba{display:flex;align-items:center;gap:var(--s-5)}
+.deck__bar--ba .deck__arrows{margin-left:auto}
+.deck__bar--ba .progress{width:min(320px,45%)}
 .deck--ba .deck__pane{
   flex:0 0 calc((100% - (var(--ba-per) - 1) * var(--deck-gap)) / var(--ba-per));
   cursor:auto;
@@ -653,6 +700,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .compare__range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:2px;height:100%;cursor:ew-resize}
 .compare__range::-moz-range-thumb{width:2px;height:100%;border:0;border-radius:0;background:transparent;cursor:ew-resize}
 .compare__range:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:var(--r-card)}
+/* On a touch screen the slider covered the whole card, so there was nowhere
+   left to swipe the row — every drag moved the handle instead. It shrinks to
+   a band across the middle, where the handle already is: the picture above
+   and below it is free to swipe. */
+@media (pointer:coarse){
+  .compare__range{top:50%;bottom:auto;height:104px;transform:translateY(-50%)}
+}
 
 /* caption under the card, the same shape a tutorial tile uses */
 .bacard{display:block}
@@ -1217,6 +1271,32 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <div class="pstat"><dt>Reviews</dt><dd class="tnum">15,000+</dd></div>
       <div class="pstat"><dt>Languages</dt><dd class="tnum">12</dd></div>
     </dl>
+  </div>
+</section>
+
+<!-- ══════════ 4 · BRAND FILM ══════════
+     PLACEHOLDER DATA: the heading, the line under it and the running time are
+     written here — swap them for the film's own words. -->
+<section class="section" id="film">
+  <div class="wrap">
+    <div class="section__head" data-reveal>
+      <div>
+        <p class="eyebrow">Film</p>
+        <h2>Why we build these</h2>
+        <p class="lede">Ninety seconds on how we work.</p>
+      </div>
+      <a class="link" href="https://www.youtube.com/watch?v=EBNI8JHmJ4o" target="_blank" rel="noopener">Watch on YouTube <svg class="btn__out" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3.4 8.6L8.6 3.4M4.6 3.4h4v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+  </div>
+
+  <div class="film" data-reveal>
+    <div class="film__frame" data-film="EBNI8JHmJ4o">
+      <img class="film__poster" src="https://i.ytimg.com/vi/EBNI8JHmJ4o/maxresdefault.jpg" alt="" loading="lazy" onerror="this.style.display='none'">
+      <button class="film__play" type="button" aria-label="Play the film: Why we build these">
+        <svg width="22" height="25" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg>
+      </button>
+      <span class="film__dur tnum">1:30</span>
+    </div>
   </div>
 </section>
 
@@ -1828,18 +1908,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           </article>
         </div>
     </div>
-    <div class="deck__bar wrap">
-      <span aria-hidden="true"></span>
-      <div class="deck__ctrl">
-        <div class="deck__dots">
-              <button class="deck__dot" type="button" aria-current="true" aria-label="Go to example 1 of 6: Natural Retouch. Timeless Color."><i></i></button>
-              <button class="deck__dot" type="button" aria-current="false" aria-label="Go to example 2 of 6: Clean skin, texture kept."><i></i></button>
-              <button class="deck__dot" type="button" aria-current="false" aria-label="Go to example 3 of 6: One look across the gallery."><i></i></button>
-              <button class="deck__dot" type="button" aria-current="false" aria-label="Go to example 4 of 6: Warm light, honest tones."><i></i></button>
-              <button class="deck__dot" type="button" aria-current="false" aria-label="Go to example 5 of 6: Studio finish, nothing plastic."><i></i></button>
-              <button class="deck__dot" type="button" aria-current="false" aria-label="Go to example 6 of 6: Whites that stay white."><i></i></button>
-        </div>
-      </div>
+    <div class="deck__bar deck__bar--ba wrap">
+      <span class="progress" aria-hidden="true"><i></i></span>
       <div class="deck__arrows">
         <button class="arrow" type="button" data-ba-step="-1" aria-label="Previous example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <button class="arrow" type="button" data-ba-step="1" aria-label="Next example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -2510,6 +2580,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       idx = i;
       dots.forEach(function(d, n){ d.setAttribute('aria-current', String(n === i)); });
       var max = track.scrollWidth - track.clientWidth - 1;
+      /* the thumb is as wide a share of the track as the visible row is of the
+         whole row, and slides across what that leaves */
+      var thumb = deck.querySelector('.progress i');
+      if(thumb && max > 0){
+        var share = Math.max(.12, track.clientWidth / track.scrollWidth);
+        thumb.style.width = (share * 100) + '%';
+        thumb.style.transform = 'translateX(' + (track.scrollLeft / max) * ((1 / share) - 1) * 100 + '%)';
+      }
       deck.querySelectorAll('[data-ba-step]').forEach(function(btn){
         var dir = parseInt(btn.getAttribute('data-ba-step'), 10);
         var atEnd = dir < 0 ? track.scrollLeft <= 1 : track.scrollLeft >= max;
@@ -2537,6 +2615,25 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     });
     window.addEventListener('resize', sync);
     mark(0);
+  });
+
+  /* ---- brand film: nothing loads from YouTube until you ask ---- */
+  document.querySelectorAll('[data-film]').forEach(function(frame){
+    var btn = frame.querySelector('.film__play');
+    if(!btn) return;
+    btn.addEventListener('click', function(){
+      var id = frame.getAttribute('data-film');
+      var f = document.createElement('iframe');
+      f.src = 'https://www.youtube-nocookie.com/embed/' + id +
+              '?autoplay=1&rel=0&modestbranding=1&playsinline=1';
+      f.title = 'Retouch Market — the film';
+      f.allow = 'accelerometer; autoplay; encrypted-media; picture-in-picture; web-share';
+      f.setAttribute('allowfullscreen', '');
+      frame.classList.add('is-live');
+      frame.appendChild(f);
+      btn.remove();
+      f.focus();
+    });
   });
 
   /* ---- play button (mockup annotation) ---- */
