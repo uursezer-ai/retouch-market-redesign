@@ -1270,27 +1270,27 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .offer2__glow{
   position:absolute;inset:-20% -10%;z-index:-1;pointer-events:none;
   background:
-    radial-gradient(46% 52% at 12% 84%, rgba(140,88,255,.17) 0%, rgba(140,88,255,0) 70%),
-    radial-gradient(40% 44% at 86% 14%, rgba(56,92,235,.15) 0%, rgba(56,92,235,0) 72%);
+    radial-gradient(46% 52% at 12% 84%, rgba(140,88,255,.15) 0%, rgba(140,88,255,0) 70%),
+    radial-gradient(40% 44% at 86% 14%, rgba(56,92,235,.13) 0%, rgba(56,92,235,0) 72%);
   animation:bandDrift 34s var(--ease) infinite alternate;
 }
 .offer2__glow::before{
   content:"";position:absolute;inset:0;
   background:
-    radial-gradient(620px circle at var(--px) var(--py), rgba(92,72,255,.17), transparent 60%),
-    radial-gradient(520px circle at calc(var(--px) - 38%) calc(var(--py) + 38%), rgba(39,98,220,.12), transparent 62%);
+    radial-gradient(620px circle at var(--px) var(--py), rgba(92,72,255,.12), transparent 60%),
+    radial-gradient(520px circle at calc(var(--px) - 38%) calc(var(--py) + 38%), rgba(39,98,220,.08), transparent 62%);
 }
 .offer2__grid{
   position:absolute;inset:0;z-index:-1;pointer-events:none;
-  background-image:radial-gradient(rgba(178,172,255,.62) 1px, transparent 1.5px);
-  background-size:26px 26px;
-  -webkit-mask:radial-gradient(330px circle at var(--px) var(--py), #000 0%, rgba(0,0,0,.45) 42%, transparent 72%);
-  mask:radial-gradient(330px circle at var(--px) var(--py), #000 0%, rgba(0,0,0,.45) 42%, transparent 72%);
+  background-image:radial-gradient(rgba(178,172,255,.34) 1px, transparent 1.5px);
+  background-size:28px 28px;
+  -webkit-mask:radial-gradient(280px circle at var(--px) var(--py), #000 0%, rgba(0,0,0,.35) 40%, transparent 70%);
+  mask:radial-gradient(280px circle at var(--px) var(--py), #000 0%, rgba(0,0,0,.35) 40%, transparent 70%);
 }
 .offer2__glow::after{
   content:"";position:absolute;left:6%;top:16%;
   width:420px;height:420px;border-radius:50%;
-  background:rgb(92,70,255);opacity:.13;filter:blur(90px);
+  background:rgb(92,70,255);opacity:.10;filter:blur(90px);
   transform:translate(var(--gx,0px), var(--gy,0px));
   transition:transform .15s ease-out;
 }
@@ -1406,10 +1406,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .prod:hover .prod__by,.prod:hover .prod__t,
 .prod:focus-within .prod__by,.prod:focus-within .prod__t{opacity:0}
 .prod__drop{
-  position:absolute;inset:var(--s-4) var(--s-1) var(--s-1);z-index:2;
+  position:absolute;left:var(--s-1);right:var(--s-1);top:var(--s-4);bottom:var(--s-1);z-index:2;
+  height:48px;margin-block:auto;
   display:grid;place-items:center;border-radius:8px;
   border:1px solid rgba(255,138,138,.34);background:rgba(120,22,32,.24);color:#FF9A9A;
-  font-size:var(--fs-2);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
+  font-size:var(--fs-4);font-weight:var(--fw-semibold);letter-spacing:-.008em;
   opacity:0;pointer-events:none;
   transition:opacity var(--dur-1) var(--ease), background var(--dur-1) var(--ease),
              color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
@@ -1419,7 +1420,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* nothing hovers on a touch screen, so there it keeps a row of its own */
 @media (hover:none){
   .prod__by,.prod__t{opacity:1 !important}
-  .prod__drop{position:static;inset:auto;opacity:1;pointer-events:auto;margin-top:var(--s-3);height:30px}
+  .prod__drop{position:static;inset:auto;margin-block:0;opacity:1;pointer-events:auto;margin-top:var(--s-3);height:48px}
 }
 .prod__body{position:relative;display:flex;flex-direction:column;gap:var(--s-2);min-width:0;padding:var(--s-4) var(--s-1) var(--s-1)}
 .prod__by{display:flex;align-items:center;gap:var(--s-2);min-width:0;font-size:var(--fs-1);color:var(--fg-muted)}
