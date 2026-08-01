@@ -483,6 +483,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 /* the hero paints --bg by default, which would cover the light underneath it */
 .topband .hero{background:transparent}
+/* and the picture wants no outline: on the band a hairline reads as a box
+   drawn round the video rather than as the video's own edge */
+.topband .showcase__frame{border:0;background:transparent}
 .topband .proof{
   background:rgba(255,255,255,.03);
   border-top:1px solid rgba(255,255,255,.10);
@@ -3331,11 +3334,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         row.scrollTo({left: chips[n].offsetLeft - (row.clientWidth - chips[n].offsetWidth) / 2,
                       behavior: still ? 'auto' : 'smooth'});
       }
-      /* and bring the whole section up under the bar, so what you just chose
-         is the thing you are looking at. The gap is the section's own
-         scroll-margin-top, which every anchor on the page already uses. */
-      var sec = chips[n].closest('section');
-      if(sec) sec.scrollIntoView({block:'start', behavior: still ? 'auto' : 'smooth'});
+      /* and bring what you just chose up under the bar. Not the section's own
+         top edge: that carries 64px of section padding on top of the bar's
+         clearance, which lands the heading a screen-inch down with nothing in
+         between. The head itself goes just under the bar instead. */
+      var head = chips[n].closest('section').querySelector('.section__head') || chips[n];
+      var nav = document.getElementById('nav');
+      var gap = (nav ? nav.offsetHeight : 0) + 24;
+      window.scrollTo({top: window.scrollY + head.getBoundingClientRect().top - gap,
+                       behavior: still ? 'auto' : 'smooth'});
     }
     chips.forEach(function(c, n){
       c.tabIndex = n === 0 ? 0 : -1;
