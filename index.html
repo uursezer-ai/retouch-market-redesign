@@ -918,6 +918,20 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .sort__menu button:hover{background:var(--surface-sunken);color:var(--fg)}
 .sort__menu button[aria-current="true"]{color:var(--accent-700);font-weight:var(--fw-semibold)}
 
+/* two across on request: a comparison is worth looking at large, and the
+   button is a toggle rather than a link, so it says what it gives you and
+   shows whether you are in it. Written with the section in front so it
+   outranks the plain .deck.deck--ba above. */
+#results.is-2up .deck.deck--ba{--ba-per:2}
+.zoom{flex:none;align-self:flex-end}
+.zoom__i rect:last-child{transition:x var(--dur-2) var(--ease), width var(--dur-2) var(--ease)}
+.zoom[aria-pressed="true"]{
+  border-color:var(--accent);color:var(--accent-fg);background:var(--accent-bg);
+}
+/* the mark says what the row will look like: two panes when it is on */
+.zoom[aria-pressed="true"] .zoom__i rect:first-child{width:6px}
+.zoom[aria-pressed="true"] .zoom__i rect:last-child{x:9px;width:8px}
+
 /* the pack chips: a scrolling row of pills, the chosen one outlined rather
    than filled so the row reads as one control and not six buttons */
 .pchips{
@@ -1438,6 +1452,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 @media (max-width:1000px){
   .deck.deck--v{--v-per:2}
+  /* already two across here, so the toggle has nothing left to offer */
+  .zoom{display:none}
   .offer{grid-template-columns:1fr;gap:var(--s-7)}
   .deck.deck--ba{--ba-per:2}
   .rail{--per-view:4}
@@ -2211,6 +2227,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <h2>Choose a Preset. See the Difference.</h2>
         <p class="lede">Select a preset and drag the slider to see its real effect on colors and skin tones.</p>
       </div>
+      <button class="btn btn--secondary zoom" type="button" data-zoom aria-pressed="false">
+        <svg class="zoom__i" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.5"/>
+          <rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        <span>2&times; view</span>
+      </button>
     </div>
     <div class="pchips" role="tablist" aria-label="Preset packs" data-reveal>
       <button class="pchip" type="button" role="tab" id="bat-0" aria-controls="bap-0" aria-selected="true">Lora</button>
@@ -3730,6 +3753,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     });
     window.addEventListener('resize', sync);
     mark(0);
+  });
+
+  /* ---- two across on request ----
+     A class on the section rather than on each row, so it survives switching
+     packs and every hidden row is already in the wider shape when it opens.
+     The rows measure themselves off a resize, which is what the arrows and
+     the indicator read. */
+  document.querySelectorAll('[data-zoom]').forEach(function(btn){
+    var sec = btn.closest('section');
+    btn.addEventListener('click', function(){
+      var on = btn.getAttribute('aria-pressed') !== 'true';
+      btn.setAttribute('aria-pressed', String(on));
+      sec.classList.toggle('is-2up', on);
+      window.dispatchEvent(new Event('resize'));
+    });
   });
 
   /* ---- preset chips: one row of comparisons at a time ---- */
