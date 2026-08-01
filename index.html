@@ -381,14 +381,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .hero__count b{color:var(--fg)}
 .dots{display:flex;align-items:center;gap:var(--s-2)}
 .dot{
-  width:36px;height:4px;border-radius:2px;overflow:hidden;flex:none;
+  width:36px;height:4px;border-radius:var(--r-full);flex:none;
   background:var(--n-300);transition:background var(--dur-1) var(--ease);
 }
 .dot:hover{background:var(--n-400)}
-.dot i{display:block;height:100%;width:100%;background:var(--accent);transform:scaleX(0);transform-origin:left}
-.dot[aria-current="true"] i{transform:scaleX(1)}
-/* while autoplay runs the fill doubles as a progress bar */
-@keyframes heroFill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.dot[aria-current="true"]{background:var(--accent)}
 .hero__arrows{display:flex;gap:var(--s-2);justify-content:flex-end}
 
 /* ════════════════════════════════════════════════════════════════
@@ -628,14 +625,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    all move it, and a screen reader gets a labelled slider without any of it
    being rebuilt in script.
    ════════════════════════════════════════════════════════════════ */
-/* The row has to read as the preset grid that happens to scroll, so it takes
-   its measurements from there rather than inventing its own: same column
-   count at the same breakpoints, the same 24px gutter between cards, and no
-   extra inset — the first card starts exactly where a preset card does.
+/* The row still takes its measurements from the preset grid rather than
+   inventing its own — same 4:5 frame, the same 24px gutter between cards, no
+   extra inset, so the first card starts exactly where a preset card does. The
+   column count is the one thing it does not share: two across, because a
+   comparison you drag needs to be big enough to read skin in.
    Written as .deck.deck--ba so the generic deck rules in the media queries
    below cannot quietly take the gap back. */
 .deck.deck--ba{
-  --ba-per:3;
+  /* two across, not three: a before/after needs the pixels to be worth
+     dragging over, and a third of the column is too small to judge skin */
+  --ba-per:2;
   --deck-gap:var(--s-6);
   --inset:max(var(--gutter), calc((100% - var(--container)) / 2 + var(--gutter)));
 }
@@ -906,7 +906,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    accordion rows share whatever is left over. Nothing here is a magic
    number, so the pair cannot drift apart when the copy changes.
    ════════════════════════════════════════════════════════════════ */
-.voices{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:var(--s-8);align-items:stretch}
+.voices{--vstage-w:460px;--v-peek:44px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,var(--vstage-w));gap:var(--s-8);align-items:stretch}
 .vlist{display:flex;flex-direction:column;gap:var(--s-2)}
 /* grow, do not stretch equally: every row keeps its natural height and the
    slack is split between them, so an open row stays taller than a shut one */
@@ -934,11 +934,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .vrow.is-open .vbtn__n{color:var(--accent-fg)}
 .vbtn__m{
-  display:flex;align-items:center;gap:var(--s-1);min-width:0;
+  display:flex;align-items:center;gap:var(--s-1);min-width:0;overflow:hidden;
   font-size:var(--fs-2);line-height:var(--lh-normal);color:var(--fg-muted);white-space:nowrap;
 }
 .vbtn__at{overflow:hidden;text-overflow:ellipsis}
-.vbtn__sep{color:var(--n-300)}
 .vbtn__chev{flex:none;color:var(--fg-muted);transition:transform var(--dur-2) var(--ease)}
 .vrow.is-open .vbtn__chev{transform:rotate(180deg);color:var(--accent-fg)}
 .vpanel{padding:0 var(--s-4) var(--s-4) calc(var(--s-4) + 44px + var(--s-3))}
@@ -950,20 +949,26 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .vq p::before{content:"\201C"}
 .vq p::after{content:"\201D"}
 
-/* six frames, three across — the same 4:5 the presets and the before/after
-   cards use, so the page keeps one picture shape throughout */
+/* One 4:5 frame at a time, scrolled sideways — the same picture shape the
+   presets and the before/after cards use, at the size a portfolio shot
+   deserves. The next one peeks by --v-peek so it is obvious there are more.
+   The column is a fixed width, so the frame's height is fixed too and the
+   accordion beside it has something steady to stretch to. */
 .vstage{display:grid;min-width:0}
 .vwork{
-  display:grid;grid-template-columns:repeat(var(--vw-per,3),minmax(0,1fr));
-  gap:var(--s-3);align-content:space-between;
+  display:flex;gap:var(--s-3);align-self:start;
+  overflow-x:auto;scroll-snap-type:x mandatory;
+  scrollbar-width:none;-ms-overflow-style:none;cursor:grab;
 }
+.vwork::-webkit-scrollbar{display:none}
+.vwork.is-dragging{cursor:grabbing;scroll-snap-type:none}
 .vwork[hidden]{display:none}
 .vshot{
-  margin:0;aspect-ratio:4/5;overflow:hidden;border-radius:var(--r-card);
+  margin:0;flex:0 0 calc(100% - var(--v-peek));scroll-snap-align:start;
+  aspect-ratio:4/5;overflow:hidden;border-radius:var(--r-card);
   border:1px solid var(--border);background:var(--surface-sunken);
 }
-.vshot img{width:100%;height:100%;object-fit:cover;display:block;transition:transform var(--dur-3) var(--ease)}
-.vshot:hover img{transform:scale(1.04)}
+.vshot img{width:100%;height:100%;object-fit:cover;display:block;-webkit-user-drag:none;user-select:none}
 
 /* ════════════════════════════════════════════════════════════════
    6 · HOW TO INSTALL
@@ -1101,8 +1106,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
   /* the gallery narrows faster than the list does, so it drops to two across
      before the list would start outrunning it */
-  .voices{grid-template-columns:minmax(0,360px) minmax(0,1fr)}
-  .vwork{--vw-per:2}
+  .voices{--vstage-w:380px}
 }
 @media (max-width:1000px){
   .rail{--per-view:4}
@@ -1134,7 +1138,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 @media (max-width:860px){
   .rail{--per-view:3}
-  .deck.deck--ba{--ba-per:2}
   :root{--section-y:var(--s-9)}
   .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
   /* swipe carries the row on a phone, so the arrows step aside */
@@ -1150,10 +1153,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .pstat dt{font-size:var(--fs-2)}
   .pstat .stars svg{width:10px;height:10px}
 
-  .voices{grid-template-columns:1fr;gap:var(--s-6)}
+  .voices{grid-template-columns:minmax(0,1fr);gap:var(--s-6)}
   .vlist{gap:var(--s-2)}
   .vrow{flex:0 0 auto}
-  .vwork{--vw-per:3}
+  /* stacked, the frame has the whole column — leave more of the next one
+     showing so the row still reads as something you can push */
+  .voices{--v-peek:96px}
 }
 @media (max-width:600px){
   .deck.deck--ba{--ba-per:1}
@@ -1178,7 +1183,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .cta{padding:var(--s-9) var(--s-5)}
   .qa__a{padding-right:0}
 
-  .vwork{--vw-per:2}
+  .voices{--v-peek:56px}
   .vpanel{padding-left:var(--s-4)}
 }
 @media (max-width:380px){
@@ -1317,9 +1322,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="hero__nav">
       <p class="hero__count" aria-hidden="true"><b id="heroIdx">01</b> / 03</p>
       <div class="dots" id="heroDots">
-          <button class="dot" aria-current="true" aria-label="Go to slide 1: Announcement"><i></i></button>
-          <button class="dot" aria-current="false" aria-label="Go to slide 2: Plugins"><i></i></button>
-          <button class="dot" aria-current="false" aria-label="Go to slide 3: Tutorials"><i></i></button>
+          <button class="dot" aria-current="true" aria-label="Go to slide 1: Announcement"></button>
+          <button class="dot" aria-current="false" aria-label="Go to slide 2: Plugins"></button>
+          <button class="dot" aria-current="false" aria-label="Go to slide 3: Tutorials"></button>
       </div>
       <div class="hero__arrows">
         <button class="arrow" data-hero="-1" aria-label="Previous slide"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -2086,7 +2091,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vbtn__id">
                 <span class="vbtn__n">Düğünümüz Var</span>
-                <span class="vbtn__m"><span class="vbtn__at">@dugunumuzvar</span><span class="vbtn__sep" aria-hidden="true">·</span><span class="tnum">1.2M</span> followers</span>
+                <span class="vbtn__m"><span class="vbtn__at">@dugunumuzvar</span><span aria-hidden="true">·</span><span class="tnum">1.2M</span> followers</span>
               </span>
               <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
@@ -2101,7 +2106,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vbtn__id">
                 <span class="vbtn__n">Zeril Film</span>
-                <span class="vbtn__m"><span class="vbtn__at">@zerilfilm</span><span class="vbtn__sep" aria-hidden="true">·</span><span class="tnum">210K</span> followers</span>
+                <span class="vbtn__m"><span class="vbtn__at">@zerilfilm</span><span aria-hidden="true">·</span><span class="tnum">210K</span> followers</span>
               </span>
               <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
@@ -2116,7 +2121,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vbtn__id">
                 <span class="vbtn__n">Oğuz Demir</span>
-                <span class="vbtn__m"><span class="vbtn__at">@oguzdemirphoto</span><span class="vbtn__sep" aria-hidden="true">·</span><span class="tnum">108K</span> followers</span>
+                <span class="vbtn__m"><span class="vbtn__at">@oguzdemirphoto</span><span aria-hidden="true">·</span><span class="tnum">108K</span> followers</span>
               </span>
               <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
@@ -2131,7 +2136,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vbtn__id">
                 <span class="vbtn__n">Focallis</span>
-                <span class="vbtn__m"><span class="vbtn__at">@focallisstudio</span><span class="vbtn__sep" aria-hidden="true">·</span><span class="tnum">1.4M</span> followers</span>
+                <span class="vbtn__m"><span class="vbtn__at">@focallisstudio</span><span aria-hidden="true">·</span><span class="tnum">1.4M</span> followers</span>
               </span>
               <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
@@ -2146,7 +2151,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vbtn__id">
                 <span class="vbtn__n">Celal Ocak</span>
-                <span class="vbtn__m"><span class="vbtn__at">@celalocak</span><span class="vbtn__sep" aria-hidden="true">·</span><span class="tnum">1.1M</span> followers</span>
+                <span class="vbtn__m"><span class="vbtn__at">@celalocak</span><span aria-hidden="true">·</span><span class="tnum">1.1M</span> followers</span>
               </span>
               <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
@@ -2161,7 +2166,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vbtn__id">
                 <span class="vbtn__n">Murat Özsoy</span>
-                <span class="vbtn__m"><span class="vbtn__at">@muratozsoy</span><span class="vbtn__sep" aria-hidden="true">·</span><span class="tnum">279K</span> followers</span>
+                <span class="vbtn__m"><span class="vbtn__at">@muratozsoy</span><span aria-hidden="true">·</span><span class="tnum">279K</span> followers</span>
               </span>
               <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </button>
@@ -2510,8 +2515,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     var hSlides = [].slice.call(hero.querySelectorAll('.slide')),
         hDots   = [].slice.call(hero.querySelectorAll('.dot')),
         hCount  = document.getElementById('heroIdx'),
-        hIdx = 0, hTimer = null, HERO_MS = 6000, hHold = false;
+        hIdx = 0;
 
+    /* the slider moves when someone moves it — there is no timer. A hero that
+       changes under the reader takes the choice away and, with the headline
+       being the whole slide, swaps the page's first sentence mid-read. */
     function heroShow(i){
       hIdx = (i + hSlides.length) % hSlides.length;
       hSlides.forEach(function(sl, n){
@@ -2521,29 +2529,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       });
       hDots.forEach(function(d, n){ d.setAttribute('aria-current', String(n === hIdx)); });
       hCount.textContent = ('0' + (hIdx + 1)).slice(-2);
-      heroTick();
     }
-    /* restart the active dot's fill so it tracks the countdown */
-    function heroTick(){
-      clearTimeout(hTimer); hTimer = null;
-      var fill = hDots[hIdx].querySelector('i');
-      fill.style.animation = 'none';
-      void fill.offsetWidth;
-      if(still || hHold) return;
-      fill.style.animation = 'heroFill ' + HERO_MS + 'ms linear forwards';
-      hTimer = setTimeout(function(){ heroShow(hIdx + 1); }, HERO_MS);
-    }
-    function heroHold(state){ hHold = state; heroTick(); }
 
     hDots.forEach(function(d, n){ d.addEventListener('click', function(){ heroShow(n); }); });
     hero.querySelectorAll('[data-hero]').forEach(function(btn){
       btn.addEventListener('click', function(){ heroShow(hIdx + parseInt(btn.getAttribute('data-hero'), 10)); });
     });
-    hero.addEventListener('pointerenter', function(){ heroHold(true); });
-    hero.addEventListener('pointerleave', function(){ heroHold(false); });
-    hero.addEventListener('focusin',  function(){ heroHold(true); });
-    hero.addEventListener('focusout', function(){ if(!hero.contains(document.activeElement)) heroHold(false); });
-    document.addEventListener('visibilitychange', function(){ heroHold(document.hidden); });
     heroShow(0);
     fitAllTitles();
     window.addEventListener('resize', fitAllTitles);
@@ -2574,6 +2565,39 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
            a gallery on screen, never an empty right-hand column */
         open(i);
       });
+    });
+
+    /* drag the row with the mouse. Touch and trackpads already scroll it
+       natively, so this only adds the one gesture a mouse does not have —
+       and it never touches the wheel, which belongs to the page. */
+    works.forEach(function(rail){
+      var down = false, startX = 0, startLeft = 0, moved = 0;
+      rail.addEventListener('pointerdown', function(e){
+        if(e.pointerType !== 'mouse' || e.button !== 0) return;
+        down = true; moved = 0; startX = e.clientX; startLeft = rail.scrollLeft;
+        rail.classList.add('is-dragging');
+        rail.setPointerCapture(e.pointerId);
+      });
+      rail.addEventListener('pointermove', function(e){
+        if(!down) return;
+        var dx = e.clientX - startX;
+        moved = Math.max(moved, Math.abs(dx));
+        rail.scrollLeft = startLeft - dx;
+      });
+      function up(e){
+        if(!down) return;
+        down = false;
+        rail.classList.remove('is-dragging');
+        /* snap back on once the drag is over, and let it settle where it was
+           let go rather than jumping to where the drag started */
+        var at = rail.scrollLeft;
+        rail.scrollLeft = at;
+        if(rail.hasPointerCapture && rail.hasPointerCapture(e.pointerId)) rail.releasePointerCapture(e.pointerId);
+      }
+      rail.addEventListener('pointerup', up);
+      rail.addEventListener('pointercancel', up);
+      /* a drag that ended on a link or image must not also read as a click */
+      rail.addEventListener('click', function(e){ if(moved > 4){ e.preventDefault(); e.stopPropagation(); } }, true);
     });
   });
 
