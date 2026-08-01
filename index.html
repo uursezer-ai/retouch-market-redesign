@@ -486,10 +486,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .ptab[aria-selected="true"] .ptab__n{color:var(--accent-fg)}
 /* where it runs, said beside the name rather than on a line of its own */
 .ptab__apps{display:flex;gap:4px;flex:none}
+/* square, not a squat rectangle — 26 by 26, and the label drops to 11px so
+   the widest of them, LrC, still has air either side of it */
 .ptab__app{
-  display:grid;place-items:center;min-width:26px;height:22px;padding:0 5px;
-  border-radius:5px;border:1px solid var(--border-strong);color:var(--fg-muted);
-  font-size:var(--fs-1);font-weight:var(--fw-bold);line-height:1;
+  display:grid;place-items:center;width:26px;height:26px;padding:0;
+  border-radius:6px;border:1px solid var(--border-strong);color:var(--fg-muted);
+  font-size:11px;font-weight:var(--fw-bold);line-height:1;
   transition:border-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
 }
 .ptab[aria-selected="true"] .ptab__app{border-color:var(--accent-border);color:var(--accent-700)}
@@ -1185,8 +1187,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="hero__slides" id="heroSlides">
       <article class="slide is-on" role="group" aria-roledescription="slide" aria-label="1 of 3">
         <div class="slide__copy">
-          <p class="eyebrow">Commercial</p>
-          <div class="slide__title"><h1 id="heroTitle">One Vision,<br>One Workflow.<br>Best Presets &amp; Plugins</h1></div>
+          <p class="eyebrow">Presets &amp; Plugins</p>
+          <div class="slide__title"><h1 id="heroTitle">One Vision.<br>One Workflow.<br>One Creator.</h1></div>
           <div class="hero__actions">
             <a class="btn btn--primary btn--lg" href="https://www.youtube.com/watch?v=EBNI8JHmJ4o" target="_blank" rel="noopener">Watch Full Video <svg class="btn__out" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3.4 8.6L8.6 3.4M4.6 3.4h4v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           </div>
@@ -1285,7 +1287,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <span class="ptab__no" aria-hidden="true">2</span>
         <span class="ptab__box"><img src="images/box-lightroom-ai-color.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
         <span class="ptab__body">
-          <span class="ptab__row"><span class="ptab__n">LrC Ai Color Plugin</span><span class="ptab__apps" aria-hidden="true"><span class="ptab__app">LrC</span></span><span class="vh">for Lightroom Classic</span></span>
+          <span class="ptab__row"><span class="ptab__n">Lightroom Ai Color Plugin</span><span class="ptab__apps" aria-hidden="true"><span class="ptab__app">LrC</span></span><span class="vh">for Lightroom Classic</span></span>
           <span class="ptab__what">One grade across a shoot</span>
         </span>
       </button>
@@ -1387,13 +1389,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </div>
       </div>
       <div class="panel" id="pp-1" role="tabpanel" aria-labelledby="pt-1" hidden>
-        <div class="deck" data-deck role="group" aria-roledescription="carousel" aria-label="LrC Ai Color Plugin walkthroughs">
+        <div class="deck" data-deck role="group" aria-roledescription="carousel" aria-label="Lightroom Ai Color Plugin walkthroughs">
           <div class="deck__track" data-deck-track>
-            <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="LrC Ai Color Plugin — grade a gallery in taps — video 1 of 7">
+            <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Lightroom Ai Color Plugin — grade a gallery in taps — video 1 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-01.mp4" type="video/mp4"></video>
-                <button class="play" type="button" aria-label="Play: LrC Ai Color Plugin — grade a gallery in taps (3:26)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">LrC Ai Color Plugin — grade a gallery in taps</span>
+                <button class="play" type="button" aria-label="Play: Lightroom Ai Color Plugin — grade a gallery in taps (3:26)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
+                <span class="player__cap">Lightroom Ai Color Plugin — grade a gallery in taps</span>
                 <span class="player__dur tnum">3:26</span>
                 <p class="player__note">Mockup: drop videos/lightroom-ai-color-01.mp4 in to replace this still.</p>
               </div>
@@ -1457,7 +1459,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <span aria-hidden="true"></span>
             <div class="deck__ctrl">
               <div class="deck__dots">
-                <button class="deck__dot" type="button" aria-current="true" aria-label="Go to video 1 of 7: LrC Ai Color Plugin — grade a gallery in taps"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="true" aria-label="Go to video 1 of 7: Lightroom Ai Color Plugin — grade a gallery in taps"><i></i></button>
                 <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 2 of 7: Matching a reference frame"><i></i></button>
                 <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 3 of 7: Building your own look"><i></i></button>
                 <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 4 of 7: Syncing across a shoot"><i></i></button>
@@ -1465,7 +1467,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 6 of 7: Split toning shadows"><i></i></button>
                 <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 7 of 7: Exporting a preset pack"><i></i></button>
               </div>
-              <button class="deck__play is-playing" type="button" data-deck-toggle aria-label="Pause the LrC Ai Color Plugin carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
+              <button class="deck__play is-playing" type="button" data-deck-toggle aria-label="Pause the Lightroom Ai Color Plugin carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
             </div>
             <div class="deck__arrows">
               <button class="arrow" type="button" data-deck-step="-1" aria-label="Previous video"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -1572,7 +1574,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <div>
         <p class="eyebrow">Presets &amp; LUTs</p>
         <h2>Original Signature Looks</h2>
-        <p class="lede">Created by one of Türkiye&#8217;s most recognized wedding photographers.</p>
+        <p class="lede">For Lightroom Classic &amp; Camera Raw. Created by one of Türkiye&#8217;s most popular photographers.</p>
       </div>
       <div class="sort">
         <button class="sort__btn" type="button" id="sortBtn" aria-expanded="false" aria-haspopup="true" aria-controls="sortMenu">
@@ -1807,7 +1809,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             </div>
             <div class="bacard__body" id="baCap-2">
               <p class="ba__t">One look across the gallery.</p>
-              <p class="ba__by">Edited with <a href="#plugins">LrC Ai Color Plugin</a> + <a href="#presets">Terra Preset Pack</a></p>
+              <p class="ba__by">Edited with <a href="#plugins">Lightroom Ai Color Plugin</a> + <a href="#presets">Terra Preset Pack</a></p>
             </div>
           </article>
         </div>
@@ -1824,7 +1826,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             </div>
             <div class="bacard__body" id="baCap-3">
               <p class="ba__t">Warm light, honest tones.</p>
-              <p class="ba__by">Edited with <a href="#plugins">LrC Ai Color Plugin</a> + <a href="#presets">Jardin Preset Pack</a></p>
+              <p class="ba__by">Edited with <a href="#plugins">Lightroom Ai Color Plugin</a> + <a href="#presets">Jardin Preset Pack</a></p>
             </div>
           </article>
         </div>
@@ -1858,7 +1860,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             </div>
             <div class="bacard__body" id="baCap-5">
               <p class="ba__t">Whites that stay white.</p>
-              <p class="ba__by">Edited with <a href="#plugins">LrC Ai Color Plugin</a> + <a href="#presets">Olbia LUTs</a></p>
+              <p class="ba__by">Edited with <a href="#plugins">Lightroom Ai Color Plugin</a> + <a href="#presets">Olbia LUTs</a></p>
             </div>
           </article>
         </div>
