@@ -77,7 +77,8 @@
   --fs-10:38px;  /* h2 ceiling                    */
   --fs-11:48px;
   --fs-12:58px;  /* h1 ceiling — the page's peak  */
-  --h1-size:clamp(38px,5.6vw,76px);
+  --h1-size:clamp(38px,5.6vw,76px);   /* the headline's CEILING, never its floor */
+  --h1-lines:3;                       /* how many of those lines the box reserves */
 
   /* ── Line heights — bigger text, tighter leading ────────────── */
   --lh-display:1.06;
@@ -343,12 +344,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    the h1 as 16ch it would shrink in step with the font and the line count
    would never drop */
 .hero__slides{position:relative}
+/* THE HEADLINE BOX. Its width is the whole copy column and its height is
+   --h1-lines lines of the largest size the headline is allowed to take. It is
+   the same box on every slide and it never moves — the type inside it is what
+   gives way. */
 .slide__title{
-  min-height:calc(var(--h1-size) * var(--lh-display) * 3);
-  max-width:calc(var(--h1-size) * 8.8);
+  min-height:calc(var(--h1-size) * var(--lh-display) * var(--h1-lines));
+  max-width:none;
   display:flex;align-items:flex-start;
 }
-.slide h1{margin:0;max-width:none}
+.slide h1{margin:0;max-width:none;overflow-wrap:break-word}
 /* margin-top:auto, not a fixed step: the gap under the headline is whatever is
    left over, and it collapses to the floor below when nothing is left */
 .hero__actions{display:flex;flex-wrap:wrap;gap:var(--s-3);margin-top:auto;padding-top:var(--s-4)}
@@ -1066,7 +1071,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .slide__media{order:1}
   .slide__copy{order:2}
   .hero__slides{position:relative}
-.slide__title{max-width:calc(var(--h1-size) * 11)}
   .faq{grid-template-columns:1fr;gap:var(--s-7)}
   .faq__head{position:static}
   .faq__head .lede{max-width:60ch}
@@ -2219,20 +2223,31 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     nt.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
   });
 
-  /* ---- keep every headline inside three lines ----
-     The reserved box is three lines of the base size. If a headline needs a
-     fourth, step the size down until it fits, so the slide height never
-     moves between slides. */
+  /* ---- fit every headline to the headline box ----
+     The rules, in order:
+       1. The box is fixed — the full width of the copy column, and
+          --h1-lines lines of --h1-size tall. Text never changes it.
+       2. --h1-size is a ceiling. A headline that already fits is left there
+          and is never blown up to fill the box.
+       3. There is no floor. A headline that does not fit steps down 1px at a
+          time until it fits the box in BOTH directions — height and width.
+          FLOOR is a runaway stop, not a design minimum.
+       4. All three slides end on one size: the smallest any of them needs. */
+  var FLOOR = 10;
+  function boxOf(h1){
+    var box = h1.closest('.slide__title');
+    /* min-height, not clientHeight: an overflowing headline has already
+       stretched the box, and measuring that would call it a fit */
+    return { h: parseFloat(getComputedStyle(box).minHeight) || box.clientHeight,
+             w: box.clientWidth };
+  }
   function fitTitle(h1){
     if(!h1) return;
     h1.style.fontSize = '';
-    var size = parseFloat(getComputedStyle(h1).fontSize);
-    /* enough steps to walk the whole range: the base size is 76 now, so 40
-       tries stopped at 36px with a long headline still on a fourth line */
-    var guard = 90;
-    while(guard-- > 0 && size > 22){
-      var lh = parseFloat(getComputedStyle(h1).lineHeight) || size * 1.06;
-      if(h1.scrollHeight <= Math.ceil(lh * 3) + 1) break;
+    var size = parseFloat(getComputedStyle(h1).fontSize), box = boxOf(h1);
+    var guard = 400;
+    while(guard-- > 0 && size > FLOOR){
+      if(h1.scrollHeight <= box.h + 1 && h1.scrollWidth <= box.w + 1) break;
       size -= 1;
       h1.style.fontSize = size + 'px';
     }
