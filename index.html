@@ -597,10 +597,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    anywhere on the frame and the arrow keys all move it, and a screen reader
    gets a labelled slider without any of it being rebuilt in script.
    ════════════════════════════════════════════════════════════════ */
-.ba__set{display:none}
-.ba__set.is-on{display:block;margin:0}
+/* A 4:5 frame the width of the column would be 1440px tall, so the section
+   is two columns instead: the portrait on the left at a size you can take in
+   at a glance, the caption and the way between examples beside it — the same
+   media-left / copy-right shape the install section uses. */
+.ba{display:grid;grid-template-columns:minmax(0,440px) minmax(0,1fr);gap:var(--s-10);align-items:center}
+.ba__frame{display:none}
+.ba__frame.is-on{display:block}
 .compare{
-  position:relative;aspect-ratio:3/2;overflow:hidden;
+  position:relative;aspect-ratio:4/5;overflow:hidden;
   border-radius:var(--r-card);border:1px solid var(--border);background:var(--surface-sunken);
   transition:box-shadow var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease);
 }
@@ -610,11 +615,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .compare__after{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--x)) 0 0)}
 .compare__tag{
   position:absolute;bottom:var(--s-4);z-index:2;
-  font-size:var(--fs-2);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);text-transform:uppercase;
+  font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);text-transform:uppercase;
   color:#fff;padding:var(--s-1) var(--s-3);border-radius:var(--r-full);background:rgba(10,37,64,.72);
 }
-.compare__tag--a{left:var(--s-4)}
-.compare__tag--b{right:var(--s-4)}
+.compare__tag--a{left:var(--s-3)}
+.compare__tag--b{right:var(--s-3)}
 .compare__bar{
   position:absolute;top:0;bottom:0;left:var(--x);z-index:3;
   width:2px;margin-left:-1px;background:rgba(255,255,255,.9);pointer-events:none;
@@ -636,17 +641,26 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   position:absolute;inset:0;z-index:4;width:100%;height:100%;margin:0;
   appearance:none;-webkit-appearance:none;background:transparent;cursor:ew-resize;
 }
-.compare__range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:44px;height:200px;cursor:ew-resize}
-.compare__range::-moz-range-thumb{width:44px;height:200px;border:0;background:transparent;cursor:ew-resize}
+/* a hairline thumb, not a wide one: a range maps its value across the track
+   minus the thumb, so a 44px thumb both put the handle a thumb-width behind
+   the pointer and stopped it ever reaching either edge — you could not fully
+   reveal one side. The whole input is the drag surface, so nothing is lost. */
+.compare__range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:2px;height:100%;cursor:ew-resize}
+.compare__range::-moz-range-thumb{width:2px;height:100%;border:0;border-radius:0;background:transparent;cursor:ew-resize}
 .compare__range:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:var(--r-card)}
 
-.ba__cap{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s-2) var(--s-4);margin-top:var(--s-5)}
-.ba__t{margin:0;font-size:var(--fs-6);font-weight:var(--fw-semibold);letter-spacing:var(--tr-heading);color:var(--fg)}
-.ba__by{margin:0;font-size:var(--fs-3);color:var(--fg-muted)}
-/* the control bar every row on this page uses: middle centred, arrows at the
-   bottom right of the content */
-.ba__bar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:var(--s-4);margin-top:var(--s-5)}
-.ba__nav{display:flex;gap:var(--s-2);justify-content:flex-end}
+.ba__side{min-width:0}
+.ba__cap{display:none}
+.ba__cap.is-on{display:block}
+.ba__t{margin:0;font-size:var(--fs-8);font-weight:var(--fw-bold);letter-spacing:var(--tr-heading);line-height:var(--lh-tight);color:var(--fg);text-wrap:balance}
+/* the two products that did the work are the useful part of the credit, so
+   they are the links */
+.ba__by{margin:var(--s-4) 0 0;font-size:var(--fs-5);line-height:var(--lh-relaxed);color:var(--fg-body)}
+.ba__by a{color:var(--accent-fg);font-weight:var(--fw-medium);text-decoration:underline;text-underline-offset:3px;text-decoration-thickness:1px;text-decoration-color:var(--accent-border)}
+.ba__by a:hover{text-decoration-color:var(--accent)}
+/* the same control bar as every other row, kept inside the copy column */
+.ba__bar{display:flex;align-items:center;gap:var(--s-5);margin-top:var(--s-8)}
+.ba__nav{display:flex;gap:var(--s-2);margin-left:auto}
 
 /* ════════════════════════════════════════════════════════════════
    TUTORIALS — vertical 9:16 shelf, deliberately unlike the plugin
@@ -972,6 +986,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .rail{--per-view:5}
   .slide.is-on{grid-template-columns:minmax(0,1fr) minmax(0,480px);gap:var(--s-8)}
   .install,.faq{gap:var(--s-8)}
+  .ba{grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:var(--s-8)}
 }
 @media (max-width:1000px){
   .rail{--per-view:4}
@@ -1009,6 +1024,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .deck__arrows{display:none}
   .ptabs{grid-template-columns:1fr;gap:var(--s-2);padding-inline:var(--gutter)}
       .install{grid-template-columns:1fr;gap:var(--s-8)}
+  .ba{grid-template-columns:1fr;gap:var(--s-7)}
+  .ba__stage{max-width:420px}
   .footer__top{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-8)}
   .section__head{flex-direction:column;align-items:flex-start;gap:var(--s-5)}
   /* still four across — the type steps down instead of the row breaking */
@@ -1700,62 +1717,65 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <a class="link" href="#presets">Browse the packs <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
 
-    <div id="baSets" data-reveal>
-      <figure class="ba__set is-on" id="ba-0">
-        <div class="compare" data-compare style="--x:50%">
-          <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="Before the edit" loading="lazy" onerror="this.style.display='none'">
-          <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="After the edit" loading="lazy" onerror="this.style.display='none'"></span>
-          <span class="compare__tag compare__tag--a">Before</span>
-          <span class="compare__tag compare__tag--b">After</span>
-          <span class="compare__bar" aria-hidden="true"><i></i></span>
-          <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
-                 aria-label="Reveal the edited version: Natural Retouch. Timeless Color.">
+    <div class="ba" id="baSets" data-reveal>
+      <div class="ba__stage">
+        <div class="ba__frame is-on" data-ba="0">
+          <div class="compare" data-compare style="--x:50%">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="Before the edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="After the edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the edited version" aria-describedby="baCap-0">
+          </div>
         </div>
-        <figcaption class="ba__cap">
+        <div class="ba__frame" data-ba="1" hidden>
+          <div class="compare" data-compare style="--x:50%">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" alt="Before the edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" alt="After the edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the edited version" aria-describedby="baCap-1">
+          </div>
+        </div>
+        <div class="ba__frame" data-ba="2" hidden>
+          <div class="compare" data-compare style="--x:50%">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" alt="Before the edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" alt="After the edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the edited version" aria-describedby="baCap-2">
+          </div>
+        </div>
+      </div>
+      <div class="ba__side">
+        <div class="ba__cap is-on" id="baCap-0" data-ba="0">
           <p class="ba__t">Natural Retouch. Timeless Color.</p>
-          <p class="ba__by">Edited with US Photoshop Plugin + Solis Preset Pack</p>
-        </figcaption>
-      </figure>
-      <figure class="ba__set" id="ba-1" hidden>
-        <div class="compare" data-compare style="--x:50%">
-          <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" alt="Before the edit" loading="lazy" onerror="this.style.display='none'">
-          <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" alt="After the edit" loading="lazy" onerror="this.style.display='none'"></span>
-          <span class="compare__tag compare__tag--a">Before</span>
-          <span class="compare__tag compare__tag--b">After</span>
-          <span class="compare__bar" aria-hidden="true"><i></i></span>
-          <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
-                 aria-label="Reveal the edited version: Clean skin, texture kept.">
+          <p class="ba__by">Edited with <a href="#plugins">US Photoshop Plugin</a> + <a href="#presets">Solis Preset Pack</a></p>
         </div>
-        <figcaption class="ba__cap">
+        <div class="ba__cap" id="baCap-1" data-ba="1" hidden>
           <p class="ba__t">Clean skin, texture kept.</p>
-          <p class="ba__by">Edited with RetouchX + Lora Preset Pack</p>
-        </figcaption>
-      </figure>
-      <figure class="ba__set" id="ba-2" hidden>
-        <div class="compare" data-compare style="--x:50%">
-          <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" alt="Before the edit" loading="lazy" onerror="this.style.display='none'">
-          <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" alt="After the edit" loading="lazy" onerror="this.style.display='none'"></span>
-          <span class="compare__tag compare__tag--a">Before</span>
-          <span class="compare__tag compare__tag--b">After</span>
-          <span class="compare__bar" aria-hidden="true"><i></i></span>
-          <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
-                 aria-label="Reveal the edited version: One look across the gallery.">
+          <p class="ba__by">Edited with <a href="#plugins">RetouchX</a> + <a href="#presets">Lora Preset Pack</a></p>
         </div>
-        <figcaption class="ba__cap">
+        <div class="ba__cap" id="baCap-2" data-ba="2" hidden>
           <p class="ba__t">One look across the gallery.</p>
-          <p class="ba__by">Edited with Lightroom AI Color + Terra Preset Pack</p>
-        </figcaption>
-      </figure>
-      <div class="ba__bar">
-        <span aria-hidden="true"></span>
-        <div class="dots">
-          <button class="dot" type="button" aria-current="true" aria-label="Show example 1 of 3: Natural Retouch. Timeless Color."><i></i></button>
-          <button class="dot" type="button" aria-current="false" aria-label="Show example 2 of 3: Clean skin, texture kept."><i></i></button>
-          <button class="dot" type="button" aria-current="false" aria-label="Show example 3 of 3: One look across the gallery."><i></i></button>
+          <p class="ba__by">Edited with <a href="#plugins">Lightroom AI Color</a> + <a href="#presets">Terra Preset Pack</a></p>
         </div>
-        <div class="ba__nav">
-          <button class="arrow" type="button" data-ba="-1" aria-label="Previous example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <button class="arrow" type="button" data-ba="1" aria-label="Next example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        <div class="ba__bar">
+          <div class="dots">
+            <button class="dot" type="button" aria-current="true" aria-label="Show example 1 of 3: Natural Retouch. Timeless Color."><i></i></button>
+            <button class="dot" type="button" aria-current="false" aria-label="Show example 2 of 3: Clean skin, texture kept."><i></i></button>
+            <button class="dot" type="button" aria-current="false" aria-label="Show example 3 of 3: One look across the gallery."><i></i></button>
+          </div>
+          <div class="ba__nav">
+            <button class="arrow" type="button" data-ba-step="-1" aria-label="Previous example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="arrow" type="button" data-ba-step="1" aria-label="Next example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
         </div>
       </div>
     </div>
@@ -2402,21 +2422,23 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   });
   var baBox = document.getElementById('baSets');
   if(baBox){
-    var baSets = [].slice.call(baBox.querySelectorAll('.ba__set')),
-        baDots = [].slice.call(baBox.querySelectorAll('.dot')),
+    /* a frame and its caption sit in different columns, so an example is
+       every element carrying that index */
+    var baDots = [].slice.call(baBox.querySelectorAll('.dot')),
+        baParts = [].slice.call(baBox.querySelectorAll('[data-ba]')),
         baIdx = 0;
     function baShow(i){
-      baIdx = (i + baSets.length) % baSets.length;
-      baSets.forEach(function(set, n){
-        var on = n === baIdx;
-        set.classList.toggle('is-on', on);
-        if(on){ set.removeAttribute('hidden'); } else { set.setAttribute('hidden',''); }
+      baIdx = (i + baDots.length) % baDots.length;
+      baParts.forEach(function(part){
+        var on = +part.getAttribute('data-ba') === baIdx;
+        part.classList.toggle('is-on', on);
+        if(on){ part.removeAttribute('hidden'); } else { part.setAttribute('hidden',''); }
       });
       baDots.forEach(function(d, n){ d.setAttribute('aria-current', String(n === baIdx)); });
     }
     baDots.forEach(function(d, n){ d.addEventListener('click', function(){ baShow(n); }); });
-    baBox.querySelectorAll('[data-ba]').forEach(function(btn){
-      btn.addEventListener('click', function(){ baShow(baIdx + parseInt(btn.getAttribute('data-ba'), 10)); });
+    baBox.querySelectorAll('[data-ba-step]').forEach(function(btn){
+      btn.addEventListener('click', function(){ baShow(baIdx + parseInt(btn.getAttribute('data-ba-step'), 10)); });
     });
   }
 
