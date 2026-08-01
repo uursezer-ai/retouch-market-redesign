@@ -415,7 +415,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    closes on. The palette is declared once and scoped to both, so every
    component inside either of them turns over on its own terms — and the two
    ends of the page cannot drift apart later. */
-.topband,.offer2{
+.topband,.shell{
   position:relative;isolation:isolate;overflow:hidden;
   --n-0:#0B1020;
   --n-25:#0C1224;
@@ -513,9 +513,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .nav.is-dark .cart__n{border-color:#080C18}
 .nav.is-dark.is-stuck{box-shadow:none}
 @media (prefers-reduced-motion:reduce){
-  .topband__glow,.offer2__glow{animation:none}
+  .topband__glow,.shell__glow{animation:none}
   .topband__glow::before,.topband__glow::after,
-  .offer2__glow::before,.offer2__glow::after{display:none}
+  .shell__glow::before,.shell__glow::after{display:none}
+  .prod.is-free .prod__badge{animation:none}
   .topband .slide__media{transform:none}
 }
 
@@ -1250,26 +1251,26 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    for the bundle, not for place three. Boxes and picker are drawn from one
    state, so the two cannot disagree.
    ════════════════════════════════════════════════════════════════ */
-.offer2{background:var(--bg);border-top:1px solid var(--border);color:var(--fg-body)}
+
 /* the band's three layers again, a shade quieter: the ambient pair drifts on
    its own, ::before is the pool that follows the pointer, ::after the blob
    that leans against it. Same colours — it is meant to read as the same room
    at the other end of the page. */
-.offer2{--px:50%;--py:40%}
-.offer2__glow{
+.shell{--px:50%;--py:40%}
+.shell__glow{
   position:absolute;inset:-20% -10%;z-index:-1;pointer-events:none;
   background:
     radial-gradient(46% 52% at 12% 84%, rgba(140,88,255,.12) 0%, rgba(140,88,255,0) 70%),
     radial-gradient(40% 44% at 86% 14%, rgba(56,92,235,.10) 0%, rgba(56,92,235,0) 72%);
   animation:bandDrift 34s var(--ease) infinite alternate;
 }
-.offer2__glow::before{
+.shell__glow::before{
   content:"";position:absolute;inset:0;
   background:
     radial-gradient(620px circle at var(--px) var(--py), rgba(92,72,255,.10), transparent 60%),
     radial-gradient(520px circle at calc(var(--px) - 38%) calc(var(--py) + 38%), rgba(39,98,220,.07), transparent 62%);
 }
-.offer2__glow::after{
+.shell__glow::after{
   content:"";position:absolute;left:6%;top:16%;
   width:420px;height:420px;border-radius:50%;
   background:rgb(92,70,255);opacity:.08;filter:blur(90px);
@@ -1280,10 +1281,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* the panel lifts off the ground on a hairline and a wash rather than a
    shadow, which does nothing on a dark surface */
 .shell{
-  position:relative;padding:var(--s-9);border-radius:var(--r-panel);
+  position:relative;isolation:isolate;overflow:hidden;
+  padding:var(--s-9);border-radius:var(--r-panel);
   border:1px solid var(--accent-border);
-  background:linear-gradient(145deg,rgba(104,88,255,.10),rgba(255,255,255,.03) 42%,rgba(45,92,210,.06));
-  box-shadow:0 40px 100px rgba(0,0,0,.28);
+  background:
+    linear-gradient(145deg,rgba(104,88,255,.10),rgba(255,255,255,.03) 42%,rgba(45,92,210,.06)),
+    #080C18;
+  /* it is a card on the page now, not the floor of it */
+  box-shadow:0 30px 80px -24px rgba(11,16,32,.45);
 }
 .shell__head{
   display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s-9);
@@ -1370,21 +1375,27 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 /* the free mark goes on the picture, where the eye lands first */
 .prod__badge{
-  position:absolute;left:10px;top:10px;z-index:2;padding:3px var(--s-2);border-radius:var(--r-full);
-  background:var(--accent);color:var(--fg-on-accent);
-  font-size:var(--fs-1);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);
-  box-shadow:0 6px 18px rgba(105,87,255,.30);
+  position:absolute;left:10px;top:10px;z-index:3;padding:5px var(--s-3);border-radius:var(--r-full);
+  background:var(--accent);color:var(--fg-on-accent);border:1px solid rgba(255,255,255,.34);
+  font-size:var(--fs-2);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
+  animation:freePulse 3.2s var(--ease) infinite alternate;
+}
+/* a ring that breathes outwards — the pill stays put, the light around it
+   does the moving, so nothing under it shifts */
+@keyframes freePulse{
+  from{box-shadow:0 8px 22px rgba(105,87,255,.42), 0 0 0 3px rgba(99,91,255,.20)}
+  to  {box-shadow:0 10px 28px rgba(105,87,255,.62), 0 0 0 8px rgba(99,91,255,.06)}
 }
 .prod__x{
   position:absolute;right:var(--s-2);top:var(--s-2);z-index:3;
   display:grid;place-items:center;width:26px;height:26px;border-radius:var(--r-full);
-  background:rgba(6,12,22,.66);color:#fff;backdrop-filter:blur(4px);
+  background:rgba(6,12,22,.68);color:#FF8A8A;backdrop-filter:blur(4px);
   opacity:0;transform:scale(.9);
   transition:opacity var(--dur-1) var(--ease), transform var(--dur-1) var(--ease),
              background var(--dur-1) var(--ease);
 }
 .prod:hover .prod__x,.prod:focus-within .prod__x{opacity:1;transform:none}
-.prod__x:hover{background:rgba(6,12,22,.90)}
+.prod__x:hover{background:rgba(120,22,32,.86);color:#fff}
 .prod__body{display:flex;flex-direction:column;gap:var(--s-2);min-width:0;padding:var(--s-4) var(--s-1) var(--s-1)}
 .prod__by{display:flex;align-items:center;gap:var(--s-2);min-width:0;font-size:var(--fs-1);color:var(--fg-muted)}
 .prod__by .avatar{width:24px;height:24px;font-size:9px;background:var(--surface-sunken)}
@@ -2689,7 +2700,182 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   </div>
 </section>
 
-<!-- ══════════ 6 · TESTIMONIALS ══════════
+
+
+
+<!-- ══════════ 7 · CLOSING OFFER ══════════
+     PLACEHOLDER DATA: the plugin pack's price is set in the build script — the
+     page states it nowhere; so is the 10,000+ figure. Everything else is read
+     off the preset grid above. The boxes and the picker are drawn from one
+     state in script, so the two cannot disagree; this markup is the frame. -->
+<section class="section section--tint" id="offer" aria-labelledby="offerTitle">
+  <div class="wrap">
+    <div class="shell" data-offer data-reveal data-lit>
+      <div class="shell__glow" aria-hidden="true"></div>
+      <div class="shell__head">
+        <div>
+          <p class="eyebrow">Bestseller bundle</p>
+          <h2 id="offerTitle">The Easiest Way to Choose.</h2>
+          <p class="lede">Not sure where to start? We put our bestselling tools together and made
+            the decision for you — keep our picks, or swap in the ones you want.</p>
+        </div>
+        <div class="oswitch" role="tablist" aria-label="Bundle size">
+          <button class="oswitch__b" type="button" role="tab" data-deal="3" aria-selected="false" aria-controls="bundleRow">
+            Get 3, Pay 2<span>Starter bundle</span>
+          </button>
+          <button class="oswitch__b" type="button" role="tab" data-deal="5" aria-selected="true" aria-controls="bundleRow">
+            Get 5, Pay 3<span>Best value</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="prods" id="bundleRow" data-picks aria-live="polite"></div>
+
+      <div class="custom" id="bundlePicker" data-custom hidden>
+        <div class="custom__top">
+          <div>
+            <h3>Customize your selection</h3>
+            <p>Any mix of plugins and presets — the cheapest ones in your bundle come free.</p>
+          </div>
+          <button class="custom__x" type="button" data-close aria-label="Close the picker">
+            <svg width="13" height="13" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1.5 1.5l9 9m0-9l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="choices" data-choices></div>
+        <p class="custom__hint" data-hint aria-live="polite"></p>
+      </div>
+
+      <div class="ofoot">
+        <p class="oproof">
+          <span class="oproof__faces" aria-hidden="true"><img src="images/testimonials/mucahitguney/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"><img src="images/testimonials/zariffilm/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"><img src="images/testimonials/ugurdemir/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"></span>
+          <span>Chosen by 10,000+ photographers<br>One-time purchase · instant download · every future release included</span>
+        </p>
+        <div class="oact">
+          <span class="oact__row">
+            <button class="btn btn--secondary btn--lg" type="button" data-customize aria-expanded="false" aria-controls="bundlePicker">Customize bundle</button>
+            <button class="btn btn--primary btn--lg obuy" type="button" data-go disabled></button>
+          </span>
+          <p class="onote" data-note></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 8 · TUTORIALS ══════════
+     PLACEHOLDER DATA: titles, durations and view counts below are stand-ins.
+     Swap in the real Reels — and their real numbers — before this goes live. -->
+<section class="section section--tint" id="tutorials">
+  <div class="wrap">
+    <div class="section__head" data-reveal>
+      <div>
+        <p class="eyebrow">Tutorials</p>
+        <h2>Learn from the Creator</h2>
+        <p class="lede">Every tutorial is taught by the photographer who created the tools.</p>
+      </div>
+      <div class="follow">
+        <a class="btn btn--secondary" href="#" aria-label="Watch every tutorial on Instagram, @ugursezerphoto"><svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="9" r="3.6" stroke="currentColor" stroke-width="1.6"/><circle cx="13.4" cy="4.6" r="1.05" fill="currentColor"/></svg><span>@ugursezerphoto</span><svg class="btn__out" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3.4 8.6L8.6 3.4M4.6 3.4h4v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="btn btn--secondary" href="#" aria-label="Watch every tutorial on YouTube, ugursezer"><svg width="19" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true"><rect x="1" y="1" width="18" height="12" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M8.4 4.4l4.4 2.6-4.4 2.6V4.4z" fill="currentColor"/></svg><span>ugursezer</span><svg class="btn__out" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3.4 8.6L8.6 3.4M4.6 3.4h4v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      </div>
+    </div>
+
+    <div class="strip" data-reveal>
+      <div class="rail">
+
+        <a class="reel" href="#">
+          <span class="reel__thumb">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <span class="reel__dur tnum">1:04</span>
+            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>4.2M<span class="vh"> views</span></span>
+          </span>
+          <span class="reel__t">Skin that still looks like skin</span>
+          <span class="reel__cat">Retouching</span>
+        </a>
+
+        <a class="reel" href="#">
+          <span class="reel__thumb">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <span class="reel__dur tnum">0:48</span>
+            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>2.8M<span class="vh"> views</span></span>
+          </span>
+          <span class="reel__t">Fixing mixed lighting in one pass</span>
+          <span class="reel__cat">Colour</span>
+        </a>
+
+        <a class="reel" href="#">
+          <span class="reel__thumb">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <span class="reel__dur tnum">1:12</span>
+            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>1.9M<span class="vh"> views</span></span>
+          </span>
+          <span class="reel__t">Why your whites keep going grey</span>
+          <span class="reel__cat">Colour</span>
+        </a>
+
+        <a class="reel" href="#">
+          <span class="reel__thumb">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <span class="reel__dur tnum">0:56</span>
+            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>1.6M<span class="vh"> views</span></span>
+          </span>
+          <span class="reel__t">One preset across five skin tones</span>
+          <span class="reel__cat">Presets</span>
+        </a>
+
+        <a class="reel" href="#">
+          <span class="reel__thumb">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <span class="reel__dur tnum">1:21</span>
+            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>1.2M<span class="vh"> views</span></span>
+          </span>
+          <span class="reel__t">Culling 800 frames without losing the day</span>
+          <span class="reel__cat">Workflow</span>
+        </a>
+
+        <a class="reel" href="#">
+          <span class="reel__thumb">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <span class="reel__dur tnum">1:08</span>
+            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>980K<span class="vh"> views</span></span>
+          </span>
+          <span class="reel__t">The dodge and burn shortcut nobody uses</span>
+          <span class="reel__cat">Retouching</span>
+        </a>
+
+        <a class="reel" href="#">
+          <span class="reel__thumb">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <span class="reel__dur tnum">0:52</span>
+            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>870K<span class="vh"> views</span></span>
+          </span>
+          <span class="reel__t">Matching two cameras in one pass</span>
+          <span class="reel__cat">Colour</span>
+        </a>
+
+        <a class="reel" href="#">
+          <span class="reel__thumb">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
+            <span class="reel__dur tnum">1:15</span>
+            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>740K<span class="vh"> views</span></span>
+          </span>
+          <span class="reel__t">Stop over-sharpening portraits</span>
+          <span class="reel__cat">Retouching</span>
+        </a>
+
+      </div>
+      <div class="strip__bar">
+        <span aria-hidden="true"></span>
+        <span class="progress" aria-hidden="true"><i></i></span>
+        <div class="strip__nav">
+          <button class="arrow" type="button" data-dir="-1" aria-label="Scroll tutorials left"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="arrow" type="button" data-dir="1" aria-label="Scroll tutorials right"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 9 · TESTIMONIALS ══════════
      The photographs, names and handles come from the client's archive.
      PLACEHOLDER: five of the six quotes are written here rather than supplied,
      and no follower counts were given. -->
@@ -2844,121 +3030,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   </div>
 </section>
 
-<!-- ══════════ 7 · TUTORIALS ══════════
-     PLACEHOLDER DATA: titles, durations and view counts below are stand-ins.
-     Swap in the real Reels — and their real numbers — before this goes live. -->
-<section class="section section--tint" id="tutorials">
-  <div class="wrap">
-    <div class="section__head" data-reveal>
-      <div>
-        <p class="eyebrow">Tutorials</p>
-        <h2>Learn from the Creator</h2>
-        <p class="lede">Every tutorial is taught by the photographer who created the tools.</p>
-      </div>
-      <div class="follow">
-        <a class="btn btn--secondary" href="#" aria-label="Watch every tutorial on Instagram, @ugursezerphoto"><svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="9" r="3.6" stroke="currentColor" stroke-width="1.6"/><circle cx="13.4" cy="4.6" r="1.05" fill="currentColor"/></svg><span>@ugursezerphoto</span><svg class="btn__out" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3.4 8.6L8.6 3.4M4.6 3.4h4v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-        <a class="btn btn--secondary" href="#" aria-label="Watch every tutorial on YouTube, ugursezer"><svg width="19" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true"><rect x="1" y="1" width="18" height="12" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M8.4 4.4l4.4 2.6-4.4 2.6V4.4z" fill="currentColor"/></svg><span>ugursezer</span><svg class="btn__out" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3.4 8.6L8.6 3.4M4.6 3.4h4v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
-      </div>
-    </div>
-
-    <div class="strip" data-reveal>
-      <div class="rail">
-
-        <a class="reel" href="#">
-          <span class="reel__thumb">
-            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
-            <span class="reel__dur tnum">1:04</span>
-            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>4.2M<span class="vh"> views</span></span>
-          </span>
-          <span class="reel__t">Skin that still looks like skin</span>
-          <span class="reel__cat">Retouching</span>
-        </a>
-
-        <a class="reel" href="#">
-          <span class="reel__thumb">
-            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
-            <span class="reel__dur tnum">0:48</span>
-            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>2.8M<span class="vh"> views</span></span>
-          </span>
-          <span class="reel__t">Fixing mixed lighting in one pass</span>
-          <span class="reel__cat">Colour</span>
-        </a>
-
-        <a class="reel" href="#">
-          <span class="reel__thumb">
-            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
-            <span class="reel__dur tnum">1:12</span>
-            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>1.9M<span class="vh"> views</span></span>
-          </span>
-          <span class="reel__t">Why your whites keep going grey</span>
-          <span class="reel__cat">Colour</span>
-        </a>
-
-        <a class="reel" href="#">
-          <span class="reel__thumb">
-            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
-            <span class="reel__dur tnum">0:56</span>
-            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>1.6M<span class="vh"> views</span></span>
-          </span>
-          <span class="reel__t">One preset across five skin tones</span>
-          <span class="reel__cat">Presets</span>
-        </a>
-
-        <a class="reel" href="#">
-          <span class="reel__thumb">
-            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
-            <span class="reel__dur tnum">1:21</span>
-            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>1.2M<span class="vh"> views</span></span>
-          </span>
-          <span class="reel__t">Culling 800 frames without losing the day</span>
-          <span class="reel__cat">Workflow</span>
-        </a>
-
-        <a class="reel" href="#">
-          <span class="reel__thumb">
-            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
-            <span class="reel__dur tnum">1:08</span>
-            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>980K<span class="vh"> views</span></span>
-          </span>
-          <span class="reel__t">The dodge and burn shortcut nobody uses</span>
-          <span class="reel__cat">Retouching</span>
-        </a>
-
-        <a class="reel" href="#">
-          <span class="reel__thumb">
-            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
-            <span class="reel__dur tnum">0:52</span>
-            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>870K<span class="vh"> views</span></span>
-          </span>
-          <span class="reel__t">Matching two cameras in one pass</span>
-          <span class="reel__cat">Colour</span>
-        </a>
-
-        <a class="reel" href="#">
-          <span class="reel__thumb">
-            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
-            <span class="reel__dur tnum">1:15</span>
-            <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>740K<span class="vh"> views</span></span>
-          </span>
-          <span class="reel__t">Stop over-sharpening portraits</span>
-          <span class="reel__cat">Retouching</span>
-        </a>
-
-      </div>
-      <div class="strip__bar">
-        <span aria-hidden="true"></span>
-        <span class="progress" aria-hidden="true"><i></i></span>
-        <div class="strip__nav">
-          <button class="arrow" type="button" data-dir="-1" aria-label="Scroll tutorials left"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          <button class="arrow" type="button" data-dir="1" aria-label="Scroll tutorials right"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-
-<!-- ══════════ 7 · HOW TO INSTALL ══════════ -->
+<!-- ══════════ 10 · HOW TO INSTALL ══════════ -->
 <section class="section" id="install">
   <div class="wrap">
     <div class="section__head" data-reveal>
@@ -3010,7 +3082,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   </div>
 </section>
 
-<!-- ══════════ 8 · FAQ ══════════ -->
+<!-- ══════════ 11 · FAQ ══════════ -->
 <section class="section section--tint" id="faq">
   <div class="wrap">
     <div class="faq">
@@ -3065,68 +3137,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   </div>
 </section>
 
-<!-- ══════════ 9 · CLOSING OFFER ══════════
-     PLACEHOLDER DATA: the plugin pack's price is set in the build script — the
-     page states it nowhere; so is the 10,000+ figure. Everything else is read
-     off the preset grid above. The boxes and the picker are drawn from one
-     state in script, so the two cannot disagree; this markup is the frame. -->
-<section class="section offer2" id="offer" aria-labelledby="offerTitle" data-lit>
-  <div class="offer2__glow" aria-hidden="true"></div>
-  <div class="wrap">
-    <div class="shell" data-offer data-reveal>
-      <div class="shell__head">
-        <div>
-          <p class="eyebrow">Bestseller bundle</p>
-          <h2 id="offerTitle">The Easiest Way to Choose.</h2>
-          <p class="lede">Not sure where to start? We put our bestselling tools together and made
-            the decision for you — keep our picks, or swap in the ones you want.</p>
-        </div>
-        <div class="oswitch" role="tablist" aria-label="Bundle size">
-          <button class="oswitch__b" type="button" role="tab" data-deal="3" aria-selected="false" aria-controls="bundleRow">
-            Get 3, Pay 2<span>Starter bundle</span>
-          </button>
-          <button class="oswitch__b" type="button" role="tab" data-deal="5" aria-selected="true" aria-controls="bundleRow">
-            Get 5, Pay 3<span>Best value</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="prods" id="bundleRow" data-picks aria-live="polite"></div>
-
-      <div class="custom" id="bundlePicker" data-custom hidden>
-        <div class="custom__top">
-          <div>
-            <h3>Customize your selection</h3>
-            <p>Any mix of plugins and presets — the cheapest ones in your bundle come free.</p>
-          </div>
-          <button class="custom__x" type="button" data-close aria-label="Close the picker">
-            <svg width="13" height="13" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1.5 1.5l9 9m0-9l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-        <div class="choices" data-choices></div>
-        <p class="custom__hint" data-hint aria-live="polite"></p>
-      </div>
-
-      <div class="ofoot">
-        <p class="oproof">
-          <span class="oproof__faces" aria-hidden="true"><img src="images/testimonials/mucahitguney/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"><img src="images/testimonials/zariffilm/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"><img src="images/testimonials/ugurdemir/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"></span>
-          <span>Chosen by 10,000+ photographers<br>One-time purchase · instant download · every future release included</span>
-        </p>
-        <div class="oact">
-          <span class="oact__row">
-            <button class="btn btn--secondary btn--lg" type="button" data-customize aria-expanded="false" aria-controls="bundlePicker">Customize bundle</button>
-            <button class="btn btn--primary btn--lg obuy" type="button" data-go disabled></button>
-          </span>
-          <p class="onote" data-note></p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 </main>
 
-<!-- ══════════ 10 · FOOTER ══════════ -->
+<!-- ══════════ 12 · FOOTER ══════════ -->
 <footer class="footer">
   <div class="wrap">
     <div class="footer__top">
@@ -3381,7 +3395,19 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     var tabs = [].slice.call(offer.querySelectorAll('[data-deal]'));
     /* the best value is the one on offer, so it is the one already chosen —
        filled with the five the page has been arguing for */
-    var state = { get:5, picks:[0,1,2,3,4] };
+    /* the made-up bundle, in the order it is offered */
+    var DEFAULTS = [0,1,2,3,4];
+    var state = { get:5, picks:DEFAULTS.slice() }, was = null;
+    /* top up to the size of the deal: the predefined packs first, then
+       anything else in the catalogue, so a place is never left blank by a
+       switch — only by you taking something out */
+    function fill(){
+      DEFAULTS.concat(PACKS.map(function(p, i){ return i; })).some(function(i){
+        if(state.picks.length >= state.get) return true;
+        if(state.picks.indexOf(i) === -1) state.picks.push(i);
+        return false;
+      });
+    }
 
     function deal(){ for(var i=0;i<DEALS.length;i++) if(DEALS[i].get === state.get) return DEALS[i]; return DEALS[0]; }
     function money(s){ return Number(String(s).replace(/[^\d.]/g, '')) || 0; }
@@ -3434,6 +3460,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       PACKS.forEach(function(p, i){ grid.appendChild(choice(i)); });
 
       var short = state.get - list.length, d = deal();
+      /* only on the change, never on every draw — otherwise opening it by
+         hand on a finished bundle would shut again under your finger */
+      if(was !== null && was !== short){
+        if(short > 0 && was === 0) open(true);
+        else if(short === 0) open(false);
+      }
+      was = short;
       hint.textContent = short > 0
         ? list.length + ' of ' + state.get + ' chosen — pick ' + short + ' more.'
         : state.get + ' of ' + state.get + ' chosen. Your bundle is ready.';
@@ -3518,6 +3551,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         /* growing keeps what you chose and leaves the new places empty;
            shrinking drops from the end rather than silently reshuffling */
         state.picks = state.picks.slice(0, state.get);
+        fill();
         tabs.forEach(function(t){
           t.setAttribute('aria-selected', String(t === tab));
           t.tabIndex = t === tab ? 0 : -1;
