@@ -415,7 +415,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    closes on. The palette is declared once and scoped to both, so every
    component inside either of them turns over on its own terms — and the two
    ends of the page cannot drift apart later. */
-.topband,.shell{
+.topband,.offer2{
   position:relative;isolation:isolate;overflow:hidden;
   --n-0:#0B1020;
   --n-25:#0C1224;
@@ -513,9 +513,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .nav.is-dark .cart__n{border-color:#080C18}
 .nav.is-dark.is-stuck{box-shadow:none}
 @media (prefers-reduced-motion:reduce){
-  .topband__glow,.shell__glow{animation:none}
+  .topband__glow,.offer2__glow{animation:none}
   .topband__glow::before,.topband__glow::after,
-  .shell__glow::before,.shell__glow::after{display:none}
+  .offer2__glow::before,.offer2__glow::after{display:none}
   .prod.is-free .prod__badge{animation:none}
   .topband .slide__media{transform:none}
 }
@@ -1256,21 +1256,22 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    its own, ::before is the pool that follows the pointer, ::after the blob
    that leans against it. Same colours — it is meant to read as the same room
    at the other end of the page. */
-.shell{--px:50%;--py:40%}
-.shell__glow{
+.offer2{background:var(--bg);border-top:1px solid var(--border);color:var(--fg-body)}
+.offer2{--px:50%;--py:40%}
+.offer2__glow{
   position:absolute;inset:-20% -10%;z-index:-1;pointer-events:none;
   background:
     radial-gradient(46% 52% at 12% 84%, rgba(140,88,255,.12) 0%, rgba(140,88,255,0) 70%),
     radial-gradient(40% 44% at 86% 14%, rgba(56,92,235,.10) 0%, rgba(56,92,235,0) 72%);
   animation:bandDrift 34s var(--ease) infinite alternate;
 }
-.shell__glow::before{
+.offer2__glow::before{
   content:"";position:absolute;inset:0;
   background:
     radial-gradient(620px circle at var(--px) var(--py), rgba(92,72,255,.10), transparent 60%),
     radial-gradient(520px circle at calc(var(--px) - 38%) calc(var(--py) + 38%), rgba(39,98,220,.07), transparent 62%);
 }
-.shell__glow::after{
+.offer2__glow::after{
   content:"";position:absolute;left:6%;top:16%;
   width:420px;height:420px;border-radius:50%;
   background:rgb(92,70,255);opacity:.08;filter:blur(90px);
@@ -1281,14 +1282,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* the panel lifts off the ground on a hairline and a wash rather than a
    shadow, which does nothing on a dark surface */
 .shell{
-  position:relative;isolation:isolate;overflow:hidden;
-  padding:var(--s-9);border-radius:var(--r-panel);
+  position:relative;padding:var(--s-9);border-radius:var(--r-panel);
   border:1px solid var(--accent-border);
-  background:
-    linear-gradient(145deg,rgba(104,88,255,.10),rgba(255,255,255,.03) 42%,rgba(45,92,210,.06)),
-    #080C18;
-  /* it is a card on the page now, not the floor of it */
-  box-shadow:0 30px 80px -24px rgba(11,16,32,.45);
+  background:linear-gradient(145deg,rgba(104,88,255,.10),rgba(255,255,255,.03) 42%,rgba(45,92,210,.06));
+  box-shadow:0 40px 100px rgba(0,0,0,.28);
 }
 .shell__head{
   display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s-9);
@@ -2319,7 +2316,66 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   </div>
 </section>
 
-<!-- ══════════ 6 · BEFORE / AFTER ══════════
+<!-- ══════════ 6 · BESTSELLER BUNDLE ══════════
+     PLACEHOLDER DATA: the plugin pack's price is set in the build script — the
+     page states it nowhere; so is the 10,000+ figure. Everything else is read
+     off the preset grid above. The boxes and the picker are drawn from one
+     state in script, so the two cannot disagree; this markup is the frame. -->
+<section class="section offer2" id="offer" aria-labelledby="offerTitle" data-lit>
+  <div class="offer2__glow" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="shell" data-offer data-reveal>
+      <div class="shell__head">
+        <div>
+          <p class="eyebrow">Bestseller bundle</p>
+          <h2 id="offerTitle">The Easiest Way to Choose.</h2>
+          <p class="lede">Not sure where to start? We put our bestselling tools together and made
+            the decision for you — keep our picks, or swap in the ones you want.</p>
+        </div>
+        <div class="oswitch" role="tablist" aria-label="Bundle size">
+          <button class="oswitch__b" type="button" role="tab" data-deal="3" aria-selected="false" aria-controls="bundleRow">
+            Get 3, Pay 2<span>Starter bundle</span>
+          </button>
+          <button class="oswitch__b" type="button" role="tab" data-deal="5" aria-selected="true" aria-controls="bundleRow">
+            Get 5, Pay 3<span>Best value</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="prods" id="bundleRow" data-picks aria-live="polite"></div>
+
+      <div class="custom" id="bundlePicker" data-custom hidden>
+        <div class="custom__top">
+          <div>
+            <h3>Customize your selection</h3>
+            <p>Any mix of plugins and presets — the cheapest ones in your bundle come free.</p>
+          </div>
+          <button class="custom__x" type="button" data-close aria-label="Close the picker">
+            <svg width="13" height="13" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1.5 1.5l9 9m0-9l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="choices" data-choices></div>
+        <p class="custom__hint" data-hint aria-live="polite"></p>
+      </div>
+
+      <div class="ofoot">
+        <p class="oproof">
+          <span class="oproof__faces" aria-hidden="true"><img src="images/testimonials/mucahitguney/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"><img src="images/testimonials/zariffilm/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"><img src="images/testimonials/ugurdemir/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"></span>
+          <span>Chosen by 10,000+ photographers<br>One-time purchase · instant download · every future release included</span>
+        </p>
+        <div class="oact">
+          <span class="oact__row">
+            <button class="btn btn--secondary btn--lg" type="button" data-customize aria-expanded="false" aria-controls="bundlePicker">Customize bundle</button>
+            <button class="btn btn--primary btn--lg obuy" type="button" data-go disabled></button>
+          </span>
+          <p class="onote" data-note></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 7 · BEFORE / AFTER ══════════
      PLACEHOLDER DATA: the pack names are real, but which photograph belongs to
      which pack is a stand-in and every frame is drawn from the page's pool. -->
 <section class="section" id="results">
@@ -2703,64 +2759,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
 
 
-<!-- ══════════ 7 · CLOSING OFFER ══════════
-     PLACEHOLDER DATA: the plugin pack's price is set in the build script — the
-     page states it nowhere; so is the 10,000+ figure. Everything else is read
-     off the preset grid above. The boxes and the picker are drawn from one
-     state in script, so the two cannot disagree; this markup is the frame. -->
-<section class="section section--tint" id="offer" aria-labelledby="offerTitle">
-  <div class="wrap">
-    <div class="shell" data-offer data-reveal data-lit>
-      <div class="shell__glow" aria-hidden="true"></div>
-      <div class="shell__head">
-        <div>
-          <p class="eyebrow">Bestseller bundle</p>
-          <h2 id="offerTitle">The Easiest Way to Choose.</h2>
-          <p class="lede">Not sure where to start? We put our bestselling tools together and made
-            the decision for you — keep our picks, or swap in the ones you want.</p>
-        </div>
-        <div class="oswitch" role="tablist" aria-label="Bundle size">
-          <button class="oswitch__b" type="button" role="tab" data-deal="3" aria-selected="false" aria-controls="bundleRow">
-            Get 3, Pay 2<span>Starter bundle</span>
-          </button>
-          <button class="oswitch__b" type="button" role="tab" data-deal="5" aria-selected="true" aria-controls="bundleRow">
-            Get 5, Pay 3<span>Best value</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="prods" id="bundleRow" data-picks aria-live="polite"></div>
-
-      <div class="custom" id="bundlePicker" data-custom hidden>
-        <div class="custom__top">
-          <div>
-            <h3>Customize your selection</h3>
-            <p>Any mix of plugins and presets — the cheapest ones in your bundle come free.</p>
-          </div>
-          <button class="custom__x" type="button" data-close aria-label="Close the picker">
-            <svg width="13" height="13" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1.5 1.5l9 9m0-9l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-          </button>
-        </div>
-        <div class="choices" data-choices></div>
-        <p class="custom__hint" data-hint aria-live="polite"></p>
-      </div>
-
-      <div class="ofoot">
-        <p class="oproof">
-          <span class="oproof__faces" aria-hidden="true"><img src="images/testimonials/mucahitguney/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"><img src="images/testimonials/zariffilm/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"><img src="images/testimonials/ugurdemir/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"></span>
-          <span>Chosen by 10,000+ photographers<br>One-time purchase · instant download · every future release included</span>
-        </p>
-        <div class="oact">
-          <span class="oact__row">
-            <button class="btn btn--secondary btn--lg" type="button" data-customize aria-expanded="false" aria-controls="bundlePicker">Customize bundle</button>
-            <button class="btn btn--primary btn--lg obuy" type="button" data-go disabled></button>
-          </span>
-          <p class="onote" data-note></p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ══════════ 8 · TUTORIALS ══════════
      PLACEHOLDER DATA: titles, durations and view counts below are stand-ins.
@@ -2875,7 +2873,116 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   </div>
 </section>
 
-<!-- ══════════ 9 · TESTIMONIALS ══════════
+
+<!-- ══════════ 9 · HOW TO INSTALL ══════════ -->
+<section class="section" id="install">
+  <div class="wrap">
+    <div class="section__head" data-reveal>
+      <div>
+        <p class="eyebrow">Installing</p>
+        <h2>Ready in One Click</h2>
+        <p class="lede">Install everything automatically with the RetouchMarket App.</p>
+      </div>
+      <a class="link" href="#">Read the written guide
+        <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <div class="install" data-reveal>
+      <div class="player">
+        <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" alt="Install walkthrough" loading="lazy" onerror="this.style.display='none'">
+        <button class="play" aria-label="Play the install walkthrough">
+          <svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg>
+        </button>
+        <span class="player__dur tnum">2:08</span>
+                <div class="player__foot">
+                  <span class="player__cap">Installing plugins and presets</span>
+                </div>
+      </div>
+
+      <div>
+        <div class="os" role="tablist" aria-label="Installation">
+          <button type="button" role="tab" aria-selected="true" aria-controls="osp-steps" id="ost-steps">Mac &amp; Win</button>
+          <button type="button" role="tab" aria-selected="false" aria-controls="osp-req" id="ost-req" tabindex="-1">Requirements</button>
+        </div>
+        <div class="ospanels">
+          <ol class="steps osp is-on" id="osp-steps" role="tabpanel" aria-labelledby="ost-steps">
+            <li><span class="n">1</span><h3>Download your files</h3><p>After checkout everything lands in your account library as one zip.</p></li>
+            <li><span class="n">2</span><h3>Run the installer</h3><p>Plugins install themselves. Presets go in through File → Import Profiles &amp; Presets.</p></li>
+            <li><span class="n">3</span><h3>Restart and edit</h3><p>Reopen Lightroom or Photoshop. The panel appears under Retouch Market.</p></li>
+          </ol>
+          <div class="req osp" id="osp-req" role="tabpanel" aria-labelledby="ost-req">
+            <ul>
+              <li>macOS 12 or newer, or Windows 10 64-bit or newer</li>
+              <li>Apple silicon, Intel or AMD, 8 GB RAM</li>
+              <li>Photoshop 2021 or newer</li>
+              <li>Lightroom Classic 11 or newer</li>
+              <li>1.2 GB free disk space</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 10 · FAQ ══════════ -->
+<section class="section section--tint" id="faq">
+  <div class="wrap">
+    <div class="faq">
+      <div class="faq__head" data-reveal>
+        <p class="eyebrow">Questions</p>
+        <h2>Before you buy</h2>
+        <p class="lede">The six things people ask us most.</p>
+        <a class="link faq__support" href="#">Email support
+          <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+      </div>
+
+      <div id="faqList">
+        <div class="qa" data-open="true">
+          <h3 class="qa__h"><button class="qa__q" aria-expanded="true">Which apps do these work with?
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </button></h3>
+          <div class="qa__a"><p>The plugins run in Lightroom Classic and Photoshop, and RetouchX Plugin also runs as a standalone desktop app. Presets come as XMP for desktop and DNG for Lightroom mobile, so one purchase covers both.</p></div>
+        </div>
+        <div class="qa">
+          <h3 class="qa__h"><button class="qa__q" aria-expanded="false">Is it a subscription?
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </button></h3>
+          <div class="qa__a"><p>No. You pay once and the files are yours, updates included. There is nothing to cancel.</p></div>
+        </div>
+        <div class="qa">
+          <h3 class="qa__h"><button class="qa__q" aria-expanded="false">Will the plugins run on my machine?
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </button></h3>
+          <div class="qa__a"><p>Yes on macOS with Intel or Apple silicon, and on Windows 10 and 11. The interface is available in Turkish, English and ten more languages.</p></div>
+        </div>
+        <div class="qa">
+          <h3 class="qa__h"><button class="qa__q" aria-expanded="false">Do presets work on any photo?
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </button></h3>
+          <div class="qa__a"><p>They are built for portrait, wedding, maternity and newborn work. Apply the look, then nudge exposure and white balance for your light — that is the intended workflow, not a workaround.</p></div>
+        </div>
+        <div class="qa">
+          <h3 class="qa__h"><button class="qa__q" aria-expanded="false">How do I get my files?
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </button></h3>
+          <div class="qa__a"><p>Instantly. The download link appears on the confirmation screen and stays in your account library, so you can re-download after a new laptop.</p></div>
+        </div>
+        <div class="qa">
+          <h3 class="qa__h"><button class="qa__q" aria-expanded="false">What if something will not install?
+            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          </button></h3>
+          <div class="qa__a"><p>Send us a screenshot and we will get it running or refund you. Digital purchases otherwise follow the distance sales contract linked in the footer.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════ 11 · TESTIMONIALS ══════════
      The photographs, names and handles come from the client's archive.
      PLACEHOLDER: five of the six quotes are written here rather than supplied,
      and no follower counts were given. -->
@@ -3029,114 +3136,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     </div>
   </div>
 </section>
-
-<!-- ══════════ 10 · HOW TO INSTALL ══════════ -->
-<section class="section" id="install">
-  <div class="wrap">
-    <div class="section__head" data-reveal>
-      <div>
-        <p class="eyebrow">Installing</p>
-        <h2>Ready in One Click</h2>
-        <p class="lede">Install everything automatically with the RetouchMarket App.</p>
-      </div>
-      <a class="link" href="#">Read the written guide
-        <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
-    </div>
-
-    <div class="install" data-reveal>
-      <div class="player">
-        <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" alt="Install walkthrough" loading="lazy" onerror="this.style.display='none'">
-        <button class="play" aria-label="Play the install walkthrough">
-          <svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg>
-        </button>
-        <span class="player__dur tnum">2:08</span>
-                <div class="player__foot">
-                  <span class="player__cap">Installing plugins and presets</span>
-                </div>
-      </div>
-
-      <div>
-        <div class="os" role="tablist" aria-label="Installation">
-          <button type="button" role="tab" aria-selected="true" aria-controls="osp-steps" id="ost-steps">Mac &amp; Win</button>
-          <button type="button" role="tab" aria-selected="false" aria-controls="osp-req" id="ost-req" tabindex="-1">Requirements</button>
-        </div>
-        <div class="ospanels">
-          <ol class="steps osp is-on" id="osp-steps" role="tabpanel" aria-labelledby="ost-steps">
-            <li><span class="n">1</span><h3>Download your files</h3><p>After checkout everything lands in your account library as one zip.</p></li>
-            <li><span class="n">2</span><h3>Run the installer</h3><p>Plugins install themselves. Presets go in through File → Import Profiles &amp; Presets.</p></li>
-            <li><span class="n">3</span><h3>Restart and edit</h3><p>Reopen Lightroom or Photoshop. The panel appears under Retouch Market.</p></li>
-          </ol>
-          <div class="req osp" id="osp-req" role="tabpanel" aria-labelledby="ost-req">
-            <ul>
-              <li>macOS 12 or newer, or Windows 10 64-bit or newer</li>
-              <li>Apple silicon, Intel or AMD, 8 GB RAM</li>
-              <li>Photoshop 2021 or newer</li>
-              <li>Lightroom Classic 11 or newer</li>
-              <li>1.2 GB free disk space</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════ 11 · FAQ ══════════ -->
-<section class="section section--tint" id="faq">
-  <div class="wrap">
-    <div class="faq">
-      <div class="faq__head" data-reveal>
-        <p class="eyebrow">Questions</p>
-        <h2>Before you buy</h2>
-        <p class="lede">The six things people ask us most.</p>
-        <a class="link faq__support" href="#">Email support
-          <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-      </div>
-
-      <div id="faqList">
-        <div class="qa" data-open="true">
-          <h3 class="qa__h"><button class="qa__q" aria-expanded="true">Which apps do these work with?
-            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          </button></h3>
-          <div class="qa__a"><p>The plugins run in Lightroom Classic and Photoshop, and RetouchX Plugin also runs as a standalone desktop app. Presets come as XMP for desktop and DNG for Lightroom mobile, so one purchase covers both.</p></div>
-        </div>
-        <div class="qa">
-          <h3 class="qa__h"><button class="qa__q" aria-expanded="false">Is it a subscription?
-            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          </button></h3>
-          <div class="qa__a"><p>No. You pay once and the files are yours, updates included. There is nothing to cancel.</p></div>
-        </div>
-        <div class="qa">
-          <h3 class="qa__h"><button class="qa__q" aria-expanded="false">Will the plugins run on my machine?
-            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          </button></h3>
-          <div class="qa__a"><p>Yes on macOS with Intel or Apple silicon, and on Windows 10 and 11. The interface is available in Turkish, English and ten more languages.</p></div>
-        </div>
-        <div class="qa">
-          <h3 class="qa__h"><button class="qa__q" aria-expanded="false">Do presets work on any photo?
-            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          </button></h3>
-          <div class="qa__a"><p>They are built for portrait, wedding, maternity and newborn work. Apply the look, then nudge exposure and white balance for your light — that is the intended workflow, not a workaround.</p></div>
-        </div>
-        <div class="qa">
-          <h3 class="qa__h"><button class="qa__q" aria-expanded="false">How do I get my files?
-            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          </button></h3>
-          <div class="qa__a"><p>Instantly. The download link appears on the confirmation screen and stays in your account library, so you can re-download after a new laptop.</p></div>
-        </div>
-        <div class="qa">
-          <h3 class="qa__h"><button class="qa__q" aria-expanded="false">What if something will not install?
-            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          </button></h3>
-          <div class="qa__a"><p>Send us a screenshot and we will get it running or refund you. Digital purchases otherwise follow the distance sales contract linked in the footer.</p></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 
 </main>
 
