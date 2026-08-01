@@ -426,7 +426,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .section{padding:var(--section-y) 0}
 .section--tint{background:var(--bg-subtle);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
 .section__head{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s-8);margin-bottom:var(--s-7)}
-.section__head h2{max-width:24ch}
+/* 24ch was the longest heading on the page until the before/after one; the
+   cap only limits, so widening it changes nothing for the shorter ones */
+.section__head h2{max-width:36ch}
 .section__head .lede{max-width:78ch}
 [id]{scroll-margin-top:calc(var(--nav-h) + var(--s-4))}
 
@@ -562,17 +564,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   border:1px solid var(--border);background:var(--surface);box-shadow:var(--sh-1);
 }
 .deck__dot{
-  width:8px;height:8px;border-radius:var(--r-full);flex:none;overflow:hidden;
+  width:8px;height:8px;border-radius:var(--r-full);flex:none;
   background:var(--n-300);
   transition:width var(--dur-2) var(--ease), background var(--dur-1) var(--ease);
 }
 .deck__dot:hover{background:var(--n-400)}
-/* the active dot stretches into a track its fill can run along, the same
-   countdown the hero dots use */
-.deck__dot[aria-current="true"]{width:26px;background:var(--n-200)}
-.deck__dot i{display:block;width:100%;height:100%;background:var(--accent);transform:scaleX(0);transform-origin:left}
-.deck__dot[aria-current="true"] i{transform:scaleX(1)}
-@keyframes deckFill{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+/* where you are, not how far you have come. The old version ran an accent
+   fill inside a grey track and never rewound the ones it had passed, so a
+   deck three videos in showed three filled dots and read as a progress bar
+   for the whole set. It is one dot, one colour, stretched when it is the
+   one you are on. */
+.deck__dot[aria-current="true"]{width:26px;background:var(--accent)}
 .deck__play{
   width:38px;height:38px;border-radius:var(--r-full);display:grid;place-items:center;flex:none;
   border:1px solid var(--border);background:var(--surface);color:var(--fg-body);box-shadow:var(--sh-1);
@@ -633,9 +635,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    Written as .deck.deck--ba so the generic deck rules in the media queries
    below cannot quietly take the gap back. */
 .deck.deck--ba{
-  /* two across, not three: a before/after needs the pixels to be worth
-     dragging over, and a third of the column is too small to judge skin */
-  --ba-per:2;
+  /* two and a half: three was too small to judge skin in, two took over the
+     screen. The half card is also the one you click to move the row on. */
+  --ba-per:2.5;
   --deck-gap:var(--s-6);
   --inset:max(var(--gutter), calc((100% - var(--container)) / 2 + var(--gutter)));
 }
@@ -699,14 +701,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .compare__range{top:50%;bottom:auto;height:104px;transform:translateY(-50%)}
 }
 
-/* caption under the card, the same shape a tutorial tile uses */
-.bacard{display:block}
-.bacard__body{margin-top:var(--s-4)}
-.ba__t{
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-  margin:0;min-height:calc(2 * var(--lh-snug) * var(--fs-4));
-  font-size:var(--fs-4);font-weight:var(--fw-semibold);line-height:var(--lh-snug);color:var(--fg);
-}
 
 /* ════════════════════════════════════════════════════════════════
    TUTORIALS — vertical 9:16 shelf, deliberately unlike the plugin
@@ -780,6 +774,28 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .sort__menu button:hover{background:var(--surface-sunken);color:var(--fg)}
 .sort__menu button[aria-current="true"]{color:var(--accent-700);font-weight:var(--fw-semibold)}
+
+/* the pack chips: a scrolling row of pills, the chosen one outlined rather
+   than filled so the row reads as one control and not six buttons */
+.pchips{
+  display:flex;gap:var(--s-2);margin-bottom:var(--s-6);
+  overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;
+  padding-bottom:var(--s-1);
+}
+.pchips::-webkit-scrollbar{display:none}
+.pchip{
+  flex:none;height:40px;padding:0 var(--s-5);border-radius:var(--r-full);
+  border:1px solid transparent;background:var(--surface-sunken);color:var(--fg-body);
+  font-size:var(--fs-4);font-weight:var(--fw-medium);white-space:nowrap;
+  transition:background var(--dur-1) var(--ease), color var(--dur-1) var(--ease),
+             border-color var(--dur-1) var(--ease);
+}
+.pchip:hover{background:var(--n-200);color:var(--fg)}
+.pchip[aria-selected="true"]{
+  background:var(--surface);border-color:var(--accent);color:var(--accent-fg);
+  font-weight:var(--fw-semibold);box-shadow:0 0 0 1px var(--accent);
+}
+.bapanel[hidden]{display:none}
 
 /* ════════════════════════════════════════════════════════════════
    5 · PRESETS
@@ -901,74 +917,51 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
 /* ════════════════════════════════════════════════════════════════
    7 · TESTIMONIALS
-   Two columns that end on the same line by construction: the gallery's
-   height falls out of its own width (six 4:5 frames, fixed grid), and the
-   accordion rows share whatever is left over. Nothing here is a magic
-   number, so the pair cannot drift apart when the copy changes.
+   A shelf of quote cards rather than a list that hides five people behind
+   the sixth: the work on top, what they said under it, who they are at the
+   foot. The cards stretch to the tallest of them and the name row is pushed
+   to the bottom of each, so the three lines up across the row however long
+   the quotes run. Same .strip/.rail the tutorials use — one scroll
+   behaviour on the page, not two.
    ════════════════════════════════════════════════════════════════ */
-.voices{--vstage-w:460px;--v-peek:44px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,var(--vstage-w));gap:var(--s-8);align-items:stretch}
-.vlist{display:flex;flex-direction:column;gap:var(--s-2)}
-/* grow, do not stretch equally: every row keeps its natural height and the
-   slack is split between them, so an open row stays taller than a shut one */
-.vrow{
-  flex:1 0 auto;display:flex;flex-direction:column;justify-content:center;
-  border:1px solid var(--border);border-radius:var(--r-card);background:var(--surface);
-  transition:border-color var(--dur-2) var(--ease), background var(--dur-2) var(--ease),
-             box-shadow var(--dur-2) var(--ease);
+.vrail{--v-per:3;align-items:stretch}
+.vcard{
+  flex:0 0 calc((100% - (var(--v-per) - 1) * var(--s-4)) / var(--v-per));
+  scroll-snap-align:start;margin:0;display:flex;flex-direction:column;
+  border:1px solid var(--border);border-radius:var(--r-card);
+  background:var(--surface);overflow:hidden;
+  transition:border-color var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease),
+             transform var(--dur-2) var(--ease);
 }
-.vrow:hover{border-color:var(--border-strong)}
-.vrow.is-open{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-bg)}
-.vrow__h{margin:0;font-size:inherit;line-height:inherit;font-weight:inherit}
-.vbtn{
-  width:100%;display:flex;align-items:center;gap:var(--s-3);text-align:left;
-  padding:var(--s-3) var(--s-4);border-radius:var(--r-card);
+.vcard:hover{border-color:var(--border-strong);box-shadow:var(--sh-3);transform:translateY(-3px)}
+/* the same 4:5 the presets and the comparisons use */
+.vcard__shot{aspect-ratio:4/5;overflow:hidden;background:var(--surface-sunken);flex:none}
+.vcard__shot img{width:100%;height:100%;object-fit:cover;display:block;transition:transform var(--dur-3) var(--ease)}
+.vcard:hover .vcard__shot img{transform:scale(1.04)}
+.vcard__q{margin:0;padding:var(--s-5) var(--s-5) var(--s-4)}
+.vcard__mark{display:block;color:var(--accent);opacity:.5;margin-bottom:var(--s-3)}
+.vcard__q p{
+  margin:0;font-size:var(--fs-5);line-height:var(--lh-relaxed);
+  color:var(--fg);text-wrap:pretty;
 }
-.vbtn__pp{
-  flex:none;width:44px;height:44px;border-radius:var(--r-full);object-fit:cover;
+/* pushed to the foot so every card's name row sits on the same line */
+.vcard__who{
+  margin-top:auto;display:flex;align-items:center;gap:var(--s-3);
+  padding:var(--s-4) var(--s-5);border-top:1px solid var(--border);
+}
+.vcard__pp{
+  flex:none;width:40px;height:40px;border-radius:var(--r-full);object-fit:cover;
   background:var(--surface-sunken);border:1px solid var(--border);
 }
-.vbtn__id{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
-.vbtn__n{
-  font-size:var(--fs-5);font-weight:var(--fw-semibold);line-height:var(--lh-snug);color:var(--fg);
+.vcard__id{display:flex;flex-direction:column;gap:1px;min-width:0}
+.vcard__n{
+  font-size:var(--fs-4);font-weight:var(--fw-semibold);line-height:var(--lh-snug);color:var(--fg);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.vrow.is-open .vbtn__n{color:var(--accent-fg)}
-.vbtn__m{
-  display:flex;align-items:center;gap:var(--s-1);min-width:0;overflow:hidden;
-  font-size:var(--fs-2);line-height:var(--lh-normal);color:var(--fg-muted);white-space:nowrap;
+.vcard__m{
+  font-size:var(--fs-2);line-height:var(--lh-normal);color:var(--fg-muted);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.vbtn__at{overflow:hidden;text-overflow:ellipsis}
-.vbtn__chev{flex:none;color:var(--fg-muted);transition:transform var(--dur-2) var(--ease)}
-.vrow.is-open .vbtn__chev{transform:rotate(180deg);color:var(--accent-fg)}
-.vpanel{padding:0 var(--s-4) var(--s-4) calc(var(--s-4) + 44px + var(--s-3))}
-.vq{margin:0}
-.vq p{
-  margin:0;font-size:var(--fs-4);line-height:var(--lh-relaxed);color:var(--fg-body);
-  text-wrap:pretty;
-}
-.vq p::before{content:"\201C"}
-.vq p::after{content:"\201D"}
-
-/* One 4:5 frame at a time, scrolled sideways — the same picture shape the
-   presets and the before/after cards use, at the size a portfolio shot
-   deserves. The next one peeks by --v-peek so it is obvious there are more.
-   The column is a fixed width, so the frame's height is fixed too and the
-   accordion beside it has something steady to stretch to. */
-.vstage{display:grid;min-width:0}
-.vwork{
-  display:flex;gap:var(--s-3);align-self:start;
-  overflow-x:auto;scroll-snap-type:x mandatory;
-  scrollbar-width:none;-ms-overflow-style:none;cursor:grab;
-}
-.vwork::-webkit-scrollbar{display:none}
-.vwork.is-dragging{cursor:grabbing;scroll-snap-type:none}
-.vwork[hidden]{display:none}
-.vshot{
-  margin:0;flex:0 0 calc(100% - var(--v-peek));scroll-snap-align:start;
-  aspect-ratio:4/5;overflow:hidden;border-radius:var(--r-card);
-  border:1px solid var(--border);background:var(--surface-sunken);
-}
-.vshot img{width:100%;height:100%;object-fit:cover;display:block;-webkit-user-drag:none;user-select:none}
 
 /* ════════════════════════════════════════════════════════════════
    6 · HOW TO INSTALL
@@ -1106,9 +1099,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
   /* the gallery narrows faster than the list does, so it drops to two across
      before the list would start outrunning it */
-  .voices{--vstage-w:380px}
 }
 @media (max-width:1000px){
+  .vrail{--v-per:2}
   .rail{--per-view:4}
   .nav__links{display:none}
   /* three icons plus the wordmark need the slack back — tighter than desktop
@@ -1153,12 +1146,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .pstat dt{font-size:var(--fs-2)}
   .pstat .stars svg{width:10px;height:10px}
 
-  .voices{grid-template-columns:minmax(0,1fr);gap:var(--s-6)}
-  .vlist{gap:var(--s-2)}
-  .vrow{flex:0 0 auto}
-  /* stacked, the frame has the whole column — leave more of the next one
-     showing so the row still reads as something you can push */
-  .voices{--v-peek:96px}
 }
 @media (max-width:600px){
   .deck.deck--ba{--ba-per:1}
@@ -1183,8 +1170,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .cta{padding:var(--s-9) var(--s-5)}
   .qa__a{padding-right:0}
 
-  .voices{--v-peek:56px}
-  .vpanel{padding-left:var(--s-4)}
+  .vrail{--v-per:1.12}
 }
 @media (max-width:380px){
   /* the wordmark alone needs ~140px; below this the bar cannot hold brand,
@@ -1455,13 +1441,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <span aria-hidden="true"></span>
             <div class="deck__ctrl">
               <div class="deck__dots">
-                <button class="deck__dot" type="button" aria-current="true" aria-label="Go to video 1 of 7: RetouchX Plugin — 40 portraits, one pass"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 2 of 7: Setting up a batch queue"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 3 of 7: Keeping skin texture"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 4 of 7: Eyes, teeth and lips"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 5 of 7: Reviewing before export"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 6 of 7: Masking hair edges"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 7 of 7: Saving your own recipe"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="true" aria-label="Go to video 1 of 7: RetouchX Plugin — 40 portraits, one pass"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 2 of 7: Setting up a batch queue"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 3 of 7: Keeping skin texture"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 4 of 7: Eyes, teeth and lips"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 5 of 7: Reviewing before export"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 6 of 7: Masking hair edges"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 7 of 7: Saving your own recipe"></button>
               </div>
               <button class="deck__play is-playing" type="button" data-deck-toggle aria-label="Pause the RetouchX Plugin carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
             </div>
@@ -1543,13 +1529,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <span aria-hidden="true"></span>
             <div class="deck__ctrl">
               <div class="deck__dots">
-                <button class="deck__dot" type="button" aria-current="true" aria-label="Go to video 1 of 7: Lightroom Ai Color Plugin — grade a gallery in taps"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 2 of 7: Matching a reference frame"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 3 of 7: Building your own look"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 4 of 7: Syncing across a shoot"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 5 of 7: Protecting skin tones"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 6 of 7: Split toning shadows"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 7 of 7: Exporting a preset pack"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="true" aria-label="Go to video 1 of 7: Lightroom Ai Color Plugin — grade a gallery in taps"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 2 of 7: Matching a reference frame"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 3 of 7: Building your own look"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 4 of 7: Syncing across a shoot"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 5 of 7: Protecting skin tones"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 6 of 7: Split toning shadows"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 7 of 7: Exporting a preset pack"></button>
               </div>
               <button class="deck__play is-playing" type="button" data-deck-toggle aria-label="Pause the Lightroom Ai Color Plugin carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
             </div>
@@ -1631,13 +1617,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <span aria-hidden="true"></span>
             <div class="deck__ctrl">
               <div class="deck__dots">
-                <button class="deck__dot" type="button" aria-current="true" aria-label="Go to video 1 of 7: US Photoshop Plugin — the panel tour"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 2 of 7: Frequency separation"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 3 of 7: Dodge and burn layers"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 4 of 7: Saved liquify shapes"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 5 of 7: Export sizes for Instagram"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 6 of 7: Cleaning up backgrounds"><i></i></button>
-                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 7 of 7: Sharpening for print"><i></i></button>
+                <button class="deck__dot" type="button" aria-current="true" aria-label="Go to video 1 of 7: US Photoshop Plugin — the panel tour"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 2 of 7: Frequency separation"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 3 of 7: Dodge and burn layers"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 4 of 7: Saved liquify shapes"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 5 of 7: Export sizes for Instagram"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 6 of 7: Cleaning up backgrounds"></button>
+                <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 7 of 7: Sharpening for print"></button>
               </div>
               <button class="deck__play is-playing" type="button" data-deck-toggle aria-label="Pause the US Photoshop Plugin carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
             </div>
@@ -1830,125 +1816,374 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 </section>
 
 <!-- ══════════ 6 · BEFORE / AFTER ══════════
-     PLACEHOLDER DATA: both frames in every pair are stand-ins, and the second
-     and third captions are written here rather than supplied. -->
+     PLACEHOLDER DATA: the pack names are real, but which photograph belongs to
+     which pack is a stand-in and every frame is drawn from the page's pool. -->
 <section class="section" id="results">
   <div class="wrap">
     <div class="section__head" data-reveal>
       <div>
         <p class="eyebrow">Before / after</p>
-        <h2>Real Results. No Tricks.</h2>
-        <p class="lede">Drag the slider to compare skin tones, colors, and fine details.</p>
+        <h2>Choose a Preset. See the Difference.</h2>
+        <p class="lede">Select a preset and drag the slider to see its real effect on colors and skin tones.</p>
       </div>
-      <a class="link" href="#presets">Browse the packs <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+    <div class="pchips" role="tablist" aria-label="Preset packs" data-reveal>
+      <button class="pchip" type="button" role="tab" id="bat-0" aria-controls="bap-0" aria-selected="true">Lora Presets</button>
+      <button class="pchip" type="button" role="tab" id="bat-1" aria-controls="bap-1" aria-selected="false">Solis Presets</button>
+      <button class="pchip" type="button" role="tab" id="bat-2" aria-controls="bap-2" aria-selected="false">Terra Presets</button>
+      <button class="pchip" type="button" role="tab" id="bat-3" aria-controls="bap-3" aria-selected="false">Jardin Presets</button>
+      <button class="pchip" type="button" role="tab" id="bat-4" aria-controls="bap-4" aria-selected="false">Mely Presets</button>
+      <button class="pchip" type="button" role="tab" id="bat-5" aria-controls="bap-5" aria-selected="false">Onyx Presets</button>
     </div>
   </div>
 
-  <div class="deck deck--ba" data-badeck data-reveal>
-    <div class="deck__track" data-badeck-track>
+  <div data-reveal>
+    <div class="bapanel is-on" id="bap-0" role="tabpanel" aria-labelledby="bat-0">
+      <div class="deck deck--ba" data-badeck role="group" aria-roledescription="carousel" aria-label="Lora Presets before and after">
+        <div class="deck__track" data-badeck-track>
         <div class="deck__pane">
-          <article class="bacard">
-            <div class="compare" data-compare style="--x:50%">
-              <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="Before the edit" loading="lazy" onerror="this.style.display='none'">
-              <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="After the edit" loading="lazy" onerror="this.style.display='none'"></span>
-              <span class="compare__tag compare__tag--a">Before</span>
-              <span class="compare__tag compare__tag--b">After</span>
-              <span class="compare__bar" aria-hidden="true"><i></i></span>
-              <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
-                     aria-label="Reveal the edited version" aria-describedby="baCap-0">
-            </div>
-            <div class="bacard__body" id="baCap-0">
-              <p class="ba__t">Natural Retouch. Timeless Color.</p>
-            </div>
-          </article>
+          <div class="compare" data-compare style="--x:50%" id="ba-0-0">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="Before the Lora Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="After the Lora Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Lora Presets edit, example 1 of 4">
+          </div>
         </div>
         <div class="deck__pane">
-          <article class="bacard">
-            <div class="compare" data-compare style="--x:50%">
-              <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" alt="Before the edit" loading="lazy" onerror="this.style.display='none'">
-              <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" alt="After the edit" loading="lazy" onerror="this.style.display='none'"></span>
-              <span class="compare__tag compare__tag--a">Before</span>
-              <span class="compare__tag compare__tag--b">After</span>
-              <span class="compare__bar" aria-hidden="true"><i></i></span>
-              <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
-                     aria-label="Reveal the edited version" aria-describedby="baCap-1">
-            </div>
-            <div class="bacard__body" id="baCap-1">
-              <p class="ba__t">Clean skin, texture kept.</p>
-            </div>
-          </article>
+          <div class="compare" data-compare style="--x:50%" id="ba-0-1">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=1080&amp;q=75" alt="Before the Lora Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" alt="After the Lora Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Lora Presets edit, example 2 of 4">
+          </div>
         </div>
         <div class="deck__pane">
-          <article class="bacard">
-            <div class="compare" data-compare style="--x:50%">
-              <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" alt="Before the edit" loading="lazy" onerror="this.style.display='none'">
-              <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" alt="After the edit" loading="lazy" onerror="this.style.display='none'"></span>
-              <span class="compare__tag compare__tag--a">Before</span>
-              <span class="compare__tag compare__tag--b">After</span>
-              <span class="compare__bar" aria-hidden="true"><i></i></span>
-              <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
-                     aria-label="Reveal the edited version" aria-describedby="baCap-2">
-            </div>
-            <div class="bacard__body" id="baCap-2">
-              <p class="ba__t">One look across the gallery.</p>
-            </div>
-          </article>
+          <div class="compare" data-compare style="--x:50%" id="ba-0-2">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" alt="Before the Lora Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="After the Lora Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Lora Presets edit, example 3 of 4">
+          </div>
         </div>
         <div class="deck__pane">
-          <article class="bacard">
-            <div class="compare" data-compare style="--x:50%">
-              <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=1080&amp;q=75" alt="Before the edit" loading="lazy" onerror="this.style.display='none'">
-              <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" alt="After the edit" loading="lazy" onerror="this.style.display='none'"></span>
-              <span class="compare__tag compare__tag--a">Before</span>
-              <span class="compare__tag compare__tag--b">After</span>
-              <span class="compare__bar" aria-hidden="true"><i></i></span>
-              <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
-                     aria-label="Reveal the edited version" aria-describedby="baCap-3">
-            </div>
-            <div class="bacard__body" id="baCap-3">
-              <p class="ba__t">Warm light, honest tones.</p>
-            </div>
-          </article>
+          <div class="compare" data-compare style="--x:50%" id="ba-0-3">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=1080&amp;q=75" alt="Before the Lora Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" alt="After the Lora Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Lora Presets edit, example 4 of 4">
+          </div>
         </div>
-        <div class="deck__pane">
-          <article class="bacard">
-            <div class="compare" data-compare style="--x:50%">
-              <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" alt="Before the edit" loading="lazy" onerror="this.style.display='none'">
-              <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=1080&amp;q=75" alt="After the edit" loading="lazy" onerror="this.style.display='none'"></span>
-              <span class="compare__tag compare__tag--a">Before</span>
-              <span class="compare__tag compare__tag--b">After</span>
-              <span class="compare__bar" aria-hidden="true"><i></i></span>
-              <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
-                     aria-label="Reveal the edited version" aria-describedby="baCap-4">
-            </div>
-            <div class="bacard__body" id="baCap-4">
-              <p class="ba__t">Studio finish, nothing plastic.</p>
-            </div>
-          </article>
         </div>
-        <div class="deck__pane">
-          <article class="bacard">
-            <div class="compare" data-compare style="--x:50%">
-              <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" alt="Before the edit" loading="lazy" onerror="this.style.display='none'">
-              <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" alt="After the edit" loading="lazy" onerror="this.style.display='none'"></span>
-              <span class="compare__tag compare__tag--a">Before</span>
-              <span class="compare__tag compare__tag--b">After</span>
-              <span class="compare__bar" aria-hidden="true"><i></i></span>
-              <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
-                     aria-label="Reveal the edited version" aria-describedby="baCap-5">
-            </div>
-            <div class="bacard__body" id="baCap-5">
-              <p class="ba__t">Whites that stay white.</p>
-            </div>
-          </article>
+        <div class="strip__bar wrap">
+          <span aria-hidden="true"></span>
+          <span class="progress" aria-hidden="true"><i></i></span>
+          <div class="strip__nav">
+            <button class="arrow" type="button" data-ba-step="-1" aria-label="Previous example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="arrow" type="button" data-ba-step="1" aria-label="Next example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
         </div>
+      </div>
     </div>
-    <div class="strip__bar wrap">
-      <span aria-hidden="true"></span>
-      <span class="progress" aria-hidden="true"><i></i></span>
-      <div class="strip__nav">
-        <button class="arrow" type="button" data-ba-step="-1" aria-label="Previous example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-        <button class="arrow" type="button" data-ba-step="1" aria-label="Next example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+    <div class="bapanel" id="bap-1" role="tabpanel" aria-labelledby="bat-1" hidden>
+      <div class="deck deck--ba" data-badeck role="group" aria-roledescription="carousel" aria-label="Solis Presets before and after">
+        <div class="deck__track" data-badeck-track>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-1-0">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="Before the Solis Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=1080&amp;q=75" alt="After the Solis Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Solis Presets edit, example 1 of 4">
+          </div>
+        </div>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-1-1">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" alt="Before the Solis Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" alt="After the Solis Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Solis Presets edit, example 2 of 4">
+          </div>
+        </div>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-1-2">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" alt="Before the Solis Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=1080&amp;q=75" alt="After the Solis Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Solis Presets edit, example 3 of 4">
+          </div>
+        </div>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-1-3">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" alt="Before the Solis Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" alt="After the Solis Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Solis Presets edit, example 4 of 4">
+          </div>
+        </div>
+        </div>
+        <div class="strip__bar wrap">
+          <span aria-hidden="true"></span>
+          <span class="progress" aria-hidden="true"><i></i></span>
+          <div class="strip__nav">
+            <button class="arrow" type="button" data-ba-step="-1" aria-label="Previous example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="arrow" type="button" data-ba-step="1" aria-label="Next example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bapanel" id="bap-2" role="tabpanel" aria-labelledby="bat-2" hidden>
+      <div class="deck deck--ba" data-badeck role="group" aria-roledescription="carousel" aria-label="Terra Presets before and after">
+        <div class="deck__track" data-badeck-track>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-2-0">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=1080&amp;q=75" alt="Before the Terra Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" alt="After the Terra Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Terra Presets edit, example 1 of 4">
+          </div>
+        </div>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-2-1">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" alt="Before the Terra Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=1080&amp;q=75" alt="After the Terra Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Terra Presets edit, example 2 of 4">
+          </div>
+        </div>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-2-2">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" alt="Before the Terra Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="After the Terra Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Terra Presets edit, example 3 of 4">
+          </div>
+        </div>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-2-3">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="Before the Terra Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=1080&amp;q=75" alt="After the Terra Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Terra Presets edit, example 4 of 4">
+          </div>
+        </div>
+        </div>
+        <div class="strip__bar wrap">
+          <span aria-hidden="true"></span>
+          <span class="progress" aria-hidden="true"><i></i></span>
+          <div class="strip__nav">
+            <button class="arrow" type="button" data-ba-step="-1" aria-label="Previous example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="arrow" type="button" data-ba-step="1" aria-label="Next example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bapanel" id="bap-3" role="tabpanel" aria-labelledby="bat-3" hidden>
+      <div class="deck deck--ba" data-badeck role="group" aria-roledescription="carousel" aria-label="Jardin Presets before and after">
+        <div class="deck__track" data-badeck-track>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-3-0">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="Before the Jardin Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="After the Jardin Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Jardin Presets edit, example 1 of 4">
+          </div>
+        </div>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-3-1">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=1080&amp;q=75" alt="Before the Jardin Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" alt="After the Jardin Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Jardin Presets edit, example 2 of 4">
+          </div>
+        </div>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-3-2">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" alt="Before the Jardin Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="After the Jardin Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Jardin Presets edit, example 3 of 4">
+          </div>
+        </div>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-3-3">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=1080&amp;q=75" alt="Before the Jardin Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" alt="After the Jardin Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Jardin Presets edit, example 4 of 4">
+          </div>
+        </div>
+        </div>
+        <div class="strip__bar wrap">
+          <span aria-hidden="true"></span>
+          <span class="progress" aria-hidden="true"><i></i></span>
+          <div class="strip__nav">
+            <button class="arrow" type="button" data-ba-step="-1" aria-label="Previous example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="arrow" type="button" data-ba-step="1" aria-label="Next example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bapanel" id="bap-4" role="tabpanel" aria-labelledby="bat-4" hidden>
+      <div class="deck deck--ba" data-badeck role="group" aria-roledescription="carousel" aria-label="Mely Presets before and after">
+        <div class="deck__track" data-badeck-track>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-4-0">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="Before the Mely Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=1080&amp;q=75" alt="After the Mely Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Mely Presets edit, example 1 of 4">
+          </div>
+        </div>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-4-1">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" alt="Before the Mely Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" alt="After the Mely Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Mely Presets edit, example 2 of 4">
+          </div>
+        </div>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-4-2">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" alt="Before the Mely Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=1080&amp;q=75" alt="After the Mely Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Mely Presets edit, example 3 of 4">
+          </div>
+        </div>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-4-3">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" alt="Before the Mely Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" alt="After the Mely Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Mely Presets edit, example 4 of 4">
+          </div>
+        </div>
+        </div>
+        <div class="strip__bar wrap">
+          <span aria-hidden="true"></span>
+          <span class="progress" aria-hidden="true"><i></i></span>
+          <div class="strip__nav">
+            <button class="arrow" type="button" data-ba-step="-1" aria-label="Previous example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="arrow" type="button" data-ba-step="1" aria-label="Next example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bapanel" id="bap-5" role="tabpanel" aria-labelledby="bat-5" hidden>
+      <div class="deck deck--ba" data-badeck role="group" aria-roledescription="carousel" aria-label="Onyx Presets before and after">
+        <div class="deck__track" data-badeck-track>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-5-0">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=1080&amp;q=75" alt="Before the Onyx Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" alt="After the Onyx Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Onyx Presets edit, example 1 of 4">
+          </div>
+        </div>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-5-1">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" alt="Before the Onyx Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=1080&amp;q=75" alt="After the Onyx Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Onyx Presets edit, example 2 of 4">
+          </div>
+        </div>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-5-2">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" alt="Before the Onyx Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="After the Onyx Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Onyx Presets edit, example 3 of 4">
+          </div>
+        </div>
+        <div class="deck__pane">
+          <div class="compare" data-compare style="--x:50%" id="ba-5-3">
+            <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="Before the Onyx Presets edit" loading="lazy" onerror="this.style.display='none'">
+            <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=1080&amp;q=75" alt="After the Onyx Presets edit" loading="lazy" onerror="this.style.display='none'"></span>
+            <span class="compare__tag compare__tag--a">Before</span>
+            <span class="compare__tag compare__tag--b">After</span>
+            <span class="compare__bar" aria-hidden="true"><i></i></span>
+            <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                   aria-label="Reveal the Onyx Presets edit, example 4 of 4">
+          </div>
+        </div>
+        </div>
+        <div class="strip__bar wrap">
+          <span aria-hidden="true"></span>
+          <span class="progress" aria-hidden="true"><i></i></span>
+          <div class="strip__nav">
+            <button class="arrow" type="button" data-ba-step="-1" aria-label="Previous example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="arrow" type="button" data-ba-step="1" aria-label="Next example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -2073,157 +2308,121 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      of the six quotes are stand-ins. Only the first quote comes from the old
      bundle page. Swap all of it — and link the handles — before this goes live.
      ══════════════════════════════════════ -->
-<section class="section" id="voices">
+<section class="section section--tint" id="voices">
   <div class="wrap">
     <div class="section__head" data-reveal>
       <div>
         <p class="eyebrow">Testimonials</p>
-        <h2>Trusted by Professionals</h2>
+        <h2>Trusted by Professional Photographers</h2>
         <p class="lede">Studios and creators who shoot every week, editing with the same tools.</p>
       </div>
     </div>
 
-    <div class="voices" data-voices data-reveal>
-      <div class="vlist">
-        <div class="vrow is-open">
-          <h3 class="vrow__h">
-            <button class="vbtn" type="button" id="vb-0" aria-expanded="true" aria-controls="vp-0">
-              <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
-              <span class="vbtn__id">
-                <span class="vbtn__n">Düğünümüz Var</span>
-                <span class="vbtn__m"><span class="vbtn__at">@dugunumuzvar</span><span aria-hidden="true">·</span><span class="tnum">1.2M</span> followers</span>
+    <div class="strip" data-reveal>
+      <div class="rail vrail">
+          <figure class="vcard">
+            <div class="vcard__shot">
+              <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="A photograph by Düğünümüz Var, edited with the pack" loading="lazy" onerror="this.style.display='none'">
+            </div>
+            <blockquote class="vcard__q">
+              <svg class="vcard__mark" width="22" height="16" viewBox="0 0 22 16" fill="currentColor" aria-hidden="true"><path d="M0 16V9.4C0 4.5 2.6 1.4 7.4 0l1 2.2C5.6 3.3 4.2 5 4.2 7.2h2.6V16H0zm13.6 0V9.4c0-4.9 2.6-8 7.4-9.4l1 2.2c-2.8 1.1-4.2 2.8-4.2 5h2.6V16h-6.8z"/></svg>
+              <p>RetouchMarket is the only pack we use. It is complete, reliable, and it saves our team hours on every wedding.</p>
+            </blockquote>
+            <figcaption class="vcard__who">
+              <img class="vcard__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=384&amp;q=75" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
+              <span class="vcard__id">
+                <span class="vcard__n">Düğünümüz Var</span>
+                <span class="vcard__m">@dugunumuzvar<span aria-hidden="true"> · </span><span class="tnum">1.2M</span> followers</span>
               </span>
-              <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-          </h3>
-          <div class="vpanel" id="vp-0" role="region" aria-labelledby="vb-0">
-            <blockquote class="vq"><p>RetouchMarket is the only pack we use. It is complete, reliable, and it saves our team hours on every wedding.</p></blockquote>
-          </div>
-        </div>
-        <div class="vrow">
-          <h3 class="vrow__h">
-            <button class="vbtn" type="button" id="vb-1" aria-expanded="false" aria-controls="vp-1">
-              <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
-              <span class="vbtn__id">
-                <span class="vbtn__n">Zeril Film</span>
-                <span class="vbtn__m"><span class="vbtn__at">@zerilfilm</span><span aria-hidden="true">·</span><span class="tnum">210K</span> followers</span>
+            </figcaption>
+          </figure>
+          <figure class="vcard">
+            <div class="vcard__shot">
+              <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=1080&amp;q=75" alt="A photograph by Zeril Film, edited with the pack" loading="lazy" onerror="this.style.display='none'">
+            </div>
+            <blockquote class="vcard__q">
+              <svg class="vcard__mark" width="22" height="16" viewBox="0 0 22 16" fill="currentColor" aria-hidden="true"><path d="M0 16V9.4C0 4.5 2.6 1.4 7.4 0l1 2.2C5.6 3.3 4.2 5 4.2 7.2h2.6V16H0zm13.6 0V9.4c0-4.9 2.6-8 7.4-9.4l1 2.2c-2.8 1.1-4.2 2.8-4.2 5h2.6V16h-6.8z"/></svg>
+              <p>We deliver a whole wedding in a day now. The colour holds from the first frame to the last.</p>
+            </blockquote>
+            <figcaption class="vcard__who">
+              <img class="vcard__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=384&amp;q=75" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
+              <span class="vcard__id">
+                <span class="vcard__n">Zeril Film</span>
+                <span class="vcard__m">@zerilfilm<span aria-hidden="true"> · </span><span class="tnum">210K</span> followers</span>
               </span>
-              <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-          </h3>
-          <div class="vpanel" id="vp-1" role="region" aria-labelledby="vb-1" hidden>
-            <blockquote class="vq"><p>We deliver a whole wedding in a day now. The colour holds from the first frame to the last.</p></blockquote>
-          </div>
-        </div>
-        <div class="vrow">
-          <h3 class="vrow__h">
-            <button class="vbtn" type="button" id="vb-2" aria-expanded="false" aria-controls="vp-2">
-              <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
-              <span class="vbtn__id">
-                <span class="vbtn__n">Oğuz Demir</span>
-                <span class="vbtn__m"><span class="vbtn__at">@oguzdemirphoto</span><span aria-hidden="true">·</span><span class="tnum">108K</span> followers</span>
+            </figcaption>
+          </figure>
+          <figure class="vcard">
+            <div class="vcard__shot">
+              <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" alt="A photograph by Oğuz Demir, edited with the pack" loading="lazy" onerror="this.style.display='none'">
+            </div>
+            <blockquote class="vcard__q">
+              <svg class="vcard__mark" width="22" height="16" viewBox="0 0 22 16" fill="currentColor" aria-hidden="true"><path d="M0 16V9.4C0 4.5 2.6 1.4 7.4 0l1 2.2C5.6 3.3 4.2 5 4.2 7.2h2.6V16H0zm13.6 0V9.4c0-4.9 2.6-8 7.4-9.4l1 2.2c-2.8 1.1-4.2 2.8-4.2 5h2.6V16h-6.8z"/></svg>
+              <p>Skin still looks like skin. That is the part I could never get out of any other preset pack.</p>
+            </blockquote>
+            <figcaption class="vcard__who">
+              <img class="vcard__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=384&amp;q=75" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
+              <span class="vcard__id">
+                <span class="vcard__n">Oğuz Demir</span>
+                <span class="vcard__m">@oguzdemirphoto<span aria-hidden="true"> · </span><span class="tnum">108K</span> followers</span>
               </span>
-              <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-          </h3>
-          <div class="vpanel" id="vp-2" role="region" aria-labelledby="vb-2" hidden>
-            <blockquote class="vq"><p>Skin still looks like skin. That is the part I could never get out of any other preset pack.</p></blockquote>
-          </div>
-        </div>
-        <div class="vrow">
-          <h3 class="vrow__h">
-            <button class="vbtn" type="button" id="vb-3" aria-expanded="false" aria-controls="vp-3">
-              <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
-              <span class="vbtn__id">
-                <span class="vbtn__n">Focallis</span>
-                <span class="vbtn__m"><span class="vbtn__at">@focallisstudio</span><span aria-hidden="true">·</span><span class="tnum">1.4M</span> followers</span>
+            </figcaption>
+          </figure>
+          <figure class="vcard">
+            <div class="vcard__shot">
+              <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=1080&amp;q=75" alt="A photograph by Focallis, edited with the pack" loading="lazy" onerror="this.style.display='none'">
+            </div>
+            <blockquote class="vcard__q">
+              <svg class="vcard__mark" width="22" height="16" viewBox="0 0 22 16" fill="currentColor" aria-hidden="true"><path d="M0 16V9.4C0 4.5 2.6 1.4 7.4 0l1 2.2C5.6 3.3 4.2 5 4.2 7.2h2.6V16H0zm13.6 0V9.4c0-4.9 2.6-8 7.4-9.4l1 2.2c-2.8 1.1-4.2 2.8-4.2 5h2.6V16h-6.8z"/></svg>
+              <p>One click and the shoot matches. It changed how we hand work over to the rest of the studio.</p>
+            </blockquote>
+            <figcaption class="vcard__who">
+              <img class="vcard__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=384&amp;q=75" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
+              <span class="vcard__id">
+                <span class="vcard__n">Focallis</span>
+                <span class="vcard__m">@focallisstudio<span aria-hidden="true"> · </span><span class="tnum">1.4M</span> followers</span>
               </span>
-              <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-          </h3>
-          <div class="vpanel" id="vp-3" role="region" aria-labelledby="vb-3" hidden>
-            <blockquote class="vq"><p>One click and the shoot matches. It changed how we hand work over to the rest of the studio.</p></blockquote>
-          </div>
-        </div>
-        <div class="vrow">
-          <h3 class="vrow__h">
-            <button class="vbtn" type="button" id="vb-4" aria-expanded="false" aria-controls="vp-4">
-              <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
-              <span class="vbtn__id">
-                <span class="vbtn__n">Celal Ocak</span>
-                <span class="vbtn__m"><span class="vbtn__at">@celalocak</span><span aria-hidden="true">·</span><span class="tnum">1.1M</span> followers</span>
+            </figcaption>
+          </figure>
+          <figure class="vcard">
+            <div class="vcard__shot">
+              <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" alt="A photograph by Celal Ocak, edited with the pack" loading="lazy" onerror="this.style.display='none'">
+            </div>
+            <blockquote class="vcard__q">
+              <svg class="vcard__mark" width="22" height="16" viewBox="0 0 22 16" fill="currentColor" aria-hidden="true"><path d="M0 16V9.4C0 4.5 2.6 1.4 7.4 0l1 2.2C5.6 3.3 4.2 5 4.2 7.2h2.6V16H0zm13.6 0V9.4c0-4.9 2.6-8 7.4-9.4l1 2.2c-2.8 1.1-4.2 2.8-4.2 5h2.6V16h-6.8z"/></svg>
+              <p>I stopped switching between panels halfway through an edit. Everything I reach for is in one place.</p>
+            </blockquote>
+            <figcaption class="vcard__who">
+              <img class="vcard__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=384&amp;q=75" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
+              <span class="vcard__id">
+                <span class="vcard__n">Celal Ocak</span>
+                <span class="vcard__m">@celalocak<span aria-hidden="true"> · </span><span class="tnum">1.1M</span> followers</span>
               </span>
-              <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-          </h3>
-          <div class="vpanel" id="vp-4" role="region" aria-labelledby="vb-4" hidden>
-            <blockquote class="vq"><p>I stopped switching between panels halfway through an edit. Everything I reach for is in one place.</p></blockquote>
-          </div>
-        </div>
-        <div class="vrow">
-          <h3 class="vrow__h">
-            <button class="vbtn" type="button" id="vb-5" aria-expanded="false" aria-controls="vp-5">
-              <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
-              <span class="vbtn__id">
-                <span class="vbtn__n">Murat Özsoy</span>
-                <span class="vbtn__m"><span class="vbtn__at">@muratozsoy</span><span aria-hidden="true">·</span><span class="tnum">279K</span> followers</span>
+            </figcaption>
+          </figure>
+          <figure class="vcard">
+            <div class="vcard__shot">
+              <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=1080&amp;q=75" alt="A photograph by Murat Özsoy, edited with the pack" loading="lazy" onerror="this.style.display='none'">
+            </div>
+            <blockquote class="vcard__q">
+              <svg class="vcard__mark" width="22" height="16" viewBox="0 0 22 16" fill="currentColor" aria-hidden="true"><path d="M0 16V9.4C0 4.5 2.6 1.4 7.4 0l1 2.2C5.6 3.3 4.2 5 4.2 7.2h2.6V16H0zm13.6 0V9.4c0-4.9 2.6-8 7.4-9.4l1 2.2c-2.8 1.1-4.2 2.8-4.2 5h2.6V16h-6.8z"/></svg>
+              <p>The plugins do the boring half of the job, so the time goes on the frames that actually matter.</p>
+            </blockquote>
+            <figcaption class="vcard__who">
+              <img class="vcard__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=384&amp;q=75" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
+              <span class="vcard__id">
+                <span class="vcard__n">Murat Özsoy</span>
+                <span class="vcard__m">@muratozsoy<span aria-hidden="true"> · </span><span class="tnum">279K</span> followers</span>
               </span>
-              <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </button>
-          </h3>
-          <div class="vpanel" id="vp-5" role="region" aria-labelledby="vb-5" hidden>
-            <blockquote class="vq"><p>The plugins do the boring half of the job, so the time goes on the frames that actually matter.</p></blockquote>
-          </div>
-        </div>
+            </figcaption>
+          </figure>
       </div>
-      <div class="vstage">
-        <div class="vwork" id="vw-0" role="group" aria-label="Photographs by Düğünümüz Var">
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="A photograph by Düğünümüz Var, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="A photograph by Düğünümüz Var, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=1080&amp;q=75" alt="A photograph by Düğünümüz Var, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" alt="A photograph by Düğünümüz Var, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" alt="A photograph by Düğünümüz Var, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="A photograph by Düğünümüz Var, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-        </div>
-        <div class="vwork" id="vw-1" role="group" aria-label="Photographs by Zeril Film" hidden>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=1080&amp;q=75" alt="A photograph by Zeril Film, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" alt="A photograph by Zeril Film, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" alt="A photograph by Zeril Film, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" alt="A photograph by Zeril Film, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=1080&amp;q=75" alt="A photograph by Zeril Film, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" alt="A photograph by Zeril Film, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-        </div>
-        <div class="vwork" id="vw-2" role="group" aria-label="Photographs by Oğuz Demir" hidden>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" alt="A photograph by Oğuz Demir, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=1080&amp;q=75" alt="A photograph by Oğuz Demir, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" alt="A photograph by Oğuz Demir, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="A photograph by Oğuz Demir, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="A photograph by Oğuz Demir, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=1080&amp;q=75" alt="A photograph by Oğuz Demir, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-        </div>
-        <div class="vwork" id="vw-3" role="group" aria-label="Photographs by Focallis" hidden>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" alt="A photograph by Focallis, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" alt="A photograph by Focallis, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="A photograph by Focallis, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=1080&amp;q=75" alt="A photograph by Focallis, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" alt="A photograph by Focallis, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" alt="A photograph by Focallis, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-        </div>
-        <div class="vwork" id="vw-4" role="group" aria-label="Photographs by Celal Ocak" hidden>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" alt="A photograph by Celal Ocak, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=1080&amp;q=75" alt="A photograph by Celal Ocak, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" alt="A photograph by Celal Ocak, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" alt="A photograph by Celal Ocak, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=1080&amp;q=75" alt="A photograph by Celal Ocak, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" alt="A photograph by Celal Ocak, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-        </div>
-        <div class="vwork" id="vw-5" role="group" aria-label="Photographs by Murat Özsoy" hidden>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="A photograph by Murat Özsoy, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="A photograph by Murat Özsoy, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=1080&amp;q=75" alt="A photograph by Murat Özsoy, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" alt="A photograph by Murat Özsoy, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" alt="A photograph by Murat Özsoy, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
-          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="A photograph by Murat Özsoy, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+      <div class="strip__bar">
+        <span aria-hidden="true"></span>
+        <span class="progress" aria-hidden="true"><i></i></span>
+        <div class="strip__nav">
+          <button class="arrow" type="button" data-dir="-1" aria-label="Scroll testimonials left"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="arrow" type="button" data-dir="1" aria-label="Scroll testimonials right"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         </div>
       </div>
     </div>
@@ -2541,66 +2740,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitAllTitles);
   }
 
-  /* ---- testimonials: one open at a time, gallery follows ----
-     A plain disclosure per row. Opening one shuts the rest, so the column
-     height only ever holds one quote, and swaps the 4:5 gallery beside it. */
-  document.querySelectorAll('[data-voices]').forEach(function(voices){
-    var rows   = [].slice.call(voices.querySelectorAll('.vrow'));
-    var works  = [].slice.call(voices.querySelectorAll('.vwork'));
-    function open(n){
-      rows.forEach(function(row, i){
-        var on = i === n;
-        row.classList.toggle('is-open', on);
-        row.querySelector('.vbtn').setAttribute('aria-expanded', String(on));
-        var panel = row.querySelector('.vpanel');
-        if(on){ panel.removeAttribute('hidden'); } else { panel.setAttribute('hidden',''); }
-      });
-      works.forEach(function(w, i){
-        if(i === n){ w.removeAttribute('hidden'); } else { w.setAttribute('hidden',''); }
-      });
-    }
-    rows.forEach(function(row, i){
-      row.querySelector('.vbtn').addEventListener('click', function(){
-        /* clicking the open row leaves it open — there is always a quote and
-           a gallery on screen, never an empty right-hand column */
-        open(i);
-      });
-    });
-
-    /* drag the row with the mouse. Touch and trackpads already scroll it
-       natively, so this only adds the one gesture a mouse does not have —
-       and it never touches the wheel, which belongs to the page. */
-    works.forEach(function(rail){
-      var down = false, startX = 0, startLeft = 0, moved = 0;
-      rail.addEventListener('pointerdown', function(e){
-        if(e.pointerType !== 'mouse' || e.button !== 0) return;
-        down = true; moved = 0; startX = e.clientX; startLeft = rail.scrollLeft;
-        rail.classList.add('is-dragging');
-        rail.setPointerCapture(e.pointerId);
-      });
-      rail.addEventListener('pointermove', function(e){
-        if(!down) return;
-        var dx = e.clientX - startX;
-        moved = Math.max(moved, Math.abs(dx));
-        rail.scrollLeft = startLeft - dx;
-      });
-      function up(e){
-        if(!down) return;
-        down = false;
-        rail.classList.remove('is-dragging');
-        /* snap back on once the drag is over, and let it settle where it was
-           let go rather than jumping to where the drag started */
-        var at = rail.scrollLeft;
-        rail.scrollLeft = at;
-        if(rail.hasPointerCapture && rail.hasPointerCapture(e.pointerId)) rail.releasePointerCapture(e.pointerId);
-      }
-      rail.addEventListener('pointerup', up);
-      rail.addEventListener('pointercancel', up);
-      /* a drag that ended on a link or image must not also read as a click */
-      rail.addEventListener('click', function(e){ if(moved > 4){ e.preventDefault(); e.stopPropagation(); } }, true);
-    });
-  });
-
   /* ---- clip rails: arrows + disabled states ---- */
   var rails = [].slice.call(document.querySelectorAll('.strip'));
   function syncRails(){
@@ -2677,14 +2816,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         }
       });
     }
-    /* restart the active dot's fill so it tracks the countdown */
     function tick(){
       clearTimeout(timer); timer = null;
-      var fill = dots[idx].querySelector('i');
-      fill.style.animation = 'none';
-      void fill.offsetWidth;
       if(held()) return;
-      fill.style.animation = 'deckFill ' + DECK_MS + 'ms linear forwards';
       timer = setTimeout(function(){ go((idx + 1) % panes.length); }, DECK_MS);
     }
     function mark(i){
@@ -2823,10 +2957,24 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   });
 
   /* ---- before / after ---- */
+  var fine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
   document.querySelectorAll('[data-compare]').forEach(function(box){
     var range = box.querySelector('.compare__range');
     function draw(){ box.style.setProperty('--x', range.value + '%'); }
     range.addEventListener('input', draw);
+    /* on a mouse the reveal follows the pointer — there is nothing to grab and
+       nothing to learn. The range is still the thing that holds the value, so
+       the keyboard and the screen reader get the same control they always had,
+       and a touch screen (no hover) still drags it. */
+    if(fine){
+      box.addEventListener('pointermove', function(e){
+        if(e.pointerType !== 'mouse') return;
+        var r = box.getBoundingClientRect();
+        var pct = Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100));
+        range.value = pct; draw();
+      });
+      box.addEventListener('pointerleave', function(){ range.value = 50; draw(); });
+    }
     draw();
   });
   /* the before/after row: same controls as the walkthrough deck, but nothing
@@ -2886,9 +3034,52 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     deck.querySelectorAll('[data-ba-step]').forEach(function(btn){
       btn.addEventListener('click', function(){ go(idx + parseInt(btn.getAttribute('data-ba-step'), 10)); });
     });
+    /* a card only part way on screen steps you onto it. A card you can already
+       see whole is left alone, so clicking one to set the handle still works */
+    panes.forEach(function(p, n){
+      p.addEventListener('click', function(e){
+        var r = p.getBoundingClientRect(), t = track.getBoundingClientRect();
+        var whole = r.left >= t.left - 1 && r.right <= t.right + 1;
+        if(whole) return;
+        e.preventDefault(); e.stopPropagation();
+        go(n);
+      }, true);
+    });
     window.addEventListener('resize', sync);
     mark(0);
   });
+
+  /* ---- preset chips: one row of comparisons at a time ---- */
+  (function(){
+    var chips = [].slice.call(document.querySelectorAll('.pchips [role="tab"]'));
+    if(!chips.length) return;
+    function pick(n){
+      chips.forEach(function(c, i){
+        var on = i === n;
+        c.setAttribute('aria-selected', String(on));
+        c.tabIndex = on ? 0 : -1;
+        var panel = document.getElementById(c.getAttribute('aria-controls'));
+        if(!panel) return;
+        panel.classList.toggle('is-on', on);
+        if(on){ panel.removeAttribute('hidden'); } else { panel.setAttribute('hidden',''); }
+      });
+      /* the row that just appeared has never been measured — its arrows and
+         thumb would still be showing the last one's position */
+      window.dispatchEvent(new Event('resize'));
+      chips[n].scrollIntoView({block:'nearest', inline:'nearest', behavior: still ? 'auto' : 'smooth'});
+    }
+    chips.forEach(function(c, n){
+      c.tabIndex = n === 0 ? 0 : -1;
+      c.addEventListener('click', function(){ pick(n); });
+      c.addEventListener('keydown', function(e){
+        var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if(!d) return;
+        e.preventDefault();
+        var to = (n + d + chips.length) % chips.length;
+        pick(to); chips[to].focus();
+      });
+    });
+  })();
 
   /* ---- hero film ----
      The player is the browser's own, showing from the first frame, and it
