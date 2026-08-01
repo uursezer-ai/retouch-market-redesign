@@ -687,10 +687,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* the neighbours show their picture and nothing else — half a caption and a
    stray duration read as debris rather than as the next video */
 .deck__pane:not(.is-on) .play,
-.deck__pane:not(.is-on) .player__cap,
+.deck__pane:not(.is-on) .player__foot,
 .deck__pane:not(.is-on) .player__dur{opacity:0;pointer-events:none}
 .deck__pane .play{transition:opacity var(--dur-2) var(--ease), transform var(--dur-2) var(--ease)}
-.deck__pane .player__cap,.deck__pane .player__dur{transition:opacity var(--dur-2) var(--ease)}
+.deck__pane .player__foot,.deck__pane .player__dur{transition:opacity var(--dur-2) var(--ease)}
 
 .deck__bar{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin-top:var(--s-5)}
 .deck__ctrl{display:flex;align-items:center;justify-content:center;gap:var(--s-3)}
@@ -1033,7 +1033,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .player img,.player video{display:block;width:100%;height:100%;object-fit:cover}
 .player::after{
   content:"";position:absolute;inset:0;pointer-events:none;
-  background:linear-gradient(to top,rgba(10,37,64,.74) 0%,rgba(10,37,64,.30) 18%,transparent 42%);
+  background:linear-gradient(to bottom,rgba(10,37,64,.34) 0%,transparent 22%);
 }
 .play{
   position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:2;
@@ -1043,13 +1043,35 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .play:hover{transform:translate(-50%,-50%) scale(1.06)}
 /* stops short of the duration pill instead of running underneath it */
+/* the footer is one box: the clip's name, and under it an optional line about
+   what is on screen. The scrim is the box's own background, so a long
+   description gets more shade to sit on instead of less contrast — and a clip
+   with nothing to say costs nothing but the name. */
+.player__foot{
+  position:absolute;left:0;right:0;bottom:0;z-index:2;
+  display:flex;flex-direction:column;gap:var(--s-2);
+  padding:var(--s-10) var(--s-5) var(--s-5);
+  background:linear-gradient(to top,rgba(4,10,20,.94) 0%,rgba(4,10,20,.76) 40%,rgba(4,10,20,0) 100%);
+}
 .player__cap{
-  position:absolute;left:var(--s-5);right:calc(var(--s-5) + 62px);bottom:var(--s-4);z-index:2;
   font-size:var(--fs-4);font-weight:var(--fw-semibold);color:#fff;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
+.player__desc{
+  margin:0;max-width:70ch;
+  font-size:var(--fs-3);line-height:var(--lh-normal);color:rgba(255,255,255,.88);
+  text-wrap:pretty;
+}
+/* it opens rather than appears: the pane you land on gives you the name at
+   once and the sentence a beat later. Scoped to the deck, so a player that
+   stands on its own simply shows its line. */
+.deck__pane .player__desc{
+  opacity:0;transform:translateY(6px);
+  transition:opacity var(--dur-2) var(--ease) 90ms, transform var(--dur-2) var(--ease) 90ms;
+}
+.deck__pane.is-on .player__desc{opacity:1;transform:none}
 .player__dur{
-  position:absolute;right:var(--s-5);bottom:var(--s-4);z-index:2;
+  position:absolute;right:var(--s-5);top:var(--s-4);z-index:2;
   font-size:var(--fs-2);font-weight:var(--fw-medium);color:#fff;
   padding:var(--s-1) var(--s-2);border-radius:6px;background:rgba(10,37,64,.72);
 }
@@ -1218,6 +1240,128 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .cta__note{position:relative;margin:var(--s-5) 0 0;font-size:var(--fs-2);color:var(--fg-muted)}
 
 /* ════════════════════════════════════════════════════════════════
+   9 · CLOSING OFFER
+   The last thing on the page is a decision, so it is built like a product
+   page rather than a banner: the pack on the left, what is in it on the
+   right, and the price doing the arguing. The first slot is the plugin pack
+   and cannot be swapped; the rest are a select each, because a native one
+   is the control every phone already knows how to open.
+   ════════════════════════════════════════════════════════════════ */
+.offer{display:grid;gap:var(--s-7)}
+.offer__deals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-3)}
+.deal__tab{
+  display:flex;flex-direction:column;align-items:flex-start;gap:2px;
+  padding:var(--s-4) var(--s-5);border-radius:var(--r-card);text-align:left;
+  border:1px solid var(--border);background:var(--surface);
+  transition:transform var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease),
+             box-shadow var(--dur-2) var(--ease), background var(--dur-2) var(--ease);
+}
+.deal__tab:not([aria-selected="true"]):hover{
+  transform:translateY(-3px);box-shadow:var(--sh-3);border-color:var(--border-strong);
+}
+.deal__tab[aria-selected="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-bg)}
+.deal__label{font-size:var(--fs-6);font-weight:var(--fw-bold);color:var(--fg)}
+.deal__tab[aria-selected="true"] .deal__label{color:var(--accent-fg)}
+.deal__sub{font-size:var(--fs-2);color:var(--fg-muted)}
+
+.deal{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,520px);gap:var(--s-9);align-items:center}
+.deal[hidden]{display:none}
+
+/* the visual: the bundle as a hand of cards, the plugin pack in front */
+.offer__stage{position:relative;min-width:0}
+.fan{display:flex;justify-content:center;padding:var(--s-8) 0 var(--s-6);min-width:0}
+.fan__card{
+  /* five cards at 30%, each advancing 17%, come to 98% of the box — the hand
+     has to fit whether the deal holds three of them or five */
+  margin:0;flex:0 0 30%;aspect-ratio:4/5;overflow:hidden;
+  border-radius:var(--r-card);border:1px solid var(--border);background:var(--surface);
+  box-shadow:var(--sh-2);
+  /* laid out back to front, so each one leans a little further and the front
+     card — the plugin pack — sits square and on top */
+  transform:rotate(calc(var(--i) * -3.2deg)) translateY(calc(var(--i) * 6px));
+  transform-origin:bottom center;
+  transition:transform var(--dur-3) var(--ease);
+}
+.fan__card + .fan__card{margin-left:-13%}
+.fan__card img{width:100%;height:100%;object-fit:cover;display:block}
+.fan__card[data-fan="0"]{z-index:3;box-shadow:var(--sh-3)}
+.fan__card[data-fan="0"] img{object-fit:contain;background:var(--surface)}
+.offer:hover .fan__card{transform:rotate(calc(var(--i) * -4.4deg)) translateY(calc(var(--i) * 8px))}
+.fan__seal{
+  position:absolute;left:var(--s-4);top:0;z-index:4;margin:0;
+  display:flex;align-items:baseline;gap:6px;
+  padding:var(--s-2) var(--s-4);border-radius:var(--r-full);
+  background:var(--accent);color:var(--fg-on-accent);
+  font-size:var(--fs-3);font-weight:var(--fw-semibold);box-shadow:var(--sh-2);
+}
+.fan__seal b{font-size:var(--fs-6);font-weight:var(--fw-bold);font-variant-numeric:tabular-nums}
+
+/* what is in it */
+.slots{list-style:none;margin:0 0 var(--s-6);padding:0;display:flex;flex-direction:column;gap:var(--s-2)}
+.slot{
+  display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;align-items:center;gap:var(--s-3);
+  padding:var(--s-3);border-radius:var(--r-card);
+  border:1px solid var(--border);background:var(--surface);
+}
+.slot__no{
+  display:grid;place-items:center;width:24px;height:24px;border-radius:var(--r-full);
+  background:var(--surface-sunken);color:var(--fg-muted);
+  font-size:var(--fs-1);font-weight:var(--fw-bold);font-variant-numeric:tabular-nums;
+}
+.slot.is-locked .slot__no{background:var(--accent);color:var(--fg-on-accent)}
+.slot__shot{
+  display:block;width:36px;aspect-ratio:4/5;flex:none;overflow:hidden;
+  border-radius:6px;background:var(--surface-sunken);border:1px solid var(--border);
+}
+.slot__shot img{width:100%;height:100%;object-fit:cover;display:block}
+.slot__body{display:flex;flex-direction:column;gap:2px;min-width:0}
+.slot__n{
+  font-size:var(--fs-4);font-weight:var(--fw-semibold);color:var(--fg);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.slot__note{font-size:var(--fs-2);color:var(--accent-fg);font-weight:var(--fw-medium)}
+/* the select is the whole row's second line, styled down to a quiet link so
+   it does not shout over the name above it */
+.slot__swap{position:relative;display:inline-flex;align-items:center;gap:6px;min-width:0;color:var(--fg-muted)}
+/* the pack's name is the control: a row that printed the name and then a
+   select showing the same name said everything twice */
+.slot__swap select{
+  appearance:none;-webkit-appearance:none;background:none;border:0;padding:0 16px 0 0;margin:0;
+  font:inherit;font-size:var(--fs-4);font-weight:var(--fw-semibold);color:var(--fg);
+  cursor:pointer;max-width:100%;text-overflow:ellipsis;
+}
+.slot__swap svg{position:absolute;right:2px;pointer-events:none;transition:transform var(--dur-2) var(--ease)}
+.slot__swap:hover select,.slot__swap:hover{color:var(--accent-fg)}
+.slot__swap:hover svg{transform:translateY(1px)}
+.slot__swap select:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.slot__price{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.slot__price b{font-size:var(--fs-4);font-weight:var(--fw-bold);color:var(--fg)}
+.slot__was{display:block;font-size:var(--fs-1);color:var(--fg-muted);text-decoration:line-through}
+.slot.is-free{border-color:var(--accent-border);background:var(--accent-bg)}
+.slot.is-free .slot__was{display:none}
+.slot.is-free .slot__price b{color:var(--fg-muted);text-decoration:line-through;font-weight:var(--fw-medium)}
+.slot.is-free .slot__price::after{
+  content:"FREE";display:block;margin-top:2px;
+  font-size:var(--fs-1);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);color:var(--accent-fg);
+}
+
+.sum{
+  display:flex;flex-direction:column;gap:var(--s-2);
+  padding:var(--s-5);margin-bottom:var(--s-4);
+  border-radius:var(--r-card);background:var(--surface-sunken);
+}
+.sum__row{display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-4)}
+.sum__k{font-size:var(--fs-4);color:var(--fg-body)}
+.sum__v{display:flex;align-items:baseline;gap:var(--s-2);font-variant-numeric:tabular-nums}
+.sum__v s{font-size:var(--fs-4);color:var(--fg-muted)}
+.sum__v b{font-size:var(--fs-9);font-weight:var(--fw-bold);color:var(--fg);letter-spacing:var(--tr-heading)}
+.sum__save{margin:0;font-size:var(--fs-3);color:var(--fg-body)}
+.sum__save b{color:var(--accent-fg);font-variant-numeric:tabular-nums}
+.offer__go{width:100%}
+.offer__go span{font-variant-numeric:tabular-nums}
+.offer__fine{margin:var(--s-3) 0 0;font-size:var(--fs-2);line-height:var(--lh-normal);color:var(--fg-muted);text-align:center}
+
+/* ════════════════════════════════════════════════════════════════
    10 · FOOTER
    ════════════════════════════════════════════════════════════════ */
 .footer{border-top:1px solid var(--border);padding:var(--s-10) 0 var(--s-7)}
@@ -1274,6 +1418,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 @media (max-width:1000px){
   .deck.deck--v{--v-per:2}
+  .deal{grid-template-columns:1fr;gap:var(--s-7)}
+  .fan__card{flex:0 0 30%}
   .deck.deck--ba{--ba-per:2}
   .rail{--per-view:4}
   .nav__links{display:none}
@@ -1322,6 +1468,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 @media (max-width:600px){
   .deck.deck--ba{--ba-per:1}
+  /* the tabs stack rather than squeeze two long labels into half a phone */
+  .offer__deals{grid-template-columns:1fr}
+  .fan{padding:var(--s-4) 0}
+  .fan__card{flex:0 0 38%}
+  .fan__card + .fan__card{margin-left:-16%}
+  .fan__seal{left:0;font-size:var(--fs-2)}
+  .slot{grid-template-columns:auto minmax(0,1fr) auto;gap:var(--s-2)}
+  .slot__shot{display:none}
+  .sum__v b{font-size:var(--fs-8)}
+  /* a phone has room for the name and about two lines under it */
+  .player__foot{padding:var(--s-9) var(--s-4) var(--s-4)}
+  .player__desc{font-size:var(--fs-2);-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
   /* the mark costs 56px of a 98px column on a phone — the numbers matter more
      than the decoration, so it steps aside and the pair centres again */
   .pstat{grid-template-columns:minmax(0,1fr);grid-template-areas:"value" "label";
@@ -1561,63 +1719,73 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <div class="player">
                 <video poster="images/testimonials/ugurdemir/3.webp" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/retouchx-01.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: RetouchX Plugin — 40 portraits, one pass (4:12)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">RetouchX Plugin — 40 portraits, one pass</span>
                 <span class="player__dur tnum">4:12</span>
-                <p class="player__note">Mockup: drop videos/retouchx-01.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">RetouchX Plugin — 40 portraits, one pass</span>
+                  <p class="player__desc">One pass over a full gallery: skin, teeth and eyes are evened out on every frame while the grain and the pores stay exactly where they were.</p>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Setting up a batch queue — video 2 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/retouchx-02.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Setting up a batch queue (1:12)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Setting up a batch queue</span>
                 <span class="player__dur tnum">1:12</span>
-                <p class="player__note">Mockup: drop videos/retouchx-02.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Setting up a batch queue</span>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Keeping skin texture — video 3 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/retouchx-03.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Keeping skin texture (0:48)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Keeping skin texture</span>
                 <span class="player__dur tnum">0:48</span>
-                <p class="player__note">Mockup: drop videos/retouchx-03.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Keeping skin texture</span>
+                  <p class="player__desc">The smoothing runs under the texture rather than over it, so pores survive at 100%.</p>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Eyes, teeth and lips — video 4 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/retouchx-04.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Eyes, teeth and lips (2:04)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Eyes, teeth and lips</span>
                 <span class="player__dur tnum">2:04</span>
-                <p class="player__note">Mockup: drop videos/retouchx-04.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Eyes, teeth and lips</span>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Reviewing before export — video 5 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/retouchx-05.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Reviewing before export (1:33)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Reviewing before export</span>
                 <span class="player__dur tnum">1:33</span>
-                <p class="player__note">Mockup: drop videos/retouchx-05.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Reviewing before export</span>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Masking hair edges — video 6 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/retouchx-06.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Masking hair edges (1:57)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Masking hair edges</span>
                 <span class="player__dur tnum">1:57</span>
-                <p class="player__note">Mockup: drop videos/retouchx-06.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Masking hair edges</span>
+                  <p class="player__desc">Edge detection keeps the flyaway strands rather than painting them into the background — the part every automatic mask usually loses.</p>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Saving your own recipe — video 7 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/retouchx-07.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Saving your own recipe (2:26)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Saving your own recipe</span>
                 <span class="player__dur tnum">2:26</span>
-                <p class="player__note">Mockup: drop videos/retouchx-07.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Saving your own recipe</span>
+                </div>
               </div>
             </div>
           </div>
@@ -1649,63 +1817,72 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-01.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Lightroom Ai Color Plugin — grade a gallery in taps (3:26)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Lightroom Ai Color Plugin — grade a gallery in taps</span>
                 <span class="player__dur tnum">3:26</span>
-                <p class="player__note">Mockup: drop videos/lightroom-ai-color-01.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Lightroom Ai Color Plugin — grade a gallery in taps</span>
+                  <p class="player__desc">Set the look on one frame and it lands on the rest of the shoot, matched for exposure and white balance rather than pasted on.</p>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Matching a reference frame — video 2 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-02.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Matching a reference frame (1:05)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Matching a reference frame</span>
                 <span class="player__dur tnum">1:05</span>
-                <p class="player__note">Mockup: drop videos/lightroom-ai-color-02.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Matching a reference frame</span>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Building your own look — video 3 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-03.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Building your own look (2:19)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Building your own look</span>
                 <span class="player__dur tnum">2:19</span>
-                <p class="player__note">Mockup: drop videos/lightroom-ai-color-03.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Building your own look</span>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Syncing across a shoot — video 4 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-04.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Syncing across a shoot (0:52)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Syncing across a shoot</span>
                 <span class="player__dur tnum">0:52</span>
-                <p class="player__note">Mockup: drop videos/lightroom-ai-color-04.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Syncing across a shoot</span>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Protecting skin tones — video 5 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-05.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Protecting skin tones (1:41)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Protecting skin tones</span>
                 <span class="player__dur tnum">1:41</span>
-                <p class="player__note">Mockup: drop videos/lightroom-ai-color-05.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Protecting skin tones</span>
+                  <p class="player__desc">Colour is worked in HSL, so the grade goes on the scene and leaves the skin alone.</p>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Split toning shadows — video 6 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-06.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Split toning shadows (1:28)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Split toning shadows</span>
                 <span class="player__dur tnum">1:28</span>
-                <p class="player__note">Mockup: drop videos/lightroom-ai-color-06.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Split toning shadows</span>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Exporting a preset pack — video 7 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-07.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Exporting a preset pack (2:11)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Exporting a preset pack</span>
                 <span class="player__dur tnum">2:11</span>
-                <p class="player__note">Mockup: drop videos/lightroom-ai-color-07.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Exporting a preset pack</span>
+                </div>
               </div>
             </div>
           </div>
@@ -1737,63 +1914,72 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/us-photoshop-plugin-01.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: US Photoshop Plugin — the panel tour (5:03)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">US Photoshop Plugin — the panel tour</span>
                 <span class="player__dur tnum">5:03</span>
-                <p class="player__note">Mockup: drop videos/us-photoshop-plugin-01.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">US Photoshop Plugin — the panel tour</span>
+                  <p class="player__desc">Everything the panel does, in the order you would actually use it — about four minutes end to end.</p>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Frequency separation — video 2 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/us-photoshop-plugin-02.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Frequency separation (2:37)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Frequency separation</span>
                 <span class="player__dur tnum">2:37</span>
-                <p class="player__note">Mockup: drop videos/us-photoshop-plugin-02.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Frequency separation</span>
+                  <p class="player__desc">Texture and colour are split into two layers so you can even out a blotch without flattening the pore next to it.</p>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Dodge and burn layers — video 3 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/us-photoshop-plugin-03.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Dodge and burn layers (1:58)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Dodge and burn layers</span>
                 <span class="player__dur tnum">1:58</span>
-                <p class="player__note">Mockup: drop videos/us-photoshop-plugin-03.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Dodge and burn layers</span>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Saved liquify shapes — video 4 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/us-photoshop-plugin-04.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Saved liquify shapes (1:14)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Saved liquify shapes</span>
                 <span class="player__dur tnum">1:14</span>
-                <p class="player__note">Mockup: drop videos/us-photoshop-plugin-04.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Saved liquify shapes</span>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Export sizes for Instagram — video 5 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/us-photoshop-plugin-05.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Export sizes for Instagram (0:44)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Export sizes for Instagram</span>
                 <span class="player__dur tnum">0:44</span>
-                <p class="player__note">Mockup: drop videos/us-photoshop-plugin-05.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Export sizes for Instagram</span>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Cleaning up backgrounds — video 6 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/us-photoshop-plugin-06.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Cleaning up backgrounds (3:02)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Cleaning up backgrounds</span>
                 <span class="player__dur tnum">3:02</span>
-                <p class="player__note">Mockup: drop videos/us-photoshop-plugin-06.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Cleaning up backgrounds</span>
+                </div>
               </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Sharpening for print — video 7 of 7">
               <div class="player">
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/us-photoshop-plugin-07.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Sharpening for print (1:49)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
-                <span class="player__cap">Sharpening for print</span>
                 <span class="player__dur tnum">1:49</span>
-                <p class="player__note">Mockup: drop videos/us-photoshop-plugin-07.mp4 in to replace this still.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Sharpening for print</span>
+                </div>
               </div>
             </div>
           </div>
@@ -2662,9 +2848,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <button class="play" aria-label="Play the install walkthrough">
           <svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg>
         </button>
-        <span class="player__cap">Installing plugins and presets</span>
         <span class="player__dur tnum">2:08</span>
-        <p class="player__note">Mockup: drop the MP4 or Vimeo embed in here.</p>
+                <div class="player__foot">
+                  <span class="player__cap">Installing plugins and presets</span>
+                </div>
       </div>
 
       <div>
@@ -2748,18 +2935,181 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   </div>
 </section>
 
-<!-- ══════════ 9 · CLOSING CTA ══════════ -->
-<section class="section" aria-labelledby="ctaTitle">
+<!-- ══════════ 9 · CLOSING OFFER ══════════
+     PLACEHOLDER DATA: the plugin pack's price is set in the build script — the
+     page states it nowhere. The preset names, prices and pictures are read off
+     the grid above, so the two can never disagree. -->
+<section class="section section--tint" id="offer" aria-labelledby="offerTitle">
   <div class="wrap">
-    <div class="cta" data-reveal>
-      <p class="eyebrow">Full pack</p>
-      <h2 id="ctaTitle">Everything in one pack</h2>
-      <p class="lede">Three plugins, twelve packs.</p>
-      <div class="cta__actions">
-        <a class="btn btn--primary btn--lg" href="#">Get the Full Pack — $59</a>
-        <a class="btn btn--secondary btn--lg" href="#presets">Browse single packs</a>
+    <div class="section__head" data-reveal>
+      <div>
+        <p class="eyebrow">The bundle</p>
+        <h2 id="offerTitle">Take More. Pay for Less.</h2>
+        <p class="lede">Our best-selling packs, put together — the cheapest ones in your bundle are free.</p>
       </div>
-      <p class="cta__note">One-time purchase · instant download · every future release included · help-or-refund if it will not install</p>
+    </div>
+
+    <div class="offer" data-offer data-reveal>
+      <div class="offer__deals" role="tablist" aria-label="Bundle size">
+        <button class="deal__tab" type="button" role="tab" id="d3-tab" aria-controls="d3" aria-selected="true">
+          <span class="deal__label">Get 3 · Pay 2</span>
+          <span class="deal__sub">3 packs, 1 free</span>
+        </button>
+        <button class="deal__tab" type="button" role="tab" id="d5-tab" aria-controls="d5" aria-selected="false">
+          <span class="deal__label">Get 5 · Pay 3</span>
+          <span class="deal__sub">5 packs, 2 free · best value</span>
+        </button>
+      </div>
+      <div class="deal is-on" id="d3" role="tabpanel" aria-labelledby="d3-tab"
+           data-deal data-pay="2" data-get="3">
+        <div class="offer__stage">
+          <div class="fan" data-fan-row>
+          <figure class="fan__card" data-fan="2" style="--i:2">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="Solis Presets" loading="lazy" onerror="this.style.display='none'">
+          </figure>
+          <figure class="fan__card" data-fan="1" style="--i:1">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="Lora Presets" loading="lazy" onerror="this.style.display='none'">
+          </figure>
+          <figure class="fan__card" data-fan="0" style="--i:0">
+            <img src="images/box-retouchx.png" alt="Full Plugin Pack" loading="lazy" onerror="this.style.display='none'">
+          </figure>
+          </div>
+          <p class="fan__seal"><b data-save>$59</b> off</p>
+        </div>
+        <div class="offer__panel">
+          <ol class="slots" data-slots>
+            <li class="slot is-locked" data-slot="0">
+              <span class="slot__no" aria-hidden="true">1</span>
+              <span class="slot__shot"><img src="images/box-retouchx.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+              <span class="slot__body">
+                <span class="slot__n">Full Plugin Pack</span>
+                <span class="slot__note">Always included</span>
+              </span>
+              <span class="slot__price"><s class="slot__was">$299</s><b>$149</b></span>
+            </li>
+            <li class="slot" data-slot="1">
+              <span class="slot__no" aria-hidden="true">2</span>
+              <span class="slot__shot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+              <span class="slot__body">
+                <label class="slot__swap"><span class="vh">Choose the pack in slot 2</span>
+                  <select class="slot__n" data-swap="1"><option value="0" selected>Lora Presets</option><option value="1">Solis Presets</option><option value="2">Terra Presets</option><option value="3">Jardin Presets</option><option value="4">Mely Presets</option><option value="5">Onyx Presets</option><option value="6">Doré Presets</option><option value="7">Olbia LUTs</option></select>
+                  <svg width="10" height="7" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </label>
+              </span>
+              <span class="slot__price"><s class="slot__was">$119</s><b>$59</b></span>
+            </li>
+            <li class="slot is-free" data-slot="2">
+              <span class="slot__no" aria-hidden="true">3</span>
+              <span class="slot__shot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+              <span class="slot__body">
+                <label class="slot__swap"><span class="vh">Choose the pack in slot 3</span>
+                  <select class="slot__n" data-swap="2"><option value="0">Lora Presets</option><option value="1" selected>Solis Presets</option><option value="2">Terra Presets</option><option value="3">Jardin Presets</option><option value="4">Mely Presets</option><option value="5">Onyx Presets</option><option value="6">Doré Presets</option><option value="7">Olbia LUTs</option></select>
+                  <svg width="10" height="7" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </label>
+              </span>
+              <span class="slot__price"><s class="slot__was">$119</s><b>$59</b></span>
+            </li>
+          </ol>
+          <div class="sum">
+            <div class="sum__row">
+              <span class="sum__k">Bundle price</span>
+              <span class="sum__v"><s data-full>$267</s><b data-pay>$208</b></span>
+            </div>
+            <p class="sum__save">You keep <b data-save>$59</b> — the 1 cheapest pack is on us.</p>
+          </div>
+          <a class="btn btn--primary btn--lg offer__go" href="#">Add this bundle — <span data-pay>$208</span></a>
+          <p class="offer__fine">One-time purchase · instant download · every future release included · 14-day help-or-refund</p>
+        </div>
+      </div>
+      <div class="deal" id="d5" role="tabpanel" aria-labelledby="d5-tab" hidden
+           data-deal data-pay="3" data-get="5">
+        <div class="offer__stage">
+          <div class="fan" data-fan-row>
+          <figure class="fan__card" data-fan="4" style="--i:4">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="Jardin Presets" loading="lazy" onerror="this.style.display='none'">
+          </figure>
+          <figure class="fan__card" data-fan="3" style="--i:3">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75" alt="Terra Presets" loading="lazy" onerror="this.style.display='none'">
+          </figure>
+          <figure class="fan__card" data-fan="2" style="--i:2">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="Solis Presets" loading="lazy" onerror="this.style.display='none'">
+          </figure>
+          <figure class="fan__card" data-fan="1" style="--i:1">
+            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="Lora Presets" loading="lazy" onerror="this.style.display='none'">
+          </figure>
+          <figure class="fan__card" data-fan="0" style="--i:0">
+            <img src="images/box-retouchx.png" alt="Full Plugin Pack" loading="lazy" onerror="this.style.display='none'">
+          </figure>
+          </div>
+          <p class="fan__seal"><b data-save>$118</b> off</p>
+        </div>
+        <div class="offer__panel">
+          <ol class="slots" data-slots>
+            <li class="slot is-locked" data-slot="0">
+              <span class="slot__no" aria-hidden="true">1</span>
+              <span class="slot__shot"><img src="images/box-retouchx.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+              <span class="slot__body">
+                <span class="slot__n">Full Plugin Pack</span>
+                <span class="slot__note">Always included</span>
+              </span>
+              <span class="slot__price"><s class="slot__was">$299</s><b>$149</b></span>
+            </li>
+            <li class="slot" data-slot="1">
+              <span class="slot__no" aria-hidden="true">2</span>
+              <span class="slot__shot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+              <span class="slot__body">
+                <label class="slot__swap"><span class="vh">Choose the pack in slot 2</span>
+                  <select class="slot__n" data-swap="1"><option value="0" selected>Lora Presets</option><option value="1">Solis Presets</option><option value="2">Terra Presets</option><option value="3">Jardin Presets</option><option value="4">Mely Presets</option><option value="5">Onyx Presets</option><option value="6">Doré Presets</option><option value="7">Olbia LUTs</option></select>
+                  <svg width="10" height="7" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </label>
+              </span>
+              <span class="slot__price"><s class="slot__was">$119</s><b>$59</b></span>
+            </li>
+            <li class="slot" data-slot="2">
+              <span class="slot__no" aria-hidden="true">3</span>
+              <span class="slot__shot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+              <span class="slot__body">
+                <label class="slot__swap"><span class="vh">Choose the pack in slot 3</span>
+                  <select class="slot__n" data-swap="2"><option value="0">Lora Presets</option><option value="1" selected>Solis Presets</option><option value="2">Terra Presets</option><option value="3">Jardin Presets</option><option value="4">Mely Presets</option><option value="5">Onyx Presets</option><option value="6">Doré Presets</option><option value="7">Olbia LUTs</option></select>
+                  <svg width="10" height="7" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </label>
+              </span>
+              <span class="slot__price"><s class="slot__was">$119</s><b>$59</b></span>
+            </li>
+            <li class="slot is-free" data-slot="3">
+              <span class="slot__no" aria-hidden="true">4</span>
+              <span class="slot__shot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+              <span class="slot__body">
+                <label class="slot__swap"><span class="vh">Choose the pack in slot 4</span>
+                  <select class="slot__n" data-swap="3"><option value="0">Lora Presets</option><option value="1">Solis Presets</option><option value="2" selected>Terra Presets</option><option value="3">Jardin Presets</option><option value="4">Mely Presets</option><option value="5">Onyx Presets</option><option value="6">Doré Presets</option><option value="7">Olbia LUTs</option></select>
+                  <svg width="10" height="7" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </label>
+              </span>
+              <span class="slot__price"><s class="slot__was">$119</s><b>$59</b></span>
+            </li>
+            <li class="slot is-free" data-slot="4">
+              <span class="slot__no" aria-hidden="true">5</span>
+              <span class="slot__shot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
+              <span class="slot__body">
+                <label class="slot__swap"><span class="vh">Choose the pack in slot 5</span>
+                  <select class="slot__n" data-swap="4"><option value="0">Lora Presets</option><option value="1">Solis Presets</option><option value="2">Terra Presets</option><option value="3" selected>Jardin Presets</option><option value="4">Mely Presets</option><option value="5">Onyx Presets</option><option value="6">Doré Presets</option><option value="7">Olbia LUTs</option></select>
+                  <svg width="10" height="7" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </label>
+              </span>
+              <span class="slot__price"><s class="slot__was">$119</s><b>$59</b></span>
+            </li>
+          </ol>
+          <div class="sum">
+            <div class="sum__row">
+              <span class="sum__k">Bundle price</span>
+              <span class="sum__v"><s data-full>$385</s><b data-pay>$267</b></span>
+            </div>
+            <p class="sum__save">You keep <b data-save>$118</b> — the 2 cheapest packs are on us.</p>
+          </div>
+          <a class="btn btn--primary btn--lg offer__go" href="#">Add this bundle — <span data-pay>$267</span></a>
+          <p class="offer__fine">One-time purchase · instant download · every future release included · 14-day help-or-refund</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -3000,6 +3350,96 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     bar.addEventListener('pointerup', up);
     bar.addEventListener('pointercancel', up);
   });
+
+  /* ---- the closing offer ----
+     Two deals, one open at a time. Slot one is the plugin pack and is fixed;
+     every other slot is a select over the paid packs. Choosing a pack that is
+     already somewhere else swaps the two rather than letting it appear twice.
+     The bill is recomputed from the rows themselves, so the prices on screen
+     and the total can never drift apart. */
+  (function(){
+    var offer = document.querySelector('[data-offer]');
+    if(!offer) return;
+    var CATALOGUE = [{"n":"Lora Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"n":"Solis Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"n":"Terra Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"n":"Jardin Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"n":"Mely Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"n":"Onyx Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"n":"Doré Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"n":"Olbia LUTs","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"}];
+    var tabs  = [].slice.call(offer.querySelectorAll('[role="tab"]'));
+    var deals = [].slice.call(offer.querySelectorAll('[data-deal]'));
+
+    function money(s){ return Number(String(s).replace(/[^\d.]/g, '')) || 0; }
+
+    function draw(deal){
+      var pay = parseInt(deal.getAttribute('data-pay'), 10);
+      var rows = [].slice.call(deal.querySelectorAll('.slot'));
+      /* the free ones are the cheapest, whatever order they sit in */
+      var order = rows.map(function(r, i){ return {i:i, v: money(r.querySelector('.slot__price b').firstChild.nodeValue)}; })
+                      .sort(function(a, b){ return b.v - a.v; });
+      var free = {};
+      order.slice(pay).forEach(function(o){ free[o.i] = true; });
+      var full = 0, bill = 0;
+      rows.forEach(function(r, i){
+        var v = money(r.querySelector('.slot__price b').firstChild.nodeValue);
+        full += v;
+        if(free[i]) r.classList.add('is-free'); else { r.classList.remove('is-free'); bill += v; }
+      });
+      deal.querySelectorAll('[data-full]').forEach(function(e){ e.textContent = '$' + full; });
+      deal.querySelectorAll('[data-pay]').forEach(function(e){ if(e.hasAttribute('data-deal')) return; e.textContent = '$' + bill; });
+      deal.querySelectorAll('[data-save]').forEach(function(e){ e.textContent = '$' + (full - bill); });
+    }
+
+    function fill(row, item){
+      /* on a swappable row the name is the select and the browser has already
+         written it — only the picture and the price need saying */
+      var shot = row.querySelector('.slot__shot img'); if(shot){ shot.src = item.img; shot.alt = ''; }
+      row.querySelector('.slot__price b').firstChild.nodeValue = item.price;
+      row.querySelector('.slot__was').textContent = item.was;
+      var n = parseInt(row.getAttribute('data-slot'), 10);
+      var fan = row.closest('[data-deal]').querySelector('[data-fan="' + n + '"] img');
+      if(fan){ fan.src = item.img; fan.alt = item.n; }
+    }
+
+    deals.forEach(function(deal){
+      var sels = [].slice.call(deal.querySelectorAll('[data-swap]'));
+      sels.forEach(function(sel){
+        sel.dataset.prev = sel.value;
+        sel.addEventListener('change', function(){
+          var picked = sel.value, was = sel.dataset.prev;
+          /* whoever already had it takes the one being given up, so the
+             bundle never holds the same pack twice */
+          sels.forEach(function(other){
+            if(other !== sel && other.value === picked){
+              other.value = was; other.dataset.prev = was;
+              fill(other.closest('.slot'), CATALOGUE[was]);
+            }
+          });
+          sel.dataset.prev = picked;
+          fill(sel.closest('.slot'), CATALOGUE[picked]);
+          draw(deal);
+        });
+      });
+      draw(deal);
+    });
+
+    tabs.forEach(function(tab, n){
+      tab.tabIndex = n === 0 ? 0 : -1;
+      tab.addEventListener('click', function(){
+        tabs.forEach(function(t, i){
+          var on = i === n;
+          t.setAttribute('aria-selected', String(on));
+          t.tabIndex = on ? 0 : -1;
+          var panel = document.getElementById(t.getAttribute('aria-controls'));
+          if(!panel) return;
+          panel.classList.toggle('is-on', on);
+          if(on){ panel.removeAttribute('hidden'); draw(panel); } else { panel.setAttribute('hidden',''); }
+        });
+      });
+      tab.addEventListener('keydown', function(e){
+        var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+        if(!d) return;
+        e.preventDefault();
+        var to = (n + d + tabs.length) % tabs.length;
+        tabs[to].click(); tabs[to].focus();
+      });
+    });
+  })();
 
   /* ---- clip rails: arrows + disabled states ---- */
   var rails = [].slice.call(document.querySelectorAll('.strip'));
