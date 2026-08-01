@@ -645,7 +645,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    all move it, and a screen reader gets a labelled slider without any of it
    being rebuilt in script.
    ════════════════════════════════════════════════════════════════ */
-.deck--ba{--ba-per:3}
+/* The row has to read as the preset grid that happens to scroll, so it takes
+   its measurements from there rather than inventing its own: same column
+   count at the same breakpoints, the same 24px gutter between cards, and no
+   extra inset — the first card starts exactly where a preset card does.
+   Written as .deck.deck--ba so the generic deck rules in the media queries
+   below cannot quietly take the gap back. */
+.deck.deck--ba{
+  --ba-per:3;
+  --deck-gap:var(--s-6);
+  --inset:max(var(--gutter), calc((100% - var(--container)) / 2 + var(--gutter)));
+}
 /* This row has no slides to count, it scrolls by the cardful — so it uses the
    tutorials shelf's bar outright, .strip__bar and all: track centred, arrows
    at the bottom right of the column. Sharing the class rather than copying
@@ -1041,7 +1051,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    RESPONSIVE
    ════════════════════════════════════════════════════════════════ */
 @media (max-width:1100px){
-  .deck--ba{--ba-per:2}
   .rail{--per-view:5}
   .slide.is-on{grid-template-columns:minmax(0,1fr) minmax(0,480px);gap:var(--s-8)}
   .install,.faq{gap:var(--s-8)}
@@ -1076,6 +1085,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 @media (max-width:860px){
   .rail{--per-view:3}
+  .deck.deck--ba{--ba-per:2}
   :root{--section-y:var(--s-9)}
   .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
   /* swipe carries the row on a phone, so the arrows step aside */
@@ -1092,7 +1102,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .pstat .stars svg{width:10px;height:10px}
 }
 @media (max-width:600px){
-  .deck--ba{--ba-per:1}
+  .deck.deck--ba{--ba-per:1}
   :root{--gutter:var(--s-5);--section-y:var(--s-8)}
   .hero{padding:var(--s-9) 0 var(--s-10)}
   .cards{grid-template-columns:1fr}
