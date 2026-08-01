@@ -590,11 +590,74 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .rail::-webkit-scrollbar{display:none}
 
 /* ════════════════════════════════════════════════════════════════
+   6 · BEFORE / AFTER
+   A drag-to-compare frame rather than two pictures side by side: the eye
+   cannot judge a retouch across a gap, it has to see the same pixels change.
+   The handle is a range input under an invisible thumb, so a drag, a tap
+   anywhere on the frame and the arrow keys all move it, and a screen reader
+   gets a labelled slider without any of it being rebuilt in script.
+   ════════════════════════════════════════════════════════════════ */
+.ba__set{display:none}
+.ba__set.is-on{display:block;margin:0}
+.compare{
+  position:relative;aspect-ratio:3/2;overflow:hidden;
+  border-radius:var(--r-card);border:1px solid var(--border);background:var(--surface-sunken);
+  transition:box-shadow var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease);
+}
+.compare:hover{box-shadow:var(--sh-3);border-color:var(--border-strong)}
+.compare__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+/* clipped, not resized — a narrowed wrapper would squash the face */
+.compare__after{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--x)) 0 0)}
+.compare__tag{
+  position:absolute;bottom:var(--s-4);z-index:2;
+  font-size:var(--fs-2);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);text-transform:uppercase;
+  color:#fff;padding:var(--s-1) var(--s-3);border-radius:var(--r-full);background:rgba(10,37,64,.72);
+}
+.compare__tag--a{left:var(--s-4)}
+.compare__tag--b{right:var(--s-4)}
+.compare__bar{
+  position:absolute;top:0;bottom:0;left:var(--x);z-index:3;
+  width:2px;margin-left:-1px;background:rgba(255,255,255,.9);pointer-events:none;
+  box-shadow:0 0 0 1px rgba(10,37,64,.18);
+}
+.compare__bar i{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:40px;height:40px;border-radius:var(--r-full);
+  background:#fff;box-shadow:var(--sh-3);
+}
+/* the two chevrons on the handle, drawn rather than shipped as another file */
+.compare__bar i::before,.compare__bar i::after{
+  content:"";position:absolute;top:50%;width:6px;height:6px;
+  border-top:2px solid var(--fg-body);border-right:2px solid var(--fg-body);border-radius:1px;
+}
+.compare__bar i::before{left:11px;transform:translateY(-50%) rotate(-135deg)}
+.compare__bar i::after{right:11px;transform:translateY(-50%) rotate(45deg)}
+.compare__range{
+  position:absolute;inset:0;z-index:4;width:100%;height:100%;margin:0;
+  appearance:none;-webkit-appearance:none;background:transparent;cursor:ew-resize;
+}
+.compare__range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:44px;height:200px;cursor:ew-resize}
+.compare__range::-moz-range-thumb{width:44px;height:200px;border:0;background:transparent;cursor:ew-resize}
+.compare__range:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:var(--r-card)}
+
+.ba__cap{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s-2) var(--s-4);margin-top:var(--s-5)}
+.ba__t{margin:0;font-size:var(--fs-6);font-weight:var(--fw-semibold);letter-spacing:var(--tr-heading);color:var(--fg)}
+.ba__by{margin:0;font-size:var(--fs-3);color:var(--fg-muted)}
+/* the control bar every row on this page uses: middle centred, arrows at the
+   bottom right of the content */
+.ba__bar{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:var(--s-4);margin-top:var(--s-5)}
+.ba__nav{display:flex;gap:var(--s-2);justify-content:flex-end}
+
+/* ════════════════════════════════════════════════════════════════
    TUTORIALS — vertical 9:16 shelf, deliberately unlike the plugin
    rail above it: that one is product walkthroughs, this is technique.
    Reuses .strip / .rail / .arrow so the scroll behaviour is identical.
    ════════════════════════════════════════════════════════════════ */
-.reel{flex:0 0 176px;scroll-snap-align:start;display:block}
+.rail{--per-view:6}
+.reel{
+  flex:0 0 calc((100% - (var(--per-view) - 1) * var(--s-4)) / var(--per-view));
+  scroll-snap-align:start;display:block;
+}
 .reel__thumb{
   position:relative;display:block;aspect-ratio:9/16;overflow:hidden;
   border-radius:var(--r-card);background:var(--surface-sunken);
@@ -616,6 +679,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   letter-spacing:var(--tr-heading);font-variant-numeric:tabular-nums;
 }
 .reel__views svg{flex:none;opacity:.9}
+.reel__t{
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  margin-top:var(--s-3);min-height:calc(2 * var(--lh-snug) * var(--fs-3));
+  font-size:var(--fs-3);font-weight:var(--fw-medium);
+  line-height:var(--lh-snug);color:var(--fg);
+}
+.reel:hover .reel__t{color:var(--accent-fg)}
+.reel__cat{display:block;margin-top:var(--s-1);font-size:var(--fs-2);color:var(--fg-muted)}
 .reel__dur{
   position:absolute;top:var(--s-3);right:var(--s-3);z-index:2;
   font-size:var(--fs-1);font-weight:var(--fw-medium);color:#fff;
@@ -718,6 +789,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .price b{font-size:var(--fs-5);font-weight:var(--fw-bold);letter-spacing:var(--tr-heading);color:var(--fg)}
 .price s{font-size:var(--fs-2);color:var(--fg-muted)}
 .follow{display:flex;gap:var(--s-3);flex-wrap:wrap}
+/* the trailing mark says the link leaves the site — it sits after the handle
+   and stays quieter than it */
+.btn__out{margin-left:2px;color:var(--fg-faint)}
+.btn:hover .btn__out{color:var(--fg-muted)}
 .presets__more{display:flex;flex-direction:column;align-items:center;gap:var(--s-4);margin-top:var(--s-7)}
 
 /* ── walkthrough player — used by the install section ─────────── */
@@ -894,10 +969,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    RESPONSIVE
    ════════════════════════════════════════════════════════════════ */
 @media (max-width:1100px){
+  .rail{--per-view:5}
   .slide.is-on{grid-template-columns:minmax(0,1fr) minmax(0,480px);gap:var(--s-8)}
   .install,.faq{gap:var(--s-8)}
 }
 @media (max-width:1000px){
+  .rail{--per-view:4}
   .nav__links{display:none}
   /* three icons plus the wordmark need the slack back — tighter than desktop
      rather than dropping the brand name */
@@ -925,6 +1002,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .faq__head .lede{max-width:60ch}
 }
 @media (max-width:860px){
+  .rail{--per-view:3}
   :root{--section-y:var(--s-9)}
   .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
   /* swipe carries the row on a phone, so the arrows step aside */
@@ -954,7 +1032,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .pstat dt{font-size:11px}
   .pstat .stars{display:none}
   .clip{flex:0 0 152px}
-  .reel{flex:0 0 148px}
+  .rail{--per-view:2}
   .hero__actions .btn,.cta__actions .btn{width:100%}
   .totop{right:var(--s-4);bottom:var(--s-4);width:40px;height:40px}
   .hero__nav{gap:var(--s-4)}
@@ -1608,10 +1686,86 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   </div>
 </section>
 
+<!-- ══════════ 6 · BEFORE / AFTER ══════════
+     PLACEHOLDER DATA: both frames in every pair are stand-ins, and the second
+     and third captions are written here rather than supplied. -->
+<section class="section" id="results">
+  <div class="wrap">
+    <div class="section__head" data-reveal>
+      <div>
+        <p class="eyebrow">Before / after</p>
+        <h2>See it on real skin</h2>
+        <p class="lede">Drag the handle to compare.</p>
+      </div>
+      <a class="link" href="#presets">Browse the packs <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+
+    <div id="baSets" data-reveal>
+      <figure class="ba__set is-on" id="ba-0">
+        <div class="compare" data-compare style="--x:50%">
+          <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="Before the edit" loading="lazy" onerror="this.style.display='none'">
+          <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="After the edit" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="compare__tag compare__tag--a">Before</span>
+          <span class="compare__tag compare__tag--b">After</span>
+          <span class="compare__bar" aria-hidden="true"><i></i></span>
+          <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                 aria-label="Reveal the edited version: Natural Retouch. Timeless Color.">
+        </div>
+        <figcaption class="ba__cap">
+          <p class="ba__t">Natural Retouch. Timeless Color.</p>
+          <p class="ba__by">Edited with US Photoshop Plugin + Solis Preset Pack</p>
+        </figcaption>
+      </figure>
+      <figure class="ba__set" id="ba-1" hidden>
+        <div class="compare" data-compare style="--x:50%">
+          <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" alt="Before the edit" loading="lazy" onerror="this.style.display='none'">
+          <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" alt="After the edit" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="compare__tag compare__tag--a">Before</span>
+          <span class="compare__tag compare__tag--b">After</span>
+          <span class="compare__bar" aria-hidden="true"><i></i></span>
+          <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                 aria-label="Reveal the edited version: Clean skin, texture kept.">
+        </div>
+        <figcaption class="ba__cap">
+          <p class="ba__t">Clean skin, texture kept.</p>
+          <p class="ba__by">Edited with RetouchX + Lora Preset Pack</p>
+        </figcaption>
+      </figure>
+      <figure class="ba__set" id="ba-2" hidden>
+        <div class="compare" data-compare style="--x:50%">
+          <img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" alt="Before the edit" loading="lazy" onerror="this.style.display='none'">
+          <span class="compare__after"><img class="compare__img" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" alt="After the edit" loading="lazy" onerror="this.style.display='none'"></span>
+          <span class="compare__tag compare__tag--a">Before</span>
+          <span class="compare__tag compare__tag--b">After</span>
+          <span class="compare__bar" aria-hidden="true"><i></i></span>
+          <input class="compare__range" type="range" min="0" max="100" step="0.5" value="50"
+                 aria-label="Reveal the edited version: One look across the gallery.">
+        </div>
+        <figcaption class="ba__cap">
+          <p class="ba__t">One look across the gallery.</p>
+          <p class="ba__by">Edited with Lightroom AI Color + Terra Preset Pack</p>
+        </figcaption>
+      </figure>
+      <div class="ba__bar">
+        <span aria-hidden="true"></span>
+        <div class="dots">
+          <button class="dot" type="button" aria-current="true" aria-label="Show example 1 of 3: Natural Retouch. Timeless Color."><i></i></button>
+          <button class="dot" type="button" aria-current="false" aria-label="Show example 2 of 3: Clean skin, texture kept."><i></i></button>
+          <button class="dot" type="button" aria-current="false" aria-label="Show example 3 of 3: One look across the gallery."><i></i></button>
+        </div>
+        <div class="ba__nav">
+          <button class="arrow" type="button" data-ba="-1" aria-label="Previous example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button class="arrow" type="button" data-ba="1" aria-label="Next example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ══════════ 6 · TUTORIALS ══════════
      PLACEHOLDER DATA: titles, durations and view counts below are stand-ins.
      Swap in the real Reels — and their real numbers — before this goes live. -->
-<section class="section" id="tutorials">
+<section class="section section--tint" id="tutorials">
   <div class="wrap">
     <div class="section__head" data-reveal>
       <div>
@@ -1620,76 +1774,92 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <p class="lede">Real edits, a minute each.</p>
       </div>
       <div class="follow">
-        <a class="btn btn--secondary" href="#" aria-label="Watch every tutorial on Instagram"><svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="9" r="3.6" stroke="currentColor" stroke-width="1.6"/><circle cx="13.4" cy="4.6" r="1.05" fill="currentColor"/></svg>Instagram</a>
-        <a class="btn btn--secondary" href="#" aria-label="Watch every tutorial on YouTube"><svg width="19" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true"><rect x="1" y="1" width="18" height="12" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M8.4 4.4l4.4 2.6-4.4 2.6V4.4z" fill="currentColor"/></svg>YouTube</a>
+        <a class="btn btn--secondary" href="#" aria-label="Watch every tutorial on Instagram, @ugursezerphoto"><svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="9" r="3.6" stroke="currentColor" stroke-width="1.6"/><circle cx="13.4" cy="4.6" r="1.05" fill="currentColor"/></svg><span>@ugursezerphoto</span><svg class="btn__out" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3.4 8.6L8.6 3.4M4.6 3.4h4v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a class="btn btn--secondary" href="#" aria-label="Watch every tutorial on YouTube, ugursezer"><svg width="19" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true"><rect x="1" y="1" width="18" height="12" rx="4" stroke="currentColor" stroke-width="1.6"/><path d="M8.4 4.4l4.4 2.6-4.4 2.6V4.4z" fill="currentColor"/></svg><span>ugursezer</span><svg class="btn__out" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3.4 8.6L8.6 3.4M4.6 3.4h4v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
       </div>
     </div>
 
     <div class="strip" data-reveal>
       <div class="rail">
 
-        <a class="reel" href="#" aria-label="Skin that still looks like skin">
+        <a class="reel" href="#">
           <span class="reel__thumb">
             <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
             <span class="reel__dur tnum">1:04</span>
             <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>4.2M<span class="vh"> views</span></span>
           </span>
+          <span class="reel__t">Skin that still looks like skin</span>
+          <span class="reel__cat">Retouching</span>
         </a>
 
-        <a class="reel" href="#" aria-label="Fixing mixed lighting in one pass">
+        <a class="reel" href="#">
           <span class="reel__thumb">
             <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
             <span class="reel__dur tnum">0:48</span>
             <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>2.8M<span class="vh"> views</span></span>
           </span>
+          <span class="reel__t">Fixing mixed lighting in one pass</span>
+          <span class="reel__cat">Colour</span>
         </a>
 
-        <a class="reel" href="#" aria-label="Why your whites keep going grey">
+        <a class="reel" href="#">
           <span class="reel__thumb">
             <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
             <span class="reel__dur tnum">1:12</span>
             <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>1.9M<span class="vh"> views</span></span>
           </span>
+          <span class="reel__t">Why your whites keep going grey</span>
+          <span class="reel__cat">Colour</span>
         </a>
 
-        <a class="reel" href="#" aria-label="One preset across five skin tones">
+        <a class="reel" href="#">
           <span class="reel__thumb">
             <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
             <span class="reel__dur tnum">0:56</span>
             <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>1.6M<span class="vh"> views</span></span>
           </span>
+          <span class="reel__t">One preset across five skin tones</span>
+          <span class="reel__cat">Presets</span>
         </a>
 
-        <a class="reel" href="#" aria-label="Culling 800 frames without losing the day">
+        <a class="reel" href="#">
           <span class="reel__thumb">
             <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
             <span class="reel__dur tnum">1:21</span>
             <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>1.2M<span class="vh"> views</span></span>
           </span>
+          <span class="reel__t">Culling 800 frames without losing the day</span>
+          <span class="reel__cat">Workflow</span>
         </a>
 
-        <a class="reel" href="#" aria-label="The dodge and burn shortcut nobody uses">
+        <a class="reel" href="#">
           <span class="reel__thumb">
             <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
             <span class="reel__dur tnum">1:08</span>
             <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>980K<span class="vh"> views</span></span>
           </span>
+          <span class="reel__t">The dodge and burn shortcut nobody uses</span>
+          <span class="reel__cat">Retouching</span>
         </a>
 
-        <a class="reel" href="#" aria-label="Matching two cameras in one pass">
+        <a class="reel" href="#">
           <span class="reel__thumb">
             <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
             <span class="reel__dur tnum">0:52</span>
             <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>870K<span class="vh"> views</span></span>
           </span>
+          <span class="reel__t">Matching two cameras in one pass</span>
+          <span class="reel__cat">Colour</span>
         </a>
 
-        <a class="reel" href="#" aria-label="Stop over-sharpening portraits">
+        <a class="reel" href="#">
           <span class="reel__thumb">
             <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=384&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'">
             <span class="reel__dur tnum">1:15</span>
             <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>740K<span class="vh"> views</span></span>
           </span>
+          <span class="reel__t">Stop over-sharpening portraits</span>
+          <span class="reel__cat">Retouching</span>
         </a>
 
       </div>
@@ -1706,7 +1876,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 </section>
 
 <!-- ══════════ 7 · HOW TO INSTALL ══════════ -->
-<section class="section section--tint" id="install">
+<section class="section" id="install">
   <div class="wrap">
     <div class="section__head" data-reveal>
       <div>
@@ -1757,7 +1927,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 </section>
 
 <!-- ══════════ 8 · FAQ ══════════ -->
-<section class="section" id="faq">
+<section class="section section--tint" id="faq">
   <div class="wrap">
     <div class="faq">
       <div class="faq__head" data-reveal>
@@ -2031,11 +2201,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     var rail = strip.querySelector('.rail');
     strip.querySelectorAll('.arrow').forEach(function(btn){
       btn.addEventListener('click', function(){
-        /* measure whatever this rail actually holds — clips and reels differ in width */
-        var card = rail.firstElementChild;
+        /* a page at a time: the cards are sized so a whole number of them
+           fills the rail, so this always lands on a card boundary */
         var gap = parseFloat(getComputedStyle(rail).columnGap) || 16;
-        var step = (card ? card.offsetWidth : 176) + gap;
-        rail.scrollBy({left: step * 2 * parseInt(btn.getAttribute('data-dir'), 10), behavior: still ? 'auto' : 'smooth'});
+        var step = rail.clientWidth + gap;
+        rail.scrollBy({left: step * parseInt(btn.getAttribute('data-dir'), 10), behavior: still ? 'auto' : 'smooth'});
       });
     });
     rail.addEventListener('scroll', syncRails, {passive:true});
@@ -2222,6 +2392,33 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       if(next !== null){ selectPlugin(next); ptabs[next].focus({preventScroll:true}); e.preventDefault(); }
     });
   });
+
+  /* ---- before / after ---- */
+  document.querySelectorAll('[data-compare]').forEach(function(box){
+    var range = box.querySelector('.compare__range');
+    function draw(){ box.style.setProperty('--x', range.value + '%'); }
+    range.addEventListener('input', draw);
+    draw();
+  });
+  var baBox = document.getElementById('baSets');
+  if(baBox){
+    var baSets = [].slice.call(baBox.querySelectorAll('.ba__set')),
+        baDots = [].slice.call(baBox.querySelectorAll('.dot')),
+        baIdx = 0;
+    function baShow(i){
+      baIdx = (i + baSets.length) % baSets.length;
+      baSets.forEach(function(set, n){
+        var on = n === baIdx;
+        set.classList.toggle('is-on', on);
+        if(on){ set.removeAttribute('hidden'); } else { set.setAttribute('hidden',''); }
+      });
+      baDots.forEach(function(d, n){ d.setAttribute('aria-current', String(n === baIdx)); });
+    }
+    baDots.forEach(function(d, n){ d.addEventListener('click', function(){ baShow(n); }); });
+    baBox.querySelectorAll('[data-ba]').forEach(function(btn){
+      btn.addEventListener('click', function(){ baShow(baIdx + parseInt(btn.getAttribute('data-ba'), 10)); });
+    });
+  }
 
   /* ---- play button (mockup annotation) ---- */
   document.querySelectorAll('.play').forEach(function(btn){
