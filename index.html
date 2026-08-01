@@ -646,12 +646,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    being rebuilt in script.
    ════════════════════════════════════════════════════════════════ */
 .deck--ba{--ba-per:3}
-/* this row has no slides to count, it scrolls by the cardful — so the same
-   track-and-thumb the tutorials shelf uses, leading the row with the arrows
-   at its far end */
-.deck__bar--ba{display:flex;align-items:center;gap:var(--s-5)}
-.deck__bar--ba .deck__arrows{margin-left:auto}
-.deck__bar--ba .progress{width:min(320px,45%)}
+/* This row has no slides to count, it scrolls by the cardful — so it uses the
+   tutorials shelf's bar outright, .strip__bar and all: track centred, arrows
+   at the bottom right of the column. Sharing the class rather than copying
+   the numbers is what keeps the two rows from drifting apart. */
 .deck--ba .deck__pane{
   flex:0 0 calc((100% - (var(--ba-per) - 1) * var(--deck-gap)) / var(--ba-per));
   cursor:auto;
@@ -1908,9 +1906,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           </article>
         </div>
     </div>
-    <div class="deck__bar deck__bar--ba wrap">
+    <div class="strip__bar wrap">
+      <span aria-hidden="true"></span>
       <span class="progress" aria-hidden="true"><i></i></span>
-      <div class="deck__arrows">
+      <div class="strip__nav">
         <button class="arrow" type="button" data-ba-step="-1" aria-label="Previous example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
         <button class="arrow" type="button" data-ba-step="1" aria-label="Next example"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </div>
