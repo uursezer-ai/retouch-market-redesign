@@ -336,6 +336,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* the width cap lives on the box, in terms of the BASE size — if it sat on
    the h1 as 16ch it would shrink in step with the font and the line count
    would never drop */
+.hero__slides{position:relative}
 .slide__title{
   min-height:calc(var(--h1-size) * var(--lh-display) * 3);
   max-width:calc(var(--h1-size) * 8.8);
@@ -351,12 +352,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   background:var(--surface-sunken);
 }
 .showcase__frame img,.showcase__v{display:block;width:100%;height:100%;object-fit:cover}
-/* the line under the headline. Every slide carries one, or the first would
-   stand taller than the other two and the slider's height would jump */
-.slide__text{
-  margin:var(--s-4) 0 0;font-size:var(--fs-6);line-height:var(--lh-relaxed);
-  color:var(--fg-body);max-width:42ch;text-wrap:pretty;
-}
 
 /* ── slide controls ─────────────────────────────────────────────── */
 /* three columns so the dots land in the middle of the copy column and the
@@ -422,7 +417,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .section--tint{background:var(--bg-subtle);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
 .section__head{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s-8);margin-bottom:var(--s-7)}
 .section__head h2{max-width:24ch}
-.section__head .lede{max-width:42ch}
+.section__head .lede{max-width:78ch}
 [id]{scroll-margin-top:calc(var(--nav-h) + var(--s-4))}
 
 /* ════════════════════════════════════════════════════════════════
@@ -1043,7 +1038,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .slide.is-on{grid-template-columns:1fr;gap:var(--s-6)}
   .slide__media{order:1}
   .slide__copy{order:2}
-  .slide__title{max-width:calc(var(--h1-size) * 11)}
+  .hero__slides{position:relative}
+.slide__title{max-width:calc(var(--h1-size) * 11)}
   .faq{grid-template-columns:1fr;gap:var(--s-7)}
   .faq__head{position:static}
   .faq__head .lede{max-width:60ch}
@@ -1178,8 +1174,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="slide is-on" role="group" aria-roledescription="slide" aria-label="1 of 3">
         <div class="slide__copy">
           <p class="eyebrow">Commercial</p>
-          <div class="slide__title"><h1 id="heroTitle">One Vision, One Workflow.</h1></div>
-          <p class="slide__text">RetouchMarket Photo Editing System</p>
+          <div class="slide__title"><h1 id="heroTitle">One Vision, One Workflow. Presets &amp; Plugins</h1></div>
           <div class="hero__actions">
             <a class="btn btn--primary btn--lg" href="https://www.youtube.com/watch?v=EBNI8JHmJ4o" target="_blank" rel="noopener">Watch Full Video <svg class="btn__out" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3.4 8.6L8.6 3.4M4.6 3.4h4v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           </div>
@@ -1197,7 +1192,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <div class="slide__copy">
           <p class="eyebrow">Plugins</p>
           <div class="slide__title"><h1>Retouch forty portraits in a single pass.</h1></div>
-          <p class="slide__text">RetouchX Plugin for Photoshop and desktop</p>
           <div class="hero__actions">
             <a class="btn btn--primary btn--lg" href="#plugins">Watch RetouchX Plugin work</a>
           </div>
@@ -1212,7 +1206,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <div class="slide__copy">
           <p class="eyebrow">Tutorials</p>
           <div class="slide__title"><h1>Learn the technique, not just where to click.</h1></div>
-          <p class="slide__text">Real edits, a minute each</p>
           <div class="hero__actions">
             <a class="btn btn--primary btn--lg" href="#tutorials">Browse the tutorials</a>
           </div>
@@ -1259,7 +1252,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <div>
         <p class="eyebrow">Plugins</p>
         <h2>3 Plugins in 1 Pack</h2>
-        <p class="lede">Photoshop and Lightroom Classic.</p>
+        <p class="lede">Everything you need for faster, more consistent photo editing in one bundle.</p>
       </div>
       <a class="link" href="#">All plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
@@ -1566,8 +1559,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="section__head" data-reveal>
       <div>
         <p class="eyebrow">Presets &amp; LUTs</p>
-        <h2>Twelve preset packs</h2>
-        <p class="lede">XMP for desktop, DNG for mobile.</p>
+        <h2>Original Signature Looks</h2>
+        <p class="lede">Created by one of Türkiye&#8217;s most recognized wedding photographers.</p>
       </div>
       <div class="sort">
         <button class="sort__btn" type="button" id="sortBtn" aria-expanded="false" aria-haspopup="true" aria-controls="sortMenu">
@@ -1746,8 +1739,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="section__head" data-reveal>
       <div>
         <p class="eyebrow">Before / after</p>
-        <h2>See it on real skin</h2>
-        <p class="lede">Drag the handle to compare.</p>
+        <h2>Real Results. No Tricks.</h2>
+        <p class="lede">Drag the slider to compare skin tones, colors, and fine details.</p>
       </div>
       <a class="link" href="#presets">Browse the packs <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
@@ -1877,8 +1870,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="section__head" data-reveal>
       <div>
         <p class="eyebrow">Tutorials</p>
-        <h2>Learn the technique</h2>
-        <p class="lede">Real edits, a minute each.</p>
+        <h2>Learn from the Creator</h2>
+        <p class="lede">Every tutorial is taught by the photographer who created the tools.</p>
       </div>
       <div class="follow">
         <a class="btn btn--secondary" href="#" aria-label="Watch every tutorial on Instagram, @ugursezerphoto"><svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="1" width="16" height="16" rx="5" stroke="currentColor" stroke-width="1.6"/><circle cx="9" cy="9" r="3.6" stroke="currentColor" stroke-width="1.6"/><circle cx="13.4" cy="4.6" r="1.05" fill="currentColor"/></svg><span>@ugursezerphoto</span><svg class="btn__out" width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M3.4 8.6L8.6 3.4M4.6 3.4h4v4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
@@ -1988,8 +1981,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="section__head" data-reveal>
       <div>
         <p class="eyebrow">Installing</p>
-        <h2>Set up in two minutes</h2>
-        <p class="lede">No licence server, nothing to set up.</p>
+        <h2>Ready in One Click</h2>
+        <p class="lede">Install everything automatically with the RetouchMarket App.</p>
       </div>
       <a class="link" href="#">Read the written guide
         <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -2225,11 +2218,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     document.querySelectorAll('.slide h1').forEach(function(h1){
       var slide = h1.closest('.slide'), was = slide.hasAttribute('hidden');
       /* measure hidden slides too, without letting them flash */
+      /* pinned to the slider's own box: left/right nail it to the width the
+         slide will really have, or a hidden one is measured wider than it
+         ends up and the headline is left a line too big */
       if(was){ slide.style.visibility='hidden'; slide.style.position='absolute';
+               slide.style.left='0'; slide.style.right='0'; slide.style.top='0';
                slide.style.display='grid'; slide.removeAttribute('hidden'); }
       fitTitle(h1);
       if(was){ slide.setAttribute('hidden',''); slide.style.visibility='';
-               slide.style.position=''; slide.style.display=''; }
+               slide.style.position=''; slide.style.left=''; slide.style.right='';
+               slide.style.top=''; slide.style.display=''; }
     });
   }
 
