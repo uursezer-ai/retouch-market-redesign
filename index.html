@@ -935,7 +935,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 #results.is-2up .compare{cursor:zoom-out}
 /* below the breakpoint the row is already two across — nothing to promise */
 @media (max-width:1000px){#results .compare{cursor:default}}
-.zoom{flex:none;align-self:flex-end}
+.zoom{flex:none}
 .zoom__i rect:last-child{transition:x var(--dur-2) var(--ease), width var(--dur-2) var(--ease)}
 .zoom[aria-pressed="true"]{
   border-color:var(--accent);color:var(--accent-fg);background:var(--accent-bg);
@@ -946,8 +946,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
 /* the pack chips: a scrolling row of pills, the chosen one outlined rather
    than filled so the row reads as one control and not six buttons */
+/* one line: what you are looking at, and how big you want to see it */
+.pbar{display:flex;align-items:center;gap:var(--s-4);margin-bottom:var(--s-6)}
 .pchips{
-  display:flex;gap:var(--s-2);margin-bottom:var(--s-6);
+  flex:1;min-width:0;
+  display:flex;gap:var(--s-2);
   overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;
   padding-bottom:var(--s-1);
 }
@@ -1040,7 +1043,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .btn:hover .btn__out{color:var(--fg-muted)}
 /* the section pays 64px underneath, so the block gets the same above it and
    sits in the middle of its own space rather than at the top of it */
-.presets__more{display:flex;flex-direction:column;align-items:center;gap:var(--s-4);margin-top:var(--s-10)}
 
 /* ── walkthrough player — used by the install section ─────────── */
 /* same shell as a preset card: thin border, 12px corner, no resting shadow,
@@ -1383,16 +1385,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   from{box-shadow:0 8px 22px rgba(105,87,255,.42), 0 0 0 3px rgba(99,91,255,.20)}
   to  {box-shadow:0 10px 28px rgba(105,87,255,.62), 0 0 0 8px rgba(99,91,255,.06)}
 }
-.prod__x{
-  position:absolute;right:var(--s-2);top:var(--s-2);z-index:3;
-  display:grid;place-items:center;width:26px;height:26px;border-radius:var(--r-full);
-  background:rgba(6,12,22,.68);color:#FF8A8A;backdrop-filter:blur(4px);
-  opacity:0;transform:scale(.9);
-  transition:opacity var(--dur-1) var(--ease), transform var(--dur-1) var(--ease),
+/* the swap sits under the name, on its own line, on every box — a control
+   you can see is a control you can plan around, which a cross that waits for
+   the pointer never was */
+.prod__swap{
+  margin-top:var(--s-3);width:100%;height:30px;border-radius:8px;
+  border:1px solid var(--border);background:transparent;color:var(--fg-muted);
+  font-size:var(--fs-1);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
+  transition:color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease),
              background var(--dur-1) var(--ease);
 }
-.prod:hover .prod__x,.prod:focus-within .prod__x{opacity:1;transform:none}
-.prod__x:hover{background:rgba(120,22,32,.86);color:#fff}
+.prod__swap:hover{color:var(--accent-fg);border-color:var(--accent-border);background:var(--accent-bg)}
 .prod__body{display:flex;flex-direction:column;gap:var(--s-2);min-width:0;padding:var(--s-4) var(--s-1) var(--s-1)}
 .prod__by{display:flex;align-items:center;gap:var(--s-2);min-width:0;font-size:var(--fs-1);color:var(--fg-muted)}
 .prod__by .avatar{width:24px;height:24px;font-size:9px;background:var(--surface-sunken)}
@@ -1484,7 +1487,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* ════════════════════════════════════════════════════════════════
    10 · FOOTER
    ════════════════════════════════════════════════════════════════ */
-.footer{border-top:1px solid var(--border);padding:var(--s-10) 0 var(--s-7)}
+.footer{background:#F7F9FC;border-top:1px solid var(--border);padding:var(--s-10) 0 var(--s-7)}
 .footer__top{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));gap:var(--s-8)}
 .footer__intro p{margin:var(--s-4) 0 var(--s-5);font-size:var(--fs-3);line-height:var(--lh-normal);color:var(--fg-muted);max-width:36ch}
 .social{display:flex;gap:var(--s-2);margin-bottom:var(--s-5)}
@@ -1607,7 +1610,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .oswitch__b{min-width:0;flex:1;padding-inline:var(--s-2)}
   .oswitch__b span{letter-spacing:.03em}
   .prods{--col:calc((100% - var(--s-3)) / 2);grid-template-columns:repeat(2,minmax(0,var(--col)));gap:var(--s-3)}
-  .prod__x{opacity:1;transform:none}
   .choices{grid-template-columns:minmax(0,1fr)}
   .custom{padding:var(--s-5) var(--s-4)}
   .oact,.oact__row{align-self:stretch;align-items:stretch;flex-direction:column}
@@ -1814,7 +1816,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <h2>3 Plugins in 1 Pack</h2>
         <p class="lede">Everything you need for faster, more consistent photo editing in one bundle.</p>
       </div>
-      <a class="link" href="#">All plugin details <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
 
   </div>
@@ -2309,10 +2310,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       </article>
     </div>
 
-    <div class="presets__more">
-      <p class="meta tnum">Showing 9 of 12 packs</p>
-      <button class="btn btn--secondary" type="button">Load more</button>
-    </div>
   </div>
 </section>
 
@@ -2384,7 +2381,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <div>
         <p class="eyebrow">Before / after</p>
         <h2>Choose a Preset. See the Difference.</h2>
-        <p class="lede">Select a preset and drag the slider to see its real effect on colors and skin tones.</p>
+      </div>
+    </div>
+    <div class="pbar" data-reveal>
+    <div class="pchips" role="tablist" aria-label="Preset packs">
+      <button class="pchip" type="button" role="tab" id="bat-0" aria-controls="bap-0" aria-selected="true">Lora</button>
+      <button class="pchip" type="button" role="tab" id="bat-1" aria-controls="bap-1" aria-selected="false">Solis</button>
+      <button class="pchip" type="button" role="tab" id="bat-2" aria-controls="bap-2" aria-selected="false">Terra</button>
+      <button class="pchip" type="button" role="tab" id="bat-3" aria-controls="bap-3" aria-selected="false">Jardin</button>
+      <button class="pchip" type="button" role="tab" id="bat-4" aria-controls="bap-4" aria-selected="false">Mely</button>
+      <button class="pchip" type="button" role="tab" id="bat-5" aria-controls="bap-5" aria-selected="false">Onyx</button>
       </div>
       <button class="btn btn--secondary zoom" type="button" data-zoom aria-pressed="false">
         <svg class="zoom__i" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
@@ -2393,14 +2399,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </svg>
         <span>2&times; view</span>
       </button>
-    </div>
-    <div class="pchips" role="tablist" aria-label="Preset packs" data-reveal>
-      <button class="pchip" type="button" role="tab" id="bat-0" aria-controls="bap-0" aria-selected="true">Lora</button>
-      <button class="pchip" type="button" role="tab" id="bat-1" aria-controls="bap-1" aria-selected="false">Solis</button>
-      <button class="pchip" type="button" role="tab" id="bat-2" aria-controls="bap-2" aria-selected="false">Terra</button>
-      <button class="pchip" type="button" role="tab" id="bat-3" aria-controls="bap-3" aria-selected="false">Jardin</button>
-      <button class="pchip" type="button" role="tab" id="bat-4" aria-controls="bap-4" aria-selected="false">Mely</button>
-      <button class="pchip" type="button" role="tab" id="bat-5" aria-controls="bap-5" aria-selected="false">Onyx</button>
     </div>
   </div>
 
@@ -2883,9 +2881,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <h2>Ready in One Click</h2>
         <p class="lede">Install everything automatically with the RetouchMarket App.</p>
       </div>
-      <a class="link" href="#">Read the written guide
-        <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
     </div>
 
     <div class="install" data-reveal>
@@ -2986,7 +2981,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      The photographs, names and handles come from the client's archive.
      PLACEHOLDER: five of the six quotes are written here rather than supplied,
      and no follower counts were given. -->
-<section class="section section--tint" id="voices">
+<section class="section" id="voices">
   <div class="wrap">
     <div class="section__head" data-reveal>
       <div>
@@ -3436,8 +3431,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       return free;
     }
 
-    var CROSS = '<svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1.5 1.5l9 9m0-9l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>';
-
     function render(){
       var list = ordered();
       state.picks = list;                        // keep the state in the order it is shown
@@ -3485,14 +3478,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         '<img src="' + esc(p.img) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
         '<span class="prod__no">' + pad(n + 1) + '</span>' +
         (isFree ? '<span class="prod__badge">Free</span>' : '')));
-      var x = el('button', 'prod__x', CROSS);
-      x.type = 'button';
-      x.setAttribute('aria-label', 'Remove ' + p.name + ' from the bundle');
-      x.addEventListener('click', function(){ state.picks.splice(n, 1); render(); });
-      f.appendChild(x);
-      f.appendChild(el('figcaption', 'prod__body',
+      var body = el('figcaption', 'prod__body',
         '<span class="prod__by"><span class="avatar">' + esc(p.ini) + '</span><b>' + esc(p.by) + '</b></span>' +
-        '<h3 class="prod__t">' + esc(p.name) + '</h3>'));
+        '<h3 class="prod__t">' + esc(p.name) + '</h3>' +
+        '<button class="prod__swap" type="button">Change</button>');
+      var swap = body.querySelector('.prod__swap');
+      swap.setAttribute('aria-label', 'Change ' + p.name + ' for another pack');
+      swap.addEventListener('click', function(){ state.picks.splice(n, 1); render(); });
+      f.appendChild(body);
       return f;
     }
     function emptyBox(n){
@@ -3889,7 +3882,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       sec.classList.toggle('is-2up', on);
       window.dispatchEvent(new Event('resize'));
     }
-    btn.addEventListener('click', function(){ set(btn.getAttribute('aria-pressed') !== 'true'); });
+    btn.addEventListener('click', function(){
+      set(btn.getAttribute('aria-pressed') !== 'true');
+      toChips(btn);
+    });
 
     /* the picture is what you want bigger, so it is the other way in. A
        click and not a drag: the split follows the pointer across this same
@@ -3912,6 +3908,29 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   });
 
   /* ---- preset chips: one row of comparisons at a time ---- */
+  /* bring the chip row up under the bar, with a hand's width above it. Not
+     the section's own top edge — that carries 64px of section padding on top
+     of the bar's clearance — and not the heading either: by the time you are
+     pressing a chip you have read it, and what you want on screen is the row
+     you are choosing for. */
+  function toChips(from){
+    var bar = from.closest('section').querySelector('.pbar');
+    if(!bar) return;
+    /* the reveal holds this row 14px low until it fires, and measuring it
+       there lands the scroll short — settle it first, without animating */
+    if(!bar.classList.contains('is-in')){
+      var keep = bar.style.transition;
+      bar.style.transition = 'none';
+      bar.classList.add('is-in');
+      void bar.offsetWidth;
+      bar.style.transition = keep;
+    }
+    var nav = document.getElementById('nav');
+    var gap = (nav ? nav.offsetHeight : 0) + 28;
+    window.scrollTo({top: window.scrollY + bar.getBoundingClientRect().top - gap,
+                     behavior: still ? 'auto' : 'smooth'});
+  }
+
   (function(){
     var chips = [].slice.call(document.querySelectorAll('.pchips [role="tab"]'));
     if(!chips.length) return;
@@ -3935,15 +3954,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         row.scrollTo({left: chips[n].offsetLeft - (row.clientWidth - chips[n].offsetWidth) / 2,
                       behavior: still ? 'auto' : 'smooth'});
       }
-      /* and bring what you just chose up under the bar. Not the section's own
-         top edge: that carries 64px of section padding on top of the bar's
-         clearance, which lands the heading a screen-inch down with nothing in
-         between. The head itself goes just under the bar instead. */
-      var head = chips[n].closest('section').querySelector('.section__head') || chips[n];
-      var nav = document.getElementById('nav');
-      var gap = (nav ? nav.offsetHeight : 0) + 24;
-      window.scrollTo({top: window.scrollY + head.getBoundingClientRect().top - gap,
-                       behavior: still ? 'auto' : 'smooth'});
+      toChips(chips[n]);
     }
     chips.forEach(function(c, n){
       c.tabIndex = n === 0 ? 0 : -1;
