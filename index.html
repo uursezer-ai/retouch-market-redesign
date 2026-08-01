@@ -415,7 +415,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    closes on. The palette is declared once and scoped to both, so every
    component inside either of them turns over on its own terms — and the two
    ends of the page cannot drift apart later. */
-.topband,.offer2{
+.topband,.offer2,.footer{
   position:relative;isolation:isolate;overflow:hidden;
   --n-0:#0B1020;
   --n-25:#0C1224;
@@ -455,20 +455,20 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    the base is the room's ambient light and drifts slowly,
    ::before is the pool that follows the pointer,
    ::after is one blurred blob that leans against it, for parallax. */
-.topband__glow{
+.topband__glow,.footer__glow{
   position:absolute;inset:-20% -10%;z-index:-1;pointer-events:none;
   background:
     radial-gradient(46% 52% at 10% 84%, rgba(140,88,255,.26) 0%, rgba(140,88,255,0) 70%),
     radial-gradient(40% 44% at 84% 14%, rgba(56,92,235,.22) 0%, rgba(56,92,235,0) 72%);
   animation:bandDrift 34s var(--ease) infinite alternate;
 }
-.topband__glow::before{
+.topband__glow::before,.footer__glow::before{
   content:"";position:absolute;inset:0;
   background:
     radial-gradient(620px circle at var(--px) var(--py), rgba(92,72,255,.22), transparent 60%),
     radial-gradient(520px circle at calc(var(--px) - 38%) calc(var(--py) + 38%), rgba(39,98,220,.16), transparent 62%);
 }
-.topband__glow::after{
+.topband__glow::after,.footer__glow::after{
   content:"";position:absolute;right:7%;top:14%;
   width:460px;height:460px;border-radius:50%;
   background:rgb(92,70,255);opacity:.16;filter:blur(80px);
@@ -513,9 +513,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .nav.is-dark .cart__n{border-color:#080C18}
 .nav.is-dark.is-stuck{box-shadow:none}
 @media (prefers-reduced-motion:reduce){
-  .topband__glow,.offer2__glow{animation:none}
+  .topband__glow,.offer2__glow,.footer__glow{animation:none}
   .topband__glow::before,.topband__glow::after,
-  .offer2__glow::before,.offer2__glow::after{display:none}
+  .offer2__glow::before,.offer2__glow::after,
+  .footer__glow::before,.footer__glow::after{display:none}
+  .offer2__grid{display:none}
   .prod.is-free .prod__badge{animation:none}
   .topband .slide__media{transform:none}
 }
@@ -811,8 +813,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .compare__after{position:absolute;inset:0;clip-path:inset(0 calc(100% - var(--x)) 0 0)}
 .compare__tag{
   position:absolute;top:var(--s-3);z-index:2;
-  font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);text-transform:uppercase;
-  color:#fff;padding:var(--s-1) var(--s-3);border-radius:var(--r-full);background:rgba(10,37,64,.72);
+  font-size:10px;font-weight:var(--fw-semibold);letter-spacing:.14em;text-transform:uppercase;
+  color:#fff;padding:3px var(--s-2);border-radius:5px;background:rgba(8,20,36,.62);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
 }
 .compare__tag--a{left:var(--s-3)}
 .compare__tag--b{right:var(--s-3)}
@@ -1113,7 +1116,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    one scroll behaviour, one scrub gesture across the whole page.
    ════════════════════════════════════════════════════════════════ */
 .deck.deck--v{
-  --v-per:3;
+  /* four across: a 4:5 card at a quarter of the row is still a portrait
+     you can read a face in, and the row stops looking like three big ones */
+  --v-per:4;
   --deck-gap:var(--s-6);
   --inset:max(var(--gutter), calc((100% - var(--container)) / 2 + var(--gutter)));
 }
@@ -1176,7 +1181,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .vcard__at{
   font-size:var(--fs-2);line-height:var(--lh-normal);color:rgba(255,255,255,.72);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  /* four across leaves the handle and the follower count fighting over one
+     line — let it take two rather than cutting the number in half */
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -1259,24 +1266,31 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    that leans against it. Same colours — it is meant to read as the same room
    at the other end of the page. */
 .offer2{background:var(--bg);border-top:1px solid var(--border);color:var(--fg-body)}
-.offer2{--px:50%;--py:40%}
+.offer2,.footer{--px:50%;--py:40%}
 .offer2__glow{
   position:absolute;inset:-20% -10%;z-index:-1;pointer-events:none;
   background:
-    radial-gradient(46% 52% at 12% 84%, rgba(140,88,255,.12) 0%, rgba(140,88,255,0) 70%),
-    radial-gradient(40% 44% at 86% 14%, rgba(56,92,235,.10) 0%, rgba(56,92,235,0) 72%);
+    radial-gradient(46% 52% at 12% 84%, rgba(140,88,255,.17) 0%, rgba(140,88,255,0) 70%),
+    radial-gradient(40% 44% at 86% 14%, rgba(56,92,235,.15) 0%, rgba(56,92,235,0) 72%);
   animation:bandDrift 34s var(--ease) infinite alternate;
 }
 .offer2__glow::before{
   content:"";position:absolute;inset:0;
   background:
-    radial-gradient(620px circle at var(--px) var(--py), rgba(92,72,255,.10), transparent 60%),
-    radial-gradient(520px circle at calc(var(--px) - 38%) calc(var(--py) + 38%), rgba(39,98,220,.07), transparent 62%);
+    radial-gradient(620px circle at var(--px) var(--py), rgba(92,72,255,.17), transparent 60%),
+    radial-gradient(520px circle at calc(var(--px) - 38%) calc(var(--py) + 38%), rgba(39,98,220,.12), transparent 62%);
+}
+.offer2__grid{
+  position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background-image:radial-gradient(rgba(178,172,255,.62) 1px, transparent 1.5px);
+  background-size:26px 26px;
+  -webkit-mask:radial-gradient(330px circle at var(--px) var(--py), #000 0%, rgba(0,0,0,.45) 42%, transparent 72%);
+  mask:radial-gradient(330px circle at var(--px) var(--py), #000 0%, rgba(0,0,0,.45) 42%, transparent 72%);
 }
 .offer2__glow::after{
   content:"";position:absolute;left:6%;top:16%;
   width:420px;height:420px;border-radius:50%;
-  background:rgb(92,70,255);opacity:.08;filter:blur(90px);
+  background:rgb(92,70,255);opacity:.13;filter:blur(90px);
   transform:translate(var(--gx,0px), var(--gy,0px));
   transition:transform .15s ease-out;
 }
@@ -1385,18 +1399,29 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   from{box-shadow:0 8px 22px rgba(105,87,255,.42), 0 0 0 3px rgba(99,91,255,.20)}
   to  {box-shadow:0 10px 28px rgba(105,87,255,.62), 0 0 0 8px rgba(99,91,255,.06)}
 }
-/* the swap sits under the name, on its own line, on every box — a control
-   you can see is a control you can plan around, which a cross that waits for
-   the pointer never was */
-.prod__swap{
-  margin-top:var(--s-3);width:100%;height:30px;border-radius:8px;
-  border:1px solid var(--border);background:transparent;color:var(--fg-muted);
-  font-size:var(--fs-1);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
-  transition:color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease),
-             background var(--dur-1) var(--ease);
+/* Remove borrows the space the maker and the title were using rather than
+   asking for a row of its own — a box you are about to drop does not need
+   its own name read back to you */
+.prod__by,.prod__t{transition:opacity var(--dur-1) var(--ease)}
+.prod:hover .prod__by,.prod:hover .prod__t,
+.prod:focus-within .prod__by,.prod:focus-within .prod__t{opacity:0}
+.prod__drop{
+  position:absolute;inset:var(--s-4) var(--s-1) var(--s-1);z-index:2;
+  display:grid;place-items:center;border-radius:8px;
+  border:1px solid rgba(255,138,138,.34);background:rgba(120,22,32,.24);color:#FF9A9A;
+  font-size:var(--fs-2);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
+  opacity:0;pointer-events:none;
+  transition:opacity var(--dur-1) var(--ease), background var(--dur-1) var(--ease),
+             color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
 }
-.prod__swap:hover{color:var(--accent-fg);border-color:var(--accent-border);background:var(--accent-bg)}
-.prod__body{display:flex;flex-direction:column;gap:var(--s-2);min-width:0;padding:var(--s-4) var(--s-1) var(--s-1)}
+.prod:hover .prod__drop,.prod:focus-within .prod__drop{opacity:1;pointer-events:auto}
+.prod__drop:hover{background:rgba(168,32,48,.52);color:#fff;border-color:#FF9A9A}
+/* nothing hovers on a touch screen, so there it keeps a row of its own */
+@media (hover:none){
+  .prod__by,.prod__t{opacity:1 !important}
+  .prod__drop{position:static;inset:auto;opacity:1;pointer-events:auto;margin-top:var(--s-3);height:30px}
+}
+.prod__body{position:relative;display:flex;flex-direction:column;gap:var(--s-2);min-width:0;padding:var(--s-4) var(--s-1) var(--s-1)}
 .prod__by{display:flex;align-items:center;gap:var(--s-2);min-width:0;font-size:var(--fs-1);color:var(--fg-muted)}
 .prod__by .avatar{width:24px;height:24px;font-size:9px;background:var(--surface-sunken)}
 .prod__by b{font-weight:var(--fw-medium);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1431,12 +1456,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .custom__top{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s-4);margin-bottom:var(--s-5)}
 .custom__top h3{margin:0;font-size:var(--fs-5)}
 .custom__top p{margin:var(--s-1) 0 0;font-size:var(--fs-2);color:var(--fg-muted)}
-.custom__x{
-  display:grid;place-items:center;width:32px;height:32px;flex:none;border-radius:var(--r-full);
-  color:var(--fg-muted);
-  transition:background var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
-}
-.custom__x:hover{background:var(--surface);color:var(--fg)}
 .custom__hint{margin:var(--s-5) 0 0;font-size:var(--fs-3);color:var(--accent-fg)}
 .choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-3)}
 .choice{
@@ -1482,12 +1501,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .obuy[disabled]{background:var(--surface-sunken);color:var(--fg-muted);box-shadow:inset 0 0 0 1px var(--border);cursor:not-allowed}
 .obuy[disabled]:hover{background:var(--surface-sunken)}
 .obuy[disabled] s{display:none}
+/* Done, on a bundle that is not done */
+[data-customize][disabled]{opacity:.45;cursor:not-allowed}
+[data-customize][disabled]:hover{border-color:var(--border);background:var(--surface)}
 .onote{margin:0;font-size:var(--fs-1);line-height:var(--lh-normal);color:var(--fg-muted);text-align:right}
 
 /* ════════════════════════════════════════════════════════════════
    10 · FOOTER
    ════════════════════════════════════════════════════════════════ */
-.footer{background:#F7F9FC;border-top:1px solid var(--border);padding:var(--s-10) 0 var(--s-7)}
+.footer{border-top:1px solid var(--border);padding:var(--s-10) 0 var(--s-7)}
 .footer__top{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));gap:var(--s-8)}
 .footer__intro p{margin:var(--s-4) 0 var(--s-5);font-size:var(--fs-3);line-height:var(--lh-normal);color:var(--fg-muted);max-width:36ch}
 .social{display:flex;gap:var(--s-2);margin-bottom:var(--s-5)}
@@ -1540,7 +1562,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      before the list would start outrunning it */
 }
 @media (max-width:1000px){
-  .deck.deck--v{--v-per:2}
+  .deck.deck--v{--v-per:3}
   /* already two across here, so the toggle has nothing left to offer */
   .zoom{display:none}
   /* the head stacks, the bundle wraps three across, and the price bar comes
@@ -1865,6 +1887,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <span class="player__dur tnum">1:12</span>
                 <div class="player__foot">
                   <span class="player__cap">Setting up a batch queue</span>
+                  <p class="player__desc">Drop a folder in, pick the pass you want, and leave it running.</p>
                 </div>
               </div>
             </div>
@@ -1884,10 +1907,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/retouchx-04.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Eyes, teeth and lips (2:04)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__dur tnum">2:04</span>
-                <div class="player__foot">
-                  <span class="player__cap">Eyes, teeth and lips</span>
-                </div>
-              </div>
+                              </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Reviewing before export — video 5 of 7">
               <div class="player">
@@ -1896,6 +1916,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <span class="player__dur tnum">1:33</span>
                 <div class="player__foot">
                   <span class="player__cap">Reviewing before export</span>
+                  <p class="player__desc">Every frame comes back as a before and after you can step through, so nothing leaves the queue unseen. Flag the two or three that want a hand and send the rest straight out, with the pass already applied.</p>
                 </div>
               </div>
             </div>
@@ -1915,10 +1936,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/retouchx-07.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Saving your own recipe (2:26)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__dur tnum">2:26</span>
-                <div class="player__foot">
-                  <span class="player__cap">Saving your own recipe</span>
-                </div>
-              </div>
+                              </div>
             </div>
           </div>
           <div class="deck__bar wrap">
@@ -1963,6 +1981,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <span class="player__dur tnum">1:05</span>
                 <div class="player__foot">
                   <span class="player__cap">Matching a reference frame</span>
+                  <p class="player__desc">Point it at a frame you already like and it reads the grade off that one rather than off a slider you have to guess at. Exposure, white balance and the colour of the light are measured against it.</p>
                 </div>
               </div>
             </div>
@@ -1971,10 +1990,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-03.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Building your own look (2:19)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__dur tnum">2:19</span>
-                <div class="player__foot">
-                  <span class="player__cap">Building your own look</span>
-                </div>
-              </div>
+                              </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Syncing across a shoot — video 4 of 7">
               <div class="player">
@@ -1983,6 +1999,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <span class="player__dur tnum">0:52</span>
                 <div class="player__foot">
                   <span class="player__cap">Syncing across a shoot</span>
+                  <p class="player__desc">One frame settled, the rest of the roll follows in a second.</p>
                 </div>
               </div>
             </div>
@@ -2004,6 +2021,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <span class="player__dur tnum">1:28</span>
                 <div class="player__foot">
                   <span class="player__cap">Split toning shadows</span>
+                  <p class="player__desc">Warmth in the highlights and a cold shadow, set separately and held apart, so a sunset does not turn the whole frame orange.</p>
                 </div>
               </div>
             </div>
@@ -2012,10 +2030,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/lightroom-ai-color-07.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Exporting a preset pack (2:11)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__dur tnum">2:11</span>
-                <div class="player__foot">
-                  <span class="player__cap">Exporting a preset pack</span>
-                </div>
-              </div>
+                              </div>
             </div>
           </div>
           <div class="deck__bar wrap">
@@ -2071,6 +2086,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <span class="player__dur tnum">1:58</span>
                 <div class="player__foot">
                   <span class="player__cap">Dodge and burn layers</span>
+                  <p class="player__desc">Two neutral layers and a soft brush, set up the way a retoucher would set them up by hand — one for the light, one for the shade. The panel keeps the pair in step and shows the map in grey.</p>
                 </div>
               </div>
             </div>
@@ -2079,10 +2095,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/us-photoshop-plugin-04.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Saved liquify shapes (1:14)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__dur tnum">1:14</span>
-                <div class="player__foot">
-                  <span class="player__cap">Saved liquify shapes</span>
-                </div>
-              </div>
+                              </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Export sizes for Instagram — video 5 of 7">
               <div class="player">
@@ -2091,6 +2104,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <span class="player__dur tnum">0:44</span>
                 <div class="player__foot">
                   <span class="player__cap">Export sizes for Instagram</span>
+                  <p class="player__desc">Feed, portrait and story, sharpened for each, in one pass.</p>
                 </div>
               </div>
             </div>
@@ -2099,10 +2113,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <video poster="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"><source src="videos/us-photoshop-plugin-06.mp4" type="video/mp4"></video>
                 <button class="play" type="button" aria-label="Play: Cleaning up backgrounds (3:02)"><svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg></button>
                 <span class="player__dur tnum">3:02</span>
-                <div class="player__foot">
-                  <span class="player__cap">Cleaning up backgrounds</span>
-                </div>
-              </div>
+                              </div>
             </div>
             <div class="deck__pane" role="group" aria-roledescription="slide" aria-label="Sharpening for print — video 7 of 7">
               <div class="player">
@@ -2111,6 +2122,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <span class="player__dur tnum">1:49</span>
                 <div class="player__foot">
                   <span class="player__cap">Sharpening for print</span>
+                  <p class="player__desc">Radius and amount are set from the print size rather than the pixel size, so a metre-wide print is not sharpened like a postcard.</p>
                 </div>
               </div>
             </div>
@@ -2320,6 +2332,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      state in script, so the two cannot disagree; this markup is the frame. -->
 <section class="section offer2" id="offer" aria-labelledby="offerTitle" data-lit>
   <div class="offer2__glow" aria-hidden="true"></div>
+  <div class="offer2__grid" aria-hidden="true"></div>
   <div class="wrap">
     <div class="shell" data-offer data-reveal>
       <div class="shell__head">
@@ -2347,9 +2360,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <h3>Customize your selection</h3>
             <p>Any mix of plugins and presets — the cheapest ones in your bundle come free.</p>
           </div>
-          <button class="custom__x" type="button" data-close aria-label="Close the picker">
-            <svg width="13" height="13" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1.5 1.5l9 9m0-9l-9 9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-          </button>
         </div>
         <div class="choices" data-choices></div>
         <p class="custom__hint" data-hint aria-live="polite"></p>
@@ -3135,7 +3145,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 </main>
 
 <!-- ══════════ 12 · FOOTER ══════════ -->
-<footer class="footer">
+<footer class="footer" data-lit>
+  <div class="footer__glow" aria-hidden="true"></div>
   <div class="wrap">
     <div class="footer__top">
       <div class="footer__intro">
@@ -3466,9 +3477,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       go.innerHTML = short > 0
         ? 'Choose ' + short + ' more pack' + (short > 1 ? 's' : '')
         : 'Get ' + state.get + ', Pay ' + d.pay + ' — $' + bill + ' <s>$' + full + '</s>';
+      syncOpen();
       note.textContent = short > 0
-        ? 'No subscription · secure checkout · 14-day help-or-refund'
-        : 'You save $' + (full - bill) + ' · no subscription · 14-day help-or-refund';
+        ? 'No subscription · secure checkout'
+        : 'You save $' + (full - bill) + ' · no subscription · secure checkout';
     }
 
     function box(id, n, isFree){
@@ -3481,10 +3493,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       var body = el('figcaption', 'prod__body',
         '<span class="prod__by"><span class="avatar">' + esc(p.ini) + '</span><b>' + esc(p.by) + '</b></span>' +
         '<h3 class="prod__t">' + esc(p.name) + '</h3>' +
-        '<button class="prod__swap" type="button">Change</button>');
-      var swap = body.querySelector('.prod__swap');
-      swap.setAttribute('aria-label', 'Change ' + p.name + ' for another pack');
-      swap.addEventListener('click', function(){ state.picks.splice(n, 1); render(); });
+        '<button class="prod__drop" type="button">Remove</button>');
+      var drop = body.querySelector('.prod__drop');
+      drop.setAttribute('aria-label', 'Remove ' + p.name + ' from the bundle');
+      drop.addEventListener('click', function(){ state.picks.splice(n, 1); render(); });
       f.appendChild(body);
       return f;
     }
@@ -3532,9 +3544,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       panel.hidden = !on;
       openBtn.setAttribute('aria-expanded', String(on));
       if(!on) panel.classList.remove('is-bad');
+      syncOpen();
+    }
+    /* one button, two jobs, and it says which one it is doing. Shut while
+       the bundle is short: there is nothing to be done about an open picker
+       except finish choosing, and the hint under it already says so. */
+    function syncOpen(){
+      var on = !panel.hidden;
+      openBtn.textContent = on ? 'Done' : 'Customize bundle';
+      openBtn.disabled = on && (state.get - state.picks.length) > 0;
     }
     openBtn.addEventListener('click', function(){ open(panel.hidden); });
-    offer.querySelector('[data-close]').addEventListener('click', function(){ open(false); openBtn.focus(); });
 
     tabs.forEach(function(tab, n){
       tab.tabIndex = tab.getAttribute('aria-selected') === 'true' ? 0 : -1;
@@ -4105,13 +4125,40 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   /* ---- add to basket ---- */
   var basketCount = document.querySelector('.cart__n');
   document.querySelectorAll('.card__add').forEach(function(btn){
+    /* the label goes in a span of its own: setting textContent on the button
+       ate the basket icon along with the words */
+    var label = document.createElement('span');
+    var text = [].filter.call(btn.childNodes, function(node){
+      return node.nodeType === 3 && node.textContent.trim();
+    })[0];
+    label.textContent = text ? text.textContent.trim() : 'Add to cart';
+    if(text){ btn.replaceChild(label, text); } else { btn.appendChild(label); }
+
+    var name = (btn.getAttribute('aria-label') || '').replace(/^Add\s+/, '').replace(/\s+to basket$/, '');
+    var on = false;
+    function draw(hovering){
+      btn.classList.toggle('is-added', on);
+      btn.setAttribute('aria-pressed', String(on));
+      btn.setAttribute('aria-label', (on ? 'Remove ' + name + ' from' : 'Add ' + name + ' to') + ' basket');
+      /* in the basket and under the pointer, it offers the way out — the
+         state is the border and the fill, so the words are free to be the
+         next move instead of repeating it */
+      label.textContent = on ? (hovering ? 'Remove' : 'Added') : 'Add to cart';
+    }
+    btn.setAttribute('aria-pressed', 'false');
     btn.addEventListener('click', function(e){
       e.preventDefault();
-      if(btn.classList.contains('is-added')) return;
-      btn.classList.add('is-added');
-      btn.textContent = 'Added';
-      if(basketCount) basketCount.textContent = String((parseInt(basketCount.textContent, 10) || 0) + 1);
+      on = !on;
+      draw(true);
+      if(basketCount){
+        basketCount.textContent =
+          String(Math.max(0, (parseInt(basketCount.textContent, 10) || 0) + (on ? 1 : -1)));
+      }
     });
+    btn.addEventListener('pointerenter', function(){ draw(true); });
+    btn.addEventListener('pointerleave', function(){ draw(false); });
+    btn.addEventListener('focus', function(){ draw(true); });
+    btn.addEventListener('blur', function(){ draw(false); });
   });
 
   /* ---- collection sort ---- */
