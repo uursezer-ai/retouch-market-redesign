@@ -462,33 +462,19 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .ptab{
   position:relative;
   display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-4);align-items:center;
-  text-align:left;padding:var(--s-3) var(--s-8) var(--s-3) var(--s-4);border-radius:var(--r-card);
+  text-align:left;padding:var(--s-3) var(--s-4);border-radius:var(--r-card);
   border:1px solid var(--border);
   background:var(--surface);
-  transition:border-color var(--dur-2) var(--ease), background var(--dur-2) var(--ease),
-             box-shadow var(--dur-2) var(--ease);
+  transition:transform var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease),
+             background var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease);
 }
-.ptab:hover{border-color:var(--border-strong)}
+/* the same lift a preset card gets. Only on the ones you can still pick —
+   the chosen card is already where it is going, so it stays put */
+.ptab:not([aria-selected="true"]):hover{
+  transform:translateY(-3px);box-shadow:var(--sh-3);border-color:var(--border-strong);
+}
 .ptab[aria-selected="true"]{
   border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-bg);
-}
-/* the position in the set, quiet in the bottom corner — it labels the card, it
-   is not the thing you read first, so it sits below the name rather than
-   competing with it at the top of the card */
-/* a counter in a ring rather than a loose numeral. On an unselected card it
-   is a quiet grey chip on white; on the selected one it turns and sits white
-   inside an accent ring, so it reads against that card's tinted background
-   instead of dissolving into it */
-.ptab__no{
-  position:absolute;bottom:var(--s-3);right:var(--s-3);
-  display:grid;place-items:center;width:26px;height:26px;border-radius:var(--r-full);
-  border:1px solid var(--border);background:var(--surface-sunken);color:var(--fg-muted);
-  font-size:var(--fs-2);font-weight:var(--fw-bold);line-height:1;font-variant-numeric:tabular-nums;
-  transition:border-color var(--dur-2) var(--ease), background var(--dur-2) var(--ease),
-             color var(--dur-2) var(--ease);
-}
-.ptab[aria-selected="true"] .ptab__no{
-  border-color:var(--accent-border);background:#fff;color:var(--accent-fg);
 }
 /* the box was sized when the card carried three lines and it, not the text,
    was setting the card's height — 115px for 46px of type. It is measured by
@@ -914,6 +900,72 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .player.is-noted .player__note{display:block}
 
 /* ════════════════════════════════════════════════════════════════
+   7 · TESTIMONIALS
+   Two columns that end on the same line by construction: the gallery's
+   height falls out of its own width (six 4:5 frames, fixed grid), and the
+   accordion rows share whatever is left over. Nothing here is a magic
+   number, so the pair cannot drift apart when the copy changes.
+   ════════════════════════════════════════════════════════════════ */
+.voices{display:grid;grid-template-columns:minmax(0,420px) minmax(0,1fr);gap:var(--s-8);align-items:stretch}
+.vlist{display:flex;flex-direction:column;gap:var(--s-2)}
+/* grow, do not stretch equally: every row keeps its natural height and the
+   slack is split between them, so an open row stays taller than a shut one */
+.vrow{
+  flex:1 0 auto;display:flex;flex-direction:column;justify-content:center;
+  border:1px solid var(--border);border-radius:var(--r-card);background:var(--surface);
+  transition:border-color var(--dur-2) var(--ease), background var(--dur-2) var(--ease),
+             box-shadow var(--dur-2) var(--ease);
+}
+.vrow:hover{border-color:var(--border-strong)}
+.vrow.is-open{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-bg)}
+.vrow__h{margin:0;font-size:inherit;line-height:inherit;font-weight:inherit}
+.vbtn{
+  width:100%;display:flex;align-items:center;gap:var(--s-3);text-align:left;
+  padding:var(--s-3) var(--s-4);border-radius:var(--r-card);
+}
+.vbtn__pp{
+  flex:none;width:44px;height:44px;border-radius:var(--r-full);object-fit:cover;
+  background:var(--surface-sunken);border:1px solid var(--border);
+}
+.vbtn__id{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+.vbtn__n{
+  font-size:var(--fs-5);font-weight:var(--fw-semibold);line-height:var(--lh-snug);color:var(--fg);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.vrow.is-open .vbtn__n{color:var(--accent-fg)}
+.vbtn__m{
+  display:flex;align-items:center;gap:var(--s-1);min-width:0;
+  font-size:var(--fs-2);line-height:var(--lh-normal);color:var(--fg-muted);white-space:nowrap;
+}
+.vbtn__at{overflow:hidden;text-overflow:ellipsis}
+.vbtn__sep{color:var(--n-300)}
+.vbtn__chev{flex:none;color:var(--fg-muted);transition:transform var(--dur-2) var(--ease)}
+.vrow.is-open .vbtn__chev{transform:rotate(180deg);color:var(--accent-fg)}
+.vpanel{padding:0 var(--s-4) var(--s-4) calc(var(--s-4) + 44px + var(--s-3))}
+.vq{margin:0}
+.vq p{
+  margin:0;font-size:var(--fs-4);line-height:var(--lh-relaxed);color:var(--fg-body);
+  text-wrap:pretty;
+}
+.vq p::before{content:"\201C"}
+.vq p::after{content:"\201D"}
+
+/* six frames, three across — the same 4:5 the presets and the before/after
+   cards use, so the page keeps one picture shape throughout */
+.vstage{display:grid;min-width:0}
+.vwork{
+  display:grid;grid-template-columns:repeat(var(--vw-per,3),minmax(0,1fr));
+  gap:var(--s-3);align-content:space-between;
+}
+.vwork[hidden]{display:none}
+.vshot{
+  margin:0;aspect-ratio:4/5;overflow:hidden;border-radius:var(--r-card);
+  border:1px solid var(--border);background:var(--surface-sunken);
+}
+.vshot img{width:100%;height:100%;object-fit:cover;display:block;transition:transform var(--dur-3) var(--ease)}
+.vshot:hover img{transform:scale(1.04)}
+
+/* ════════════════════════════════════════════════════════════════
    6 · HOW TO INSTALL
    ════════════════════════════════════════════════════════════════ */
 .install{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:var(--s-10);align-items:center}
@@ -1046,6 +1098,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .rail{--per-view:5}
   .slide.is-on{grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:var(--s-8)}
   .install,.faq{gap:var(--s-8)}
+
+  /* the gallery narrows faster than the list does, so it drops to two across
+     before the list would start outrunning it */
+  .voices{grid-template-columns:minmax(0,360px) minmax(0,1fr)}
+  .vwork{--vw-per:2}
 }
 @media (max-width:1000px){
   .rail{--per-view:4}
@@ -1092,6 +1149,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .pstat dd{font-size:var(--fs-7)}
   .pstat dt{font-size:var(--fs-2)}
   .pstat .stars svg{width:10px;height:10px}
+
+  .voices{grid-template-columns:1fr;gap:var(--s-6)}
+  .vlist{gap:var(--s-2)}
+  .vrow{flex:0 0 auto}
+  .vwork{--vw-per:3}
 }
 @media (max-width:600px){
   .deck.deck--ba{--ba-per:1}
@@ -1115,6 +1177,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .dot{width:28px}
   .cta{padding:var(--s-9) var(--s-5)}
   .qa__a{padding-right:0}
+
+  .vwork{--vw-per:2}
+  .vpanel{padding-left:var(--s-4)}
 }
 @media (max-width:380px){
   /* the wordmark alone needs ~140px; below this the bar cannot hold brand,
@@ -1293,7 +1358,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   <div class="pstage" data-reveal>
     <div class="ptabs" role="tablist" aria-label="Plugins" id="pluginTabs">
       <button class="ptab" role="tab" aria-selected="true" aria-controls="pp-0" id="pt-0">
-        <span class="ptab__no" aria-hidden="true">1</span>
         <span class="ptab__box"><img src="images/box-retouchx.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
         <span class="ptab__body">
           <span class="ptab__row"><span class="ptab__n">RetouchX Plugin</span><span class="ptab__apps" aria-hidden="true"><span class="ptab__app">Ps</span><span class="ptab__app"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1" y="2.2" width="14" height="9.2" rx="1.6" stroke="currentColor" stroke-width="1.4"/><path d="M8 11.4v3M5.4 14.4h5.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span></span><span class="vh">for Photoshop and desktop</span></span>
@@ -1301,7 +1365,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </span>
       </button>
       <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-1" id="pt-1" tabindex="-1">
-        <span class="ptab__no" aria-hidden="true">2</span>
         <span class="ptab__box"><img src="images/box-lightroom-ai-color.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
         <span class="ptab__body">
           <span class="ptab__row"><span class="ptab__n">Lightroom Ai Color Plugin</span><span class="ptab__apps" aria-hidden="true"><span class="ptab__app">LrC</span></span><span class="vh">for Lightroom Classic</span></span>
@@ -1309,7 +1372,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </span>
       </button>
       <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-2" id="pt-2" tabindex="-1">
-        <span class="ptab__no" aria-hidden="true">3</span>
         <span class="ptab__box"><img src="images/box-us-photoshop-plugin.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
         <span class="ptab__body">
           <span class="ptab__row"><span class="ptab__n">US Photoshop Plugin</span><span class="ptab__apps" aria-hidden="true"><span class="ptab__app">Ps</span></span><span class="vh">for Photoshop</span></span>
@@ -2000,6 +2062,169 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   </div>
 </section>
 
+
+<!-- ══════════ 7 · TESTIMONIALS ══════════
+     PLACEHOLDER DATA: the names, handles, follower counts, portraits and five
+     of the six quotes are stand-ins. Only the first quote comes from the old
+     bundle page. Swap all of it — and link the handles — before this goes live.
+     ══════════════════════════════════════ -->
+<section class="section" id="voices">
+  <div class="wrap">
+    <div class="section__head" data-reveal>
+      <div>
+        <p class="eyebrow">Testimonials</p>
+        <h2>Trusted by Professionals</h2>
+        <p class="lede">Studios and creators who shoot every week, editing with the same tools.</p>
+      </div>
+    </div>
+
+    <div class="voices" data-voices data-reveal>
+      <div class="vlist">
+        <div class="vrow is-open">
+          <h3 class="vrow__h">
+            <button class="vbtn" type="button" id="vb-0" aria-expanded="true" aria-controls="vp-0">
+              <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
+              <span class="vbtn__id">
+                <span class="vbtn__n">Düğünümüz Var</span>
+                <span class="vbtn__m"><span class="vbtn__at">@dugunumuzvar</span><span class="vbtn__sep" aria-hidden="true">·</span><span class="tnum">1.2M</span> followers</span>
+              </span>
+              <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </h3>
+          <div class="vpanel" id="vp-0" role="region" aria-labelledby="vb-0">
+            <blockquote class="vq"><p>RetouchMarket is the only pack we use. It is complete, reliable, and it saves our team hours on every wedding.</p></blockquote>
+          </div>
+        </div>
+        <div class="vrow">
+          <h3 class="vrow__h">
+            <button class="vbtn" type="button" id="vb-1" aria-expanded="false" aria-controls="vp-1">
+              <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
+              <span class="vbtn__id">
+                <span class="vbtn__n">Zeril Film</span>
+                <span class="vbtn__m"><span class="vbtn__at">@zerilfilm</span><span class="vbtn__sep" aria-hidden="true">·</span><span class="tnum">210K</span> followers</span>
+              </span>
+              <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </h3>
+          <div class="vpanel" id="vp-1" role="region" aria-labelledby="vb-1" hidden>
+            <blockquote class="vq"><p>We deliver a whole wedding in a day now. The colour holds from the first frame to the last.</p></blockquote>
+          </div>
+        </div>
+        <div class="vrow">
+          <h3 class="vrow__h">
+            <button class="vbtn" type="button" id="vb-2" aria-expanded="false" aria-controls="vp-2">
+              <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
+              <span class="vbtn__id">
+                <span class="vbtn__n">Oğuz Demir</span>
+                <span class="vbtn__m"><span class="vbtn__at">@oguzdemirphoto</span><span class="vbtn__sep" aria-hidden="true">·</span><span class="tnum">108K</span> followers</span>
+              </span>
+              <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </h3>
+          <div class="vpanel" id="vp-2" role="region" aria-labelledby="vb-2" hidden>
+            <blockquote class="vq"><p>Skin still looks like skin. That is the part I could never get out of any other preset pack.</p></blockquote>
+          </div>
+        </div>
+        <div class="vrow">
+          <h3 class="vrow__h">
+            <button class="vbtn" type="button" id="vb-3" aria-expanded="false" aria-controls="vp-3">
+              <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
+              <span class="vbtn__id">
+                <span class="vbtn__n">Focallis</span>
+                <span class="vbtn__m"><span class="vbtn__at">@focallisstudio</span><span class="vbtn__sep" aria-hidden="true">·</span><span class="tnum">1.4M</span> followers</span>
+              </span>
+              <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </h3>
+          <div class="vpanel" id="vp-3" role="region" aria-labelledby="vb-3" hidden>
+            <blockquote class="vq"><p>One click and the shoot matches. It changed how we hand work over to the rest of the studio.</p></blockquote>
+          </div>
+        </div>
+        <div class="vrow">
+          <h3 class="vrow__h">
+            <button class="vbtn" type="button" id="vb-4" aria-expanded="false" aria-controls="vp-4">
+              <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
+              <span class="vbtn__id">
+                <span class="vbtn__n">Celal Ocak</span>
+                <span class="vbtn__m"><span class="vbtn__at">@celalocak</span><span class="vbtn__sep" aria-hidden="true">·</span><span class="tnum">1.1M</span> followers</span>
+              </span>
+              <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </h3>
+          <div class="vpanel" id="vp-4" role="region" aria-labelledby="vb-4" hidden>
+            <blockquote class="vq"><p>I stopped switching between panels halfway through an edit. Everything I reach for is in one place.</p></blockquote>
+          </div>
+        </div>
+        <div class="vrow">
+          <h3 class="vrow__h">
+            <button class="vbtn" type="button" id="vb-5" aria-expanded="false" aria-controls="vp-5">
+              <img class="vbtn__pp" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=384&amp;q=75" alt="" width="44" height="44" loading="lazy" onerror="this.style.visibility='hidden'">
+              <span class="vbtn__id">
+                <span class="vbtn__n">Murat Özsoy</span>
+                <span class="vbtn__m"><span class="vbtn__at">@muratozsoy</span><span class="vbtn__sep" aria-hidden="true">·</span><span class="tnum">279K</span> followers</span>
+              </span>
+              <svg class="vbtn__chev" width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </h3>
+          <div class="vpanel" id="vp-5" role="region" aria-labelledby="vb-5" hidden>
+            <blockquote class="vq"><p>The plugins do the boring half of the job, so the time goes on the frames that actually matter.</p></blockquote>
+          </div>
+        </div>
+      </div>
+      <div class="vstage">
+        <div class="vwork" id="vw-0" role="group" aria-label="Photographs by Düğünümüz Var">
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="A photograph by Düğünümüz Var, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="A photograph by Düğünümüz Var, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=1080&amp;q=75" alt="A photograph by Düğünümüz Var, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" alt="A photograph by Düğünümüz Var, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" alt="A photograph by Düğünümüz Var, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="A photograph by Düğünümüz Var, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+        </div>
+        <div class="vwork" id="vw-1" role="group" aria-label="Photographs by Zeril Film" hidden>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=1080&amp;q=75" alt="A photograph by Zeril Film, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" alt="A photograph by Zeril Film, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" alt="A photograph by Zeril Film, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" alt="A photograph by Zeril Film, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=1080&amp;q=75" alt="A photograph by Zeril Film, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" alt="A photograph by Zeril Film, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+        </div>
+        <div class="vwork" id="vw-2" role="group" aria-label="Photographs by Oğuz Demir" hidden>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" alt="A photograph by Oğuz Demir, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=1080&amp;q=75" alt="A photograph by Oğuz Demir, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" alt="A photograph by Oğuz Demir, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="A photograph by Oğuz Demir, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="A photograph by Oğuz Demir, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=1080&amp;q=75" alt="A photograph by Oğuz Demir, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+        </div>
+        <div class="vwork" id="vw-3" role="group" aria-label="Photographs by Focallis" hidden>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" alt="A photograph by Focallis, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" alt="A photograph by Focallis, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="A photograph by Focallis, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=1080&amp;q=75" alt="A photograph by Focallis, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=1080&amp;q=75" alt="A photograph by Focallis, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=1080&amp;q=75" alt="A photograph by Focallis, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+        </div>
+        <div class="vwork" id="vw-4" role="group" aria-label="Photographs by Celal Ocak" hidden>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=1080&amp;q=75" alt="A photograph by Celal Ocak, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=1080&amp;q=75" alt="A photograph by Celal Ocak, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd1b4f84f-6a05-4575-b3f1-a38ad9802104-1775992531535-998071976.webp&amp;w=1080&amp;q=75" alt="A photograph by Celal Ocak, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=1080&amp;q=75" alt="A photograph by Celal Ocak, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=1080&amp;q=75" alt="A photograph by Celal Ocak, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" alt="A photograph by Celal Ocak, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+        </div>
+        <div class="vwork" id="vw-5" role="group" aria-label="Photographs by Murat Özsoy" hidden>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=1080&amp;q=75" alt="A photograph by Murat Özsoy, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=1080&amp;q=75" alt="A photograph by Murat Özsoy, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=1080&amp;q=75" alt="A photograph by Murat Özsoy, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=1080&amp;q=75" alt="A photograph by Murat Özsoy, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=1080&amp;q=75" alt="A photograph by Murat Özsoy, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+          <figure class="vshot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=1080&amp;q=75" alt="A photograph by Murat Özsoy, edited with the pack" loading="lazy" onerror="this.style.display='none'"></figure>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ══════════ 7 · HOW TO INSTALL ══════════ -->
 <section class="section" id="install">
   <div class="wrap">
@@ -2324,6 +2549,33 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     window.addEventListener('resize', fitAllTitles);
     if(document.fonts && document.fonts.ready) document.fonts.ready.then(fitAllTitles);
   }
+
+  /* ---- testimonials: one open at a time, gallery follows ----
+     A plain disclosure per row. Opening one shuts the rest, so the column
+     height only ever holds one quote, and swaps the 4:5 gallery beside it. */
+  document.querySelectorAll('[data-voices]').forEach(function(voices){
+    var rows   = [].slice.call(voices.querySelectorAll('.vrow'));
+    var works  = [].slice.call(voices.querySelectorAll('.vwork'));
+    function open(n){
+      rows.forEach(function(row, i){
+        var on = i === n;
+        row.classList.toggle('is-open', on);
+        row.querySelector('.vbtn').setAttribute('aria-expanded', String(on));
+        var panel = row.querySelector('.vpanel');
+        if(on){ panel.removeAttribute('hidden'); } else { panel.setAttribute('hidden',''); }
+      });
+      works.forEach(function(w, i){
+        if(i === n){ w.removeAttribute('hidden'); } else { w.setAttribute('hidden',''); }
+      });
+    }
+    rows.forEach(function(row, i){
+      row.querySelector('.vbtn').addEventListener('click', function(){
+        /* clicking the open row leaves it open — there is always a quote and
+           a gallery on screen, never an empty right-hand column */
+        open(i);
+      });
+    });
+  });
 
   /* ---- clip rails: arrows + disabled states ---- */
   var rails = [].slice.call(document.querySelectorAll('.strip'));
