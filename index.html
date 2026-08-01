@@ -189,7 +189,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   font-size:var(--fs-6);line-height:var(--lh-relaxed);
   color:var(--fg-body);max-width:54ch;text-wrap:pretty;
 }
-.meta{margin:0;font-size:var(--fs-2);line-height:var(--lh-normal);color:var(--fg-muted)}
 .tnum{font-variant-numeric:tabular-nums}
 
 /* ════════════════════════════════════════════════════════════════
@@ -204,7 +203,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
              border-color var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
 }
 .btn--lg{height:48px;padding:0 var(--s-6);font-size:var(--fs-5)}
-.btn--sm{height:32px;padding:0 var(--s-3);font-size:var(--fs-3)}
 
 .btn--primary{background:var(--accent);color:var(--fg-on-accent);box-shadow:var(--sh-1)}
 .btn--primary:hover{background:var(--accent-700);box-shadow:var(--sh-2)}
@@ -518,12 +516,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .nav.is-dark .cart__n{border-color:#080C18}
 .nav.is-dark.is-stuck{box-shadow:none}
 @media (prefers-reduced-motion:reduce){
-  .topband__glow,.offer2__glow,.footer__glow{animation:none}
-  .topband__glow::before,.topband__glow::after,
-  .offer2__glow::before,.offer2__glow::after,
-  .footer__glow::before,.footer__glow::after{display:none}
-  .offer2__grid{display:none}
-  .prod.is-free .prod__badge{animation:none}
+  .topband__glow{animation:none}
+  .topband__glow::before,.topband__glow::after{display:none}
   .topband .slide__media{transform:none}
 }
 
@@ -721,6 +715,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   transition:width var(--dur-2) var(--ease), background var(--dur-1) var(--ease);
 }
 .deck__dot:hover{background:var(--n-400)}
+.deck__dot,.dot{position:relative}
+/* the pad is the target; the dot is only what you can see of it */
+.deck__dot::after,.dot::after{content:"";position:absolute;inset:-8px}
 /* where you are, not how far you have come. The old version ran an accent
    fill inside a grey track and never rewound the ones it had passed, so a
    deck three videos in showed three filled dots and read as a progress bar
@@ -857,6 +854,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    a band across the middle, where the handle already is: the picture above
    and below it is free to swipe. */
 @media (pointer:coarse){
+  /* 8px apart, a 24px reach round one dot covers the next — so the row
+     opens to 16px and the reaches stop overlapping */
+  .deck__dots,.dots{gap:var(--s-4)}
   .compare__range{top:50%;bottom:auto;height:104px;transform:translateY(-50%)}
 }
 
@@ -1235,7 +1235,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .steps h3{font-size:var(--fs-5)}
 .steps p{margin:var(--s-1) 0 0;font-size:var(--fs-3);line-height:var(--lh-normal);color:var(--fg-body);max-width:48ch}
-.install__link{margin-top:var(--s-7)}
 
 /* ════════════════════════════════════════════════════════════════
    7 · FAQ — left-aligned like every other section, sticky head
@@ -1340,7 +1339,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   text-transform:uppercase;opacity:.72;
 }
 .oswitch__b:hover{color:var(--fg)}
-.oswitch__b[aria-selected="true"]{background:#fff;color:#111322;box-shadow:0 8px 25px rgba(0,0,0,.24)}
+.oswitch__b[aria-checked="true"]{background:#fff;color:#111322;box-shadow:0 8px 25px rgba(0,0,0,.24)}
 
 /* the bundle, one box a place */
 .prods{
@@ -1530,7 +1529,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   transition:color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
 }
 .social a:hover{color:var(--fg);border-color:var(--border-strong)}
-.fcol h4{margin:0 0 var(--s-4);font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);text-transform:uppercase;color:var(--fg-muted)}
+.fcol h3{margin:0 0 var(--s-4);font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:var(--tr-caps);text-transform:uppercase;color:var(--fg-muted)}
 .fcol ul{display:flex;flex-direction:column;gap:var(--s-3)}
 .fcol a{font-size:var(--fs-3);color:var(--fg-body);transition:color var(--dur-1) var(--ease)}
 .fcol a:hover{color:var(--accent-fg)}
@@ -1559,6 +1558,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .has-js [data-reveal].is-in{
   opacity:1;transform:none;
   transition:opacity var(--dur-3) var(--ease), transform var(--dur-3) var(--ease);
+}
+
+/* ════════════════════════════════════════════════════════════════
+   MOTION OFF
+   Everything above that moves on its own, stopped — declared here and not
+   beside each rule, because a reduced-motion block only wins over what
+   comes before it, and these were all written later than the one at the
+   top of the sheet.
+   ════════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion:reduce){
+  .offer2__glow,.footer__glow{animation:none}
+  .offer2__glow::before,.offer2__glow::after,
+  .footer__glow::before,.footer__glow::after{display:none}
+  .offer2__grid{display:none}
+  .prod.is-free,.prod.is-free::after,.prod.is-free .prod__badge{animation:none}
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -1669,7 +1683,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .pstat dd{font-size:var(--fs-6)}
   .pstat dt{font-size:11px}
   .pstat .stars{display:none}
-  .clip{flex:0 0 152px}
   .rail{--per-view:2}
   .totop{right:var(--s-4);bottom:var(--s-4);width:40px;height:40px}
   .hero__nav{gap:var(--s-4)}
@@ -1713,7 +1726,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <nav class="nav__links" aria-label="Main">
       <a href="#plugins">Plugins</a>
       <a href="#presets">Presets</a>
-      <a href="#">LUTs</a>
+      <a href="#presets">LUTs</a>
       <a href="#tutorials">Tutorials</a>
       <a href="#install">Install</a>
       <a href="#faq">Support</a>
@@ -1721,7 +1734,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="nav__icons">
       <button class="iconbtn" type="button" id="searchToggle" aria-expanded="false" aria-controls="searchBar" aria-label="Search"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8.8" cy="8.8" r="6.3" stroke="currentColor" stroke-width="1.6"/><path d="M13.5 13.5l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
       <a class="iconbtn" href="#" aria-label="Log in"><svg width="19" height="19" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="6.7" r="3.4" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 17.3c0-3.3 2.9-5.4 6.5-5.4s6.5 2.1 6.5 5.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
-      <a class="iconbtn cart" href="#" aria-label="Basket, 2 items"><svg width="19" height="19" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="cart__n tnum" aria-hidden="true">2</span></a>
+      <a class="iconbtn" href="#" aria-label="Basket, 2 items"><svg width="19" height="19" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><span class="cart__n tnum" aria-hidden="true">2</span></a>
     </div>
     <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navPanel" aria-label="Open menu">
       <svg width="18" height="12" viewBox="0 0 18 12" fill="none" aria-hidden="true"><path d="M0 1h18M0 6h18M0 11h18" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -1730,7 +1743,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   <div class="nav__panel" id="navPanel">
     <a href="#plugins">Plugins</a>
     <a href="#presets">Presets</a>
-    <a href="#">LUTs</a>
+    <a href="#presets">LUTs</a>
     <a href="#tutorials">Tutorials</a>
     <a href="#install">Install</a>
     <a href="#faq">Support</a>
@@ -2353,17 +2366,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           <p class="lede">Not sure where to start? We put our bestselling tools together and made
             the decision for you — keep our picks, or swap in the ones you want.</p>
         </div>
-        <div class="oswitch" role="tablist" aria-label="Bundle size">
-          <button class="oswitch__b" type="button" role="tab" data-deal="3" aria-selected="false" aria-controls="bundleRow">
+        <div class="oswitch" role="radiogroup" aria-label="Bundle size">
+          <button class="oswitch__b" type="button" role="radio" data-deal="3" aria-checked="false">
             Get 3, Pay 2<span>Starter bundle</span>
           </button>
-          <button class="oswitch__b" type="button" role="tab" data-deal="5" aria-selected="true" aria-controls="bundleRow">
+          <button class="oswitch__b" type="button" role="radio" data-deal="5" aria-checked="true">
             Get 5, Pay 3<span>Best value</span>
           </button>
         </div>
       </div>
 
-      <div class="prods" id="bundleRow" data-picks aria-live="polite"></div>
+      <div class="prods" id="bundleRow" data-picks></div>
+      <p class="vh" data-status role="status"></p>
 
       <div class="custom" id="bundlePicker" data-custom hidden>
         <div class="custom__top">
@@ -3236,17 +3250,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       </div>
       </div>
       <div class="fcol">
-        <h4>Products</h4>
+        <h3>Products</h3>
         <ul>
-          <li><a href="#">All products</a></li>
-          <li><a href="#">Full Pack</a></li>
+          <li><a href="#presets">All products</a></li>
+          <li><a href="#offer">Full Pack</a></li>
           <li><a href="#plugins">Plugins</a></li>
           <li><a href="#presets">Presets</a></li>
-          <li><a href="#">LUTs</a></li>
+          <li><a href="#presets">LUTs</a></li>
         </ul>
       </div>
       <div class="fcol">
-        <h4>Learn</h4>
+        <h3>Learn</h3>
         <ul>
           <li><a href="#install">How to install</a></li>
           <li><a href="#faq">FAQ</a></li>
@@ -3256,7 +3270,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </ul>
       </div>
       <div class="fcol">
-        <h4>Company</h4>
+        <h3>Company</h3>
         <ul>
           <li><a href="#">Contact</a></li>
           <li><a href="#">Privacy policy</a></li>
@@ -3299,10 +3313,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
   /* ---- mobile nav ---- */
   var nt = document.getElementById('navToggle'), np = document.getElementById('navPanel');
-  nt.addEventListener('click', function(){
-    var open = np.classList.toggle('is-on');
-    nt.setAttribute('aria-expanded', String(open));
-    nt.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  function navOpen(on){
+    np.classList.toggle('is-on', on);
+    nt.setAttribute('aria-expanded', String(on));
+    nt.setAttribute('aria-label', on ? 'Close menu' : 'Open menu');
+  }
+  nt.addEventListener('click', function(){ navOpen(!np.classList.contains('is-on')); });
+  /* choosing a section scrolls the page behind the panel, so the panel has
+     to stand down — otherwise you arrive somewhere you cannot see */
+  np.addEventListener('click', function(e){
+    if(e.target.closest('a[href^="#"]')) navOpen(false);
   });
 
   /* ---- fit every headline to the headline box ----
@@ -3443,7 +3463,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   (function(){
     var offer = document.querySelector('[data-offer]');
     if(!offer) return;
-    var PACKS = [{"name":"Full Plugin Pack","img":"images/box-retouchx.png","price":"$149","was":"$299","by":"Retouch Market","ini":"RM","first":true},{"name":"Lora Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&w=750&q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Solis Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&w=750&q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Terra Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&w=750&q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Jardin Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&w=750&q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Mely Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&w=750&q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Onyx Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&w=750&q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Doré Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&w=750&q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Olbia LUTs","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&w=750&q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"}];
+    var PACKS = [{"name":"Full Plugin Pack","img":"images/box-retouchx.png","price":"$149","was":"$299","by":"Retouch Market","ini":"RM","first":true},{"name":"Lora Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Solis Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Terra Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Jardin Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Demir","ini":"UD"},{"name":"Mely Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Melih Süren","ini":"MS"},{"name":"Onyx Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Adam Tahirov","ini":"AT"},{"name":"Doré Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Mücahit Güney","ini":"MG"},{"name":"Olbia LUTs","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Umut Kaçar","ini":"UK"}];
     var DEALS = [{"get":3,"pay":2},{"get":5,"pay":3}];
     var row = offer.querySelector('[data-picks]');
     var panel = offer.querySelector('[data-custom]');
@@ -3533,6 +3553,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         ? 'Choose ' + short + ' more pack' + (short > 1 ? 's' : '')
         : 'Get ' + state.get + ', Pay ' + d.pay + ' — $' + bill + ' <s>$' + full + '</s>';
       syncOpen();
+      /* the short version, for anyone who cannot see the row change */
+      var status = offer.querySelector('[data-status]');
+      if(status){
+        status.textContent = short > 0
+          ? list.length + ' of ' + state.get + ' packs chosen, ' + short + ' to go.'
+          : state.get + ' packs chosen. ' + go.textContent.replace(/\s+/g, ' ') + '.';
+      }
       note.textContent = short > 0
         ? 'No subscription · secure checkout'
         : 'You save $' + (full - bill) + ' · no subscription · secure checkout';
@@ -3612,7 +3639,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     openBtn.addEventListener('click', function(){ open(panel.hidden); });
 
     tabs.forEach(function(tab, n){
-      tab.tabIndex = tab.getAttribute('aria-selected') === 'true' ? 0 : -1;
+      tab.tabIndex = tab.getAttribute('aria-checked') === 'true' ? 0 : -1;
       tab.addEventListener('click', function(){
         state.get = Number(tab.getAttribute('data-deal'));
         /* growing keeps what you chose and leaves the new places empty;
@@ -3620,7 +3647,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         state.picks = state.picks.slice(0, state.get);
         fill();
         tabs.forEach(function(t){
-          t.setAttribute('aria-selected', String(t === tab));
+          t.setAttribute('aria-checked', String(t === tab));
           t.tabIndex = t === tab ? 0 : -1;
         });
         render();
