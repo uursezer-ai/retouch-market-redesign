@@ -1075,12 +1075,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   font-size:var(--fs-2);font-weight:var(--fw-medium);color:#fff;
   padding:var(--s-1) var(--s-2);border-radius:6px;background:rgba(10,37,64,.72);
 }
-.player__note{
-  position:absolute;inset:auto var(--s-5) 56px var(--s-5);z-index:3;display:none;margin:0;
-  font-size:var(--fs-2);color:var(--fg-body);padding:var(--s-2) var(--s-3);border-radius:var(--r-control);
-  background:rgba(255,255,255,.96);border:1px dashed var(--border-strong);
-}
-.player.is-noted .player__note{display:block}
 
 /* ════════════════════════════════════════════════════════════════
    7 · TESTIMONIALS
@@ -1224,104 +1218,114 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* ════════════════════════════════════════════════════════════════
    9 · CLOSING CTA — the page needs a last beat before the footer
    ════════════════════════════════════════════════════════════════ */
-.cta{
-  position:relative;overflow:hidden;text-align:center;
-  padding:var(--s-10) var(--s-8);border-radius:var(--r-panel);
-  background:var(--accent-bg);border:1px solid var(--accent-border);
-}
-.cta::before{
-  content:"";position:absolute;inset:auto -10% -60% -10%;height:320px;
-  background:radial-gradient(closest-side, rgba(99,91,255,.14), transparent 70%);
-  pointer-events:none;
-}
-.cta h2{position:relative;max-width:24ch;margin:0 auto}
-.cta .lede{position:relative;margin:var(--s-5) auto 0;max-width:42ch}
-.cta__actions{position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:var(--s-3);margin-top:var(--s-7)}
-.cta__note{position:relative;margin:var(--s-5) 0 0;font-size:var(--fs-2);color:var(--fg-muted)}
 
 /* ════════════════════════════════════════════════════════════════
    9 · CLOSING OFFER
-   The last thing on the page is a decision, so it is built like a product
-   page rather than a banner: the pack on the left, what is in it on the
-   right, and the price doing the arguing. The first slot is the plugin pack
-   and cannot be swapped; the rest are a select each, because a native one
-   is the control every phone already knows how to open.
+   A bundle you build rather than a banner you read. The switch is one
+   control, not two cards. On the left the bundle as boxes — take one out
+   and its place stays, dashed and empty, so what is missing is as plain as
+   what is in. On the right the same bundle as a list, because a price
+   column is easier to read than a caption. Either side changes the other:
+   both are drawn from one state.
    ════════════════════════════════════════════════════════════════ */
 .offer{display:grid;gap:var(--s-7)}
-.offer__deals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-3)}
-.deal__tab{
-  display:flex;flex-direction:column;align-items:flex-start;gap:2px;
-  padding:var(--s-4) var(--s-5);border-radius:var(--r-card);text-align:left;
+
+/* the switch: a track with the chosen one lifted out of it */
+.seg{
+  display:inline-grid;grid-auto-flow:column;gap:var(--s-1);
+  padding:var(--s-1);border-radius:var(--r-full);justify-self:start;
+  background:var(--surface-sunken);border:1px solid var(--border);
+}
+.seg__b{
+  display:flex;flex-direction:column;align-items:center;gap:1px;
+  padding:var(--s-3) var(--s-7);border-radius:var(--r-full);
+  color:var(--fg-muted);
+  transition:background var(--dur-2) var(--ease), color var(--dur-2) var(--ease),
+             box-shadow var(--dur-2) var(--ease);
+}
+.seg__b b{font-size:var(--fs-5);font-weight:var(--fw-bold);letter-spacing:-.01em}
+.seg__b span{font-size:var(--fs-2)}
+.seg__b:hover{color:var(--fg)}
+.seg__b[aria-selected="true"]{background:var(--surface);color:var(--fg);box-shadow:var(--sh-2)}
+
+.offer__body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:var(--s-9);align-items:start}
+
+/* the bundle as boxes */
+.picks{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:1fr;gap:var(--s-4)}
+.pick{
+  position:relative;margin:0;height:100%;display:flex;flex-direction:column;
+  border-radius:var(--r-card);overflow:hidden;
   border:1px solid var(--border);background:var(--surface);
-  transition:transform var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease),
-             box-shadow var(--dur-2) var(--ease), background var(--dur-2) var(--ease);
+  transition:border-color var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease),
+             transform var(--dur-2) var(--ease);
 }
-.deal__tab:not([aria-selected="true"]):hover{
-  transform:translateY(-3px);box-shadow:var(--sh-3);border-color:var(--border-strong);
+.pick:hover{border-color:var(--border-strong);box-shadow:var(--sh-2)}
+.pick__shot{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--surface-sunken)}
+.pick__shot img{width:100%;height:100%;object-fit:cover;display:block}
+.pick--plugin .pick__shot img{object-fit:contain;background:var(--surface)}
+.pick__body{padding:var(--s-3) var(--s-4) var(--s-4);display:flex;flex-direction:column;gap:2px;min-width:0}
+.pick__n{
+  font-size:var(--fs-3);font-weight:var(--fw-semibold);color:var(--fg);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.deal__tab[aria-selected="true"]{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-bg)}
-.deal__label{font-size:var(--fs-6);font-weight:var(--fw-bold);color:var(--fg)}
-.deal__tab[aria-selected="true"] .deal__label{color:var(--accent-fg)}
-.deal__sub{font-size:var(--fs-2);color:var(--fg-muted)}
-
-.deal{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,520px);gap:var(--s-9);align-items:center}
-.deal[hidden]{display:none}
-
-/* the visual: the bundle as a hand of cards, the plugin pack in front */
-.offer__stage{position:relative;min-width:0}
-.fan{display:flex;justify-content:center;padding:var(--s-8) 0 var(--s-6);min-width:0}
-.fan__card{
-  /* five cards at 30%, each advancing 17%, come to 98% of the box — the hand
-     has to fit whether the deal holds three of them or five */
-  margin:0;flex:0 0 30%;aspect-ratio:4/5;overflow:hidden;
-  border-radius:var(--r-card);border:1px solid var(--border);background:var(--surface);
-  box-shadow:var(--sh-2);
-  /* laid out back to front, so each one leans a little further and the front
-     card — the plugin pack — sits square and on top */
-  transform:rotate(calc(var(--i) * -3.2deg)) translateY(calc(var(--i) * 6px));
-  transform-origin:bottom center;
-  transition:transform var(--dur-3) var(--ease);
-}
-.fan__card + .fan__card{margin-left:-13%}
-.fan__card img{width:100%;height:100%;object-fit:cover;display:block}
-.fan__card[data-fan="0"]{z-index:3;box-shadow:var(--sh-3)}
-.fan__card[data-fan="0"] img{object-fit:contain;background:var(--surface)}
-.offer:hover .fan__card{transform:rotate(calc(var(--i) * -4.4deg)) translateY(calc(var(--i) * 8px))}
-.fan__seal{
-  position:absolute;left:var(--s-4);top:0;z-index:4;margin:0;
-  display:flex;align-items:baseline;gap:6px;
-  padding:var(--s-2) var(--s-4);border-radius:var(--r-full);
+.pick__p{font-size:var(--fs-2);color:var(--fg-muted);font-variant-numeric:tabular-nums}
+.pick.is-free .pick__p{color:var(--accent-fg);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps)}
+/* the free mark reads on the picture, where the eye lands first */
+.pick__free{
+  position:absolute;left:var(--s-3);top:var(--s-3);z-index:2;
+  padding:2px var(--s-2);border-radius:var(--r-full);
   background:var(--accent);color:var(--fg-on-accent);
-  font-size:var(--fs-3);font-weight:var(--fw-semibold);box-shadow:var(--sh-2);
+  font-size:var(--fs-1);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);
 }
-.fan__seal b{font-size:var(--fs-6);font-weight:var(--fw-bold);font-variant-numeric:tabular-nums}
+.pick__x{
+  position:absolute;right:var(--s-2);top:var(--s-2);z-index:3;
+  display:grid;place-items:center;width:26px;height:26px;border-radius:var(--r-full);
+  background:rgba(6,12,22,.62);color:#fff;backdrop-filter:blur(4px);
+  opacity:0;transform:scale(.9);
+  transition:opacity var(--dur-1) var(--ease), transform var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
+}
+.pick:hover .pick__x,.pick:focus-within .pick__x{opacity:1;transform:none}
+.pick__x:hover{background:rgba(6,12,22,.86)}
 
-/* what is in it */
+/* an empty place keeps its footprint, so a bundle that is short of a pack
+   looks short of a pack */
+.pick--empty{
+  border:1.5px dashed var(--border-strong);background:transparent;box-shadow:none;
+  align-items:center;justify-content:center;text-align:center;
+  color:var(--fg-muted);cursor:pointer;
+}
+.pick--empty:hover{border-color:var(--accent);color:var(--accent-fg);background:var(--accent-bg)}
+.pick--empty .pick__plus{
+  display:grid;place-items:center;width:40px;height:40px;border-radius:var(--r-full);
+  border:1.5px solid currentColor;font-size:22px;font-weight:var(--fw-medium);line-height:1;
+  margin-bottom:var(--s-2);
+}
+.pick--empty .pick__label{font-size:var(--fs-2);font-weight:var(--fw-medium);padding:0 var(--s-3) var(--s-4)}
+/* the native list is the picker — it covers the tile so a tap anywhere opens
+   it, and every phone already knows how to draw it */
+.pick__add{position:absolute;inset:0;z-index:2;opacity:0;width:100%;height:100%;cursor:pointer}
+
+/* the same bundle as a list */
 .slots{list-style:none;margin:0 0 var(--s-6);padding:0;display:flex;flex-direction:column;gap:var(--s-2)}
 .slot{
-  display:grid;grid-template-columns:auto auto minmax(0,1fr) auto;align-items:center;gap:var(--s-3);
+  display:grid;grid-template-columns:auto auto minmax(0,1fr) auto auto;align-items:center;gap:var(--s-3);
   padding:var(--s-3);border-radius:var(--r-card);
   border:1px solid var(--border);background:var(--surface);
 }
+.slot--empty{border-style:dashed;background:transparent}
 .slot__no{
   display:grid;place-items:center;width:24px;height:24px;border-radius:var(--r-full);
   background:var(--surface-sunken);color:var(--fg-muted);
   font-size:var(--fs-1);font-weight:var(--fw-bold);font-variant-numeric:tabular-nums;
 }
-.slot.is-locked .slot__no{background:var(--accent);color:var(--fg-on-accent)}
+.slot.is-first .slot__no{background:var(--accent);color:var(--fg-on-accent)}
 .slot__shot{
   display:block;width:36px;aspect-ratio:4/5;flex:none;overflow:hidden;
   border-radius:6px;background:var(--surface-sunken);border:1px solid var(--border);
 }
 .slot__shot img{width:100%;height:100%;object-fit:cover;display:block}
 .slot__body{display:flex;flex-direction:column;gap:2px;min-width:0}
-.slot__n{
-  font-size:var(--fs-4);font-weight:var(--fw-semibold);color:var(--fg);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
 .slot__note{font-size:var(--fs-2);color:var(--accent-fg);font-weight:var(--fw-medium)}
-/* the select is the whole row's second line, styled down to a quiet link so
-   it does not shout over the name above it */
 .slot__swap{position:relative;display:inline-flex;align-items:center;gap:6px;min-width:0;color:var(--fg-muted)}
 /* the pack's name is the control: a row that printed the name and then a
    select showing the same name said everything twice */
@@ -1330,10 +1334,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   font:inherit;font-size:var(--fs-4);font-weight:var(--fw-semibold);color:var(--fg);
   cursor:pointer;max-width:100%;text-overflow:ellipsis;
 }
+.slot--empty .slot__swap select{color:var(--fg-muted);font-weight:var(--fw-medium)}
 .slot__swap svg{position:absolute;right:2px;pointer-events:none;transition:transform var(--dur-2) var(--ease)}
 .slot__swap:hover select,.slot__swap:hover{color:var(--accent-fg)}
 .slot__swap:hover svg{transform:translateY(1px)}
-.slot__swap select:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
 .slot__price{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 .slot__price b{font-size:var(--fs-4);font-weight:var(--fw-bold);color:var(--fg)}
 .slot__was{display:block;font-size:var(--fs-1);color:var(--fg-muted);text-decoration:line-through}
@@ -1344,6 +1348,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   content:"FREE";display:block;margin-top:2px;
   font-size:var(--fs-1);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);color:var(--accent-fg);
 }
+.slot__drop{
+  display:grid;place-items:center;width:28px;height:28px;border-radius:var(--r-full);
+  color:var(--fg-faint);
+  transition:background var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+}
+.slot__drop:hover{background:var(--surface-sunken);color:var(--fg)}
+.slot--empty .slot__drop{visibility:hidden}
 
 .sum{
   display:flex;flex-direction:column;gap:var(--s-2);
@@ -1357,8 +1368,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .sum__v b{font-size:var(--fs-9);font-weight:var(--fw-bold);color:var(--fg);letter-spacing:var(--tr-heading)}
 .sum__save{margin:0;font-size:var(--fs-3);color:var(--fg-body)}
 .sum__save b{color:var(--accent-fg);font-variant-numeric:tabular-nums}
+.offer__side{min-width:0}
 .offer__go{width:100%}
-.offer__go span{font-variant-numeric:tabular-nums}
+/* an incomplete bundle cannot be bought, and says so rather than failing on
+   the next screen */
+.offer__go[disabled]{
+  background:var(--surface-sunken);color:var(--fg-muted);
+  box-shadow:inset 0 0 0 1px var(--border);cursor:not-allowed;
+}
+.offer__go[disabled]:hover{background:var(--surface-sunken)}
 .offer__fine{margin:var(--s-3) 0 0;font-size:var(--fs-2);line-height:var(--lh-normal);color:var(--fg-muted);text-align:center}
 
 /* ════════════════════════════════════════════════════════════════
@@ -1418,8 +1436,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 @media (max-width:1000px){
   .deck.deck--v{--v-per:2}
-  .deal{grid-template-columns:1fr;gap:var(--s-7)}
-  .fan__card{flex:0 0 30%}
+  .offer__body{grid-template-columns:1fr;gap:var(--s-7)}
   .deck.deck--ba{--ba-per:2}
   .rail{--per-view:4}
   .nav__links{display:none}
@@ -1467,16 +1484,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
 }
 @media (max-width:600px){
+  .hero__actions .btn{width:100%}
   .deck.deck--ba{--ba-per:1}
-  /* the tabs stack rather than squeeze two long labels into half a phone */
-  .offer__deals{grid-template-columns:1fr}
-  .fan{padding:var(--s-4) 0}
-  .fan__card{flex:0 0 38%}
-  .fan__card + .fan__card{margin-left:-16%}
-  .fan__seal{left:0;font-size:var(--fs-2)}
-  .slot{grid-template-columns:auto minmax(0,1fr) auto;gap:var(--s-2)}
+  /* two boxes across, and the switch takes the whole width. Stacked, a
+     stadium reads as two pills that have come apart — it squares off */
+  .picks{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-3)}
+  .seg{display:grid;grid-auto-flow:row;justify-self:stretch;border-radius:var(--r-card)}
+  .seg__b{padding:var(--s-3) var(--s-4);border-radius:calc(var(--r-card) - 3px)}
+  .slot{grid-template-columns:auto minmax(0,1fr) auto auto;gap:var(--s-2)}
   .slot__shot{display:none}
   .sum__v b{font-size:var(--fs-8)}
+  .pick__x{opacity:1;transform:none}
   /* a phone has room for the name and about two lines under it */
   .player__foot{padding:var(--s-9) var(--s-4) var(--s-4)}
   .player__desc{font-size:var(--fs-2);-webkit-line-clamp:3;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
@@ -1501,11 +1519,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .pstat .stars{display:none}
   .clip{flex:0 0 152px}
   .rail{--per-view:2}
-  .hero__actions .btn,.cta__actions .btn{width:100%}
   .totop{right:var(--s-4);bottom:var(--s-4);width:40px;height:40px}
   .hero__nav{gap:var(--s-4)}
   .dot{width:28px}
-  .cta{padding:var(--s-9) var(--s-5)}
   .qa__a{padding-right:0}
 
   .deck.deck--v{--v-per:1}
@@ -1520,8 +1536,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      breaking that shape */
   h2{font-size:24px}
   /* the closing panel pays for its own padding twice, so it needs both */
-  .cta{padding-inline:var(--s-4)}
-  .cta h2{font-size:22px}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -2592,7 +2606,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vcard__pp" src="images/testimonials/dugunumuzvar/pp.webp" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vcard__id">
                 <span class="vcard__n">Düğünümüz Var</span>
-                <span class="vcard__at">@dugunumuzvar<span class="vcard__dot" aria-hidden="true"> · </span><span class="tnum">1.2M</span> followers</span>
+                <span class="vcard__at">@dugunumuzvar<span aria-hidden="true"> · </span><span class="tnum">1.2M</span> followers</span>
               </span>
             </span>
           </figcaption>
@@ -2613,7 +2627,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vcard__pp" src="images/testimonials/zariffilm/pp.webp" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vcard__id">
                 <span class="vcard__n">Zarif Film</span>
-                <span class="vcard__at">@zariffilm<span class="vcard__dot" aria-hidden="true"> · </span><span class="tnum">210K</span> followers</span>
+                <span class="vcard__at">@zariffilm<span aria-hidden="true"> · </span><span class="tnum">210K</span> followers</span>
               </span>
             </span>
           </figcaption>
@@ -2634,7 +2648,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vcard__pp" src="images/testimonials/ugurdemir/pp.webp" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vcard__id">
                 <span class="vcard__n">Uğur Demir</span>
-                <span class="vcard__at">@ugurdemir<span class="vcard__dot" aria-hidden="true"> · </span><span class="tnum">108K</span> followers</span>
+                <span class="vcard__at">@ugurdemir<span aria-hidden="true"> · </span><span class="tnum">108K</span> followers</span>
               </span>
             </span>
           </figcaption>
@@ -2655,7 +2669,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vcard__pp" src="images/testimonials/ekrulila/pp.webp" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vcard__id">
                 <span class="vcard__n">Ekrulila</span>
-                <span class="vcard__at">@ekrulila<span class="vcard__dot" aria-hidden="true"> · </span><span class="tnum">96K</span> followers</span>
+                <span class="vcard__at">@ekrulila<span aria-hidden="true"> · </span><span class="tnum">96K</span> followers</span>
               </span>
             </span>
           </figcaption>
@@ -2676,7 +2690,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vcard__pp" src="images/testimonials/celalcanik/pp.webp" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vcard__id">
                 <span class="vcard__n">Celal Canık</span>
-                <span class="vcard__at">@celalcanik<span class="vcard__dot" aria-hidden="true"> · </span><span class="tnum">1.1M</span> followers</span>
+                <span class="vcard__at">@celalcanik<span aria-hidden="true"> · </span><span class="tnum">1.1M</span> followers</span>
               </span>
             </span>
           </figcaption>
@@ -2697,7 +2711,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vcard__pp" src="images/testimonials/mucahitguney/pp.webp" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vcard__id">
                 <span class="vcard__n">Mücahit Güney</span>
-                <span class="vcard__at">@mucahitguney<span class="vcard__dot" aria-hidden="true"> · </span><span class="tnum">278K</span> followers</span>
+                <span class="vcard__at">@mucahitguney<span aria-hidden="true"> · </span><span class="tnum">278K</span> followers</span>
               </span>
             </span>
           </figcaption>
@@ -2937,176 +2951,42 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
 <!-- ══════════ 9 · CLOSING OFFER ══════════
      PLACEHOLDER DATA: the plugin pack's price is set in the build script — the
-     page states it nowhere. The preset names, prices and pictures are read off
-     the grid above, so the two can never disagree. -->
+     page states it nowhere. Everything else is read off the preset grid above.
+     The boxes and the list are drawn from one state in script, so the two
+     sides cannot disagree; this markup is the first paint. -->
 <section class="section section--tint" id="offer" aria-labelledby="offerTitle">
   <div class="wrap">
     <div class="section__head" data-reveal>
       <div>
         <p class="eyebrow">The bundle</p>
-        <h2 id="offerTitle">Take More. Pay for Less.</h2>
-        <p class="lede">Our best-selling packs, put together — the cheapest ones in your bundle are free.</p>
+        <h2 id="offerTitle">Build a Pack. Pay for Less.</h2>
+        <p class="lede">Choose what goes in — the cheapest packs in your bundle come free.</p>
       </div>
     </div>
 
     <div class="offer" data-offer data-reveal>
-      <div class="offer__deals" role="tablist" aria-label="Bundle size">
-        <button class="deal__tab" type="button" role="tab" id="d3-tab" aria-controls="d3" aria-selected="true">
-          <span class="deal__label">Get 3 · Pay 2</span>
-          <span class="deal__sub">3 packs, 1 free</span>
+      <div class="seg" role="tablist" aria-label="Bundle size">
+        <button class="seg__b" type="button" role="tab" data-deal="3" aria-selected="true">
+          <b>Get 3, Pay 2</b><span>Starter bundle</span>
         </button>
-        <button class="deal__tab" type="button" role="tab" id="d5-tab" aria-controls="d5" aria-selected="false">
-          <span class="deal__label">Get 5 · Pay 3</span>
-          <span class="deal__sub">5 packs, 2 free · best value</span>
+        <button class="seg__b" type="button" role="tab" data-deal="5" aria-selected="false">
+          <b>Get 5, Pay 3</b><span>Best value</span>
         </button>
       </div>
-      <div class="deal is-on" id="d3" role="tabpanel" aria-labelledby="d3-tab"
-           data-deal data-pay="2" data-get="3">
-        <div class="offer__stage">
-          <div class="fan" data-fan-row>
-          <figure class="fan__card" data-fan="2" style="--i:2">
-            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="Solis Presets" loading="lazy" onerror="this.style.display='none'">
-          </figure>
-          <figure class="fan__card" data-fan="1" style="--i:1">
-            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="Lora Presets" loading="lazy" onerror="this.style.display='none'">
-          </figure>
-          <figure class="fan__card" data-fan="0" style="--i:0">
-            <img src="images/box-retouchx.png" alt="Full Plugin Pack" loading="lazy" onerror="this.style.display='none'">
-          </figure>
-          </div>
-          <p class="fan__seal"><b data-save>$59</b> off</p>
-        </div>
-        <div class="offer__panel">
-          <ol class="slots" data-slots>
-            <li class="slot is-locked" data-slot="0">
-              <span class="slot__no" aria-hidden="true">1</span>
-              <span class="slot__shot"><img src="images/box-retouchx.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-              <span class="slot__body">
-                <span class="slot__n">Full Plugin Pack</span>
-                <span class="slot__note">Always included</span>
-              </span>
-              <span class="slot__price"><s class="slot__was">$299</s><b>$149</b></span>
-            </li>
-            <li class="slot" data-slot="1">
-              <span class="slot__no" aria-hidden="true">2</span>
-              <span class="slot__shot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-              <span class="slot__body">
-                <label class="slot__swap"><span class="vh">Choose the pack in slot 2</span>
-                  <select class="slot__n" data-swap="1"><option value="0" selected>Lora Presets</option><option value="1">Solis Presets</option><option value="2">Terra Presets</option><option value="3">Jardin Presets</option><option value="4">Mely Presets</option><option value="5">Onyx Presets</option><option value="6">Doré Presets</option><option value="7">Olbia LUTs</option></select>
-                  <svg width="10" height="7" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </label>
-              </span>
-              <span class="slot__price"><s class="slot__was">$119</s><b>$59</b></span>
-            </li>
-            <li class="slot is-free" data-slot="2">
-              <span class="slot__no" aria-hidden="true">3</span>
-              <span class="slot__shot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-              <span class="slot__body">
-                <label class="slot__swap"><span class="vh">Choose the pack in slot 3</span>
-                  <select class="slot__n" data-swap="2"><option value="0">Lora Presets</option><option value="1" selected>Solis Presets</option><option value="2">Terra Presets</option><option value="3">Jardin Presets</option><option value="4">Mely Presets</option><option value="5">Onyx Presets</option><option value="6">Doré Presets</option><option value="7">Olbia LUTs</option></select>
-                  <svg width="10" height="7" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </label>
-              </span>
-              <span class="slot__price"><s class="slot__was">$119</s><b>$59</b></span>
-            </li>
-          </ol>
+
+      <div class="offer__body">
+        <div class="picks" data-picks aria-live="polite"></div>
+
+        <div class="offer__side">
+          <ol class="slots" data-slots></ol>
           <div class="sum">
             <div class="sum__row">
-              <span class="sum__k">Bundle price</span>
-              <span class="sum__v"><s data-full>$267</s><b data-pay>$208</b></span>
+              <span class="sum__k" data-k>Bundle price</span>
+              <span class="sum__v"><s data-full></s><b data-pay></b></span>
             </div>
-            <p class="sum__save">You keep <b data-save>$59</b> — the 1 cheapest pack is on us.</p>
+            <p class="sum__save" data-note></p>
           </div>
-          <a class="btn btn--primary btn--lg offer__go" href="#">Add this bundle — <span data-pay>$208</span></a>
-          <p class="offer__fine">One-time purchase · instant download · every future release included · 14-day help-or-refund</p>
-        </div>
-      </div>
-      <div class="deal" id="d5" role="tabpanel" aria-labelledby="d5-tab" hidden
-           data-deal data-pay="3" data-get="5">
-        <div class="offer__stage">
-          <div class="fan" data-fan-row>
-          <figure class="fan__card" data-fan="4" style="--i:4">
-            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="Jardin Presets" loading="lazy" onerror="this.style.display='none'">
-          </figure>
-          <figure class="fan__card" data-fan="3" style="--i:3">
-            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75" alt="Terra Presets" loading="lazy" onerror="this.style.display='none'">
-          </figure>
-          <figure class="fan__card" data-fan="2" style="--i:2">
-            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="Solis Presets" loading="lazy" onerror="this.style.display='none'">
-          </figure>
-          <figure class="fan__card" data-fan="1" style="--i:1">
-            <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="Lora Presets" loading="lazy" onerror="this.style.display='none'">
-          </figure>
-          <figure class="fan__card" data-fan="0" style="--i:0">
-            <img src="images/box-retouchx.png" alt="Full Plugin Pack" loading="lazy" onerror="this.style.display='none'">
-          </figure>
-          </div>
-          <p class="fan__seal"><b data-save>$118</b> off</p>
-        </div>
-        <div class="offer__panel">
-          <ol class="slots" data-slots>
-            <li class="slot is-locked" data-slot="0">
-              <span class="slot__no" aria-hidden="true">1</span>
-              <span class="slot__shot"><img src="images/box-retouchx.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-              <span class="slot__body">
-                <span class="slot__n">Full Plugin Pack</span>
-                <span class="slot__note">Always included</span>
-              </span>
-              <span class="slot__price"><s class="slot__was">$299</s><b>$149</b></span>
-            </li>
-            <li class="slot" data-slot="1">
-              <span class="slot__no" aria-hidden="true">2</span>
-              <span class="slot__shot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-              <span class="slot__body">
-                <label class="slot__swap"><span class="vh">Choose the pack in slot 2</span>
-                  <select class="slot__n" data-swap="1"><option value="0" selected>Lora Presets</option><option value="1">Solis Presets</option><option value="2">Terra Presets</option><option value="3">Jardin Presets</option><option value="4">Mely Presets</option><option value="5">Onyx Presets</option><option value="6">Doré Presets</option><option value="7">Olbia LUTs</option></select>
-                  <svg width="10" height="7" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </label>
-              </span>
-              <span class="slot__price"><s class="slot__was">$119</s><b>$59</b></span>
-            </li>
-            <li class="slot" data-slot="2">
-              <span class="slot__no" aria-hidden="true">3</span>
-              <span class="slot__shot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-              <span class="slot__body">
-                <label class="slot__swap"><span class="vh">Choose the pack in slot 3</span>
-                  <select class="slot__n" data-swap="2"><option value="0">Lora Presets</option><option value="1" selected>Solis Presets</option><option value="2">Terra Presets</option><option value="3">Jardin Presets</option><option value="4">Mely Presets</option><option value="5">Onyx Presets</option><option value="6">Doré Presets</option><option value="7">Olbia LUTs</option></select>
-                  <svg width="10" height="7" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </label>
-              </span>
-              <span class="slot__price"><s class="slot__was">$119</s><b>$59</b></span>
-            </li>
-            <li class="slot is-free" data-slot="3">
-              <span class="slot__no" aria-hidden="true">4</span>
-              <span class="slot__shot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-              <span class="slot__body">
-                <label class="slot__swap"><span class="vh">Choose the pack in slot 4</span>
-                  <select class="slot__n" data-swap="3"><option value="0">Lora Presets</option><option value="1">Solis Presets</option><option value="2" selected>Terra Presets</option><option value="3">Jardin Presets</option><option value="4">Mely Presets</option><option value="5">Onyx Presets</option><option value="6">Doré Presets</option><option value="7">Olbia LUTs</option></select>
-                  <svg width="10" height="7" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </label>
-              </span>
-              <span class="slot__price"><s class="slot__was">$119</s><b>$59</b></span>
-            </li>
-            <li class="slot is-free" data-slot="4">
-              <span class="slot__no" aria-hidden="true">5</span>
-              <span class="slot__shot"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-              <span class="slot__body">
-                <label class="slot__swap"><span class="vh">Choose the pack in slot 5</span>
-                  <select class="slot__n" data-swap="4"><option value="0">Lora Presets</option><option value="1">Solis Presets</option><option value="2">Terra Presets</option><option value="3" selected>Jardin Presets</option><option value="4">Mely Presets</option><option value="5">Onyx Presets</option><option value="6">Doré Presets</option><option value="7">Olbia LUTs</option></select>
-                  <svg width="10" height="7" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                </label>
-              </span>
-              <span class="slot__price"><s class="slot__was">$119</s><b>$59</b></span>
-            </li>
-          </ol>
-          <div class="sum">
-            <div class="sum__row">
-              <span class="sum__k">Bundle price</span>
-              <span class="sum__v"><s data-full>$385</s><b data-pay>$267</b></span>
-            </div>
-            <p class="sum__save">You keep <b data-save>$118</b> — the 2 cheapest packs are on us.</p>
-          </div>
-          <a class="btn btn--primary btn--lg offer__go" href="#">Add this bundle — <span data-pay>$267</span></a>
+          <button class="btn btn--primary btn--lg offer__go" type="button" data-go disabled></button>
           <p class="offer__fine">One-time purchase · instant download · every future release included · 14-day help-or-refund</p>
         </div>
       </div>
@@ -3352,84 +3232,186 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   });
 
   /* ---- the closing offer ----
-     Two deals, one open at a time. Slot one is the plugin pack and is fixed;
-     every other slot is a select over the paid packs. Choosing a pack that is
-     already somewhere else swaps the two rather than letting it appear twice.
-     The bill is recomputed from the rows themselves, so the prices on screen
-     and the total can never drift apart. */
+     One state — which deal, and which packs are in it — drawn twice: as boxes
+     on the left and as a list on the right. Either view edits the state and
+     both redraw, so they cannot fall out of step. An empty place keeps its
+     footprint and the button stays shut until every place is filled. */
   (function(){
     var offer = document.querySelector('[data-offer]');
     if(!offer) return;
-    var CATALOGUE = [{"n":"Lora Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"n":"Solis Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"n":"Terra Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"n":"Jardin Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"n":"Mely Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"n":"Onyx Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"n":"Doré Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"n":"Olbia LUTs","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"}];
-    var tabs  = [].slice.call(offer.querySelectorAll('[role="tab"]'));
-    var deals = [].slice.call(offer.querySelectorAll('[data-deal]'));
+    var PACKS = [{"name":"Full Plugin Pack","img":"images/box-retouchx.png","price":"$149","was":"$299","note":"1 year new licence","first":true},{"name":"Lora Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"name":"Solis Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"name":"Terra Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"name":"Jardin Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"name":"Mely Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"name":"Onyx Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"name":"Doré Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"},{"name":"Olbia LUTs","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75","price":"$59","was":"$119"}];
+    var DEALS = [{"get":3,"pay":2},{"get":5,"pay":3}];
+    var picksBox = offer.querySelector('[data-picks]');
+    var slotsBox = offer.querySelector('[data-slots]');
+    var go = offer.querySelector('[data-go]');
+    var tabs = [].slice.call(offer.querySelectorAll('[data-deal]'));
+    var state = { get: DEALS[0].get, picks: [0,1,2].slice(0, DEALS[0].get) };
 
+    function deal(){ for(var i=0;i<DEALS.length;i++) if(DEALS[i].get === state.get) return DEALS[i]; return DEALS[0]; }
     function money(s){ return Number(String(s).replace(/[^\d.]/g, '')) || 0; }
+    function el(tag, cls, html){ var e = document.createElement(tag); if(cls) e.className = cls;
+      if(html !== undefined) e.innerHTML = html; return e; }
 
-    function draw(deal){
-      var pay = parseInt(deal.getAttribute('data-pay'), 10);
-      var rows = [].slice.call(deal.querySelectorAll('.slot'));
-      /* the free ones are the cheapest, whatever order they sit in */
-      var order = rows.map(function(r, i){ return {i:i, v: money(r.querySelector('.slot__price b').firstChild.nodeValue)}; })
-                      .sort(function(a, b){ return b.v - a.v; });
-      var free = {};
-      order.slice(pay).forEach(function(o){ free[o.i] = true; });
+    /* the plugin pack is not compulsory, but when it is in the bundle it goes
+       to the front — it is the thing the rest are added to */
+    function ordered(){
+      return state.picks.slice().sort(function(a, b){
+        return (PACKS[b].first ? 1 : 0) - (PACKS[a].first ? 1 : 0);
+      });
+    }
+    /* which of the chosen packs are free: the cheapest (get − pay) of them,
+       and only once the bundle is complete */
+    function freeSet(list){
+      var d = deal(), free = {};
+      if(list.length < state.get) return free;
+      /* cheapest first, and where two cost the same the later place wins, so
+         the ones you added first are the ones you keep paying for */
+      list.map(function(id, i){ return {i:i, v: money(PACKS[id].price)}; })
+          .sort(function(a, b){ return (a.v - b.v) || (b.i - a.i); })
+          .slice(0, state.get - d.pay)
+          .forEach(function(o){ free[o.i] = true; });
+      return free;
+    }
+    function available(exceptIdx){
+      var taken = {};
+      state.picks.forEach(function(id, i){ if(i !== exceptIdx) taken[id] = true; });
+      return PACKS.map(function(p, i){ return i; }).filter(function(i){ return !taken[i]; });
+    }
+    function select(idx, current){
+      var s = el('select');
+      if(current === null){
+        var ph = el('option', null, 'Add a pack…');
+        ph.value = ''; ph.selected = true; s.appendChild(ph);
+      }
+      available(current === null ? -1 : idx).forEach(function(i){
+        var o = el('option', null, PACKS[i].name);
+        o.value = i;
+        if(i === current) o.selected = true;
+        s.appendChild(o);
+      });
+      s.setAttribute('aria-label', current === null
+        ? 'Add a pack to place ' + (idx + 1)
+        : 'Change the pack in place ' + (idx + 1));
+      s.addEventListener('change', function(){
+        if(s.value === '') return;
+        var pick = Number(s.value);
+        if(current === null) state.picks.splice(idx, 0, pick);
+        else state.picks[idx] = pick;
+        render();
+      });
+      return s;
+    }
+
+    var CHEV = '<svg width="10" height="7" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1.5L6 6.5l5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    var CROSS = "<svg width=\"11\" height=\"11\" viewBox=\"0 0 12 12\" fill=\"none\" aria-hidden=\"true\"><path d=\"M1.5 1.5l9 9m0-9l-9 9\" stroke=\"currentColor\" stroke-width=\"1.8\" stroke-linecap=\"round\"/></svg>";
+
+    function render(){
+      var list = ordered();
+      state.picks = list;                        // keep the state in the order it is shown
+      var free = freeSet(list);
       var full = 0, bill = 0;
-      rows.forEach(function(r, i){
-        var v = money(r.querySelector('.slot__price b').firstChild.nodeValue);
-        full += v;
-        if(free[i]) r.classList.add('is-free'); else { r.classList.remove('is-free'); bill += v; }
+      list.forEach(function(id, i){
+        var v = money(PACKS[id].price);
+        full += v; if(!free[i]) bill += v;
       });
-      deal.querySelectorAll('[data-full]').forEach(function(e){ e.textContent = '$' + full; });
-      deal.querySelectorAll('[data-pay]').forEach(function(e){ if(e.hasAttribute('data-deal')) return; e.textContent = '$' + bill; });
-      deal.querySelectorAll('[data-save]').forEach(function(e){ e.textContent = '$' + (full - bill); });
+
+      picksBox.textContent = ''; slotsBox.textContent = '';
+      for(var n = 0; n < state.get; n++){
+        var id = list[n];
+        picksBox.appendChild(id === undefined ? emptyTile(n) : tile(id, n, free[n]));
+        slotsBox.appendChild(id === undefined ? emptyRow(n) : row(id, n, free[n]));
+      }
+
+      var short = state.get - list.length;
+      var d = deal();
+      /* only worth striking when something has actually come off it */
+      offer.querySelector('[data-full]').textContent = full > bill ? '$' + full : '';
+      offer.querySelector('[data-pay]').textContent = list.length ? '$' + bill : '$0';
+      offer.querySelector('[data-note]').innerHTML = short > 0
+        ? 'Add ' + short + ' more pack' + (short > 1 ? 's' : '') + ' to unlock the offer.'
+        : 'You keep <b>$' + (full - bill) + '</b> — the ' + (state.get - d.pay) +
+          ' cheapest pack' + (state.get - d.pay > 1 ? 's are' : ' is') + ' on us.';
+      offer.querySelector('[data-k]').textContent = short > 0 ? 'So far' : 'Bundle price';
+      go.disabled = short > 0;
+      go.textContent = short > 0
+        ? 'Choose ' + short + ' more pack' + (short > 1 ? 's' : '')
+        : 'Add this bundle — $' + bill;
     }
 
-    function fill(row, item){
-      /* on a swappable row the name is the select and the browser has already
-         written it — only the picture and the price need saying */
-      var shot = row.querySelector('.slot__shot img'); if(shot){ shot.src = item.img; shot.alt = ''; }
-      row.querySelector('.slot__price b').firstChild.nodeValue = item.price;
-      row.querySelector('.slot__was').textContent = item.was;
-      var n = parseInt(row.getAttribute('data-slot'), 10);
-      var fan = row.closest('[data-deal]').querySelector('[data-fan="' + n + '"] img');
-      if(fan){ fan.src = item.img; fan.alt = item.n; }
+    function tile(id, n, isFree){
+      var p = PACKS[id];
+      var f = el('figure', 'pick' + (isFree ? ' is-free' : '') + (p.first ? ' pick--plugin' : ''));
+      f.appendChild(el('span', 'pick__shot',
+        '<img src="' + p.img + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
+        (isFree ? '<span class="pick__free">Free</span>' : '')));
+      var x = el('button', 'pick__x', CROSS);
+      x.type = 'button';
+      x.setAttribute('aria-label', 'Remove ' + p.name + ' from the bundle');
+      x.addEventListener('click', function(){ state.picks.splice(n, 1); render(); });
+      f.appendChild(x);
+      f.appendChild(el('figcaption', 'pick__body',
+        '<span class="pick__n">' + p.name + '</span>' +
+        '<span class="pick__p">' + (isFree ? 'Free' : p.price) + '</span>'));
+      return f;
     }
-
-    deals.forEach(function(deal){
-      var sels = [].slice.call(deal.querySelectorAll('[data-swap]'));
-      sels.forEach(function(sel){
-        sel.dataset.prev = sel.value;
-        sel.addEventListener('change', function(){
-          var picked = sel.value, was = sel.dataset.prev;
-          /* whoever already had it takes the one being given up, so the
-             bundle never holds the same pack twice */
-          sels.forEach(function(other){
-            if(other !== sel && other.value === picked){
-              other.value = was; other.dataset.prev = was;
-              fill(other.closest('.slot'), CATALOGUE[was]);
-            }
-          });
-          sel.dataset.prev = picked;
-          fill(sel.closest('.slot'), CATALOGUE[picked]);
-          draw(deal);
-        });
-      });
-      draw(deal);
-    });
+    function emptyTile(n){
+      var f = el('label', 'pick pick--empty');
+      f.appendChild(el('span', 'pick__plus', '+'));
+      f.appendChild(el('span', 'pick__label', 'Add a pack'));
+      var s = select(n, null);
+      s.className = 'pick__add';
+      f.appendChild(s);
+      return f;
+    }
+    function row(id, n, isFree){
+      var p = PACKS[id];
+      var li = el('li', 'slot' + (isFree ? ' is-free' : '') + (p.first ? ' is-first' : ''));
+      li.appendChild(el('span', 'slot__no', String(n + 1)));
+      li.appendChild(el('span', 'slot__shot',
+        '<img src="' + p.img + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">'));
+      var body = el('span', 'slot__body');
+      var swap = el('label', 'slot__swap');
+      swap.appendChild(select(n, id));
+      swap.insertAdjacentHTML('beforeend', CHEV);
+      body.appendChild(swap);
+      if(p.note) body.appendChild(el('span', 'slot__note', p.note));
+      li.appendChild(body);
+      li.appendChild(el('span', 'slot__price',
+        '<s class="slot__was">' + p.was + '</s><b>' + p.price + '</b>'));
+      var drop = el('button', 'slot__drop', CROSS);
+      drop.type = 'button';
+      drop.setAttribute('aria-label', 'Remove ' + p.name + ' from the bundle');
+      drop.addEventListener('click', function(){ state.picks.splice(n, 1); render(); });
+      li.appendChild(drop);
+      return li;
+    }
+    function emptyRow(n){
+      var li = el('li', 'slot slot--empty');
+      li.appendChild(el('span', 'slot__no', String(n + 1)));
+      li.appendChild(el('span', 'slot__shot'));
+      var body = el('span', 'slot__body');
+      var swap = el('label', 'slot__swap');
+      swap.appendChild(select(n, null));
+      swap.insertAdjacentHTML('beforeend', CHEV);
+      body.appendChild(swap);
+      li.appendChild(body);
+      li.appendChild(el('span', 'slot__price'));
+      li.appendChild(el('span', 'slot__drop'));
+      return li;
+    }
 
     tabs.forEach(function(tab, n){
       tab.tabIndex = n === 0 ? 0 : -1;
       tab.addEventListener('click', function(){
+        state.get = Number(tab.getAttribute('data-deal'));
+        /* growing keeps what you chose and leaves the new places empty;
+           shrinking drops from the end rather than silently reshuffling */
+        state.picks = state.picks.slice(0, state.get);
         tabs.forEach(function(t, i){
-          var on = i === n;
-          t.setAttribute('aria-selected', String(on));
-          t.tabIndex = on ? 0 : -1;
-          var panel = document.getElementById(t.getAttribute('aria-controls'));
-          if(!panel) return;
-          panel.classList.toggle('is-on', on);
-          if(on){ panel.removeAttribute('hidden'); draw(panel); } else { panel.setAttribute('hidden',''); }
+          t.setAttribute('aria-selected', String(t === tab));
+          t.tabIndex = t === tab ? 0 : -1;
         });
+        render();
       });
       tab.addEventListener('keydown', function(e){
         var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
@@ -3439,6 +3421,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         tabs[to].click(); tabs[to].focus();
       });
     });
+    render();
   })();
 
   /* ---- clip rails: arrows + disabled states ---- */
