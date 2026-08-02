@@ -801,6 +801,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* 100% of the track's content box — which is the column width, since the
    padding above is exactly the gutter either side */
 .deck__pane{flex:0 0 100%;min-width:0;scroll-snap-align:start}
+/* The walkthrough row is driven, not snapped. Snapping is the one thing that
+   can move this row without telling the code that owns it — it re-snaps
+   whenever the content re-lays itself, which is exactly what the videos do
+   when their metadata lands — and then the dots are describing a position
+   nothing agreed to. The controller scrolls it, and tidies the ending of a
+   swipe itself. */
+[data-deck] .deck__track{scroll-snap-type:none}
+[data-deck] .deck__pane{scroll-snap-align:none}
 /* the neighbours are the control for stepping one video left or right */
 .deck__pane:not(.is-on){cursor:pointer}
 /* the neighbours show their picture and nothing else — half a caption and a
@@ -4066,8 +4074,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         dots   = [].slice.call(deck.querySelectorAll('.deck__dot')),
         toggle = deck.querySelector('[data-deck-toggle]'),
         panel  = deck.closest('.panel'),
-        arrows = [].slice.call(deck.querySelectorAll('[data-deck-step]')),
-        idx = 0, timer = null, raf = 0, settle = null, auto = false,
+        arrows = [].slice.call(deck.querySelectorAll('[data-deck-step]'));
+
+    /* One number says which video is showing, and one function moves the row
+       to it. Everything else — the dots, the class on the pane, which video
+       plays, the countdown — is drawn from that number, never measured back
+       out of a scroll that is still moving. A scroll the row did not start
+       (a swipe, a trackpad flick) is read only when it comes to rest, and
+       then it just agrees with where it landed. */
+    var idx = 0,
+        want = null,      /* where a scroll we started is heading, or null */
+        timer = null, settle = null, raf = 0,
         playing = !still, near = false, seen = false;
 
     /* on screen, on the live tab, and not switched off */
@@ -4093,29 +4110,25 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     function tick(){
       clearTimeout(timer); timer = null;
       if(held()) return;
-      timer = setTimeout(function(){ go((idx + 1) % panes.length); }, DECK_MS);
+      timer = setTimeout(function(){ go(idx + 1); }, DECK_MS);
     }
-    function mark(i){
-      idx = i;
-      dots.forEach(function(d, n){ d.setAttribute('aria-current', String(n === i)); });
-      panes.forEach(function(p, n){ p.classList.toggle('is-on', n === i); });
+    /* everything the current index is worth saying, said in one place */
+    function paint(){
+      dots.forEach(function(d, n){ d.setAttribute('aria-current', String(n === idx)); });
+      panes.forEach(function(p, n){ p.classList.toggle('is-on', n === idx); });
+      arrows.forEach(function(a){ a.removeAttribute('disabled'); });
       reel();
       tick();
-    }
-    function go(i){
-      /* measured, not offsetLeft: the pane's offset parent is not guaranteed
-         to be the track */
-      var shift = panes[i].getBoundingClientRect().left - track.getBoundingClientRect().left;
-      /* ignore the frames this animation is about to fire, or the countdown
-         would restart at every position it passes through */
-      auto = true;
-      track.scrollTo({left: track.scrollLeft + shift, behavior: still ? 'auto' : 'smooth'});
-      mark(i);
     }
     /* the snap line: the track's left edge plus its inset, which is where a
        snapped pane's own left edge sits */
     function snapline(){
       return track.getBoundingClientRect().left + parseFloat(getComputedStyle(track).paddingLeft);
+    }
+    /* measured, not offsetLeft: the pane's offset parent is not guaranteed
+       to be the track */
+    function offsetOf(i){
+      return track.scrollLeft + (panes[i].getBoundingClientRect().left - snapline());
     }
     function nearest(){
       var edge = snapline(), best = 0, gap = Infinity;
@@ -4125,27 +4138,72 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       });
       return best;
     }
-
-    function sync(){ var n = nearest(); if(n !== idx) mark(n); }
-    track.addEventListener('scroll', function(){
-      /* whatever happened, re-read the position once the row comes to rest,
-         so no flag can leave the dots out of step */
+    function go(i, jump){
+      var n = panes.length;
+      idx = ((i % n) + n) % n;
+      /* the dots move with the press, not with the scroll: a press that took
+         half a second to land used to leave them behind, or worse, walking
+         through every pane the animation passed over */
+      paint();
+      var to = Math.round(offsetOf(idx));
+      var max = track.scrollWidth - track.clientWidth;
+      to = Math.max(0, Math.min(max, to));
+      if(Math.abs(track.scrollLeft - to) < 1){ want = null; return; }
+      want = to;
+      track.scrollTo({left: to, behavior: (jump || still) ? 'auto' : 'smooth'});
+    }
+    /* the row has stopped: let go of whatever we were steering towards, agree
+       with where it landed, and — since nothing snaps it for us — tidy a
+       swipe that came to rest between two videos */
+    function settled(){
+      want = null;
+      var n = nearest();
+      if(n !== idx){ idx = n; paint(); }
+      var to = Math.round(offsetOf(idx));
+      if(Math.abs(track.scrollLeft - to) > 2){
+        want = to;
+        track.scrollTo({left: to, behavior: still ? 'auto' : 'smooth'});
+      }
+    }
+    /* "stopped" is measured, not timed: a smooth scroll can take longer than
+       any fixed wait, and reading it early is what put the dots out of step */
+    function whenStill(){
       clearTimeout(settle);
-      settle = setTimeout(function(){ auto = false; sync(); }, 130);
-      if(auto) return;
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(sync);
+      var last = track.scrollLeft;
+      settle = setTimeout(function check(){
+        if(Math.abs(track.scrollLeft - last) > 1){
+          last = track.scrollLeft;
+          settle = setTimeout(check, 80);
+          return;
+        }
+        settled();
+      }, 90);
+    }
+    track.addEventListener('scroll', function(){
+      /* a scroll of your own moves the dots as it goes; one of ours does not,
+         because the dots are already where the press said they would be */
+      if(want === null){
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(function(){
+          var n = nearest();
+          if(n !== idx){ idx = n; paint(); }
+        });
+      }
+      whenStill();
     }, {passive:true});
 
     dots.forEach(function(d, n){ d.addEventListener('click', function(){ go(n); }); });
     arrows.forEach(function(a){
       var step = parseInt(a.getAttribute('data-deck-step'), 10);
-      a.addEventListener('click', function(){ go((idx + step + panes.length) % panes.length); });
+      a.addEventListener('click', function(){ go(idx + step); });
     });
-    /* the video showing at either edge steps you onto it */
+    /* the video showing at either edge steps you onto it — measured, so a
+       stale index can never swallow the press */
     panes.forEach(function(pane, n){
       pane.addEventListener('click', function(e){
-        if(n === idx) return;
+        var r = pane.getBoundingClientRect(), t = track.getBoundingClientRect();
+        var whole = r.left >= t.left - 1 && r.right <= t.right + 1;
+        if(whole && n === nearest()) return;
         e.preventDefault(); e.stopPropagation();
         go(n);
       }, true);
@@ -4173,8 +4231,44 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     } else { seen = true; }
 
     function refresh(){ reel(); tick(); }
-    mark(0);
-    return {el: deck, refresh: refresh, reset: function(){ track.scrollLeft = 0; mark(0); }};
+    /* the row can only be measured once it has a width — a deck in a hidden
+       tab has none, so it re-lays itself the moment its tab opens */
+    function reset(){
+      clearTimeout(settle); cancelAnimationFrame(raf);
+      want = null;
+      track.scrollLeft = 0;
+      idx = 0;
+      paint();
+      /* the panel was hidden a frame ago and had no width to measure; put the
+         row back on the first video once it has one */
+      requestAnimationFrame(repin);
+    }
+    /* Anything that changes the row's measurements moves the panes without
+       moving the scroll position, which leaves the row parked between two of
+       them while the dots still say otherwise. The commonest cause is the
+       videos: their metadata arrives after the layout is drawn, and a
+       snapping track re-lays itself around it. So whenever the track or a
+       pane changes size, put the row back on the video it is meant to be
+       showing. */
+    function repin(){
+      if(panel && panel.hasAttribute('hidden')) return;
+      if(want !== null) return;              /* a move of ours is already in flight */
+      if(!track.clientWidth) return;         /* nothing to measure yet */
+      var to = Math.round(offsetOf(idx));
+      if(Math.abs(track.scrollLeft - to) > 1) track.scrollLeft = to;
+    }
+    window.addEventListener('resize', function(){ want = null; repin(); });
+    if(window.ResizeObserver){
+      var ro = new ResizeObserver(repin);
+      ro.observe(track);
+      panes.forEach(function(pane){ ro.observe(pane); });
+    }
+    panes.forEach(function(pane){
+      var v = pane.querySelector('video');
+      if(v) v.addEventListener('loadedmetadata', repin);
+    });
+    paint();
+    return {el: deck, refresh: refresh, reset: reset};
   });
   document.addEventListener('visibilitychange', function(){
     decks.forEach(function(d){ d.refresh(); });
