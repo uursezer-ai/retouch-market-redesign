@@ -603,58 +603,26 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 /* above the video, not on it. Pick the plugin, then watch its clips — and
    nothing covers the frame you came to look at. */
+/* the plugin switcher is the same segmented control the install section
+   uses: one row of names, the chosen one lifted out of the track. The cards
+   it replaced repeated the box art the offer band above already shows. */
 .ptabs{
-  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-3);
-  padding-inline:var(--inset);margin-bottom:var(--s-5);
+  display:inline-flex;margin-inline:var(--inset);margin-bottom:var(--s-5);
+  /* the margin is outside the box, so the ceiling has to take it off the
+     column or three long names push the page sideways on a phone */
+  max-width:calc(100% - var(--inset) * 2);
+  overflow-x:auto;overscroll-behavior-x:contain;
+  scrollbar-width:none;-ms-overflow-style:none;
   /* clear of the sticky bar, the same allowance the decks take */
   scroll-margin-top:calc(var(--nav-h) + var(--s-4));
 }
-.ptab{
-  position:relative;
-  display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--s-4);align-items:center;
-  text-align:left;padding:var(--s-2) var(--s-3);border-radius:var(--r-card);
-  border:1px solid var(--border);
-  background:var(--surface);
-  transition:transform var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease),
-             background var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease);
-}
-/* the same lift a preset card gets. Only on the ones you can still pick —
-   the chosen card is already where it is going, so it stays put */
-.ptab:not([aria-selected="true"]):hover{
-  transform:translateY(-3px);box-shadow:var(--sh-3);border-color:var(--border-strong);
-}
-.ptab[aria-selected="true"]{
-  border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-bg);
-}
-/* the box was sized when the card carried three lines and it, not the text,
-   was setting the card's height — 115px for 46px of type. It is measured by
-   height now, a little taller than the two lines beside it, so the card is
-   the size of what is in it */
-.ptab__box{height:44px;flex:none}
-.ptab__box img{display:block;height:100%;width:auto}
-.ptab__body{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
-/* the name takes what is left after the badges, and gives up characters
-   rather than pushing them off the card */
-.ptab__row{display:flex;align-items:center;gap:var(--s-2);min-width:0;max-width:100%}
-.ptab__n{
-  min-width:0;font-size:var(--fs-5);font-weight:var(--fw-semibold);
-  letter-spacing:var(--tr-heading);color:var(--fg);line-height:1.3;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;
-}
-/* the chosen plugin is the one you are watching — its name says so */
-.ptab[aria-selected="true"] .ptab__n{color:var(--accent-fg)}
-/* where it runs, said beside the name rather than on a line of its own */
-.ptab__apps{display:flex;gap:4px;flex:none}
-/* square, not a squat rectangle — 26 by 26, and the label drops to 11px so
-   the widest of them, LrC, still has air either side of it */
-.ptab__app{
-  display:grid;place-items:center;width:26px;height:26px;padding:0;
-  border-radius:6px;border:1px solid var(--border-strong);color:var(--fg-muted);
-  font-size:11px;font-weight:var(--fw-bold);line-height:1;
-  transition:border-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
-}
-.ptab[aria-selected="true"] .ptab__app{border-color:var(--accent-border);color:var(--accent-700)}
-
+.ptabs::-webkit-scrollbar{display:none}
+/* a name is a name: it scrolls out of the row rather than losing letters.
+   Positioned, so the visually-hidden text inside it is contained by the
+   button and clipped with the row — an absolutely positioned descendant
+   whose containing block is outside a scroller is not clipped by it, and
+   ours was landing 200px past the right edge of a phone. */
+.ptabs button{position:relative;flex:none;white-space:nowrap}
 
 /* ── the offer band ─────────────────────────────────────────────
    The plugins tab had everything to look at and nothing to do: the three
@@ -683,7 +651,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .pbuy__art{display:flex;flex:none;align-items:center}
 /* side by side with air between them: three products, not one stack */
 .pbuy__art{gap:var(--s-2)}
-.pbuy__art img{width:54px;height:72px;object-fit:contain;border-radius:4px}
+.pbuy__art img{width:66px;height:88px;object-fit:contain;border-radius:4px}
 /* the pack's own name, at the weight a card title carries — the section
    heading above already said what it is */
 /* the name and what it runs in on one line, the promises under them: the
@@ -697,21 +665,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .pbuy__t{margin:0;min-width:0;font-size:var(--fs-7);font-weight:var(--fw-bold);
   line-height:var(--lh-snug);letter-spacing:var(--tr-heading);color:var(--fg);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pbuy__apps{display:flex;flex:none;gap:var(--s-2)}
-.pbuy__apps .ptab__app{border-color:var(--accent-border);color:var(--accent-700)}
 /* the three promises, separated the way the proof line under the offer is */
 .pbuy__meta{
   min-width:0;list-style:none;margin:0;padding:0;
-  display:flex;align-items:center;flex-wrap:wrap;gap:var(--s-2) var(--s-5);
-  margin-top:var(--s-2);font-size:var(--fs-3);color:var(--fg-body);
+  display:flex;align-items:center;flex-wrap:wrap;gap:var(--s-3) 0;
+  margin-top:var(--s-4);font-size:var(--fs-4);font-weight:var(--fw-medium);color:var(--fg);
 }
-.pbuy__meta li{display:inline-flex;align-items:center;gap:var(--s-2);white-space:nowrap}
-.pbuy__meta li + li{position:relative;padding-left:var(--s-5)}
-.pbuy__meta li + li::before{
-  content:"";position:absolute;left:0;top:50%;width:3px;height:3px;margin-top:-1.5px;
-  border-radius:var(--r-full);background:var(--n-300);
-}
-.pbuy__meta svg{flex:none;color:var(--fg-muted)}
+/* a rule between them, not a dot: three promises of equal weight, each with
+   its own mark, read as a row of three rather than one run-on sentence */
+.pbuy__meta li{display:inline-flex;align-items:center;gap:var(--s-3);white-space:nowrap;
+  padding-right:var(--s-5)}
+.pbuy__meta li + li{padding-left:var(--s-5);box-shadow:inset 1px 0 0 var(--border)}
+.pbuy__meta svg{flex:none;color:var(--fg-body)}
 /* the old price is struck, not whispered: it still has to be readable */
 .pbuy__price{margin:0;flex:none;display:flex;align-items:baseline;gap:var(--s-2)}
 .pbuy__price s{font-size:var(--fs-4);color:var(--fg-muted)}
@@ -719,7 +684,19 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* the same button the shelf cards carry, down to the height and the way it
    turns into Remove — written as .card__add.pbuy__go because those rules sit
    further down the sheet and at equal weight the later one would win */
-.card__add.pbuy__go{flex:none;width:auto;height:48px;margin-top:0;padding:0 var(--s-6)}
+/* the one primary button in the section: the tabs under it are how you look
+   around, this is the way out of looking */
+.card__add.pbuy__go{
+  flex:none;width:auto;height:48px;margin-top:0;padding:0 var(--s-6);
+  background:var(--accent);color:var(--fg-on-accent);border-color:var(--accent);
+}
+.card__add.pbuy__go:hover{background:var(--accent-700);border-color:var(--accent-700);color:var(--fg-on-accent)}
+/* in the basket the band carries the state, so the button steps back to an
+   outline rather than shouting it twice */
+.card__add.pbuy__go.is-added{background:var(--surface);color:var(--accent-fg);border-color:var(--accent)}
+.card__add.pbuy__go.is-added:hover,.card__add.pbuy__go.is-added:focus-visible{
+  background:var(--bg);border-color:var(--danger);color:var(--danger);
+}
 @media (prefers-reduced-motion:reduce){.pbuy:hover{transform:none}}
 @media (max-width:860px){
   .pbuy{flex-wrap:wrap;gap:var(--s-4)}
@@ -1116,6 +1093,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .card__t a{color:inherit}
 .card__t a::after{content:"";position:absolute;inset:0;z-index:1}
 .card:focus-within{border-color:var(--border-strong)}
+/* in the basket, the whole card takes the chosen colour rather than the
+   button carrying it alone — the same answer the plugin band gives */
+.card:has(.card__add.is-added){
+  border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-bg);
+}
+.card:has(.card__add.is-added):hover{transform:none;box-shadow:0 0 0 1px var(--accent)}
 
 /* the button sits under the price, never over the sample — the photograph is
    what the pack is selling, and covering it to sell it is self-defeating.
@@ -1693,13 +1676,20 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .oact__row{display:flex;align-items:center;gap:var(--s-3)}
 /* "Get 5, Pay 3 — $267 $385" is the widest this ever gets; holding that
    width means the price can change without the button jumping */
-.obuy{min-width:264px;justify-content:center}
+.obuy{min-width:264px;justify-content:center;gap:var(--s-2)}
+.obuy__i{flex:none}
 .obuy s{margin-left:6px;opacity:.7}
 /* an incomplete bundle cannot be bought, and says so rather than failing on
    the next screen */
 .obuy[disabled]{background:var(--surface-sunken);color:var(--fg-muted);box-shadow:inset 0 0 0 1px var(--border);cursor:not-allowed}
 .obuy[disabled]:hover{background:var(--surface-sunken)}
 .obuy[disabled] s{display:none}
+/* pressed, it stops offering and starts confirming — the accent it was is
+   the accent it stays, so the change is the words and the tick, not a new
+   colour to read */
+.obuy.is-added{background:var(--ok-700);box-shadow:none}
+.obuy.is-added:hover{background:var(--ok-700)}
+.obuy.is-added s{display:none}
 /* Done, on a bundle that is not done */
 [data-done][disabled]{opacity:.45;cursor:not-allowed}
 [data-done][disabled]:hover{border-color:var(--border);background:var(--surface)}
@@ -2067,37 +2057,22 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <img src="images/box-us-photoshop-plugin.png" alt="" loading="lazy" onerror="this.style.display='none'">
       </span>
       <span class="pbuy__body">
-        <span class="pbuy__head"><span class="pbuy__t">3 Plugins in 1 Pack</span><span class="pbuy__apps" aria-hidden="true"><span class="ptab__app">Ps</span><span class="ptab__app">LrC</span></span><span class="vh">for Photoshop and Lightroom Classic</span></span>
-        <p class="pbuy__sub">RetouchX, Lightroom Ai Color and US Photoshop plugins</p>
+        <span class="pbuy__head"><span class="pbuy__t">3 Plugins in 1 Pack</span><span class="vh">for Photoshop and Lightroom Classic</span></span>
+        <p class="pbuy__sub">RetouchX + Lightroom Ai Color + US Photoshop Plugin</p>
         <ul class="pbuy__meta">
           <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M2.2 10.4a3.1 3.1 0 011.1-6 4.2 4.2 0 018 .5 2.8 2.8 0 01.5 5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M8 7v6.4M5.6 11.2L8 13.6l2.4-2.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>Instant download</li>
           <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.4l5.2 2v4.1c0 3-2.1 5.7-5.2 7-3.1-1.3-5.2-4-5.2-7V3.4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M5.9 8l1.5 1.5L10.3 6.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>1-year licence</li>
-          <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8.9 1.4L3.4 9h3.9l-.7 5.6L12.6 7H8.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Easy install</li>
+          <li><svg width="17" height="17" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M11.8 1.6a4.3 4.3 0 00-4 5.8L2.3 12.9a1.5 1.5 0 002.1 2.1l5.5-5.5a4.3 4.3 0 005.3-5.6l-2.3 2.3-2-.5-.5-2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>Easy install</li>
         </ul>
       </span>
       <p class="pbuy__price"><s class="tnum">$299</s><b class="tnum">$149</b></p>
       <button class="card__add pbuy__go" type="button" aria-label="Add 3 Plugins in 1 Pack to basket"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add bundle to cart</button>
     </div>
     </div>
-    <div class="ptabs" role="tablist" aria-label="Plugins" id="pluginTabs">
-      <button class="ptab" role="tab" aria-selected="true" aria-controls="pp-0" id="pt-0">
-        <span class="ptab__box"><img src="images/box-retouchx.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-        <span class="ptab__body">
-          <span class="ptab__row"><span class="ptab__n">RetouchX Plugin</span><span class="ptab__apps" aria-hidden="true"><span class="ptab__app">Ps</span><span class="ptab__app"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1" y="2.2" width="14" height="9.2" rx="1.6" stroke="currentColor" stroke-width="1.4"/><path d="M8 11.4v3M5.4 14.4h5.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span></span><span class="vh">for Photoshop and desktop</span></span>
-        </span>
-      </button>
-      <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-1" id="pt-1" tabindex="-1">
-        <span class="ptab__box"><img src="images/box-lightroom-ai-color.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-        <span class="ptab__body">
-          <span class="ptab__row"><span class="ptab__n">Lightroom Ai Color Plugin</span><span class="ptab__apps" aria-hidden="true"><span class="ptab__app">LrC</span></span><span class="vh">for Lightroom Classic</span></span>
-        </span>
-      </button>
-      <button class="ptab" role="tab" aria-selected="false" aria-controls="pp-2" id="pt-2" tabindex="-1">
-        <span class="ptab__box"><img src="images/box-us-photoshop-plugin.png" alt="" loading="lazy" onerror="this.style.display='none'"></span>
-        <span class="ptab__body">
-          <span class="ptab__row"><span class="ptab__n">US Photoshop Plugin</span><span class="ptab__apps" aria-hidden="true"><span class="ptab__app">Ps</span></span><span class="vh">for Photoshop</span></span>
-        </span>
-      </button>
+    <div class="os ptabs" role="tablist" aria-label="Plugins" id="pluginTabs">
+      <button type="button" role="tab" aria-selected="true" aria-controls="pp-0" id="pt-0">RetouchX Plugin<span class="vh"> — for Photoshop and desktop</span></button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="pp-1" id="pt-1" tabindex="-1">Lightroom Ai Color Plugin<span class="vh"> — for Lightroom Classic</span></button>
+      <button type="button" role="tab" aria-selected="false" aria-controls="pp-2" id="pt-2" tabindex="-1">US Photoshop Plugin<span class="vh"> — for Photoshop</span></button>
     </div>
       <div class="panel is-on" id="pp-0" role="tabpanel" aria-labelledby="pt-0">
         <div class="deck" data-deck role="group" aria-roledescription="carousel" aria-label="RetouchX Plugin walkthroughs">
@@ -3726,6 +3701,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     var hint = offer.querySelector('[data-hint]');
     var openBtn = offer.querySelector('[data-customize]');
     var go = offer.querySelector('[data-go]');
+    /* the bundle goes into the basket like anything else on the page: the
+       header counts it, and the button holds the confirmation until the
+       bundle itself changes under it */
+    var TICK = '<svg class="obuy__i" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.6 3.6 7.2-7.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    var bought = false;
     var tabs = [].slice.call(offer.querySelectorAll('[data-deal]'));
     /* the best value is the one on offer, so it is the one already chosen —
        filled with the five the page has been arguing for */
@@ -3803,9 +3783,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         ? list.length + ' of ' + state.get + ' chosen — pick ' + short + ' more.'
         : state.get + ' of ' + state.get + ' chosen. Your bundle is ready.';
       go.disabled = short > 0;
+      /* any change to the bundle is a new bundle, so the confirmation goes */
+      if(bought){ bought = false; go.classList.remove('is-added'); }
       go.innerHTML = short > 0
         ? 'Choose ' + short + ' more pack' + (short > 1 ? 's' : '')
-        : 'Get ' + state.get + ', Pay ' + d.pay + ' — $' + bill + ' <s>$' + full + '</s>';
+        : CART + 'Get ' + state.get + ', Pay ' + d.pay + ' — $' + bill + ' <s>$' + full + '</s>';
       syncOpen();
       /* the short version, for anyone who cannot see the row change */
       var status = offer.querySelector('[data-status]');
@@ -3815,6 +3797,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           : state.get + ' packs chosen. ' + go.textContent.replace(/\s+/g, ' ') + '.';
       }
     }
+
+    /* the same basket every other add-to-basket on the page carries */
+    var CART = '<svg class="obuy__i" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+    go.addEventListener('click', function(){
+      if(go.disabled || bought) return;
+      bought = true;
+      go.classList.add('is-added');
+      go.innerHTML = TICK + 'Added to cart';
+      var basket = document.querySelector('.cart__n');
+      if(basket){
+        basket.textContent = String((parseInt(basket.textContent, 10) || 0) + state.get);
+      }
+      var say = offer.querySelector('[data-status]');
+      if(say){ say.textContent = state.get + ' packs added to your basket.'; }
+    });
 
     var GIFT = '<svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M12.2 4.2h-1.6a2.2 2.2 0 00.3-1.1A2.1 2.1 0 007 1.9a2.1 2.1 0 00-3.9 1.2 2.2 2.2 0 00.3 1.1H1.8a.6.6 0 00-.6.6v1.9a.6.6 0 00.6.6h.3v5a.6.6 0 00.6.6h3.7V4.2zm-4.9 0H5.2a1.1 1.1 0 111.1-1.1zm.9 0V3.1a1.1 1.1 0 111.1 1.1zm-.7 8.7h3.7a.6.6 0 00.6-.6v-5h.3a.6.6 0 00.6-.6V4.8a.6.6 0 00-.6-.6H7.5z"/></svg>';
     function box(id, n, isFree){
@@ -4100,7 +4097,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   });
 
   /* ---- plugin tabs ---- */
-  var ptabs = [].slice.call(document.querySelectorAll('#pluginTabs .ptab'));
+  var ptabs = [].slice.call(document.querySelectorAll('#pluginTabs button'));
   function selectPlugin(i){
     ptabs.forEach(function(tab, n){
       var on = n === i;
@@ -4642,7 +4639,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   });
 
   /* ---- install: steps or requirements ---- */
-  document.querySelectorAll('.os').forEach(function(group){
+  document.querySelectorAll('.os:not(#pluginTabs)').forEach(function(group){
     var tabs = [].slice.call(group.querySelectorAll('button'));
     function pick(i){
       tabs.forEach(function(t, n){
