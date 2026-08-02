@@ -1168,7 +1168,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      can read a face in, and the row reads as a shelf rather than a stack */
   --v-per:5;
   --deck-gap:var(--s-6);
-  --inset:max(var(--gutter), calc((100% - var(--container)) / 2 + var(--gutter)));
+  /* the tutorials shelf, not the comparison deck: the row is the content
+     column and it ends where the column ends, so what comes next arrives by
+     scrolling rather than sitting half-shown in the gutter */
+  --inset:0;
+  width:100%;max-width:var(--container);margin-inline:auto;padding:0 var(--gutter);
 }
 .deck--v .deck__track{align-items:stretch}
 .deck--v .deck__pane,.deck--v .vcard{
@@ -1206,8 +1210,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .vcard__shot img.is-on{opacity:1}
 /* where in the set the sweep has reached — the same read the preset cards give */
 .vcard__seg{
-  position:absolute;left:var(--s-3);right:var(--s-3);top:var(--s-3);z-index:2;
-  display:flex;gap:4px;opacity:0;transition:opacity var(--dur-1) var(--ease);
+  /* at the foot, where the preset cards put theirs — one place on the page
+     to look for how far through a set you are */
+  position:absolute;left:var(--s-2);right:var(--s-2);bottom:var(--s-2);z-index:2;
+  display:flex;gap:3px;opacity:0;transition:opacity var(--dur-1) var(--ease);pointer-events:none;
 }
 .vcard:hover .vcard__seg,.vcard:focus-within .vcard__seg{opacity:1}
 .vcard__seg i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.5);box-shadow:0 1px 3px rgba(4,10,20,.4)}
@@ -1218,7 +1224,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      what the shortest can hold without leaving a hole */
   --q-lines:4;
   margin:0;flex:none;
-  font-size:var(--fs-3);line-height:var(--lh-normal);
+  /* a notch down from body copy: five of these stand side by side and the
+     row is shorter for it. Opened up it comes back to reading size. */
+  font-size:var(--fs-2);line-height:var(--lh-normal);
   height:calc(var(--q-lines) * var(--lh-normal) * 1em);
   overflow-y:auto;overscroll-behavior:contain;padding-right:var(--s-2);
   scrollbar-width:thin;scrollbar-color:var(--border-strong) transparent;
@@ -1232,7 +1240,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .vcard__q p::after{content:"\201D"}
 /* opened up, the card has the room the quote was written for — bigger type,
    and a line fewer because three across is a wider column */
-#voices.is-2up .vcard__q{font-size:var(--fs-5);line-height:var(--lh-snug);--q-lines:3}
+#voices.is-2up .vcard__q{font-size:var(--fs-3);line-height:var(--lh-normal);--q-lines:3}
 .vcard__who{display:flex;align-items:center;gap:var(--s-3);min-width:0;margin-top:var(--s-4)}
 .vcard__pp{
   flex:none;width:36px;height:36px;border-radius:var(--r-full);object-fit:cover;
