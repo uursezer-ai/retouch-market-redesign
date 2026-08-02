@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Retouch Market — AI plugins, Lightroom presets & LUTs</title>
-<meta name="description" content="AI photo editing plugins, Lightroom presets and video LUTs from working photographers. One-time purchase, macOS and Windows.">
+<meta name="description" content="AI photo editing plugins, Lightroom presets and video LUTs from working photographers. Instant download, macOS and Windows.">
 <meta name="theme-color" content="#FFFFFF">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -968,13 +968,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* below the breakpoint the row is already two across — nothing to promise */
 @media (max-width:1000px){#results .compare{cursor:default}}
 .zoom{flex:none}
-.zoom__i rect:last-child{transition:x var(--dur-2) var(--ease), width var(--dur-2) var(--ease)}
+/* one glass, two signs: the upright stroke is the whole difference between
+   asking for more and offering to give it back, so it is the only thing that
+   moves — the glass itself never redraws */
+.zoom__v{transform-box:fill-box;transform-origin:center;
+  transition:transform var(--dur-2) var(--ease), opacity var(--dur-2) var(--ease)}
 .zoom[aria-pressed="true"]{
   border-color:var(--accent);color:var(--accent-fg);background:var(--accent-bg);
 }
-/* the mark says what the row will look like: two panes when it is on */
-.zoom[aria-pressed="true"] .zoom__i rect:first-child{width:6px}
-.zoom[aria-pressed="true"] .zoom__i rect:last-child{x:9px;width:8px}
+/* pressed, the row is already big — so the glass offers to take it back */
+.zoom[aria-pressed="true"] .zoom__v{transform:scaleY(0);opacity:0}
 
 /* the pack chips: a scrolling row of pills, the chosen one outlined rather
    than filled so the row reads as one control and not six buttons */
@@ -1168,13 +1171,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   flex:0 0 calc((100% - (var(--v-per) - 1) * var(--deck-gap)) / var(--v-per));
   scroll-snap-align:start;
 }
-.vcard{
-  margin:0;position:relative;display:block;border-radius:var(--r-card);overflow:hidden;
-  background:var(--n-900);box-shadow:inset 0 0 0 1px rgba(10,37,64,.07);
-  transition:box-shadow var(--dur-2) var(--ease);
+.vcard{margin:0;position:relative;display:block}
+/* the same frame the tutorials give a thumbnail: its own border, its own
+   corner, and the lift on hover rather than a card around the whole thing */
+.vcard__shot{
+  position:relative;display:block;aspect-ratio:4/5;overflow:hidden;
+  border-radius:var(--r-card);background:var(--surface-sunken);
+  border:1px solid var(--border);
+  transition:border-color var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease);
 }
-.vcard:hover{box-shadow:inset 0 0 0 1px rgba(10,37,64,.07), var(--sh-3)}
-.vcard__shot{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--n-900)}
+.vcard:hover .vcard__shot{border-color:var(--border-strong);box-shadow:var(--sh-2)}
 .vcard__shot img{
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
   opacity:0;
@@ -1187,31 +1193,27 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   display:flex;gap:4px;opacity:0;transition:opacity var(--dur-1) var(--ease);
 }
 .vcard:hover .vcard__seg,.vcard:focus-within .vcard__seg{opacity:1}
-.vcard__seg i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.45)}
+.vcard__seg i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.5);box-shadow:0 1px 3px rgba(4,10,20,.4)}
 .vcard__seg i.is-on{background:#fff}
-/* over the foot of the picture, where the covers are already dark. The scrim
-   is ours so the quote still reads once the sweep moves on to a frame that
-   is not */
+/* under the picture, in the page's own ink. Nothing has to be dimmed to
+   make it readable, so nothing has to get out of the way either — the quote
+   stays put however far the sweep runs through the frames above it. */
 .vcard__body{
-  position:absolute;inset:auto 0 0 0;z-index:2;
-  display:flex;flex-direction:column;gap:var(--s-4);
-  padding:var(--s-10) var(--s-5) var(--s-5);
-  background:linear-gradient(to top,rgba(6,12,22,.92) 0%,rgba(6,12,22,.72) 45%,rgba(6,12,22,0) 100%);
+  display:flex;flex-direction:column;gap:var(--s-3);
+  margin-top:var(--s-4);
 }
-.vcard__q{
-  margin:0;overflow:hidden;
-  max-height:14em;opacity:1;
-  transition:max-height var(--dur-2) var(--ease), opacity var(--dur-1) var(--ease),
-             margin-bottom var(--dur-2) var(--ease);
-}
-.vcard.is-past-cover .vcard__q{max-height:0;opacity:0;margin-bottom:calc(var(--s-4) * -1)}
+.vcard__q{margin:0}
 .vcard__q p{
   margin:0;font-size:var(--fs-3);line-height:var(--lh-normal);font-weight:var(--fw-medium);
-  color:#fff;text-wrap:pretty;
+  color:var(--fg);text-wrap:pretty;
+  display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;
+  /* four lines held whether they are used or not, so the faces under them
+     land on one line across the row */
+  min-height:calc(4 * var(--lh-normal) * var(--fs-3));
   transition:font-size var(--dur-2) var(--ease);
 }
 /* opened up, the card has the room the quote was written for */
-#voices.is-2up .vcard__q p{font-size:var(--fs-5);line-height:var(--lh-snug)}
+#voices.is-2up .vcard__q p{font-size:var(--fs-5);line-height:var(--lh-snug);-webkit-line-clamp:4;min-height:calc(4 * var(--lh-snug) * var(--fs-5))}
 .vcard__q p::before{content:"\201C"}
 .vcard__q p::after{content:"\201D"}
 .vcard__who{display:flex;align-items:center;gap:var(--s-2);min-width:0}
@@ -1219,17 +1221,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   /* 34, not 40: five across, those six pixels are what let the longest
      handle keep its follower count on the same line */
   flex:none;width:34px;height:34px;border-radius:var(--r-full);object-fit:cover;
-  border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.1);
+  border:1px solid var(--border);background:var(--surface-sunken);
 }
 .vcard__id{display:flex;flex-direction:column;gap:1px;min-width:0}
 .vcard__n{
-  font-size:var(--fs-4);font-weight:var(--fw-semibold);line-height:var(--lh-snug);color:#fff;
+  font-size:var(--fs-3);font-weight:var(--fw-semibold);line-height:var(--lh-snug);color:var(--fg);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .vcard__at{
   /* a notch down from the name: five across leaves a handle and a follower
      count about 135px, and this is what makes both of them fit */
-  font-size:var(--fs-1);line-height:var(--lh-normal);color:rgba(255,255,255,.78);
+  font-size:var(--fs-1);line-height:var(--lh-normal);color:var(--fg-muted);
   /* the word "followers" is gone, so the handle and the number fit a line
      again — and a handle long enough to run out is cut, not wrapped */
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
@@ -1413,15 +1415,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 @media (prefers-reduced-motion:reduce){
   .prod.is-free::after{animation:none}
   .prod.is-free{animation:none}
+  .zoom__v{transition:none}
 }
-.prod__shot{position:relative;display:block;aspect-ratio:4/5;overflow:hidden;border-radius:10px;background:var(--surface-sunken)}
-.prod__shot img{width:100%;height:100%;object-fit:cover;display:block}
-/* a box render, not a photograph — it needs air rather than a crop */
-.prod--plugin .prod__shot img{object-fit:contain;padding:var(--s-3);background:var(--surface)}
+.prod__shot{position:relative;display:block;aspect-ratio:4/5;overflow:hidden;border-radius:10px;background:#fff}
+/* the render is a product shot, not a photograph: it wants a page to stand
+   on and air round it, not a crop */
+.prod__shot img{width:100%;height:100%;object-fit:contain;
+  padding:var(--s-9) var(--s-4) var(--s-6);display:block}
 .prod__no{
   position:absolute;left:10px;bottom:9px;z-index:2;
   font-size:var(--fs-1);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);
-  color:rgba(255,255,255,.80);text-shadow:0 1px 6px rgba(0,0,0,.6);
+  color:var(--n-400);
 }
 /* the free mark goes on the picture, where the eye lands first */
 .prod__badge{
@@ -2511,7 +2515,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <div class="ofoot">
         <p class="oproof">
           <span class="oproof__faces" aria-hidden="true"><img src="images/testimonials/mucahitguney/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"><img src="images/testimonials/zariffilm/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"><img src="images/testimonials/ugurdemir/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"></span>
-          <span>Chosen by 10,000+ photographers<br>One-time purchase · instant download · every future release included</span>
+          <span>Chosen by 10,000+ photographers<br>Instant download · every future release included</span>
         </p>
         <div class="oact">
           <span class="oact__row">
@@ -2547,8 +2551,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       </div>
       <button class="btn btn--secondary zoom" type="button" data-zoom aria-pressed="false">
         <svg class="zoom__i" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-          <rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.5"/>
-          <rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="7.6" cy="7.6" r="5.6" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M11.7 11.7 16.2 16.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M4.9 7.6h5.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path class="zoom__v" d="M7.6 4.9v5.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
         <span>2&times; Zoom</span>
       </button>
@@ -3180,8 +3186,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       </div>
       <button class="btn btn--secondary zoom" type="button" data-zoom data-zoom-target=".vcard" aria-pressed="false">
         <svg class="zoom__i" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-          <rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.5"/>
-          <rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.5"/>
+          <circle cx="7.6" cy="7.6" r="5.6" stroke="currentColor" stroke-width="1.5"/>
+          <path d="M11.7 11.7 16.2 16.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M4.9 7.6h5.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          <path class="zoom__v" d="M7.6 4.9v5.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
         <span>2&times; Zoom</span>
       </button>
@@ -3192,13 +3200,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="deck__track" data-badeck-track>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-                <img src="images/testimonials/dugunumuzvar/comment.webp" class="is-on" alt="Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
-                <img src="images/testimonials/dugunumuzvar/1.webp" alt="A photograph by Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/dugunumuzvar/1.webp" class="is-on" alt="A photograph by Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/dugunumuzvar/2.webp" alt="A photograph by Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/dugunumuzvar/3.webp" alt="A photograph by Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/dugunumuzvar/4.webp" alt="A photograph by Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/dugunumuzvar/5.webp" alt="A photograph by Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
-            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i></span>
           </div>
           <figcaption class="vcard__body">
             <blockquote class="vcard__q"><p>RetouchMarket is the only pack we use. It is complete, reliable, and it saves our team hours on every wedding.</p></blockquote>
@@ -3213,13 +3220,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-                <img src="images/testimonials/zariffilm/comment.webp" class="is-on" alt="Zarif Film" loading="lazy" onerror="this.style.display='none'">
-                <img src="images/testimonials/zariffilm/1.webp" alt="A photograph by Zarif Film" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/zariffilm/1.webp" class="is-on" alt="A photograph by Zarif Film" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/zariffilm/2.webp" alt="A photograph by Zarif Film" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/zariffilm/3.webp" alt="A photograph by Zarif Film" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/zariffilm/4.webp" alt="A photograph by Zarif Film" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/zariffilm/5.webp" alt="A photograph by Zarif Film" loading="lazy" onerror="this.style.display='none'">
-            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i></span>
           </div>
           <figcaption class="vcard__body">
             <blockquote class="vcard__q"><p>We deliver a whole wedding in a day now. The colour holds from the first frame to the last.</p></blockquote>
@@ -3234,13 +3240,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-                <img src="images/testimonials/ugurdemir/comment.webp" class="is-on" alt="Uğur Demir" loading="lazy" onerror="this.style.display='none'">
-                <img src="images/testimonials/ugurdemir/1.webp" alt="A photograph by Uğur Demir" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/ugurdemir/1.webp" class="is-on" alt="A photograph by Uğur Demir" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ugurdemir/2.webp" alt="A photograph by Uğur Demir" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ugurdemir/3.webp" alt="A photograph by Uğur Demir" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ugurdemir/4.webp" alt="A photograph by Uğur Demir" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ugurdemir/5.webp" alt="A photograph by Uğur Demir" loading="lazy" onerror="this.style.display='none'">
-            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i></span>
           </div>
           <figcaption class="vcard__body">
             <blockquote class="vcard__q"><p>Skin still looks like skin. That is the part I could never get out of any other preset pack.</p></blockquote>
@@ -3255,13 +3260,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-                <img src="images/testimonials/ekrulila/comment.webp" class="is-on" alt="Ekrulila" loading="lazy" onerror="this.style.display='none'">
-                <img src="images/testimonials/ekrulila/1.webp" alt="A photograph by Ekrulila" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/ekrulila/1.webp" class="is-on" alt="A photograph by Ekrulila" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ekrulila/2.webp" alt="A photograph by Ekrulila" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ekrulila/3.webp" alt="A photograph by Ekrulila" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ekrulila/4.webp" alt="A photograph by Ekrulila" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ekrulila/5.webp" alt="A photograph by Ekrulila" loading="lazy" onerror="this.style.display='none'">
-            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i></span>
           </div>
           <figcaption class="vcard__body">
             <blockquote class="vcard__q"><p>One click and the whole shoot matches. It changed how we hand work over to the rest of the studio.</p></blockquote>
@@ -3276,13 +3280,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-                <img src="images/testimonials/celalcanik/comment.webp" class="is-on" alt="Celal Canık" loading="lazy" onerror="this.style.display='none'">
-                <img src="images/testimonials/celalcanik/1.webp" alt="A photograph by Celal Canık" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/celalcanik/1.webp" class="is-on" alt="A photograph by Celal Canık" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/celalcanik/2.webp" alt="A photograph by Celal Canık" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/celalcanik/3.webp" alt="A photograph by Celal Canık" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/celalcanik/4.webp" alt="A photograph by Celal Canık" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/celalcanik/5.webp" alt="A photograph by Celal Canık" loading="lazy" onerror="this.style.display='none'">
-            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i></span>
           </div>
           <figcaption class="vcard__body">
             <blockquote class="vcard__q"><p>I stopped switching between panels halfway through an edit. Everything I reach for is in one place.</p></blockquote>
@@ -3297,13 +3300,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-                <img src="images/testimonials/mucahitguney/comment.webp" class="is-on" alt="Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
-                <img src="images/testimonials/mucahitguney/1.webp" alt="A photograph by Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/mucahitguney/1.webp" class="is-on" alt="A photograph by Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/mucahitguney/2.webp" alt="A photograph by Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/mucahitguney/3.webp" alt="A photograph by Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/mucahitguney/4.webp" alt="A photograph by Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/mucahitguney/5.webp" alt="A photograph by Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
-            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i></span>
+            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i></span>
           </div>
           <figcaption class="vcard__body">
             <blockquote class="vcard__q"><p>The plugins do the boring half of the job, so the time goes on the frames that actually matter.</p></blockquote>
@@ -3580,7 +3582,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   (function(){
     var offer = document.querySelector('[data-offer]');
     if(!offer) return;
-    var PACKS = [{"name":"Full Plugin Pack","img":"images/box-retouchx.png","price":"$149","was":"$299","by":"Retouch Market","ini":"RM","first":true},{"name":"Lora Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Solis Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Terra Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Jardin Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Demir","ini":"UD"},{"name":"Mely Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Melih Süren","ini":"MS"},{"name":"Onyx Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Adam Tahirov","ini":"AT"},{"name":"Doré Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Mücahit Güney","ini":"MG"},{"name":"Olbia LUTs","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Umut Kaçar","ini":"UK"},{"name":"Vela Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Nord Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Melih Süren","ini":"MS"},{"name":"Aster LUTs","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Adam Tahirov","ini":"AT"}];
+    var PACKS = [{"name":"Full Plugin Pack","img":"images/boxes/full-plugin-pack.webp","price":"$149","was":"$299","by":"Retouch Market","ini":"RM","first":true},{"name":"Lora Presets","img":"images/boxes/lora.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Solis Presets","img":"images/boxes/solis.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Terra Presets","img":"images/boxes/terra.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Jardin Presets","img":"images/boxes/jardin.webp","price":"$59","was":"$119","by":"Uğur Demir","ini":"UD"},{"name":"Mely Presets","img":"images/boxes/mely.webp","price":"$59","was":"$119","by":"Melih Süren","ini":"MS"},{"name":"Onyx Presets","img":"images/boxes/onyx.webp","price":"$59","was":"$119","by":"Adam Tahirov","ini":"AT"},{"name":"Doré Presets","img":"images/boxes/dore.webp","price":"$59","was":"$119","by":"Mücahit Güney","ini":"MG"},{"name":"Olbia LUTs","img":"images/boxes/olbia.webp","price":"$59","was":"$119","by":"Umut Kaçar","ini":"UK"},{"name":"Vela Presets","img":"images/boxes/vela.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Nord Presets","img":"images/boxes/nord.webp","price":"$59","was":"$119","by":"Melih Süren","ini":"MS"},{"name":"Aster LUTs","img":"images/boxes/aster.webp","price":"$59","was":"$119","by":"Adam Tahirov","ini":"AT"}];
     var DEALS = [{"get":3,"pay":2},{"get":5,"pay":3}];
     var row = offer.querySelector('[data-picks]');
     var panel = offer.querySelector('[data-custom]');
@@ -3776,6 +3778,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
            shrinking drops from the end rather than silently reshuffling */
         state.picks = state.picks.slice(0, state.get);
         fill();
+        /* the section's own top, not the panel's: the panel is inset by the
+           gutter and landing on it leaves the dark ground cut off above */
+        var sec = offer.closest('section');
+        var nav = document.getElementById('nav');
+        window.scrollTo({top: window.scrollY + sec.getBoundingClientRect().top - (nav ? nav.offsetHeight : 0),
+                         behavior: still ? 'auto' : 'smooth'});
         tabs.forEach(function(t){
           t.setAttribute('aria-checked', String(t === tab));
           t.tabIndex = t === tab ? 0 : -1;
@@ -4133,7 +4141,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     var hint = document.createElement('span');
     hint.className = 'ziphint';
     hint.setAttribute('aria-hidden', 'true');
-    hint.innerHTML = '<svg viewBox="0 0 18 18" fill="none"><rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/><rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/></svg>Click 2\u00d7 Zoom';
+    hint.innerHTML = '<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="7.6" cy="7.6" r="5.6"/><path d="M11.7 11.7 16.2 16.2"/><path d="M4.9 7.6h5.4"/><path d="M7.6 4.9v5.4"/></svg>Click 2\u00d7 Zoom';
     sec.appendChild(hint);
     function hintOff(){ hint.classList.remove('is-on'); }
     sec.addEventListener('pointermove', function(e){
