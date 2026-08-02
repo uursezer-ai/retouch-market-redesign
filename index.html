@@ -625,6 +625,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   position:relative;flex:1 1 0;min-width:0;
   display:inline-flex;align-items:center;justify-content:center;gap:var(--s-3);
 }
+/* a disc and two badges want more room than a word does — written with the
+   track's own class so it outranks .os button further down the sheet */
+.os.ptabs button{padding-block:var(--s-3)}
 .ptab__nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 /* the count in front of the name: three plugins, and this is the first */
 .ptab__no{
@@ -731,7 +734,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   background:var(--bg);border-color:var(--danger);color:var(--danger);
 }
 @media (prefers-reduced-motion:reduce){.pbuy:hover{transform:none}}
-@media (max-width:860px){
+/* the column narrows before the band folds, and three promises on one line
+   is worth four pixels a side */
+@media (max-width:1280px){
+  .pbuy__meta li{gap:var(--s-2);padding-right:var(--s-3)}
+  .pbuy__meta li + li{padding-left:var(--s-3)}
+}
+@media (max-width:1100px){
   .pbuy{flex-wrap:wrap;gap:var(--s-4)}
   .pbuy__body{flex:1 1 60%}
   .pbuy__price{margin-left:auto}
@@ -1700,6 +1709,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .oproof__faces img:first-child{margin-left:0}
 .oact{display:flex;flex-direction:column;align-items:flex-end;gap:var(--s-3)}
+/* the bundle is bought: tuning it now would mean changing something that is
+   already in the basket, so the offer is the only button left */
+.oact.is-bought [data-customize]{display:none}
 .oact__row{display:flex;align-items:center;gap:var(--s-3)}
 /* "Get 5, Pay 3 — $267 $385" is the widest this ever gets; holding that
    width means the price can change without the button jumping */
@@ -1718,7 +1730,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* in the basket and under the pointer it offers the way out — the same
    secondary red the shelf cards use, so one gesture means one thing */
 .obuy.is-added:hover,.obuy.is-added:focus-visible{
-  background:transparent;color:var(--danger);box-shadow:inset 0 0 0 1px var(--danger);
+  background:var(--bg);color:var(--danger-fg);box-shadow:inset 0 0 0 1px var(--danger-fg);
 }
 .obuy.is-added s{display:none}
 /* Done, on a bundle that is not done */
@@ -3816,7 +3828,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         : state.get + ' of ' + state.get + ' chosen. Your bundle is ready.';
       go.disabled = short > 0;
       /* any change to the bundle is a new bundle, so the confirmation goes */
-      if(bought){ bought = false; go.classList.remove('is-added'); }
+      if(bought){
+        bought = false;
+        go.classList.remove('is-added');
+        var back = go.closest('.oact');
+        if(back) back.classList.remove('is-bought');
+      }
       go.innerHTML = short > 0
         ? 'Choose ' + short + ' more pack' + (short > 1 ? 's' : '')
         : CART + 'Get ' + state.get + ', Pay ' + d.pay + ' — $' + bill + ' <s>$' + full + '</s>';
@@ -3850,16 +3867,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     }
     go.addEventListener('click', function(){
       if(go.disabled) return;
+      var act = go.closest('.oact');
       if(bought){
         bought = false;
         go.classList.remove('is-added');
         go.removeAttribute('aria-label');
+        if(act) act.classList.remove('is-bought');
         basket(-state.get);
         render();
         return;
       }
       bought = true;
       go.classList.add('is-added');
+      /* nothing left to tune once it is bought — the way to change the
+         bundle is to take it back out */
+      if(act) act.classList.add('is-bought');
       bill(true);
       basket(state.get);
     });
