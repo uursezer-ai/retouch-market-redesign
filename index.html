@@ -944,21 +944,24 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 #voices.is-2up .deck.deck--v{--v-per:3}
 #voices .vcard{cursor:zoom-in}
 #voices.is-2up .vcard{cursor:zoom-out}
-.vcard__hint{
-  position:absolute;left:50%;top:var(--s-5);z-index:4;transform:translate(-50%,-6px);
-  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;pointer-events:none;
+/* it rides the cursor, a little below and to the right, and flips to the
+   other side rather than running off the edge of the window */
+.ziphint{
+  position:fixed;left:0;top:0;z-index:70;pointer-events:none;
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
   padding:6px var(--s-3);border-radius:var(--r-full);
-  background:rgba(6,12,22,.72);color:#fff;backdrop-filter:blur(6px);
+  background:rgba(6,12,22,.82);color:#fff;backdrop-filter:blur(6px);
   font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:.04em;
   box-shadow:0 6px 20px rgba(4,10,20,.4);
-  opacity:0;transition:opacity var(--dur-1) var(--ease), transform var(--dur-1) var(--ease);
+  transform:translate(var(--hx,0px), var(--hy,0px));
+  opacity:0;transition:opacity var(--dur-1) var(--ease);
 }
-.vcard__hint svg{width:11px;height:11px;flex:none}
-.vcard:hover .vcard__hint,.vcard:focus-within .vcard__hint{opacity:1;transform:translate(-50%,0)}
-#voices.is-2up .vcard__hint::after{content:" out"}
+.ziphint.is-on{opacity:1}
+.ziphint svg{width:11px;height:11px;flex:none}
+/* below the breakpoint there is no toggle to offer */
 @media (max-width:1000px){
   #voices .vcard{cursor:default}
-  .vcard__hint{display:none}
+  .ziphint{display:none}
 }
 #results .compare{cursor:zoom-in}
 #results.is-2up .compare{cursor:zoom-out}
@@ -1254,7 +1257,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    there */
 .os--even{margin-bottom:0;flex:none}
 .os--even button{flex:1 1 0;min-width:132px;justify-content:center}
-.offer2 .os{background:rgba(0,0,0,.34)}
+.offer2 .os{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14)}
 .offer2 .os button[aria-checked="true"]{background:#fff;color:#111322;box-shadow:0 8px 25px rgba(0,0,0,.24)}
 /* Steps and requirements are two views of the same block, stacked in one grid
    cell: whichever is showing, the column keeps the height of the taller one,
@@ -1491,6 +1494,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .custom.is-bad .custom__hint{color:#FF88A8}
 @keyframes nudge{25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
 .custom__top{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s-4);margin-bottom:var(--s-5)}
+.custom__done{flex:none}
+/* the bar under it is about paying, and you are not paying yet — it stands
+   down while the panel is open, so choosing swaps one block for another
+   instead of stacking a second one under the first */
+.shell.is-tuning .ofoot{display:none}
 .custom__top h3{margin:0;font-size:var(--fs-5)}
 .custom__top p{margin:var(--s-1) 0 0;font-size:var(--fs-2);color:var(--fg-muted)}
 .custom__hint{margin:var(--s-5) 0 0;font-size:var(--fs-3);color:var(--accent-fg)}
@@ -1567,15 +1575,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .obuy[disabled]:hover{background:var(--surface-sunken)}
 .obuy[disabled] s{display:none}
 /* Done, on a bundle that is not done */
-[data-customize][disabled]{opacity:.45;cursor:not-allowed}
-[data-customize][disabled]:hover{border-color:var(--border);background:var(--surface)}
+[data-done][disabled]{opacity:.45;cursor:not-allowed}
+[data-done][disabled]:hover{border-color:var(--border);background:var(--surface)}
 /* and Done on one that is: the job is finished, and the button is the only
    thing on the panel wearing the colour that says so */
-[data-customize].is-done{
+[data-done].is-done{
   background:var(--ok);border-color:var(--ok);color:#fff;
   box-shadow:0 8px 24px rgba(26,127,75,.34);
 }
-[data-customize].is-done:hover{background:var(--ok-700);border-color:var(--ok-700)}
+[data-done].is-done:hover{background:var(--ok-700);border-color:var(--ok-700)}
 .onote{margin:0;font-size:var(--fs-1);line-height:var(--lh-normal);color:var(--fg-muted);text-align:right}
 
 /* ════════════════════════════════════════════════════════════════
@@ -2494,6 +2502,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <h3>Customize your selection</h3>
             <p>Any mix of plugins and presets — the cheapest ones in your bundle come free.</p>
           </div>
+          <button class="btn btn--secondary custom__done" type="button" data-done>Done</button>
         </div>
         <div class="choices" data-choices></div>
         <p class="custom__hint" data-hint aria-live="polite"></p>
@@ -3183,7 +3192,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="deck__track" data-badeck-track>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-            <span class="vcard__hint" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/><rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/></svg>Click 2&times; Zoom</span>
                 <img src="images/testimonials/dugunumuzvar/comment.webp" class="is-on" alt="Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/dugunumuzvar/1.webp" alt="A photograph by Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/dugunumuzvar/2.webp" alt="A photograph by Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
@@ -3205,7 +3213,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-            <span class="vcard__hint" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/><rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/></svg>Click 2&times; Zoom</span>
                 <img src="images/testimonials/zariffilm/comment.webp" class="is-on" alt="Zarif Film" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/zariffilm/1.webp" alt="A photograph by Zarif Film" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/zariffilm/2.webp" alt="A photograph by Zarif Film" loading="lazy" onerror="this.style.display='none'">
@@ -3227,7 +3234,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-            <span class="vcard__hint" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/><rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/></svg>Click 2&times; Zoom</span>
                 <img src="images/testimonials/ugurdemir/comment.webp" class="is-on" alt="Uğur Demir" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ugurdemir/1.webp" alt="A photograph by Uğur Demir" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ugurdemir/2.webp" alt="A photograph by Uğur Demir" loading="lazy" onerror="this.style.display='none'">
@@ -3249,7 +3255,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-            <span class="vcard__hint" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/><rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/></svg>Click 2&times; Zoom</span>
                 <img src="images/testimonials/ekrulila/comment.webp" class="is-on" alt="Ekrulila" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ekrulila/1.webp" alt="A photograph by Ekrulila" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ekrulila/2.webp" alt="A photograph by Ekrulila" loading="lazy" onerror="this.style.display='none'">
@@ -3271,7 +3276,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-            <span class="vcard__hint" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/><rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/></svg>Click 2&times; Zoom</span>
                 <img src="images/testimonials/celalcanik/comment.webp" class="is-on" alt="Celal Canık" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/celalcanik/1.webp" alt="A photograph by Celal Canık" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/celalcanik/2.webp" alt="A photograph by Celal Canık" loading="lazy" onerror="this.style.display='none'">
@@ -3293,7 +3297,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-            <span class="vcard__hint" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/><rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/></svg>Click 2&times; Zoom</span>
                 <img src="images/testimonials/mucahitguney/comment.webp" class="is-on" alt="Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/mucahitguney/1.webp" alt="A photograph by Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/mucahitguney/2.webp" alt="A photograph by Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
@@ -3751,16 +3754,19 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       if(!on) panel.classList.remove('is-bad');
       syncOpen();
     }
-    /* one button, two jobs, and it says which one it is doing. Shut while
-       the bundle is short: there is nothing to be done about an open picker
-       except finish choosing, and the hint under it already says so. */
+    /* two buttons, one job each: the bar's opens the panel, the panel's
+       closes it. Done is shut while the bundle is short — there is nothing
+       to be done about an open picker except finish choosing — and green
+       once it is not, because that is the end of the job. */
+    var doneBtn = offer.querySelector('[data-done]');
     function syncOpen(){
       var on = !panel.hidden;
-      openBtn.textContent = on ? 'Done' : 'Customize bundle';
-      openBtn.disabled = on && (state.get - state.picks.length) > 0;
-      openBtn.classList.toggle('is-done', on && !openBtn.disabled);
+      offer.classList.toggle('is-tuning', on);
+      doneBtn.disabled = state.get - state.picks.length > 0;
+      doneBtn.classList.toggle('is-done', !doneBtn.disabled);
     }
     openBtn.addEventListener('click', function(){ open(panel.hidden); });
+    doneBtn.addEventListener('click', function(){ open(false); openBtn.focus(); });
 
     tabs.forEach(function(tab, n){
       tab.tabIndex = tab.getAttribute('aria-checked') === 'true' ? 0 : -1;
@@ -4106,6 +4112,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     function set(on){
       btn.setAttribute('aria-pressed', String(on));
       sec.classList.toggle('is-2up', on);
+      if(on) hintOff();
       window.dispatchEvent(new Event('resize'));
     }
     btn.addEventListener('click', function(){
@@ -4120,6 +4127,30 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
        breakpoint the row is already two across and there is nothing to
        toggle. */
     var target = btn.getAttribute('data-zoom-target') || '[data-compare]';
+
+    /* the hint rides the cursor while it is over something that opens, and
+       says nothing once it is open: the second press is the obvious one */
+    var hint = document.createElement('span');
+    hint.className = 'ziphint';
+    hint.setAttribute('aria-hidden', 'true');
+    hint.innerHTML = '<svg viewBox="0 0 18 18" fill="none"><rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/><rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/></svg>Click 2\u00d7 Zoom';
+    sec.appendChild(hint);
+    function hintOff(){ hint.classList.remove('is-on'); }
+    sec.addEventListener('pointermove', function(e){
+      if(e.pointerType !== 'mouse') return hintOff();
+      if(sec.classList.contains('is-2up') || getComputedStyle(btn).display === 'none') return hintOff();
+      if(!e.target.closest(target)) return hintOff();
+      /* measured, so it never has to guess how wide it is */
+      var w = hint.offsetWidth, h = hint.offsetHeight;
+      var flip = e.clientX + 18 + w > window.innerWidth - 8;
+      hint.style.left = e.clientX + 'px';
+      hint.style.top = e.clientY + 'px';
+      hint.style.setProperty('--hx', (flip ? -(w + 18) : 18) + 'px');
+      hint.style.setProperty('--hy', (e.clientY + 20 + h > window.innerHeight ? -(h + 14) : 16) + 'px');
+      hint.classList.add('is-on');
+    }, {passive:true});
+    sec.addEventListener('pointerleave', hintOff);
+    window.addEventListener('scroll', hintOff, {passive:true});
     var from = null;
     sec.addEventListener('pointerdown', function(e){
       from = e.target.closest(target) ? {x:e.clientX, y:e.clientY} : null;
