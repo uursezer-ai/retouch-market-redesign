@@ -740,10 +740,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .pbuy__meta li{gap:var(--s-2);padding-right:var(--s-3)}
   .pbuy__meta li + li{padding-left:var(--s-3)}
 }
-@media (max-width:1100px){
+/* the fold is where the words stop fitting, not where a round number falls:
+   below this the body claims everything the picture beside it does not need,
+   so the promises keep their line and the price drops under them */
+@media (max-width:1200px){
   .pbuy{flex-wrap:wrap;gap:var(--s-4)}
-  .pbuy__body{flex:1 1 60%}
+  .pbuy__body{flex:1 1 calc(100% - 320px)}
   .pbuy__price{margin-left:auto}
+}
+/* narrower still and the picture cannot share a line with the words: the
+   body takes the whole width, which is what keeps the promises on one line */
+@media (max-width:900px){
+  .pbuy__body{flex:1 1 100%}
 }
 @media (max-width:620px){
   .pbuy{padding:var(--s-4)}
@@ -753,7 +761,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .pbuy__meta{font-size:var(--fs-3)}
   .pbuy__meta li + li{padding-left:0}
   .pbuy__meta li + li::before{display:none}
-  .pbuy__body{flex:1 1 100%}
   .card__add.pbuy__go{order:5;width:100%;flex:1 0 100%}
 }
 
