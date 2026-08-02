@@ -769,8 +769,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .arrow:hover{border-color:var(--border-strong);color:var(--fg)}
 .arrow[disabled]{opacity:.35;cursor:default;box-shadow:none}
+/* free-running, not stepped: a shelf scrolls the way the page scrolls, so a
+   flick coasts and stops where it is let go rather than being pulled onto
+   the next card. The arrows still land on a card edge — that is what they
+   are for — but nothing drags the row there behind your hand. */
 .rail{
-  display:flex;gap:var(--s-4);overflow-x:auto;scroll-snap-type:x mandatory;
+  display:flex;gap:var(--s-4);overflow-x:auto;
   scrollbar-width:none;-ms-overflow-style:none;padding-bottom:var(--s-1);
 }
 .rail::-webkit-scrollbar{display:none}
@@ -872,7 +876,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .rail{--per-view:5}
 .reel{
   flex:0 0 calc((100% - (var(--per-view) - 1) * var(--s-4)) / var(--per-view));
-  scroll-snap-align:start;display:block;
+  display:block;
 }
 .reel__thumb{
   position:relative;display:block;aspect-ratio:9/16;overflow:hidden;
@@ -1174,13 +1178,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   --inset:0;
   width:100%;max-width:var(--container);margin-inline:auto;padding:0 var(--gutter);
 }
-.deck--v .deck__track{align-items:stretch}
+/* a shelf, not a slideshow: it scrolls the way the page scrolls and stops
+   where it is let go. The comparison decks keep their snap — those are one
+   card at a time on purpose. */
+.deck--v .deck__track{align-items:stretch;scroll-snap-type:none}
 .deck--v .deck__pane,.deck--v .vcard{
   flex:0 0 calc((100% - (var(--v-per) - 1) * var(--deck-gap)) / var(--v-per));
   /* the handle is one unbreakable run, and without this it would set the
      width of its card and knock the row out of square */
   min-width:0;
-  scroll-snap-align:start;
+  scroll-snap-align:none;
 }
 /* A quote card, not a picture card: the words are the whole point, so they
    get the room and the face signs them at the foot. Every card is the same
@@ -4125,16 +4132,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       btn.addEventListener('click', function(){ go(idx + parseInt(btn.getAttribute('data-ba-step'), 10)); });
     });
     /* a card only part way on screen steps you onto it. A card you can already
-       see whole is left alone, so clicking one to set the handle still works */
-    panes.forEach(function(p, n){
-      p.addEventListener('click', function(e){
-        var r = p.getBoundingClientRect(), t = track.getBoundingClientRect();
-        var whole = r.left >= t.left - 1 && r.right <= t.right + 1;
-        if(whole) return;
-        e.preventDefault(); e.stopPropagation();
-        go(n);
-      }, true);
-    });
+       see whole is left alone, so clicking one to set the handle still works.
+       Only on a row that steps, though: a free-running shelf is meant to stop
+       where you let it go, and a click that yanks it onto a card edge would
+       take that back. */
+    if(getComputedStyle(track).scrollSnapType.indexOf('none') !== 0){
+      panes.forEach(function(p, n){
+        p.addEventListener('click', function(e){
+          var r = p.getBoundingClientRect(), t = track.getBoundingClientRect();
+          var whole = r.left >= t.left - 1 && r.right <= t.right + 1;
+          if(whole) return;
+          e.preventDefault(); e.stopPropagation();
+          go(n);
+        }, true);
+      });
+    }
     window.addEventListener('resize', sync);
     mark(0);
   });
