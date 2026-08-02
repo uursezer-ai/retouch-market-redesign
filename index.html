@@ -1171,16 +1171,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   flex:0 0 calc((100% - (var(--v-per) - 1) * var(--deck-gap)) / var(--v-per));
   scroll-snap-align:start;
 }
-.vcard{margin:0;position:relative;display:block}
-/* the same frame the tutorials give a thumbnail: its own border, its own
-   corner, and the lift on hover rather than a card around the whole thing */
-.vcard__shot{
-  position:relative;display:block;aspect-ratio:4/5;overflow:hidden;
-  border-radius:var(--r-card);background:var(--surface-sunken);
-  border:1px solid var(--border);
-  transition:border-color var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease);
+.vcard{
+  margin:0;position:relative;display:block;border-radius:var(--r-card);overflow:hidden;
+  background:var(--n-900);box-shadow:inset 0 0 0 1px rgba(10,37,64,.07);
+  transition:box-shadow var(--dur-2) var(--ease);
 }
-.vcard:hover .vcard__shot{border-color:var(--border-strong);box-shadow:var(--sh-2)}
+.vcard:hover{box-shadow:inset 0 0 0 1px rgba(10,37,64,.07), var(--sh-3)}
+.vcard__shot{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--n-900)}
 .vcard__shot img{
   position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
   opacity:0;
@@ -1193,27 +1190,31 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   display:flex;gap:4px;opacity:0;transition:opacity var(--dur-1) var(--ease);
 }
 .vcard:hover .vcard__seg,.vcard:focus-within .vcard__seg{opacity:1}
-.vcard__seg i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.5);box-shadow:0 1px 3px rgba(4,10,20,.4)}
+.vcard__seg i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.45)}
 .vcard__seg i.is-on{background:#fff}
-/* under the picture, in the page's own ink. Nothing has to be dimmed to
-   make it readable, so nothing has to get out of the way either — the quote
-   stays put however far the sweep runs through the frames above it. */
+/* over the foot of the picture, where the covers are already dark. The scrim
+   is ours so the quote still reads once the sweep moves on to a frame that
+   is not */
 .vcard__body{
-  display:flex;flex-direction:column;gap:var(--s-3);
-  margin-top:var(--s-4);
+  position:absolute;inset:auto 0 0 0;z-index:2;
+  display:flex;flex-direction:column;gap:var(--s-4);
+  padding:var(--s-10) var(--s-5) var(--s-5);
+  background:linear-gradient(to top,rgba(6,12,22,.92) 0%,rgba(6,12,22,.72) 45%,rgba(6,12,22,0) 100%);
 }
-.vcard__q{margin:0}
+.vcard__q{
+  margin:0;overflow:hidden;
+  max-height:14em;opacity:1;
+  transition:max-height var(--dur-2) var(--ease), opacity var(--dur-1) var(--ease),
+             margin-bottom var(--dur-2) var(--ease);
+}
+.vcard.is-past-cover .vcard__q{max-height:0;opacity:0;margin-bottom:calc(var(--s-4) * -1)}
 .vcard__q p{
   margin:0;font-size:var(--fs-3);line-height:var(--lh-normal);font-weight:var(--fw-medium);
-  color:var(--fg);text-wrap:pretty;
-  display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;
-  /* four lines held whether they are used or not, so the faces under them
-     land on one line across the row */
-  min-height:calc(4 * var(--lh-normal) * var(--fs-3));
+  color:#fff;text-wrap:pretty;
   transition:font-size var(--dur-2) var(--ease);
 }
 /* opened up, the card has the room the quote was written for */
-#voices.is-2up .vcard__q p{font-size:var(--fs-5);line-height:var(--lh-snug);-webkit-line-clamp:4;min-height:calc(4 * var(--lh-snug) * var(--fs-5))}
+#voices.is-2up .vcard__q p{font-size:var(--fs-5);line-height:var(--lh-snug)}
 .vcard__q p::before{content:"\201C"}
 .vcard__q p::after{content:"\201D"}
 .vcard__who{display:flex;align-items:center;gap:var(--s-2);min-width:0}
@@ -1221,17 +1222,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   /* 34, not 40: five across, those six pixels are what let the longest
      handle keep its follower count on the same line */
   flex:none;width:34px;height:34px;border-radius:var(--r-full);object-fit:cover;
-  border:1px solid var(--border);background:var(--surface-sunken);
+  border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.1);
 }
 .vcard__id{display:flex;flex-direction:column;gap:1px;min-width:0}
 .vcard__n{
-  font-size:var(--fs-3);font-weight:var(--fw-semibold);line-height:var(--lh-snug);color:var(--fg);
+  font-size:var(--fs-4);font-weight:var(--fw-semibold);line-height:var(--lh-snug);color:#fff;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .vcard__at{
   /* a notch down from the name: five across leaves a handle and a follower
      count about 135px, and this is what makes both of them fit */
-  font-size:var(--fs-1);line-height:var(--lh-normal);color:var(--fg-muted);
+  font-size:var(--fs-1);line-height:var(--lh-normal);color:rgba(255,255,255,.78);
   /* the word "followers" is gone, so the handle and the number fit a line
      again — and a handle long enough to run out is cut, not wrapped */
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
@@ -1417,11 +1418,20 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .prod.is-free{animation:none}
   .zoom__v{transition:none}
 }
-.prod__shot{position:relative;display:block;aspect-ratio:4/5;overflow:hidden;border-radius:10px;background:#fff}
-/* the render is a product shot, not a photograph: it wants a page to stand
-   on and air round it, not a crop */
+/* a lit backdrop rather than a white page: the panel is dark and a white
+   tile punched a hole in it, so the box stands on the panel's own surface
+   with the light falling from where the section's light already falls */
+.prod__shot{
+  position:relative;display:block;aspect-ratio:2/3;overflow:hidden;border-radius:10px;
+  background:radial-gradient(120% 88% at 50% 16%,
+    rgba(255,255,255,.14), rgba(255,255,255,.05) 58%, rgba(255,255,255,.025));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.07);
+}
+/* the render is a product shot, not a photograph: it wants room to stand in
+   and air round it, not a crop — and the air is only what the mark above it
+   and the number below it need */
 .prod__shot img{width:100%;height:100%;object-fit:contain;
-  padding:var(--s-9) var(--s-4) var(--s-6);display:block}
+  padding:var(--s-9) var(--s-2) var(--s-7);display:block}
 .prod__no{
   position:absolute;left:10px;bottom:9px;z-index:2;
   font-size:var(--fs-1);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);
@@ -3200,12 +3210,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="deck__track" data-badeck-track>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-                <img src="images/testimonials/dugunumuzvar/1.webp" class="is-on" alt="A photograph by Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/dugunumuzvar/comment.webp" class="is-on" alt="Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/dugunumuzvar/1.webp" alt="A photograph by Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/dugunumuzvar/2.webp" alt="A photograph by Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/dugunumuzvar/3.webp" alt="A photograph by Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/dugunumuzvar/4.webp" alt="A photograph by Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/dugunumuzvar/5.webp" alt="A photograph by Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
-            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i></span>
+            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i></span>
           </div>
           <figcaption class="vcard__body">
             <blockquote class="vcard__q"><p>RetouchMarket is the only pack we use. It is complete, reliable, and it saves our team hours on every wedding.</p></blockquote>
@@ -3220,12 +3231,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-                <img src="images/testimonials/zariffilm/1.webp" class="is-on" alt="A photograph by Zarif Film" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/zariffilm/comment.webp" class="is-on" alt="Zarif Film" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/zariffilm/1.webp" alt="A photograph by Zarif Film" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/zariffilm/2.webp" alt="A photograph by Zarif Film" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/zariffilm/3.webp" alt="A photograph by Zarif Film" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/zariffilm/4.webp" alt="A photograph by Zarif Film" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/zariffilm/5.webp" alt="A photograph by Zarif Film" loading="lazy" onerror="this.style.display='none'">
-            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i></span>
+            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i></span>
           </div>
           <figcaption class="vcard__body">
             <blockquote class="vcard__q"><p>We deliver a whole wedding in a day now. The colour holds from the first frame to the last.</p></blockquote>
@@ -3240,12 +3252,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-                <img src="images/testimonials/ugurdemir/1.webp" class="is-on" alt="A photograph by Uğur Demir" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/ugurdemir/comment.webp" class="is-on" alt="Uğur Demir" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/ugurdemir/1.webp" alt="A photograph by Uğur Demir" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ugurdemir/2.webp" alt="A photograph by Uğur Demir" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ugurdemir/3.webp" alt="A photograph by Uğur Demir" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ugurdemir/4.webp" alt="A photograph by Uğur Demir" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ugurdemir/5.webp" alt="A photograph by Uğur Demir" loading="lazy" onerror="this.style.display='none'">
-            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i></span>
+            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i></span>
           </div>
           <figcaption class="vcard__body">
             <blockquote class="vcard__q"><p>Skin still looks like skin. That is the part I could never get out of any other preset pack.</p></blockquote>
@@ -3260,12 +3273,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-                <img src="images/testimonials/ekrulila/1.webp" class="is-on" alt="A photograph by Ekrulila" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/ekrulila/comment.webp" class="is-on" alt="Ekrulila" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/ekrulila/1.webp" alt="A photograph by Ekrulila" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ekrulila/2.webp" alt="A photograph by Ekrulila" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ekrulila/3.webp" alt="A photograph by Ekrulila" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ekrulila/4.webp" alt="A photograph by Ekrulila" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ekrulila/5.webp" alt="A photograph by Ekrulila" loading="lazy" onerror="this.style.display='none'">
-            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i></span>
+            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i></span>
           </div>
           <figcaption class="vcard__body">
             <blockquote class="vcard__q"><p>One click and the whole shoot matches. It changed how we hand work over to the rest of the studio.</p></blockquote>
@@ -3280,12 +3294,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-                <img src="images/testimonials/celalcanik/1.webp" class="is-on" alt="A photograph by Celal Canık" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/celalcanik/comment.webp" class="is-on" alt="Celal Canık" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/celalcanik/1.webp" alt="A photograph by Celal Canık" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/celalcanik/2.webp" alt="A photograph by Celal Canık" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/celalcanik/3.webp" alt="A photograph by Celal Canık" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/celalcanik/4.webp" alt="A photograph by Celal Canık" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/celalcanik/5.webp" alt="A photograph by Celal Canık" loading="lazy" onerror="this.style.display='none'">
-            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i></span>
+            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i></span>
           </div>
           <figcaption class="vcard__body">
             <blockquote class="vcard__q"><p>I stopped switching between panels halfway through an edit. Everything I reach for is in one place.</p></blockquote>
@@ -3300,12 +3315,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
-                <img src="images/testimonials/mucahitguney/1.webp" class="is-on" alt="A photograph by Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/mucahitguney/comment.webp" class="is-on" alt="Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
+                <img src="images/testimonials/mucahitguney/1.webp" alt="A photograph by Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/mucahitguney/2.webp" alt="A photograph by Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/mucahitguney/3.webp" alt="A photograph by Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/mucahitguney/4.webp" alt="A photograph by Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/mucahitguney/5.webp" alt="A photograph by Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
-            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i></span>
+            <span class="vcard__seg" aria-hidden="true"><i class="is-on"></i><i></i><i></i><i></i><i></i><i></i></span>
           </div>
           <figcaption class="vcard__body">
             <blockquote class="vcard__q"><p>The plugins do the boring half of the job, so the time goes on the frames that actually matter.</p></blockquote>
