@@ -944,7 +944,22 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 #voices.is-2up .deck.deck--v{--v-per:3}
 #voices .vcard{cursor:zoom-in}
 #voices.is-2up .vcard{cursor:zoom-out}
-@media (max-width:1000px){#voices .vcard{cursor:default}}
+.vcard__hint{
+  position:absolute;left:50%;top:var(--s-5);z-index:4;transform:translate(-50%,-6px);
+  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;pointer-events:none;
+  padding:6px var(--s-3);border-radius:var(--r-full);
+  background:rgba(6,12,22,.72);color:#fff;backdrop-filter:blur(6px);
+  font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:.04em;
+  box-shadow:0 6px 20px rgba(4,10,20,.4);
+  opacity:0;transition:opacity var(--dur-1) var(--ease), transform var(--dur-1) var(--ease);
+}
+.vcard__hint svg{width:11px;height:11px;flex:none}
+.vcard:hover .vcard__hint,.vcard:focus-within .vcard__hint{opacity:1;transform:translate(-50%,0)}
+#voices.is-2up .vcard__hint::after{content:" out"}
+@media (max-width:1000px){
+  #voices .vcard{cursor:default}
+  .vcard__hint{display:none}
+}
 #results .compare{cursor:zoom-in}
 #results.is-2up .compare{cursor:zoom-out}
 /* below the breakpoint the row is already two across — nothing to promise */
@@ -980,7 +995,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* the same "this one" the plugin tabs use: an accent wash, an accent edge
    doubled by a ring so the line reads at any zoom */
 .pchip[aria-selected="true"]{
-  background:var(--accent-bg);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);
+  background:var(--accent-bg);border-color:var(--accent);
   color:var(--accent-fg);font-weight:var(--fw-semibold);
 }
 .bapanel[hidden]{display:none}
@@ -1188,9 +1203,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .vcard.is-past-cover .vcard__q{max-height:0;opacity:0;margin-bottom:calc(var(--s-4) * -1)}
 .vcard__q p{
-  margin:0;font-size:var(--fs-5);line-height:var(--lh-snug);font-weight:var(--fw-medium);
+  margin:0;font-size:var(--fs-3);line-height:var(--lh-normal);font-weight:var(--fw-medium);
   color:#fff;text-wrap:pretty;
+  transition:font-size var(--dur-2) var(--ease);
 }
+/* opened up, the card has the room the quote was written for */
+#voices.is-2up .vcard__q p{font-size:var(--fs-5);line-height:var(--lh-snug)}
 .vcard__q p::before{content:"\201C"}
 .vcard__q p::after{content:"\201D"}
 .vcard__who{display:flex;align-items:center;gap:var(--s-2);min-width:0}
@@ -3165,6 +3183,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="deck__track" data-badeck-track>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
+            <span class="vcard__hint" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/><rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/></svg>Click 2&times; Zoom</span>
                 <img src="images/testimonials/dugunumuzvar/comment.webp" class="is-on" alt="Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/dugunumuzvar/1.webp" alt="A photograph by Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/dugunumuzvar/2.webp" alt="A photograph by Düğünümüz Var" loading="lazy" onerror="this.style.display='none'">
@@ -3186,6 +3205,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
+            <span class="vcard__hint" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/><rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/></svg>Click 2&times; Zoom</span>
                 <img src="images/testimonials/zariffilm/comment.webp" class="is-on" alt="Zarif Film" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/zariffilm/1.webp" alt="A photograph by Zarif Film" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/zariffilm/2.webp" alt="A photograph by Zarif Film" loading="lazy" onerror="this.style.display='none'">
@@ -3207,6 +3227,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
+            <span class="vcard__hint" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/><rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/></svg>Click 2&times; Zoom</span>
                 <img src="images/testimonials/ugurdemir/comment.webp" class="is-on" alt="Uğur Demir" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ugurdemir/1.webp" alt="A photograph by Uğur Demir" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ugurdemir/2.webp" alt="A photograph by Uğur Demir" loading="lazy" onerror="this.style.display='none'">
@@ -3228,6 +3249,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
+            <span class="vcard__hint" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/><rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/></svg>Click 2&times; Zoom</span>
                 <img src="images/testimonials/ekrulila/comment.webp" class="is-on" alt="Ekrulila" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ekrulila/1.webp" alt="A photograph by Ekrulila" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/ekrulila/2.webp" alt="A photograph by Ekrulila" loading="lazy" onerror="this.style.display='none'">
@@ -3249,6 +3271,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
+            <span class="vcard__hint" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/><rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/></svg>Click 2&times; Zoom</span>
                 <img src="images/testimonials/celalcanik/comment.webp" class="is-on" alt="Celal Canık" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/celalcanik/1.webp" alt="A photograph by Celal Canık" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/celalcanik/2.webp" alt="A photograph by Celal Canık" loading="lazy" onerror="this.style.display='none'">
@@ -3270,6 +3293,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </figure>
         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
+            <span class="vcard__hint" aria-hidden="true"><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/><rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.6"/></svg>Click 2&times; Zoom</span>
                 <img src="images/testimonials/mucahitguney/comment.webp" class="is-on" alt="Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/mucahitguney/1.webp" alt="A photograph by Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
                 <img src="images/testimonials/mucahitguney/2.webp" alt="A photograph by Mücahit Güney" loading="lazy" onerror="this.style.display='none'">
