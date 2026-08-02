@@ -989,6 +989,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    5 · PRESETS
    ════════════════════════════════════════════════════════════════ */
 .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-6)}
+.card[hidden]{display:none}
+.presets__more{display:flex;flex-direction:column;align-items:center;gap:var(--s-4);margin-top:var(--s-9)}
+.presets__more p{margin:0;font-size:var(--fs-2);color:var(--fg-muted)}
 /* the title's link is stretched over the whole card, so the card is one
    target and the add button can sit above it as a second, separate one —
    a button nested inside a link would not be valid or operable */
@@ -1041,10 +1044,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .card__seg i.is-on{background:#fff}
 .chip{
   position:absolute;top:var(--s-3);left:var(--s-3);
+  display:inline-flex;align-items:center;gap:5px;
   font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:.05em;text-transform:uppercase;
   padding:var(--s-1) var(--s-3);border-radius:var(--r-full);
   background:rgba(255,255,255,.95);color:var(--accent-700);box-shadow:var(--sh-1);backdrop-filter:blur(6px);
 }
+/* the mark is what you catch across a grid of twelve; the word settles it */
+.chip svg{width:11px;height:11px;flex:none;margin-top:-1px}
 .card__body{display:flex;flex-direction:column;flex:1;gap:var(--s-3);padding:var(--s-5)}
 .card__by{display:flex;align-items:center;gap:var(--s-2)}
 .card__by .avatar{width:24px;height:24px;font-size:10px;background:var(--surface-sunken)}
@@ -1399,10 +1405,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* the free mark goes on the picture, where the eye lands first */
 .prod__badge{
   position:absolute;left:10px;top:10px;z-index:3;padding:5px var(--s-3);border-radius:var(--r-full);
+  display:inline-flex;align-items:center;gap:5px;
   background:var(--accent);color:var(--fg-on-accent);border:1px solid rgba(255,255,255,.34);
   font-size:var(--fs-2);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
   animation:freePulse 2.4s var(--ease) infinite alternate;
 }
+.prod__badge svg{width:11px;height:11px;flex:none}
 /* a ring that breathes outwards — the pill stays put, the light around it
    does the moving, so nothing under it shifts */
 @keyframes freePulse{
@@ -2237,7 +2245,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="card" data-popular="1" data-added="9">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75" alt="Sample graded with Lora Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="chip">Bestseller</span>
+          <span class="chip"><svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3.2 1.4h7.6v1.2h1.9v1.5a2.9 2.9 0 01-2.4 2.85A3.6 3.6 0 017.7 8.6v1.9h2.1v1.3H4.2v-1.3h2.1V8.6a3.6 3.6 0 01-2.6-1.65A2.9 2.9 0 011.3 4.1V2.6h1.9zM2.5 3.8v.3a1.7 1.7 0 00.95 1.5A6 6 0 013.2 3.8zm9 0h-.7a6 6 0 01-.25 1.8 1.7 1.7 0 00.95-1.5z"/></svg>Bestseller</span>
           <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
         </span>
         <div class="card__body">
@@ -2253,7 +2261,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="card" data-popular="2" data-added="8">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75" alt="Sample graded with Solis Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="chip">Most saved</span>
+          <span class="chip"><svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M7.4.7s.5 1.9-.6 3.3C5.6 5.5 4.2 5.8 4.2 7.6a3 3 0 00.6 1.8s-1-.3-1.5-1.3c0 0-.9 1-.9 2.4a4.6 4.6 0 009.2.2c0-3.2-2.5-4.6-2.5-6.6 0-1.5-1.7-3.4-1.7-3.4zM7 12.1a1.8 1.8 0 01-1.8-1.8c0-1.3 1.1-1.6 1.1-2.8 0 0 1.4.9 1.4 2.3a4 4 0 01-.2 1.2 1.6 1.6 0 01-.5 1.1z"/></svg>Popular</span>
           <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
         </span>
         <div class="card__body">
@@ -2349,7 +2357,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="card" data-popular="8" data-added="1">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75" alt="Sample graded with Olbia LUTs" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="chip">New</span>
+          <span class="chip"><svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M7 0l1.2 3.5L11.7 4.7 8.2 5.9 7 9.4 5.8 5.9 2.3 4.7 5.8 3.5zM11.6 8.4l.6 1.7 1.7.6-1.7.6-.6 1.7-.6-1.7-1.7-.6 1.7-.6zM2.6 9.1l.45 1.25L4.3 10.8l-1.25.45L2.6 12.5l-.45-1.25L.9 10.8l1.25-.45z"/></svg>New</span>
           <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
         </span>
         <div class="card__body">
@@ -2378,6 +2386,59 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           <button class="card__add" type="button" aria-label="Add Demo Presets to basket"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add to cart</button>
         </div>
       </article>
+      <article class="card" data-popular="10" data-added="0">
+        <span class="card__img" data-scrub>
+          <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=750&amp;q=75" alt="Sample graded with Vela Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
+          <span class="chip"><svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M7 .8l1.85 3.75 4.15.6-3 2.93.71 4.12L7 10.25 3.29 12.2 4 8.08 1 5.15l4.15-.6z"/></svg>Editor's Choice</span>
+          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
+        </span>
+        <div class="card__body">
+          <span class="card__by"><span class="avatar">UŞ</span><span>Uğur Sezer</span></span>
+          <h3 class="card__t"><a href="#">Vela Presets</a></h3>
+          <span class="card__foot">
+            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.8 <i>(842)</i></span>
+            <span class="price"><b>$59</b><s>$119</s></span>
+          </span>
+          <button class="card__add" type="button" aria-label="Add Vela Presets to basket"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add to cart</button>
+        </div>
+      </article>
+      <article class="card" data-popular="11" data-added="0">
+        <span class="card__img" data-scrub>
+          <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=750&amp;q=75" alt="Sample graded with Nord Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
+          
+          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
+        </span>
+        <div class="card__body">
+          <span class="card__by"><span class="avatar">MS</span><span>Melih Süren</span></span>
+          <h3 class="card__t"><a href="#">Nord Presets</a></h3>
+          <span class="card__foot">
+            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.9 <i>(1,164)</i></span>
+            <span class="price"><b>$59</b><s>$119</s></span>
+          </span>
+          <button class="card__add" type="button" aria-label="Add Nord Presets to basket"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add to cart</button>
+        </div>
+      </article>
+      <article class="card" data-popular="12" data-added="0">
+        <span class="card__img" data-scrub>
+          <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=750&amp;q=75" alt="Sample graded with Aster LUTs" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
+          <span class="chip"><svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M7 0l1.2 3.5L11.7 4.7 8.2 5.9 7 9.4 5.8 5.9 2.3 4.7 5.8 3.5zM11.6 8.4l.6 1.7 1.7.6-1.7.6-.6 1.7-.6-1.7-1.7-.6 1.7-.6zM2.6 9.1l.45 1.25L4.3 10.8l-1.25.45L2.6 12.5l-.45-1.25L.9 10.8l1.25-.45z"/></svg>New</span>
+          <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
+        </span>
+        <div class="card__body">
+          <span class="card__by"><span class="avatar">AT</span><span>Adam Tahirov</span></span>
+          <h3 class="card__t"><a href="#">Aster LUTs</a></h3>
+          <span class="card__foot">
+            <span class="rate"><svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg>4.7 <i>(389)</i></span>
+            <span class="price"><b>$59</b><s>$119</s></span>
+          </span>
+          <button class="card__add" type="button" aria-label="Add Aster LUTs to basket"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add to cart</button>
+        </div>
+      </article>
+    </div>
+
+    <div class="presets__more" data-more hidden>
+      <p class="tnum" data-more-count></p>
+      <button class="btn btn--secondary" type="button" data-more-go>Load more</button>
     </div>
 
   </div>
@@ -3492,7 +3553,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   (function(){
     var offer = document.querySelector('[data-offer]');
     if(!offer) return;
-    var PACKS = [{"name":"Full Plugin Pack","img":"images/box-retouchx.png","price":"$149","was":"$299","by":"Retouch Market","ini":"RM","first":true},{"name":"Lora Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Solis Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Terra Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Jardin Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Demir","ini":"UD"},{"name":"Mely Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Melih Süren","ini":"MS"},{"name":"Onyx Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Adam Tahirov","ini":"AT"},{"name":"Doré Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Mücahit Güney","ini":"MG"},{"name":"Olbia LUTs","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Umut Kaçar","ini":"UK"}];
+    var PACKS = [{"name":"Full Plugin Pack","img":"images/box-retouchx.png","price":"$149","was":"$299","by":"Retouch Market","ini":"RM","first":true},{"name":"Lora Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Solis Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Terra Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Jardin Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Demir","ini":"UD"},{"name":"Mely Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fa0b59b6a-6bd4-4817-82b8-bc508934b7a4-1775992531696-443150602.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Melih Süren","ini":"MS"},{"name":"Onyx Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Adam Tahirov","ini":"AT"},{"name":"Doré Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Mücahit Güney","ini":"MG"},{"name":"Olbia LUTs","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Umut Kaçar","ini":"UK"},{"name":"Vela Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Nord Presets","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Melih Süren","ini":"MS"},{"name":"Aster LUTs","img":"https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=750&amp;q=75","price":"$59","was":"$119","by":"Adam Tahirov","ini":"AT"}];
     var DEALS = [{"get":3,"pay":2},{"get":5,"pay":3}];
     var row = offer.querySelector('[data-picks]');
     var panel = offer.querySelector('[data-custom]');
@@ -3594,13 +3655,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         : 'You save $' + (full - bill) + ' · no subscription · secure checkout';
     }
 
+    var GIFT = '<svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M12.2 4.2h-1.6a2.2 2.2 0 00.3-1.1A2.1 2.1 0 007 1.9a2.1 2.1 0 00-3.9 1.2 2.2 2.2 0 00.3 1.1H1.8a.6.6 0 00-.6.6v1.9a.6.6 0 00.6.6h.3v5a.6.6 0 00.6.6h3.7V4.2zm-4.9 0H5.2a1.1 1.1 0 111.1-1.1zm.9 0V3.1a1.1 1.1 0 111.1 1.1zm-.7 8.7h3.7a.6.6 0 00.6-.6v-5h.3a.6.6 0 00.6-.6V4.8a.6.6 0 00-.6-.6H7.5z"/></svg>';
     function box(id, n, isFree){
       var p = PACKS[id];
       var f = el('figure', 'prod' + (isFree ? ' is-free' : '') + (p.first ? ' prod--plugin' : ''));
       f.appendChild(el('span', 'prod__shot',
         '<img src="' + esc(p.img) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
         '<span class="prod__no">' + pad(n + 1) + '</span>' +
-        (isFree ? '<span class="prod__badge">Free</span>' : '')));
+        (isFree ? '<span class="prod__badge">' + GIFT + 'Free</span>' : '')));
       var body = el('figcaption', 'prod__body',
         '<span class="prod__by"><span class="avatar">' + esc(p.ini) + '</span><b>' + esc(p.by) + '</b></span>' +
         '<h3 class="prod__t">' + esc(p.name) + '</h3>' +
@@ -4288,6 +4350,32 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     btn.addEventListener('focus', function(){ draw(true); });
     btn.addEventListener('blur', function(){ draw(false); });
   });
+
+  /* ---- the shelf is twelve deep ----
+     Three across and four down is the shelf; anything past that waits
+     behind a button, and the button only exists while something is waiting.
+     The rule is here rather than in the markup so a thirteenth pack brings
+     it back without anyone remembering to. */
+  (function(){
+    var grid = document.getElementById('presetGrid'),
+        more = document.querySelector('[data-more]');
+    if(!grid || !more) return;
+    var PAGE = 12, shown = PAGE;
+    var count = more.querySelector('[data-more-count]'),
+        go = more.querySelector('[data-more-go]');
+    function draw(){
+      var cards = [].slice.call(grid.children);
+      cards.forEach(function(c, i){ if(i < shown){ c.removeAttribute('hidden'); } else { c.setAttribute('hidden',''); } });
+      var left = cards.length - shown;
+      more.hidden = left <= 0;
+      count.textContent = 'Showing ' + Math.min(shown, cards.length) + ' of ' + cards.length + ' packs';
+      go.textContent = 'Load ' + Math.min(PAGE, left) + ' more';
+    }
+    go.addEventListener('click', function(){ shown += PAGE; draw(); });
+    /* sorting reorders the grid, so the shelf is redrawn after it */
+    grid.addEventListener('rm:sorted', draw);
+    draw();
+  })();
 
   /* ---- collection sort ---- */
   var sortBtn = document.getElementById('sortBtn'),
