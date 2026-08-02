@@ -64,6 +64,9 @@
      draws one on the dark band. */
   --danger:#C0392E;
   --danger-fg:#FF9A9A;
+  /* finished, rather than available: the only green on the page */
+  --ok:#1A7F4B;
+  --ok-700:#166B3F;
 
   /* ── Type family ────────────────────────────────────────────── */
   --font:"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
@@ -866,7 +869,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    rail above it: that one is product walkthroughs, this is technique.
    Reuses .strip / .rail / .arrow so the scroll behaviour is identical.
    ════════════════════════════════════════════════════════════════ */
-.rail{--per-view:6}
+.rail{--per-view:5}
 .reel{
   flex:0 0 calc((100% - (var(--per-view) - 1) * var(--s-4)) / var(--per-view));
   scroll-snap-align:start;display:block;
@@ -899,7 +902,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   line-height:var(--lh-snug);color:var(--fg);
 }
 .reel:hover .reel__t{color:var(--accent-fg)}
-.reel__cat{display:block;margin-top:var(--s-1);font-size:var(--fs-2);color:var(--fg-muted)}
 .reel__dur{
   position:absolute;top:var(--s-3);right:var(--s-3);z-index:2;
   font-size:var(--fs-1);font-weight:var(--fw-medium);color:#fff;
@@ -939,6 +941,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    shows whether you are in it. Written with the section in front so it
    outranks the plain .deck.deck--ba above. */
 #results.is-2up .deck.deck--ba{--ba-per:2}
+#voices.is-2up .deck.deck--v{--v-per:3}
+#voices .vcard{cursor:zoom-in}
+#voices.is-2up .vcard{cursor:zoom-out}
+@media (max-width:1000px){#voices .vcard{cursor:default}}
 #results .compare{cursor:zoom-in}
 #results.is-2up .compare{cursor:zoom-out}
 /* below the breakpoint the row is already two across — nothing to promise */
@@ -965,15 +971,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .pchips::-webkit-scrollbar{display:none}
 .pchip{
   flex:none;height:40px;padding:0 var(--s-5);border-radius:var(--r-full);
-  border:1px solid transparent;background:var(--surface-sunken);color:var(--fg-body);
+  border:1px solid var(--border);background:var(--surface);color:var(--fg-body);
   font-size:var(--fs-4);font-weight:var(--fw-medium);white-space:nowrap;
   transition:background var(--dur-1) var(--ease), color var(--dur-1) var(--ease),
-             border-color var(--dur-1) var(--ease);
+             border-color var(--dur-1) var(--ease), box-shadow var(--dur-1) var(--ease);
 }
-.pchip:hover{background:var(--n-200);color:var(--fg)}
+.pchip:not([aria-selected="true"]):hover{border-color:var(--border-strong);color:var(--fg)}
+/* the same "this one" the plugin tabs use: an accent wash, an accent edge
+   doubled by a ring so the line reads at any zoom */
 .pchip[aria-selected="true"]{
-  background:var(--surface);border-color:var(--accent);color:var(--accent-fg);
-  font-weight:var(--fw-semibold);
+  background:var(--accent-bg);border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);
+  color:var(--accent-fg);font-weight:var(--fw-semibold);
 }
 .bapanel[hidden]{display:none}
 
@@ -1010,7 +1018,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* in the basket and under the pointer it says Remove — so it stops looking
    like the button that put it there */
 .card__add.is-added:hover,.card__add.is-added:focus-visible{
-  background:var(--danger);border-color:var(--danger);color:var(--fg-on-accent);
+  background:var(--bg);border-color:var(--danger);color:var(--danger);
 }
 .card:hover{transform:translateY(-3px);box-shadow:var(--sh-3);border-color:var(--border-strong)}
 /* hover scrub: sweeping across the image steps through that pack's samples,
@@ -1126,9 +1134,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    one scroll behaviour, one scrub gesture across the whole page.
    ════════════════════════════════════════════════════════════════ */
 .deck.deck--v{
-  /* four across: a 4:5 card at a quarter of the row is still a portrait
-     you can read a face in, and the row stops looking like three big ones */
-  --v-per:4;
+  /* five across: a 4:5 card at a fifth of the row is still a portrait you
+     can read a face in, and the row reads as a shelf rather than a stack */
+  --v-per:5;
   --deck-gap:var(--s-6);
   --inset:max(var(--gutter), calc((100% - var(--container)) / 2 + var(--gutter)));
 }
@@ -1179,9 +1187,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .vcard__q p::before{content:"\201C"}
 .vcard__q p::after{content:"\201D"}
-.vcard__who{display:flex;align-items:center;gap:var(--s-3);min-width:0}
+.vcard__who{display:flex;align-items:center;gap:var(--s-2);min-width:0}
 .vcard__pp{
-  flex:none;width:40px;height:40px;border-radius:var(--r-full);object-fit:cover;
+  /* 34, not 40: five across, those six pixels are what let the longest
+     handle keep its follower count on the same line */
+  flex:none;width:34px;height:34px;border-radius:var(--r-full);object-fit:cover;
   border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.1);
 }
 .vcard__id{display:flex;flex-direction:column;gap:1px;min-width:0}
@@ -1190,10 +1200,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 .vcard__at{
-  font-size:var(--fs-2);line-height:var(--lh-normal);color:rgba(255,255,255,.72);
-  /* four across leaves the handle and the follower count fighting over one
-     line — let it take two rather than cutting the number in half */
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  /* a notch down from the name: five across leaves a handle and a follower
+     count about 135px, and this is what makes both of them fit */
+  font-size:var(--fs-1);line-height:var(--lh-normal);color:rgba(255,255,255,.78);
+  /* the word "followers" is gone, so the handle and the number fit a line
+     again — and a handle long enough to run out is cut, not wrapped */
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -1210,7 +1222,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   transition:background var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
 }
 .os button:hover{color:var(--fg)}
-.os button[aria-selected="true"]{background:var(--surface);color:var(--fg);box-shadow:var(--sh-1)}
+.os button[aria-selected="true"],.os button[aria-checked="true"]{
+  background:var(--surface);color:var(--fg);box-shadow:var(--sh-1);
+}
+/* the offer's copy of it: halves of one width, so the pill only moves, and
+   a white fill because a translucent surface has nothing to sit on down
+   there */
+.os--even{margin-bottom:0;flex:none}
+.os--even button{flex:1 1 0;min-width:132px;justify-content:center}
+.offer2 .os{background:rgba(0,0,0,.34)}
+.offer2 .os button[aria-checked="true"]{background:#fff;color:#111322;box-shadow:0 8px 25px rgba(0,0,0,.24)}
 /* Steps and requirements are two views of the same block, stacked in one grid
    cell: whichever is showing, the column keeps the height of the taller one,
    so switching tabs never moves the video beside it. */
@@ -1320,26 +1341,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .shell__head .lede{margin-top:var(--s-3);max-width:62ch;font-size:var(--fs-5)}
 
 /* the deal is one control with two states, not two cards to compare */
-.oswitch{
-  display:flex;gap:var(--s-1);flex:none;padding:var(--s-1);
-  border-radius:var(--r-control);background:rgba(0,0,0,.34);border:1px solid var(--border);
-}
-.oswitch__b{
-  /* equal halves: sized to content, the white one moved and changed width
-     every time you switched, which read as the control wobbling */
-  flex:1 1 0;min-width:152px;height:48px;padding:0 var(--s-4);border-radius:8px;
-  display:flex;flex-direction:column;justify-content:center;
-  font-size:var(--fs-4);font-weight:var(--fw-semibold);color:var(--fg-muted);
-  transition:background var(--dur-1) var(--ease), color var(--dur-1) var(--ease),
-             box-shadow var(--dur-1) var(--ease);
-}
-.oswitch__b span{
-  display:block;margin-top:1px;
-  font-size:var(--fs-1);font-weight:var(--fw-medium);letter-spacing:var(--tr-caps);
-  text-transform:uppercase;opacity:.72;
-}
-.oswitch__b:hover{color:var(--fg)}
-.oswitch__b[aria-checked="true"]{background:#fff;color:#111322;box-shadow:0 8px 25px rgba(0,0,0,.24)}
 
 /* the bundle, one box a place */
 .prods{
@@ -1358,7 +1359,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 @property --ring{syntax:"<angle>";initial-value:0deg;inherits:false}
 .prod.is-free{
   border-color:var(--accent-border);
-  animation:freeLift 3.2s var(--ease) infinite alternate;
+  animation:freeLift 2.4s var(--ease) infinite alternate;
 }
 .prod.is-free::after{
   content:"";position:absolute;inset:-1px;z-index:2;pointer-events:none;
@@ -1374,13 +1375,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite:xor;mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite:exclude;
-  animation:freeRing 3.2s linear infinite;
+  animation:freeRing 2.4s linear infinite;
 }
 @keyframes freeRing{to{--ring:360deg}}
 /* and the box breathes under it, on the same beat */
 @keyframes freeLift{
-  from{box-shadow:0 10px 30px rgba(105,87,255,.12)}
-  to  {box-shadow:0 14px 46px rgba(105,87,255,.30)}
+  from{box-shadow:0 10px 30px rgba(105,87,255,.14)}
+  to  {box-shadow:0 16px 54px rgba(105,87,255,.42)}
 }
 @media (prefers-reduced-motion:reduce){
   .prod.is-free::after{animation:none}
@@ -1400,13 +1401,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   position:absolute;left:10px;top:10px;z-index:3;padding:5px var(--s-3);border-radius:var(--r-full);
   background:var(--accent);color:var(--fg-on-accent);border:1px solid rgba(255,255,255,.34);
   font-size:var(--fs-2);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
-  animation:freePulse 3.2s var(--ease) infinite alternate;
+  animation:freePulse 2.4s var(--ease) infinite alternate;
 }
 /* a ring that breathes outwards — the pill stays put, the light around it
    does the moving, so nothing under it shifts */
 @keyframes freePulse{
-  from{box-shadow:0 8px 22px rgba(105,87,255,.42), 0 0 0 3px rgba(99,91,255,.20)}
-  to  {box-shadow:0 10px 28px rgba(105,87,255,.62), 0 0 0 8px rgba(99,91,255,.06)}
+  from{box-shadow:0 8px 22px rgba(105,87,255,.46), 0 0 0 3px rgba(99,91,255,.26)}
+  to  {box-shadow:0 12px 32px rgba(105,87,255,.72), 0 0 0 10px rgba(99,91,255,.05)}
 }
 /* Remove borrows the space the maker and the title were using rather than
    asking for a row of its own — a box you are about to drop does not need
@@ -1467,7 +1468,19 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .custom__top h3{margin:0;font-size:var(--fs-5)}
 .custom__top p{margin:var(--s-1) 0 0;font-size:var(--fs-2);color:var(--fg-muted)}
 .custom__hint{margin:var(--s-5) 0 0;font-size:var(--fs-3);color:var(--accent-fg)}
-.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--s-3)}
+.choices{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s-3);
+  /* rows of one height, so three of them is an exact frame rather than a
+     guess that shifts when a name wraps */
+  grid-auto-rows:72px;
+  max-height:calc(72px * 3 + var(--s-3) * 2);overflow-y:auto;overscroll-behavior:contain;
+  scrollbar-width:thin;scrollbar-color:var(--border-strong) transparent;
+  /* room for the bar so it never sits on a name */
+  padding-right:var(--s-2);margin-right:calc(var(--s-2) * -1);
+}
+.choices::-webkit-scrollbar{width:6px}
+.choices::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:var(--r-full)}
+.choices::-webkit-scrollbar-track{background:transparent}
 .choice{
   position:relative;min-width:0;padding:var(--s-3) var(--s-4);border-radius:10px;text-align:left;
   border:1px solid var(--border);background:rgba(255,255,255,.03);
@@ -1477,8 +1490,24 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .choice b{
   display:block;padding-right:var(--s-6);line-height:var(--lh-snug);
   font-size:var(--fs-3);font-weight:var(--fw-semibold);color:var(--fg);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;overflow:hidden;
+  /* the fade is the ellipsis: it does not eat a character, and it gets out
+     of the way on its own once the name has slid past it */
+  -webkit-mask:linear-gradient(90deg,#000 calc(100% - 22px),transparent);
+  mask:linear-gradient(90deg,#000 calc(100% - 22px),transparent);
 }
+.choice b i{
+  display:inline-block;font-style:normal;white-space:nowrap;
+  transform:translateX(0);
+  transition:transform var(--dur-1) linear;
+}
+/* --over is what the name has left to show, set in script from the measured
+   overflow; a name that fits gets 0 and never moves */
+.choice:hover b i,.choice:focus-visible b i{
+  transform:translateX(calc(var(--over,0px) * -1));
+  transition-duration:calc(var(--over,0px) * 9ms / 1px);
+}
+.choice b:not(:has(i)){text-overflow:ellipsis}
 .choice__by{display:flex;align-items:center;gap:var(--s-2);margin-top:var(--s-2);min-width:0;font-size:var(--fs-1);color:var(--fg-muted)}
 .choice__by .avatar{width:18px;height:18px;font-size:7px;background:var(--surface-sunken)}
 .choice__by span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -1514,6 +1543,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* Done, on a bundle that is not done */
 [data-customize][disabled]{opacity:.45;cursor:not-allowed}
 [data-customize][disabled]:hover{border-color:var(--border);background:var(--surface)}
+/* and Done on one that is: the job is finished, and the button is the only
+   thing on the panel wearing the colour that says so */
+[data-customize].is-done{
+  background:var(--ok);border-color:var(--ok);color:#fff;
+  box-shadow:0 8px 24px rgba(26,127,75,.34);
+}
+[data-customize].is-done:hover{background:var(--ok-700);border-color:var(--ok-700)}
 .onote{margin:0;font-size:var(--fs-1);line-height:var(--lh-normal);color:var(--fg-muted);text-align:right}
 
 /* ════════════════════════════════════════════════════════════════
@@ -1594,7 +1630,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      out from under the proof line */
   .shell{padding:var(--s-7)}
   .shell__head{grid-template-columns:minmax(0,1fr);align-items:start;gap:var(--s-6)}
-  .oswitch{width:max-content}
+  .os--even{width:max-content}
   .prods{--col:calc((100% - 2 * var(--s-4)) / 3);grid-template-columns:repeat(3,minmax(0,var(--col)))}
   .choices{grid-template-columns:repeat(2,minmax(0,1fr))}
   .ofoot{grid-template-columns:minmax(0,1fr)}
@@ -1652,10 +1688,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   /* two boxes across, the switch across the full width, and one pack a row
      in the picker. Nothing to hover on a phone, so the remove button stays */
   .shell{padding:var(--s-5) var(--s-4);border-radius:var(--r-card)}
-  .oswitch{width:100%}
-  /* "Starter bundle" needs the tracking back to stay on one line here */
-  .oswitch__b{min-width:0;flex:1;padding-inline:var(--s-2)}
-  .oswitch__b span{letter-spacing:.03em}
+  .os--even{width:100%;display:flex}
+  .os--even button{min-width:0}
   .prods{--col:calc((100% - var(--s-3)) / 2);grid-template-columns:repeat(2,minmax(0,var(--col)));gap:var(--s-3)}
   .choices{grid-template-columns:minmax(0,1fr)}
   .custom{padding:var(--s-5) var(--s-4)}
@@ -2366,13 +2400,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           <p class="lede">Not sure where to start? We put our bestselling tools together and made
             the decision for you — keep our picks, or swap in the ones you want.</p>
         </div>
-        <div class="oswitch" role="radiogroup" aria-label="Bundle size">
-          <button class="oswitch__b" type="button" role="radio" data-deal="3" aria-checked="false">
-            Get 3, Pay 2<span>Starter bundle</span>
-          </button>
-          <button class="oswitch__b" type="button" role="radio" data-deal="5" aria-checked="true">
-            Get 5, Pay 3<span>Best value</span>
-          </button>
+        <div class="os os--even" role="radiogroup" aria-label="Bundle size">
+          <button type="button" role="radio" data-deal="3" aria-checked="false">Get 3, Pay 2</button>
+          <button type="button" role="radio" data-deal="5" aria-checked="true">Get 5, Pay 3</button>
         </div>
       </div>
 
@@ -2432,7 +2462,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           <rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.5"/>
           <rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.5"/>
         </svg>
-        <span>2&times; view</span>
+        <span>2&times; Zoom</span>
       </button>
     </div>
   </div>
@@ -2864,7 +2894,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>4.2M<span class="vh"> views</span></span>
           </span>
           <span class="reel__t">Skin that still looks like skin</span>
-          <span class="reel__cat">Retouching</span>
         </a>
 
         <a class="reel" href="#">
@@ -2874,7 +2903,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>2.8M<span class="vh"> views</span></span>
           </span>
           <span class="reel__t">Fixing mixed lighting in one pass</span>
-          <span class="reel__cat">Colour</span>
         </a>
 
         <a class="reel" href="#">
@@ -2884,7 +2912,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>1.9M<span class="vh"> views</span></span>
           </span>
           <span class="reel__t">Why your whites keep going grey</span>
-          <span class="reel__cat">Colour</span>
         </a>
 
         <a class="reel" href="#">
@@ -2894,7 +2921,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>1.6M<span class="vh"> views</span></span>
           </span>
           <span class="reel__t">One preset across five skin tones</span>
-          <span class="reel__cat">Presets</span>
         </a>
 
         <a class="reel" href="#">
@@ -2904,7 +2930,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>1.2M<span class="vh"> views</span></span>
           </span>
           <span class="reel__t">Culling 800 frames without losing the day</span>
-          <span class="reel__cat">Workflow</span>
         </a>
 
         <a class="reel" href="#">
@@ -2914,7 +2939,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>980K<span class="vh"> views</span></span>
           </span>
           <span class="reel__t">The dodge and burn shortcut nobody uses</span>
-          <span class="reel__cat">Retouching</span>
         </a>
 
         <a class="reel" href="#">
@@ -2924,7 +2948,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>870K<span class="vh"> views</span></span>
           </span>
           <span class="reel__t">Matching two cameras in one pass</span>
-          <span class="reel__cat">Colour</span>
         </a>
 
         <a class="reel" href="#">
@@ -2934,7 +2957,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <span class="reel__views"><svg width="11" height="12" viewBox="0 0 11 12" fill="currentColor" aria-hidden="true"><path d="M10.2 5.1a1 1 0 010 1.8L1.5 11.6A1 1 0 010 10.7V1.3A1 1 0 011.5.4L10.2 5.1z"/></svg>740K<span class="vh"> views</span></span>
           </span>
           <span class="reel__t">Stop over-sharpening portraits</span>
-          <span class="reel__cat">Retouching</span>
         </a>
 
       </div>
@@ -3068,6 +3090,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <h2>Trusted by Professional Photographers</h2>
         <p class="lede">Studios and creators who shoot every week, editing with the same tools.</p>
       </div>
+      <button class="btn btn--secondary zoom" type="button" data-zoom data-zoom-target=".vcard" aria-pressed="false">
+        <svg class="zoom__i" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+          <rect x="1" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.5"/>
+          <rect x="10" y="3.5" width="7" height="11" rx="1.6" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+        <span>2&times; Zoom</span>
+      </button>
     </div>
   </div>
 
@@ -3089,7 +3118,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vcard__pp" src="images/testimonials/dugunumuzvar/pp.webp" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vcard__id">
                 <span class="vcard__n">Düğünümüz Var</span>
-                <span class="vcard__at">@dugunumuzvar<span aria-hidden="true"> · </span><span class="tnum">1.2M</span> followers</span>
+                <span class="vcard__at">@dugunumuzvar<span aria-hidden="true"> · </span><span class="tnum">1.2M</span></span>
               </span>
             </span>
           </figcaption>
@@ -3110,7 +3139,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vcard__pp" src="images/testimonials/zariffilm/pp.webp" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vcard__id">
                 <span class="vcard__n">Zarif Film</span>
-                <span class="vcard__at">@zariffilm<span aria-hidden="true"> · </span><span class="tnum">210K</span> followers</span>
+                <span class="vcard__at">@zariffilm<span aria-hidden="true"> · </span><span class="tnum">210K</span></span>
               </span>
             </span>
           </figcaption>
@@ -3131,7 +3160,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vcard__pp" src="images/testimonials/ugurdemir/pp.webp" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vcard__id">
                 <span class="vcard__n">Uğur Demir</span>
-                <span class="vcard__at">@ugurdemir<span aria-hidden="true"> · </span><span class="tnum">108K</span> followers</span>
+                <span class="vcard__at">@ugurdemir<span aria-hidden="true"> · </span><span class="tnum">108K</span></span>
               </span>
             </span>
           </figcaption>
@@ -3152,7 +3181,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vcard__pp" src="images/testimonials/ekrulila/pp.webp" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vcard__id">
                 <span class="vcard__n">Ekrulila</span>
-                <span class="vcard__at">@ekrulila<span aria-hidden="true"> · </span><span class="tnum">96K</span> followers</span>
+                <span class="vcard__at">@ekrulila<span aria-hidden="true"> · </span><span class="tnum">96K</span></span>
               </span>
             </span>
           </figcaption>
@@ -3173,7 +3202,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vcard__pp" src="images/testimonials/celalcanik/pp.webp" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vcard__id">
                 <span class="vcard__n">Celal Canık</span>
-                <span class="vcard__at">@celalcanik<span aria-hidden="true"> · </span><span class="tnum">1.1M</span> followers</span>
+                <span class="vcard__at">@celalcanik<span aria-hidden="true"> · </span><span class="tnum">1.1M</span></span>
               </span>
             </span>
           </figcaption>
@@ -3194,7 +3223,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
               <img class="vcard__pp" src="images/testimonials/mucahitguney/pp.webp" alt="" width="40" height="40" loading="lazy" onerror="this.style.visibility='hidden'">
               <span class="vcard__id">
                 <span class="vcard__n">Mücahit Güney</span>
-                <span class="vcard__at">@mucahitguney<span aria-hidden="true"> · </span><span class="tnum">278K</span> followers</span>
+                <span class="vcard__at">@mucahitguney<span aria-hidden="true"> · </span><span class="tnum">278K</span></span>
               </span>
             </span>
           </figcaption>
@@ -3600,9 +3629,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       var b = el('button', 'choice');
       b.type = 'button';
       b.setAttribute('aria-pressed', String(on));
-      b.innerHTML = '<b>' + esc(p.name) + '</b>' +
+      b.innerHTML = '<b><i>' + esc(p.name) + '</i></b>' +
         '<span class="choice__by"><span class="avatar">' + esc(p.ini) + '</span>' +
         '<span>' + esc(p.by) + '</span></span>';
+      /* measured once the row is in the document: what the name has left to
+         show is what it will travel, and nothing else */
+      requestAnimationFrame(function(){
+        var box = b.querySelector('b'), run = box && box.firstChild;
+        if(!run) return;
+        var over = run.scrollWidth - box.clientWidth;
+        if(over > 0) box.style.setProperty('--over', over + 22 + 'px');
+      });
       b.addEventListener('click', function(){
         var at = state.picks.indexOf(i);
         if(at !== -1){ state.picks.splice(at, 1); }
@@ -3635,6 +3672,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       var on = !panel.hidden;
       openBtn.textContent = on ? 'Done' : 'Customize bundle';
       openBtn.disabled = on && (state.get - state.picks.length) > 0;
+      openBtn.classList.toggle('is-done', on && !openBtn.disabled);
     }
     openBtn.addEventListener('click', function(){ open(panel.hidden); });
 
@@ -3995,12 +4033,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
        And only while the button is there to agree with — below the
        breakpoint the row is already two across and there is nothing to
        toggle. */
+    var target = btn.getAttribute('data-zoom-target') || '[data-compare]';
     var from = null;
     sec.addEventListener('pointerdown', function(e){
-      from = e.target.closest('[data-compare]') ? {x:e.clientX, y:e.clientY} : null;
+      from = e.target.closest(target) ? {x:e.clientX, y:e.clientY} : null;
     }, {passive:true});
     sec.addEventListener('click', function(e){
-      var pic = e.target.closest('[data-compare]');
+      var pic = e.target.closest(target);
       if(!pic || !from) return;
       from = (Math.abs(e.clientX - from.x) < 6 && Math.abs(e.clientY - from.y) < 6) ? from : null;
       if(!from) return;
@@ -4150,11 +4189,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   var sToggle = document.getElementById('searchToggle'),
       sBar    = document.getElementById('searchBar'),
       sInput  = document.getElementById('searchInput');
-  function searchOpen(on){
+  function searchOpen(on, refocus){
     sBar.classList.toggle('is-on', on);
     sToggle.setAttribute('aria-expanded', String(on));
-    if(on){ sInput.focus(); } else { sToggle.focus(); }
+    if(on){ sInput.focus(); } else if(refocus !== false){ sToggle.focus(); }
   }
+  /* anywhere else on the page shuts it — the gesture everyone tries first.
+     Focus is left alone here: you were on your way somewhere. */
+  document.addEventListener('pointerdown', function(e){
+    if(!sBar.classList.contains('is-on')) return;
+    if(e.target.closest('#searchBar') || e.target.closest('#searchToggle')) return;
+    searchOpen(false, false);
+  }, true);
   sToggle.addEventListener('click', function(){ searchOpen(!sBar.classList.contains('is-on')); });
   document.getElementById('searchClose').addEventListener('click', function(){ searchOpen(false); });
 
