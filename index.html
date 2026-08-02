@@ -808,9 +808,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    tutorials shelf's bar outright, .strip__bar and all: track centred, arrows
    at the bottom right of the column. Sharing the class rather than copying
    the numbers is what keeps the two rows from drifting apart. */
+/* free-running like the other two shelves: it scrolls the way the page
+   scrolls and stops where it is let go. The walkthrough decks keep their
+   snap — those are one video at a time and the dots count them. */
+.deck--ba .deck__track{scroll-snap-type:none}
 .deck--ba .deck__pane{
   flex:0 0 calc((100% - (var(--ba-per) - 1) * var(--deck-gap)) / var(--ba-per));
-  cursor:auto;
+  cursor:auto;scroll-snap-align:none;
 }
 .compare{
   position:relative;aspect-ratio:4/5;overflow:hidden;
