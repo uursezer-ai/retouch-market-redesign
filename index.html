@@ -1286,7 +1286,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .shelfbar.is-pinned .shelfbar__what{display:none}
 /* and it points at the control it is talking about — pinned only, since at
    rest the head above is still doing the talking */
-.shelfbar__hint{display:none;margin-left:var(--s-3);color:var(--accent);font-weight:var(--fw-medium)}
+.shelfbar__hint{display:none;margin-left:var(--s-3);color:inherit}
 .shelfbar.is-pinned .shelfbar__hint{display:inline-flex;align-items:center;gap:6px}
 .shelfbar__go{flex:none;animation:shelfNudge 1.5s var(--ease) infinite}
 @keyframes shelfNudge{
@@ -2465,7 +2465,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <button class="btn btn--primary btn--lg pbuy__go" type="button" data-packgo="Full Plugin Pack" aria-label="Add 3 Plugins in 1 Pack to basket"><svg class="i-cart" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><svg class="i-tick" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.6 3.6 7.2-7.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="i-bin" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.4 6.2h11.2l-.8 9.4a1.5 1.5 0 01-1.5 1.4H6.7a1.5 1.5 0 01-1.5-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 6.2h14M8 3.4h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Get Plugin Pack — <b class="tnum">$149</b><s class="tnum">$299</s></button>
       </span>
       <ul class="pbuy__meta">
-        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="5.6" cy="6.1" r="3.2" stroke="currentColor" stroke-width="1.4"/><path d="M7.9 8.4l5.5 5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M11 11.5l1.4-1.4M12.6 13.1l1.3-1.3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>1 year licence</li>
+        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="4.7" cy="8" r="3.1" stroke="currentColor" stroke-width="1.4"/><circle cx="4.7" cy="8" r=".95" fill="currentColor"/><path d="M7.8 8h6.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><path d="M12.1 8v2.7M14.2 8v1.9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>1 year licence</li>
         <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.2v6.9M5.3 6.6L8 9.3l2.7-2.7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.7 11.2v1.4a1.2 1.2 0 001.2 1.2h8.2a1.2 1.2 0 001.2-1.2v-1.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>Instant Download</li>
         <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M6.1 2.4l6.6 4.9-3 .6 1.9 3.4-1.7 1-1.9-3.4-2 2.3z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M3.1 3.2l-1-1M2.4 6.4h-1.4M4.9 1.2V.1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>1 click install</li>
         <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.4l5.2 2v4.1c0 3-2.1 5.7-5.2 7-3.1-1.3-5.2-4-5.2-7V3.4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M5.9 8l1.5 1.5L10.3 6.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>No auto renewal</li>
@@ -4061,15 +4061,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
          and a count badge, so its middle is not where the bag is */
       var mark = link.querySelector('svg') || link;
       var m = mark.getBoundingClientRect(), r = link.getBoundingClientRect();
+      /* placed from the left, and against the layout width rather than
+         innerWidth: innerWidth counts the scrollbar, a fixed box is laid out
+         inside it, and the difference put the arrow a scrollbar's width left
+         of the bag on any machine that draws one */
+      var vw = document.documentElement.clientWidth;
+      var w = tipEl.offsetWidth;
+      var mid = m.left + m.width / 2;
+      var left = Math.max(8, Math.min(vw - 8 - w, Math.round(mid + 26 - w)));
       tipEl.style.top = Math.round(r.bottom + 8) + 'px';
-      var right = Math.max(8, Math.round(window.innerWidth - r.right - 6));
-      tipEl.style.right = right + 'px';
-      tipEl.style.left = 'auto';
+      tipEl.style.left = left + 'px';
+      tipEl.style.right = 'auto';
       /* the arrow is 14px across, so its own middle is 7px in from where it
          is placed — put that middle under the middle of the bag */
-      var mid = m.left + m.width / 2;
-      var point = (window.innerWidth - right) - mid - 7;
-      tipEl.style.setProperty('--point', Math.max(10, Math.round(point)) + 'px');
+      tipEl.style.setProperty('--point',
+        Math.max(10, Math.min(w - 24, Math.round(left + w - mid - 7))) + 'px');
     }
     place();
     clearTimeout(tipGo);
