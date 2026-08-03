@@ -525,9 +525,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   background-image:linear-gradient(145deg,rgba(104,88,255,.20),rgba(255,255,255,.04) 42%,rgba(45,92,210,.14));
   border-color:var(--accent);
 }
-/* once it is in the basket the price has done its job — what is left to say
-   is that it is yours, and the button says that on its own */
-.pbuy.pbuy--dark.is-added .pbuy__price{display:none}
 .pbuy.pbuy--dark.is-added:hover{transform:none}
 /* the travelling ring is the edge now, so no flat ring under it */
 .pbuy.pbuy--dark.is-added{box-shadow:none}
@@ -804,9 +801,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* the offer, kept together: the price and the button are one thing to look
    at, sitting where the eye lands after the name */
 .pbuy__buy{grid-area:buy;display:flex;align-items:center;gap:var(--s-5)}
-.pbuy__price{margin:0;flex:none;display:flex;align-items:baseline;gap:var(--s-2)}
-.pbuy__price s{font-size:var(--fs-4);color:var(--fg-muted)}
-.pbuy__price b{font-size:var(--fs-9);font-weight:var(--fw-bold);line-height:1;color:var(--fg)}
 /* the same button the shelf cards carry, down to the height and the way it
    turns into Remove — written as .card__add.pbuy__go because those rules sit
    further down the sheet and at equal weight the later one would win */
@@ -1895,7 +1889,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .oact__row{display:flex;align-items:center;gap:var(--s-3)}
 /* "Get 5, Pay 3 — $267 $385" is the widest this ever gets; holding that
    width means the price can change without the button jumping */
-.obuy s{margin-left:6px;opacity:.7}
+.obuy s,.pbuy__go s{margin-left:6px;opacity:.7}
 /* an incomplete bundle cannot be bought, and says so rather than failing on
    the next screen */
 .obuy[disabled]{background:var(--surface-sunken);color:var(--fg-muted);box-shadow:inset 0 0 0 1px var(--border);cursor:not-allowed}
@@ -2279,8 +2273,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <p class="pbuy__sub">RetouchX + Lightroom Ai Color + US Photoshop Plugin</p>
       </span>
       <span class="pbuy__buy">
-        <p class="pbuy__price"><s class="tnum">$299</s><b class="tnum">$149</b></p>
-        <button class="btn btn--primary btn--lg pbuy__go" type="button" data-packgo="Full Plugin Pack" aria-label="Add 3 Plugins in 1 Pack to basket"><svg class="i-cart" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><svg class="i-tick" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.6 3.6 7.2-7.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="i-bin" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.4 6.2h11.2l-.8 9.4a1.5 1.5 0 01-1.5 1.4H6.7a1.5 1.5 0 01-1.5-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 6.2h14M8 3.4h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add to cart</button>
+        <button class="btn btn--primary btn--lg pbuy__go" type="button" data-packgo="Full Plugin Pack" aria-label="Add 3 Plugins in 1 Pack to basket"><svg class="i-cart" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><svg class="i-tick" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.6 3.6 7.2-7.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="i-bin" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.4 6.2h11.2l-.8 9.4a1.5 1.5 0 01-1.5 1.4H6.7a1.5 1.5 0 01-1.5-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 6.2h14M8 3.4h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Get Plugin Pack — <b class="tnum">$149</b><s class="tnum">$299</s></button>
       </span>
       <ul class="pbuy__meta">
         <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.4l5.2 2v4.1c0 3-2.1 5.7-5.2 7-3.1-1.3-5.2-4-5.2-7V3.4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M5.9 8l1.5 1.5L10.3 6.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>1-year licence</li>
