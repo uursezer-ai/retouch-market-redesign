@@ -1159,9 +1159,20 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    last line, which is where it has always been. */
 .shelfbar{
   position:sticky;top:calc(var(--nav-h) + var(--s-2));z-index:40;
-  display:flex;justify-content:flex-end;margin-bottom:var(--s-7);
-  pointer-events:none;
+  display:flex;align-items:center;justify-content:space-between;gap:var(--s-6);
+  margin-bottom:var(--s-7);pointer-events:none;
 }
+/* the section's own line travels with them: it says what the shelf is, which
+   is worth having in front of you while you are working your way down it */
+.shelfbar__say{
+  margin:0;min-width:0;max-width:none;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  transition:font-size var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
+}
+/* pinned it is a label on a toolbar rather than the section's opening line,
+   and steps down to the size a toolbar wants */
+.shelfbar.is-pinned .shelfbar__say{font-size:var(--fs-4);color:var(--fg-muted)}
+@media (max-width:1180px){.shelfbar__say{display:none}}
 .shelfbar > *{pointer-events:auto}
 .shelfbar__watch{display:block;height:1px;margin-bottom:-1px}
 /* pinned, it is over the packs rather than over the page, so it takes a
@@ -1176,8 +1187,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .shelfbar.is-pinned::before{opacity:1}
 @media (min-width:861px){
-  /* 40px of control and the head's own 32px gap: back onto the head's line */
-  .shelfbar{margin-top:calc(-1 * (var(--s-7) + 40px))}
+  /* the head ends at the heading now, and this row is the line under it —
+     the head's own 32px gap less the 16px the line has always had */
+  .shelfbar{margin-top:calc(-1 * var(--s-7) + var(--s-4))}
 }
 @media (prefers-reduced-motion:reduce){.shelfbar::before{transition:none}}
 /* how many across, then in what order — the pair reads left to right the way
@@ -1320,7 +1332,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .card__add{
   position:relative;z-index:2;
   display:flex;align-items:center;justify-content:center;gap:var(--s-2);
-  width:100%;height:40px;margin-top:var(--s-1);
+  width:100%;height:48px;margin-top:var(--s-1);
   border-radius:var(--r-control);
   background:var(--surface);color:var(--fg);border:1px solid var(--border-strong);
   font-size:var(--fs-4);font-weight:var(--fw-semibold);
@@ -1921,12 +1933,39 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .oproof__faces img:first-child{margin-left:0}
 .oact{display:flex;flex-direction:column;align-items:flex-end;gap:var(--s-3)}
-/* what the bundle absorbed, named — nothing anyone put in the basket goes
-   quietly, and nothing outside the bundle is touched at all */
-.ofold{margin:0;max-width:44ch;font-size:var(--fs-2);line-height:var(--lh-normal);
-  color:var(--fg-muted);text-align:right}
+/* What pressing the button will do to what you have already chosen. It is
+   about the button, so it sits on the button — a popover with its point in
+   the button's shoulder — rather than as small print under it where it read
+   as a footnote and went unread. */
+.oact{position:relative}
+.owarn{
+  position:absolute;bottom:calc(100% + 12px);right:0;z-index:20;
+  width:max-content;max-width:min(330px, 80vw);
+  display:flex;align-items:flex-start;gap:var(--s-2);
+  margin:0;padding:var(--s-3) var(--s-4);
+  border-radius:var(--r-card);
+  /* written out, not taken from the ramp: this block re-defines the whole
+     neutral scale for a dark ground, and a white card wants the light one */
+  background:#FFFFFF;color:#1B2436;
+  box-shadow:0 12px 34px rgba(4,10,20,.40), 0 0 0 1px rgba(4,10,20,.06);
+  font-size:var(--fs-2);line-height:var(--lh-normal);text-align:left;
+  opacity:0;transform:translateY(5px);pointer-events:none;
+  transition:opacity var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
+}
+.owarn::after{
+  content:"";position:absolute;top:100%;right:56px;
+  border:7px solid transparent;border-top-color:#FFFFFF;
+}
+.owarn.is-on{opacity:1;transform:none}
+.owarn__i{flex:none;margin-top:1px}
+.owarn__i--warn{color:#C0392E}
+.owarn__i--done{display:none;color:#166B3F}
 /* once it has happened it is a confirmation, not a warning */
-.ofold.is-done{color:var(--accent-fg)}
+.owarn.is-done .owarn__i--warn{display:none}
+.owarn.is-done .owarn__i--done{display:block}
+@media (prefers-reduced-motion:reduce){.owarn{transition:none}}
+/* stacked, the button is full width and the point wants the middle of it */
+@media (max-width:900px){.owarn{right:auto;left:0;max-width:100%}.owarn::after{right:auto;left:56px}}
 /* the bundle is bought: tuning it now would mean changing something that is
    already in the basket, so the offer is the only button left */
 .oact.is-bought [data-customize]{display:none}
@@ -2624,7 +2663,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <div>
         <p class="eyebrow">Presets &amp; LUTs</p>
         <h2>Original Signature Looks</h2>
-        <p class="lede">For Lightroom Classic &amp; Camera Raw. Created by one of Türkiye&#8217;s most popular photographers.</p>
       </div>
       <a class="vh" href="#">View store
         <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -2635,6 +2673,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
          there are packs to sort, and gone with the section -->
     <span class="shelfbar__watch" aria-hidden="true"></span>
     <div class="shelfbar" data-shelfbar>
+      <p class="lede shelfbar__say">For Lightroom Classic &amp; Camera Raw. Created by Türkiye&#8217;s leading photographers <span aria-hidden="true">&#10084;&#65039;</span></p>
       <div class="tools">
         <div class="sort">
           <button class="sort__btn" type="button" id="colsBtn" aria-expanded="false" aria-haspopup="true" aria-controls="colsMenu">
@@ -2910,7 +2949,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <button class="btn btn--secondary btn--lg" type="button" data-customize aria-expanded="false" aria-controls="bundlePicker">Customize bundle</button>
             <button class="btn btn--primary btn--lg obuy" type="button" data-go disabled></button>
           </span>
-          <p class="ofold" data-fold role="status" hidden></p>
+          <p class="owarn" data-fold role="status" hidden><svg class="owarn__i owarn__i--warn" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M9 2.2l7 12.1H2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 7v3.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="9" cy="12.3" r=".95" fill="currentColor"/></svg><svg class="owarn__i owarn__i--done" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true"><circle cx="9" cy="9" r="6.9" stroke="currentColor" stroke-width="1.5"/><path d="M5.9 9.2l2.1 2.1 4.1-4.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-fold-say></span></p>
         </div>
       </div>
     </div>
@@ -2944,7 +2983,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           <path d="M4.9 7.6h5.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           <path class="zoom__v" d="M7.6 4.9v5.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
-        <span>2&times; Zoom</span>
+        <span>Zoom In</span>
       </button>
     </div>
   </div>
@@ -3579,7 +3618,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           <path d="M4.9 7.6h5.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
           <path class="zoom__v" d="M7.6 4.9v5.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
-        <span>2&times; Zoom</span>
+        <span>Zoom In</span>
       </button>
     </div>
   </div>
@@ -3853,17 +3892,26 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         delete singles[name];
         draw(name + ' removed from your basket.');
       },
-      /* the bundle absorbs whatever it already contains, and says which */
+      /* what is loose in the basket, by name — the bundle replaces all of
+         it, and the warning over the button says so before you press it */
+      loose: function(){
+        var out = [], k;
+        for(k in singles){ if(singles[k]) out.push(k); }
+        return out;
+      },
+      /* the bundle takes the basket's place rather than sitting beside it,
+         so nothing can be in there twice */
       addBundle: function(label, packs){
+        var cleared = [], k;
+        for(k in singles){ if(singles[k]) cleared.push(k); }
+        singles = {};
         bundle = { label: label, packs: packs.slice() };
-        var folded = packs.filter(function(n){ return singles[n]; });
-        folded.forEach(function(n){ delete singles[n]; });
-        draw(label + ' added to your basket.' + (folded.length
-          ? ' ' + list(folded) + (folded.length > 1 ? ' were' : ' was') +
-            ' already in it — the bundle includes ' + (folded.length > 1 ? 'them' : 'it') +
-            ', so the single' + (folded.length > 1 ? 's are' : ' is') + ' gone.'
+        draw(label + ' added to your basket.' + (cleared.length
+          ? ' ' + list(cleared) + (cleared.length > 1 ? ' were' : ' was') +
+            ' cleared to make room for it — you can add ' +
+            (cleared.length > 1 ? 'them' : 'it') + ' back any time.'
           : ''));
-        return folded;
+        return cleared;
       },
       dropBundle: function(){
         var was = bundle; bundle = null;
@@ -4165,30 +4213,44 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       return state.picks.map(function(i){ return PACKS[i] && PACKS[i].name; })
         .filter(Boolean);
     }
-    var fold = offer.querySelector('[data-fold]');
-    /* said before it happens as well as after: the overlap is named while the
-       button still says Get, so nothing about the basket is a surprise */
-    function tell(folded){
+    var fold = offer.querySelector('[data-fold]'),
+        foldSay = fold && fold.querySelector('[data-fold-say]'),
+        foldGo = null;
+    /* hidden for anyone reading the page, faded for anyone looking at it —
+       the attribute is what a screen reader goes by, the class is what the
+       eye goes by, and they have to be set a frame apart to see the fade */
+    function show(on){
       if(!fold) return;
-      if(folded === null){
-        var waiting = names().filter(function(n){ return Cart.has(n) && !Cart.covered(n); });
-        fold.textContent = waiting.length
-          ? (waiting.length > 1 ? waiting.length + ' of these are' : waiting[0] + ' is') +
-            ' already in your basket. Adding the bundle takes the single' +
-            (waiting.length > 1 ? 's' : '') + ' out — you can put ' +
-            (waiting.length > 1 ? 'them' : 'it') + ' back any time.'
-          : '';
-        fold.hidden = !waiting.length;
-        fold.classList.remove('is-done');
+      clearTimeout(foldGo);
+      if(on){
+        fold.hidden = false;
+        requestAnimationFrame(function(){ fold.classList.add('is-on'); });
+      } else {
+        fold.classList.remove('is-on');
+        foldGo = setTimeout(function(){ fold.hidden = true; }, 220);
+      }
+    }
+    /* said before it happens as well as after: while the button still says
+       Get, the popover says what pressing it will cost */
+    function tell(cleared){
+      if(!fold) return;
+      if(cleared === null){
+        var waiting = Cart.loose();
+        if(waiting.length){
+          foldSay.textContent = 'Your cart will be cleared and replaced with this bundle. ' +
+            'You can add other products back at any time.';
+          fold.classList.remove('is-done');
+          show(true);
+        } else { show(false); }
         return;
       }
-      fold.textContent = folded.length
-        ? (folded.length > 1 ? folded.length + ' packs you already had are' : folded[0] + ' was') +
-          ' part of this bundle — we took the single' + (folded.length > 1 ? 's' : '') +
-          ' out. You can put ' + (folded.length > 1 ? 'them' : 'it') + ' back any time.'
-        : '';
-      fold.hidden = !folded.length;
-      fold.classList.toggle('is-done', !!folded.length);
+      if(!cleared.length){ show(false); return; }
+      foldSay.textContent = 'Your cart was cleared and replaced with this bundle. ' +
+        'You can add other products back at any time.';
+      fold.classList.add('is-done');
+      show(true);
+      /* a confirmation has a life of its own — it goes when it has been read */
+      foldGo = setTimeout(function(){ show(false); }, 6000);
     }
     /* and it re-reads the basket whenever the basket changes */
     Cart.watch(function(){ if(!bought) tell(null); });
@@ -4755,7 +4817,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     var say = btn.querySelector('span');
     function set(on){
       btn.setAttribute('aria-pressed', String(on));
-      if(say) say.textContent = on ? 'Zoom Out' : '2\u00d7 Zoom';
+      if(say) say.textContent = on ? 'Zoom Out' : 'Zoom In';
       sec.classList.toggle('is-2up', on);
       if(on) hintOff();
       window.dispatchEvent(new Event('resize'));
@@ -4778,7 +4840,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     var hint = document.createElement('span');
     hint.className = 'ziphint';
     hint.setAttribute('aria-hidden', 'true');
-    hint.innerHTML = '<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="7.6" cy="7.6" r="5.6"/><path d="M11.7 11.7 16.2 16.2"/><path d="M4.9 7.6h5.4"/><path d="M7.6 4.9v5.4"/></svg>Click 2\u00d7 Zoom';
+    hint.innerHTML = '<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="7.6" cy="7.6" r="5.6"/><path d="M11.7 11.7 16.2 16.2"/><path d="M4.9 7.6h5.4"/><path d="M7.6 4.9v5.4"/></svg>Zoom In';
     sec.appendChild(hint);
     function hintOff(){ hint.classList.remove('is-on'); }
     sec.addEventListener('pointermove', function(e){
