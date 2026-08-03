@@ -482,8 +482,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .pbuy__glow::after{
   content:"";position:absolute;inset:0;
   background:
-    radial-gradient(420px circle at var(--px) var(--py), rgba(92,72,255,.20), transparent 60%),
-    radial-gradient(340px circle at calc(var(--px) - 34%) calc(var(--py) + 38%), rgba(39,98,220,.12), transparent 62%);
+    radial-gradient(460px circle at var(--px) var(--py), rgba(108,88,255,.38), transparent 62%),
+    radial-gradient(380px circle at calc(var(--px) - 34%) calc(var(--py) + 38%), rgba(48,112,235,.24), transparent 64%);
 }
 /* the dot grid, lit only where the pointer is */
 .pbuy__dots{
@@ -495,8 +495,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* and one blurred blob leaning against the pool, for depth */
 .pbuy__dots::before{
   content:"";position:absolute;left:8%;top:-40%;
-  width:300px;height:300px;border-radius:50%;
-  background:rgb(92,70,255);opacity:.16;filter:blur(70px);
+  width:320px;height:320px;border-radius:50%;
+  background:rgb(104,84,255);opacity:.30;filter:blur(70px);
   transform:translate(var(--gx,0px), var(--gy,0px));
   transition:transform .15s ease-out;
 }
@@ -506,25 +506,33 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   position:relative;overflow:clip;
   background:var(--bg);
   border-color:rgba(255,255,255,.12);
-  box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 18px 40px -24px rgba(4,10,20,.9);
+  /* no drop shadow: it sits on white and a dark band with a shadow under it
+     reads as a sticker rather than as part of the page */
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset;
 }
 .pbuy.pbuy--dark:hover{
   border-color:rgba(255,255,255,.26);
-  box-shadow:0 1px 0 rgba(255,255,255,.07) inset, 0 26px 60px -26px rgba(4,10,20,1);
+  box-shadow:0 1px 0 rgba(255,255,255,.07) inset;
 }
 /* in the basket it takes the same wash, edge and ring a chosen box in the
    bundle takes — one language for "this is in your basket" */
-.pbuy.pbuy--dark:has(.pbuy__go.is-added){
-  background:linear-gradient(145deg,rgba(104,88,255,.16),rgba(255,255,255,.03) 42%,rgba(45,92,210,.10)),var(--bg);
-  border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);
+/* longhands, not the shorthand: "background: <gradient>, var(--bg)" is
+   invalid at computed-value time — a colour cannot be a layer's image — and
+   the whole declaration was being thrown away, taking the dark ground with
+   it and letting the white page through */
+.pbuy.pbuy--dark.is-added{
+  background-color:var(--bg);
+  background-image:linear-gradient(145deg,rgba(104,88,255,.20),rgba(255,255,255,.04) 42%,rgba(45,92,210,.14));
+  border-color:var(--accent);
 }
-.pbuy.pbuy--dark:has(.pbuy__go.is-added):hover{transform:none}
+.pbuy.pbuy--dark.is-added:hover{transform:none}
+/* the travelling ring is the edge now, so no flat ring under it */
+.pbuy.pbuy--dark.is-added{box-shadow:none}
 /* the boxes are renders on white — on this ground they want a page to stand
    on, the way the bundle's own boxes do */
 .pbuy--dark .pbuy__art img{background:transparent}
 /* the mark reads in the accent this ground uses, not the one the white page
    uses */
-.pbuy--dark .pbuy__best{color:var(--accent-fg)}
 /* the light below the surface: two soft pools, one accent, one colder, and a
    thin arc catching the bottom left corner the way a rim light would */
 .topband{--px:50%;--py:40%}
@@ -744,13 +752,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 /* the same lift a preset card and an unchosen tab get — the whole band is
    the offer, so the whole band answers the pointer */
-.pbuy:hover{transform:translateY(-3px);box-shadow:var(--sh-3);border-color:var(--border-strong)}
-/* and once the pack is in the basket the whole band goes to the colour a
-   chosen tab wears, rather than the button changing alone */
-.pbuy:has(.pbuy__go.is-added){
-  border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);background:var(--accent-bg);
-}
-.pbuy:has(.pbuy__go.is-added):hover{transform:none;box-shadow:0 0 0 1px var(--accent)}
+.pbuy:hover{transform:translateY(-3px);border-color:var(--border-strong)}
 /* the three boxes at a glance, overlapped the way they stand on a shelf */
 /* the picture spans both rows: the promises start where the words start, so
    the boxes keep the height they had rather than being squeezed above them */
@@ -769,14 +771,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pbuy__head{display:flex;align-items:center;gap:var(--s-3);min-width:0}
 /* the shelf's own bestseller mark, at the size the band's own type wants */
+/* the same pill the free packs wear in the bundle: filled accent, white on
+   it, and a ring that breathes outwards without moving anything under it */
 .pbuy__best{
   flex:none;display:inline-flex;align-items:center;gap:5px;
-  padding:var(--s-1) var(--s-3);border-radius:var(--r-full);
-  background:var(--accent-bg);color:var(--accent-700);border:1px solid var(--accent-border);
-  /* on the dark ground the 700 is too near the ground itself — see .pbuy--dark */
-  font-size:var(--fs-1);font-weight:var(--fw-semibold);letter-spacing:.05em;text-transform:uppercase;
+  padding:5px var(--s-3);border-radius:var(--r-full);
+  background:var(--accent);color:var(--fg-on-accent);border:1px solid rgba(255,255,255,.34);
+  font-size:var(--fs-2);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
+  animation:freePulse 2.4s var(--ease) infinite alternate;
 }
-.pbuy__best svg{width:11px;height:11px;flex:none;margin-top:-1px}
+.pbuy__best svg{width:11px;height:11px;flex:none}
 .pbuy__t{margin:0;min-width:0;font-size:var(--fs-7);font-weight:var(--fw-bold);
   line-height:var(--lh-snug);letter-spacing:var(--tr-heading);color:var(--fg);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -803,32 +807,33 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* the same button the shelf cards carry, down to the height and the way it
    turns into Remove — written as .card__add.pbuy__go because those rules sit
    further down the sheet and at equal weight the later one would win */
-/* the one primary button in the section: the tabs under it are how you look
-   around, this is the way out of looking */
-.card__add.pbuy__go{
-  flex:none;width:auto;height:48px;margin-top:0;padding:0 var(--s-6);
-  background:var(--accent);color:var(--fg-on-accent);border-color:var(--accent);
-}
-.card__add.pbuy__go:hover{background:var(--accent-700);border-color:var(--accent-700);color:var(--fg-on-accent)}
+.pbuy__go{flex:none}
 /* in the basket it keeps the accent — the band behind it changes ground, so
    an outlined button in a washed band would read as switched off */
-/* In the basket it confirms rather than repeating the offer, and under the
-   pointer it offers the way out — the same three states, in the same three
-   colours, that the bundle's own button uses at the other end of the page.
-   The mark changes with them: basket, tick, bin. */
-.card__add.pbuy__go .i-tick,.card__add.pbuy__go .i-bin{display:none}
-.card__add.pbuy__go.is-added{
-  background:var(--ok-700);border-color:var(--ok-700);color:#fff;
+/* ── the two offer buttons ──────────────────────────────────────
+   The plugin band and the bundle sell the same kind of thing, so they are
+   the same button: the offer in the accent, the confirmation in green with a
+   tick, and — while the pointer is on it — the way out in this ground's red
+   with a bin. One rule, both of them, so they cannot drift apart. */
+.obuy,.pbuy__go{min-width:264px;justify-content:center;gap:var(--s-2)}
+.obuy__i,.pbuy__go svg{flex:none}
+.obuy .i-tick,.obuy .i-bin,.pbuy__go .i-tick,.pbuy__go .i-bin{display:none}
+.obuy.is-added,.pbuy__go.is-added{
+  /* --ok, not --ok-700: the darker one read as a hole on this ground, and
+     this still clears AA against white at 5.02 */
+  background:var(--ok);box-shadow:none;color:#fff;
 }
-.card__add.pbuy__go.is-added .i-cart{display:none}
-.card__add.pbuy__go.is-added .i-tick{display:block}
-.card__add.pbuy__go.is-added:hover,.card__add.pbuy__go.is-added:focus-visible{
-  background:var(--bg);border-color:var(--danger-fg);color:var(--danger-fg);
+.obuy.is-added .i-cart,.pbuy__go.is-added .i-cart{display:none}
+.obuy.is-added .i-tick,.pbuy__go.is-added .i-tick{display:block}
+.obuy.is-added s,.pbuy__go.is-added s{display:none}
+.obuy.is-added:hover,.obuy.is-added:focus-visible,
+.pbuy__go.is-added:hover,.pbuy__go.is-added:focus-visible{
+  background:var(--bg);color:var(--danger-fg);box-shadow:inset 0 0 0 1px var(--danger-fg);
 }
-.card__add.pbuy__go.is-added:hover .i-tick,
-.card__add.pbuy__go.is-added:focus-visible .i-tick{display:none}
-.card__add.pbuy__go.is-added:hover .i-bin,
-.card__add.pbuy__go.is-added:focus-visible .i-bin{display:block}
+.obuy.is-added:hover .i-tick,.obuy.is-added:focus-visible .i-tick,
+.pbuy__go.is-added:hover .i-tick,.pbuy__go.is-added:focus-visible .i-tick{display:none}
+.obuy.is-added:hover .i-bin,.obuy.is-added:focus-visible .i-bin,
+.pbuy__go.is-added:hover .i-bin,.pbuy__go.is-added:focus-visible .i-bin{display:block}
 @media (prefers-reduced-motion:reduce){.pbuy:hover{transform:none}}
 /* the column narrows before the band folds, and three promises on one line
    is worth four pixels a side */
@@ -866,7 +871,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .pbuy__meta{font-size:var(--fs-3)}
   .pbuy__meta li + li{padding-left:0}
   .pbuy__meta li + li::before{display:none}
-  .card__add.pbuy__go{order:5;width:100%;flex:1 0 100%}
+  .pbuy__go{order:5;width:100%;flex:1 0 100%;min-width:0}
 }
 
 /* ── the walkthrough deck ───────────────────────────────────────
@@ -1599,8 +1604,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .offer2__glow::before{
   content:"";position:absolute;inset:0;
   background:
-    radial-gradient(620px circle at var(--px) var(--py), rgba(92,72,255,.12), transparent 60%),
-    radial-gradient(520px circle at calc(var(--px) - 38%) calc(var(--py) + 38%), rgba(39,98,220,.08), transparent 62%);
+    radial-gradient(680px circle at var(--px) var(--py), rgba(100,80,255,.26), transparent 62%),
+    radial-gradient(560px circle at calc(var(--px) - 38%) calc(var(--py) + 38%), rgba(46,108,232,.17), transparent 64%);
 }
 .offer2__grid{
   position:absolute;inset:0;z-index:-1;pointer-events:none;
@@ -1611,8 +1616,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .offer2__glow::after{
   content:"";position:absolute;left:6%;top:16%;
-  width:420px;height:420px;border-radius:50%;
-  background:rgb(92,70,255);opacity:.10;filter:blur(90px);
+  width:460px;height:460px;border-radius:50%;
+  background:rgb(100,78,255);opacity:.22;filter:blur(90px);
   transform:translate(var(--gx,0px), var(--gy,0px));
   transition:transform .15s ease-out;
 }
@@ -1670,6 +1675,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   animation:freeRing 2.4s linear infinite;
 }
 @keyframes freeRing{to{--ring:360deg}}
+/* the same travelling highlight the free packs wear, on an offer that is in
+   the basket — one mark for "this is yours now", wherever it happens */
+.pbuy--dark.is-added::after,.shell.is-bought::after{
+  content:"";position:absolute;inset:-1px;z-index:3;pointer-events:none;
+  border-radius:calc(var(--r-card) + 1px);padding:1.5px;
+  background:conic-gradient(from var(--ring),
+    rgba(129,117,255,.52) 0deg, rgba(129,117,255,.52) 138deg,
+    rgba(174,168,255,.88) 206deg, #FFFFFF 244deg, #D6D2FF 262deg,
+    #8F87FF 296deg, rgba(129,117,255,.66) 330deg, rgba(129,117,255,.52) 360deg);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite:exclude;
+  animation:freeRing 2.4s linear infinite;
+}
+.shell.is-bought::after{border-radius:calc(var(--r-panel) + 1px)}
 /* and the box breathes under it, on the same beat */
 @keyframes freeLift{
   from{box-shadow:0 10px 30px rgba(105,87,255,.14)}
@@ -1678,6 +1698,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 @media (prefers-reduced-motion:reduce){
   .prod.is-free::after{animation:none}
   .prod.is-free{animation:none}
+  .pbuy--dark.is-added::after,.shell.is-bought::after{animation:none}
   .zoom__v{transition:none}
 }
 /* no tile behind the box: the card is already a frame, and a second one
@@ -1688,6 +1709,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .prod__shot img{width:100%;height:100%;object-fit:contain;
   padding:var(--s-2) var(--s-1);display:block}
+/* three renders in the space of one: side by side, the middle one forward,
+   so a pack of three reads as three */
+.prod__shot--set{display:flex;align-items:center;justify-content:center;gap:0}
+.prod__shot--set img{width:auto;height:82%;padding:0;flex:0 1 auto;min-width:0}
+.prod__shot--set img:nth-child(2){height:92%;z-index:1;margin-inline:-6%}
 /* top right, opposite the free mark, where a box render has nothing to show */
 .prod__no{
   position:absolute;right:2px;top:2px;z-index:2;
@@ -1838,16 +1864,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .oact{display:flex;flex-direction:column;align-items:flex-end;gap:var(--s-3)}
 /* what the bundle absorbed, named — nothing anyone put in the basket goes
    quietly, and nothing outside the bundle is touched at all */
-.ofold{margin:0;max-width:38ch;font-size:var(--fs-2);line-height:var(--lh-normal);
-  color:var(--accent-fg);text-align:right}
+.ofold{margin:0;max-width:44ch;font-size:var(--fs-2);line-height:var(--lh-normal);
+  color:var(--fg-muted);text-align:right}
+/* once it has happened it is a confirmation, not a warning */
+.ofold.is-done{color:var(--accent-fg)}
 /* the bundle is bought: tuning it now would mean changing something that is
    already in the basket, so the offer is the only button left */
 .oact.is-bought [data-customize]{display:none}
 .oact__row{display:flex;align-items:center;gap:var(--s-3)}
 /* "Get 5, Pay 3 — $267 $385" is the widest this ever gets; holding that
    width means the price can change without the button jumping */
-.obuy{min-width:264px;justify-content:center;gap:var(--s-2)}
-.obuy__i{flex:none}
 .obuy s{margin-left:6px;opacity:.7}
 /* an incomplete bundle cannot be bought, and says so rather than failing on
    the next screen */
@@ -1857,13 +1883,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* pressed, it stops offering and starts confirming — the accent it was is
    the accent it stays, so the change is the words and the tick, not a new
    colour to read */
-.obuy.is-added{background:var(--ok-700);box-shadow:none}
-/* in the basket and under the pointer it offers the way out — the same
-   secondary red the shelf cards use, so one gesture means one thing */
-.obuy.is-added:hover,.obuy.is-added:focus-visible{
-  background:var(--bg);color:var(--danger-fg);box-shadow:inset 0 0 0 1px var(--danger-fg);
-}
-.obuy.is-added s{display:none}
 /* Done, on a bundle that is not done */
 [data-done][disabled]{opacity:.45;cursor:not-allowed}
 [data-done][disabled]:hover{border-color:var(--border);background:var(--surface)}
@@ -1933,7 +1952,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .offer2__glow::before,.offer2__glow::after,
   .footer__glow::before,.footer__glow::after{display:none}
   .offer2__grid{display:none}
-  .prod.is-free,.prod.is-free::after,.prod.is-free .prod__badge{animation:none}
+  .prod.is-free,.prod.is-free::after,.prod.is-free .prod__badge,.pbuy__best{animation:none}
 }
 
 /* ════════════════════════════════════════════════════════════════
@@ -2240,7 +2259,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       </span>
       <span class="pbuy__buy">
         <p class="pbuy__price"><s class="tnum">$299</s><b class="tnum">$149</b></p>
-        <button class="card__add pbuy__go" type="button" data-pack="Full Plugin Pack" aria-label="Add 3 Plugins in 1 Pack to basket"><svg class="i-cart" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><svg class="i-tick" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.6 3.6 7.2-7.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="i-bin" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.4 6.2h11.2l-.8 9.4a1.5 1.5 0 01-1.5 1.4H6.7a1.5 1.5 0 01-1.5-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 6.2h14M8 3.4h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add bundle to cart</button>
+        <button class="btn btn--primary btn--lg pbuy__go" type="button" data-packgo="Full Plugin Pack" aria-label="Add 3 Plugins in 1 Pack to basket"><svg class="i-cart" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><svg class="i-tick" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.6 3.6 7.2-7.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="i-bin" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.4 6.2h11.2l-.8 9.4a1.5 1.5 0 01-1.5 1.4H6.7a1.5 1.5 0 01-1.5-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 6.2h14M8 3.4h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add bundle to cart</button>
       </span>
       <ul class="pbuy__meta">
         <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.4l5.2 2v4.1c0 3-2.1 5.7-5.2 7-3.1-1.3-5.2-4-5.2-7V3.4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M5.9 8l1.5 1.5L10.3 6.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>1-year licence</li>
@@ -3710,6 +3729,72 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
   var still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ---- add to basket ---- */
+  var basketCount = document.querySelector('.cart__n');
+
+  /* ---- the basket ----
+     One line a product. A licence is not something anyone buys twice, so
+     adding the same pack again is not a second copy — and a bundle does not
+     sit beside the singles it contains, it takes their place. That is the
+     ordinary shape of this everywhere it is done well: nothing the customer
+     put in is thrown away silently, the overlap is folded in and named, and
+     everything outside the bundle is left exactly where it was. */
+  var Cart = (function(){
+    var singles = {}, bundle = null, watchers = [];
+    var say = document.querySelector('[data-status]');
+    function covered(name){ return !!bundle && bundle.packs.indexOf(name) > -1; }
+    function size(){
+      var n = 0, k;
+      for(k in singles){ if(singles[k]) n++; }
+      return n + (bundle ? bundle.packs.length : 0);
+    }
+    var link = document.querySelector('[data-basket]');
+    function draw(msg){
+      var n = size();
+      if(basketCount) basketCount.textContent = String(n);
+      if(link) link.setAttribute('aria-label',
+        'Basket, ' + (n ? n + ' item' + (n > 1 ? 's' : '') : 'empty'));
+      if(say && msg) say.textContent = msg;
+      watchers.forEach(function(fn){ fn(); });
+    }
+    function list(names){
+      if(names.length === 1) return names[0];
+      return names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
+    }
+    return {
+      covered: covered,
+      has: function(name){ return !!singles[name] || covered(name); },
+      watch: function(fn){ watchers.push(fn); },
+      add: function(name){
+        if(covered(name)) return false;
+        singles[name] = true;
+        draw(name + ' added to your basket.');
+        return true;
+      },
+      drop: function(name){
+        if(!singles[name]) return;
+        delete singles[name];
+        draw(name + ' removed from your basket.');
+      },
+      /* the bundle absorbs whatever it already contains, and says which */
+      addBundle: function(label, packs){
+        bundle = { label: label, packs: packs.slice() };
+        var folded = packs.filter(function(n){ return singles[n]; });
+        folded.forEach(function(n){ delete singles[n]; });
+        draw(label + ' added to your basket.' + (folded.length
+          ? ' ' + list(folded) + (folded.length > 1 ? ' were' : ' was') +
+            ' already in it — the bundle includes ' + (folded.length > 1 ? 'them' : 'it') +
+            ', so the single' + (folded.length > 1 ? 's are' : ' is') + ' gone.'
+          : ''));
+        return folded;
+      },
+      dropBundle: function(){
+        var was = bundle; bundle = null;
+        draw(was ? was.label + ' removed from your basket.' : '');
+      }
+    };
+  })();
+
   /* ---- nav: border + shadow only once you have scrolled ---- */
   var nav = document.getElementById('nav');
   var band = document.querySelector('.topband');
@@ -3874,7 +3959,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   (function(){
     var offer = document.querySelector('[data-offer]');
     if(!offer) return;
-    var PACKS = [{"name":"Full Plugin Pack","img":"images/boxes/full-plugin-pack.webp","price":"$149","was":"$299","by":"Retouch Market","ini":"RM","first":true},{"name":"Lora Presets","img":"images/boxes/lora.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Solis Presets","img":"images/boxes/solis.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Terra Presets","img":"images/boxes/terra.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Jardin Presets","img":"images/boxes/jardin.webp","price":"$59","was":"$119","by":"Uğur Demir","ini":"UD"},{"name":"Mely Presets","img":"images/boxes/mely.webp","price":"$59","was":"$119","by":"Melih Süren","ini":"MS"},{"name":"Onyx Presets","img":"images/boxes/onyx.webp","price":"$59","was":"$119","by":"Adam Tahirov","ini":"AT"},{"name":"Doré Presets","img":"images/boxes/dore.webp","price":"$59","was":"$119","by":"Mücahit Güney","ini":"MG"},{"name":"Olbia LUTs","img":"images/boxes/olbia.webp","price":"$59","was":"$119","by":"Umut Kaçar","ini":"UK"},{"name":"Vela Presets","img":"images/boxes/vela.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Nord Presets","img":"images/boxes/nord.webp","price":"$59","was":"$119","by":"Melih Süren","ini":"MS"},{"name":"Aster LUTs","img":"images/boxes/aster.webp","price":"$59","was":"$119","by":"Adam Tahirov","ini":"AT"}];
+    var PACKS = [{"name":"Full Plugin Pack","img":"images/boxes/full-plugin-pack.webp","imgs":["images/box-retouchx.png","images/box-lightroom-ai-color.png","images/box-us-photoshop-plugin.png"],"price":"$149","was":"$299","by":"Retouch Market","ini":"RM","first":true},{"name":"Lora Presets","img":"images/boxes/lora.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Solis Presets","img":"images/boxes/solis.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Terra Presets","img":"images/boxes/terra.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Jardin Presets","img":"images/boxes/jardin.webp","price":"$59","was":"$119","by":"Uğur Demir","ini":"UD"},{"name":"Mely Presets","img":"images/boxes/mely.webp","price":"$59","was":"$119","by":"Melih Süren","ini":"MS"},{"name":"Onyx Presets","img":"images/boxes/onyx.webp","price":"$59","was":"$119","by":"Adam Tahirov","ini":"AT"},{"name":"Doré Presets","img":"images/boxes/dore.webp","price":"$59","was":"$119","by":"Mücahit Güney","ini":"MG"},{"name":"Olbia LUTs","img":"images/boxes/olbia.webp","price":"$59","was":"$119","by":"Umut Kaçar","ini":"UK"},{"name":"Vela Presets","img":"images/boxes/vela.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Nord Presets","img":"images/boxes/nord.webp","price":"$59","was":"$119","by":"Melih Süren","ini":"MS"},{"name":"Aster LUTs","img":"images/boxes/aster.webp","price":"$59","was":"$119","by":"Adam Tahirov","ini":"AT"}];
     var DEALS = [{"get":3,"pay":2},{"get":5,"pay":3}];
     var row = offer.querySelector('[data-picks]');
     var panel = offer.querySelector('[data-custom]');
@@ -3887,7 +3972,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
        bundle itself changes under it */
     var BIN = '<svg class="obuy__i" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.4 6.2h11.2l-.8 9.4a1.5 1.5 0 01-1.5 1.4H6.7a1.5 1.5 0 01-1.5-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 6.2h14M8 3.4h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
     var TICK = '<svg class="obuy__i" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.6 3.6 7.2-7.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    var bought = false;
+    var bought = false, shell = offer.closest('.shell') || offer;
     var tabs = [].slice.call(offer.querySelectorAll('[data-deal]'));
     /* the best value is the one on offer, so it is the one already chosen —
        filled with the five the page has been arguing for */
@@ -3971,8 +4056,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         go.classList.remove('is-added');
         var back = go.closest('.oact');
         if(back) back.classList.remove('is-bought');
+        if(shell) shell.classList.remove('is-bought');
         Cart.dropBundle();
-        tell([]);
+        tell(null);
       }
       go.innerHTML = short > 0
         ? 'Choose ' + short + ' more pack' + (short > 1 ? 's' : '')
@@ -4003,14 +4089,32 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         .filter(Boolean);
     }
     var fold = offer.querySelector('[data-fold]');
+    /* said before it happens as well as after: the overlap is named while the
+       button still says Get, so nothing about the basket is a surprise */
     function tell(folded){
       if(!fold) return;
+      if(folded === null){
+        var waiting = names().filter(function(n){ return Cart.has(n) && !Cart.covered(n); });
+        fold.textContent = waiting.length
+          ? (waiting.length > 1 ? waiting.length + ' of these are' : waiting[0] + ' is') +
+            ' already in your basket. Adding the bundle takes the single' +
+            (waiting.length > 1 ? 's' : '') + ' out — you can put ' +
+            (waiting.length > 1 ? 'them' : 'it') + ' back any time.'
+          : '';
+        fold.hidden = !waiting.length;
+        fold.classList.remove('is-done');
+        return;
+      }
       fold.textContent = folded.length
         ? (folded.length > 1 ? folded.length + ' packs you already had are' : folded[0] + ' was') +
-          ' part of this bundle — we took the single' + (folded.length > 1 ? 's' : '') + ' out.'
+          ' part of this bundle — we took the single' + (folded.length > 1 ? 's' : '') +
+          ' out. You can put ' + (folded.length > 1 ? 'them' : 'it') + ' back any time.'
         : '';
       fold.hidden = !folded.length;
+      fold.classList.toggle('is-done', !!folded.length);
     }
+    /* and it re-reads the basket whenever the basket changes */
+    Cart.watch(function(){ if(!bought) tell(null); });
     go.addEventListener('click', function(){
       if(go.disabled) return;
       var act = go.closest('.oact');
@@ -4019,8 +4123,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         go.classList.remove('is-added');
         go.removeAttribute('aria-label');
         if(act) act.classList.remove('is-bought');
+        if(shell) shell.classList.remove('is-bought');
         Cart.dropBundle();
-        tell([]);
+        tell(null);
         render();
         return;
       }
@@ -4029,6 +4134,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       /* nothing left to tune once it is bought — the way to change the
          bundle is to take it back out */
       if(act) act.classList.add('is-bought');
+      if(shell) shell.classList.add('is-bought');
       bill(true);
       tell(Cart.addBundle('Bestseller bundle', names()));
     });
@@ -4041,8 +4147,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     function box(id, n, isFree){
       var p = PACKS[id];
       var f = el('figure', 'prod' + (isFree ? ' is-free' : '') + (p.first ? ' prod--plugin' : ''));
-      f.appendChild(el('span', 'prod__shot',
-        '<img src="' + esc(p.img) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">' +
+      /* a pack of three shows three: one render would say you were buying one */
+      var art = (p.imgs || [p.img]).map(function(src){
+        return '<img src="' + esc(src) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">';
+      }).join('');
+      f.appendChild(el('span', 'prod__shot' + (p.imgs ? ' prod__shot--set' : ''),
+        art +
         '<span class="prod__no">' + pad(n + 1) + '</span>' +
         (isFree ? '<span class="prod__badge">' + GIFT + 'Free</span>' : '')));
       var body = el('figcaption', 'prod__body',
@@ -4821,71 +4931,53 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     if(sBar.classList.contains('is-on')) searchOpen(false);
   });
 
-  /* ---- add to basket ---- */
-  var basketCount = document.querySelector('.cart__n');
-
-  /* ---- the basket ----
-     One line a product. A licence is not something anyone buys twice, so
-     adding the same pack again is not a second copy — and a bundle does not
-     sit beside the singles it contains, it takes their place. That is the
-     ordinary shape of this everywhere it is done well: nothing the customer
-     put in is thrown away silently, the overlap is folded in and named, and
-     everything outside the bundle is left exactly where it was. */
-  var Cart = (function(){
-    var singles = {}, bundle = null, watchers = [];
-    var say = document.querySelector('[data-status]');
-    function covered(name){ return !!bundle && bundle.packs.indexOf(name) > -1; }
-    function size(){
-      var n = 0, k;
-      for(k in singles){ if(singles[k]) n++; }
-      return n + (bundle ? bundle.packs.length : 0);
-    }
-    var link = document.querySelector('[data-basket]');
-    function draw(msg){
-      var n = size();
-      if(basketCount) basketCount.textContent = String(n);
-      if(link) link.setAttribute('aria-label',
-        'Basket, ' + (n ? n + ' item' + (n > 1 ? 's' : '') : 'empty'));
-      if(say && msg) say.textContent = msg;
-      watchers.forEach(function(fn){ fn(); });
-    }
-    function list(names){
-      if(names.length === 1) return names[0];
-      return names.slice(0, -1).join(', ') + ' and ' + names[names.length - 1];
-    }
-    return {
-      covered: covered,
-      has: function(name){ return !!singles[name] || covered(name); },
-      watch: function(fn){ watchers.push(fn); },
-      add: function(name){
-        if(covered(name)) return false;
-        singles[name] = true;
-        draw(name + ' added to your basket.');
-        return true;
-      },
-      drop: function(name){
-        if(!singles[name]) return;
-        delete singles[name];
-        draw(name + ' removed from your basket.');
-      },
-      /* the bundle absorbs whatever it already contains, and says which */
-      addBundle: function(label, packs){
-        bundle = { label: label, packs: packs.slice() };
-        var folded = packs.filter(function(n){ return singles[n]; });
-        folded.forEach(function(n){ delete singles[n]; });
-        draw(label + ' added to your basket.' + (folded.length
-          ? ' ' + list(folded) + (folded.length > 1 ? ' were' : ' was') +
-            ' already in it — the bundle includes ' + (folded.length > 1 ? 'them' : 'it') +
-            ', so the single' + (folded.length > 1 ? 's are' : ' is') + ' gone.'
-          : ''));
-        return folded;
-      },
-      dropBundle: function(){
-        var was = bundle; bundle = null;
-        draw(was ? was.label + ' removed from your basket.' : '');
+  /* ---- the plugin band's offer ----
+     The same three states the bundle's button has, in the same order and the
+     same words: the offer, the confirmation, and — while the pointer is on
+     it — the way out. It was on the shelf card's handler before, which wrote
+     its own label over the markup's and called the states something else. */
+  (function(){
+    var go = document.querySelector('[data-packgo]');
+    if(!go) return;
+    var pack = go.getAttribute('data-packgo');
+    var band = go.closest('.pbuy');
+    var OFFER = go.innerHTML;
+    var TICK = '<svg class="i-tick" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.6 3.6 7.2-7.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    var BIN = '<svg class="i-bin" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.4 6.2h11.2l-.8 9.4a1.5 1.5 0 01-1.5 1.4H6.7a1.5 1.5 0 01-1.5-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 6.2h14M8 3.4h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
+    var inCart = false;
+    function draw(hovering){
+      var held = Cart.covered(pack);
+      go.classList.toggle('is-added', inCart || held);
+      go.disabled = held;
+      if(held){
+        go.innerHTML = TICK + 'In your bundle';
+        go.setAttribute('aria-label', pack + ' is already in the bundle in your basket');
+      } else if(inCart){
+        go.innerHTML = hovering ? BIN + 'Remove' : TICK + 'Added to cart';
+        go.setAttribute('aria-label', 'Remove ' + pack + ' from your basket');
+      } else {
+        go.innerHTML = OFFER;
+        go.setAttribute('aria-label', 'Add ' + pack + ' to basket');
       }
-    };
+      if(band) band.classList.toggle('is-added', inCart || held);
+    }
+    Cart.watch(function(){
+      if(inCart && !Cart.has(pack)) inCart = false;
+      draw(false);
+    });
+    go.addEventListener('click', function(){
+      if(go.disabled) return;
+      inCart = !inCart;
+      if(inCart){ Cart.add(pack); } else { Cart.drop(pack); }
+      draw(true);
+    });
+    go.addEventListener('pointerenter', function(){ draw(true); });
+    go.addEventListener('focus', function(){ draw(true); });
+    go.addEventListener('pointerleave', function(){ draw(false); });
+    go.addEventListener('blur', function(){ draw(false); });
+    draw(false);
   })();
+
   document.querySelectorAll('.card__add').forEach(function(btn){
     /* the label goes in a span of its own: setting textContent on the button
        ate the basket icon along with the words */
@@ -4896,8 +4988,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     label.textContent = text ? text.textContent.trim() : 'Add to cart';
     if(text){ btn.replaceChild(label, text); } else { btn.appendChild(label); }
 
-    var name = btn.getAttribute('data-pack') ||
-      (btn.getAttribute('aria-label') || '').replace(/^Add\s+/, '').replace(/\s+to basket$/, '');
+    var name = (btn.getAttribute('aria-label') || '').replace(/^Add\s+/, '').replace(/\s+to basket$/, '');
     var on = false;
     function draw(hovering){
       /* a pack the bundle already contains is not something to buy again:
