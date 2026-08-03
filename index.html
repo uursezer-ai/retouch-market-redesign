@@ -457,9 +457,53 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* the offer band in the same ground the bundle stands on. One class: the
    tokens above turn everything inside it over, and taking the class off puts
    it back on the page's white. */
+/* The band's three layers, the bundle's own: an ambient pair that drifts on
+   its own, a pool that follows the pointer, and a blurred blob that leans
+   against it. Same colours, a shade quieter for a band this size — it is the
+   same offer at the other end of the page. */
+.pbuy--dark{--px:50%;--py:40%;isolation:isolate}
+/* the mask has to be able to reach the corners the dots sit in */
+/* Every layer lives inside a box that is exactly the band, so the drift and
+   the blob can hang past the corners without any of it counting as width the
+   band has to hold. */
+.pbuy__glow,.pbuy__dots{
+  position:absolute;inset:0;z-index:-1;pointer-events:none;
+  overflow:hidden;border-radius:inherit;
+}
+/* the ambient pair, drifting on its own */
+.pbuy__glow::before{
+  content:"";position:absolute;inset:-14% -8%;
+  background:
+    radial-gradient(52% 120% at 14% 90%, rgba(140,88,255,.20) 0%, rgba(140,88,255,0) 70%),
+    radial-gradient(46% 110% at 88% 6%, rgba(56,92,235,.17) 0%, rgba(56,92,235,0) 72%);
+  animation:bandDrift 34s var(--ease) infinite alternate;
+}
+/* the pool that follows the pointer */
+.pbuy__glow::after{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(420px circle at var(--px) var(--py), rgba(92,72,255,.20), transparent 60%),
+    radial-gradient(340px circle at calc(var(--px) - 34%) calc(var(--py) + 38%), rgba(39,98,220,.12), transparent 62%);
+}
+/* the dot grid, lit only where the pointer is */
+.pbuy__dots{
+  background-image:radial-gradient(rgba(178,172,255,.34) 1px, transparent 1.5px);
+  background-size:28px 28px;
+  -webkit-mask:radial-gradient(220px circle at var(--px) var(--py), #000 0%, rgba(0,0,0,.35) 40%, transparent 70%);
+  mask:radial-gradient(220px circle at var(--px) var(--py), #000 0%, rgba(0,0,0,.35) 40%, transparent 70%);
+}
+/* and one blurred blob leaning against the pool, for depth */
+.pbuy__dots::before{
+  content:"";position:absolute;left:8%;top:-40%;
+  width:300px;height:300px;border-radius:50%;
+  background:rgb(92,70,255);opacity:.16;filter:blur(70px);
+  transform:translate(var(--gx,0px), var(--gy,0px));
+  transition:transform .15s ease-out;
+}
 /* written .pbuy.pbuy--dark: the band's own rules sit further down the sheet
    and at equal weight the later one would take the ground back */
 .pbuy.pbuy--dark{
+  position:relative;overflow:clip;
   background:var(--bg);
   border-color:rgba(255,255,255,.12);
   box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 18px 40px -24px rgba(4,10,20,.9);
@@ -468,11 +512,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   border-color:rgba(255,255,255,.26);
   box-shadow:0 1px 0 rgba(255,255,255,.07) inset, 0 26px 60px -26px rgba(4,10,20,1);
 }
-/* in the basket it takes the same wash the bundle's chosen boxes take */
+/* in the basket it takes the same wash, edge and ring a chosen box in the
+   bundle takes — one language for "this is in your basket" */
 .pbuy.pbuy--dark:has(.pbuy__go.is-added){
-  background:rgba(99,91,255,.14);border-color:var(--accent);
-  box-shadow:0 0 0 1px var(--accent);
+  background:linear-gradient(145deg,rgba(104,88,255,.16),rgba(255,255,255,.03) 42%,rgba(45,92,210,.10)),var(--bg);
+  border-color:var(--accent);box-shadow:0 0 0 1px var(--accent);
 }
+.pbuy.pbuy--dark:has(.pbuy__go.is-added):hover{transform:none}
 /* the boxes are renders on white — on this ground they want a page to stand
    on, the way the bundle's own boxes do */
 .pbuy--dark .pbuy__art img{background:transparent}
@@ -689,7 +735,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      promises across the foot, where a fourth one can join them without
      pushing anything onto a second row */
   display:grid;grid-template-columns:auto minmax(0,1fr) auto;
-  grid-template-areas:"art body buy" "meta meta meta";
+  grid-template-areas:"art body buy" "art meta meta";
   align-items:center;column-gap:var(--s-6);row-gap:var(--s-4);
   padding:var(--s-5) var(--s-6);border-radius:var(--r-card);
   background:var(--surface);border:1px solid var(--border);
@@ -706,7 +752,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .pbuy:has(.pbuy__go.is-added):hover{transform:none;box-shadow:0 0 0 1px var(--accent)}
 /* the three boxes at a glance, overlapped the way they stand on a shelf */
-.pbuy__art{grid-area:art;display:flex;align-items:center}
+/* the picture spans both rows: the promises start where the words start, so
+   the boxes keep the height they had rather than being squeezed above them */
+.pbuy__art{grid-area:art;display:flex;align-items:center;gap:var(--s-1)}
 /* side by side with air between them: three products, not one stack */
 .pbuy__art{gap:var(--s-2)}
 .pbuy__art img{width:80px;height:107px;object-fit:contain;border-radius:4px}
@@ -764,10 +812,23 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .card__add.pbuy__go:hover{background:var(--accent-700);border-color:var(--accent-700);color:var(--fg-on-accent)}
 /* in the basket it keeps the accent — the band behind it changes ground, so
    an outlined button in a washed band would read as switched off */
-.card__add.pbuy__go.is-added{background:var(--accent);color:var(--fg-on-accent);border-color:var(--accent)}
-.card__add.pbuy__go.is-added:hover,.card__add.pbuy__go.is-added:focus-visible{
-  background:var(--bg);border-color:var(--danger);color:var(--danger);
+/* In the basket it confirms rather than repeating the offer, and under the
+   pointer it offers the way out — the same three states, in the same three
+   colours, that the bundle's own button uses at the other end of the page.
+   The mark changes with them: basket, tick, bin. */
+.card__add.pbuy__go .i-tick,.card__add.pbuy__go .i-bin{display:none}
+.card__add.pbuy__go.is-added{
+  background:var(--ok-700);border-color:var(--ok-700);color:#fff;
 }
+.card__add.pbuy__go.is-added .i-cart{display:none}
+.card__add.pbuy__go.is-added .i-tick{display:block}
+.card__add.pbuy__go.is-added:hover,.card__add.pbuy__go.is-added:focus-visible{
+  background:var(--bg);border-color:var(--danger-fg);color:var(--danger-fg);
+}
+.card__add.pbuy__go.is-added:hover .i-tick,
+.card__add.pbuy__go.is-added:focus-visible .i-tick{display:none}
+.card__add.pbuy__go.is-added:hover .i-bin,
+.card__add.pbuy__go.is-added:focus-visible .i-bin{display:block}
 @media (prefers-reduced-motion:reduce){.pbuy:hover{transform:none}}
 /* the column narrows before the band folds, and three promises on one line
    is worth four pixels a side */
@@ -779,15 +840,26 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 @media (max-width:1000px){
   .pbuy{
     grid-template-columns:auto minmax(0,1fr);
-    grid-template-areas:"art body" "buy buy" "meta meta";
+    grid-template-areas:"art body" "art meta" "buy buy";
     row-gap:var(--s-4);
   }
   .pbuy__buy{justify-content:flex-end}
 }
+/* narrower still and the picture cannot hold a column beside the words: it
+   takes a row of its own so the promises get the full width and stay on one
+   line, which is what they are a row for */
+@media (max-width:900px){
+  .pbuy{
+    grid-template-columns:minmax(0,1fr);
+    grid-template-areas:"art" "body" "meta" "buy";
+  }
+  /* stretched, not sized to content: the subtitle is one unbreakable line and
+     would otherwise set a width the band cannot hold */
+  .pbuy__buy{justify-content:space-between}
+}
 @media (max-width:620px){
-  .pbuy{padding:var(--s-4);grid-template-columns:minmax(0,1fr);
-    grid-template-areas:"art" "body" "meta" "buy"}
-  .pbuy__buy{flex-wrap:wrap;justify-content:space-between}
+  .pbuy{padding:var(--s-4)}
+  .pbuy__buy{flex-wrap:wrap}
   .pbuy__t{font-size:var(--fs-6)}
   /* wrapped, a separator dot lands at the start of a line and reads as a
      bullet nobody asked for — the gap does the separating down here */
@@ -1856,6 +1928,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    ════════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion:reduce){
   .offer2__glow,.footer__glow{animation:none}
+  .pbuy__glow::before{animation:none}
+  .pbuy__dots::before{transition:none}
   .offer2__glow::before,.offer2__glow::after,
   .footer__glow::before,.footer__glow::after{display:none}
   .offer2__grid{display:none}
@@ -2152,7 +2226,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
   <div class="pstage" data-reveal>
     <div class="pbuyrow" data-reveal>
-    <div class="pbuy pbuy--dark">
+    <div class="pbuy pbuy--dark" data-lit>
+      <span class="pbuy__glow" aria-hidden="true"></span>
+      <span class="pbuy__dots" aria-hidden="true"></span>
       <span class="pbuy__art" aria-hidden="true">
         <img src="images/box-retouchx.png" alt="" loading="lazy" onerror="this.style.display='none'">
         <img src="images/box-lightroom-ai-color.png" alt="" loading="lazy" onerror="this.style.display='none'">
@@ -2164,7 +2240,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       </span>
       <span class="pbuy__buy">
         <p class="pbuy__price"><s class="tnum">$299</s><b class="tnum">$149</b></p>
-        <button class="card__add pbuy__go" type="button" data-pack="Full Plugin Pack" aria-label="Add 3 Plugins in 1 Pack to basket"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add bundle to cart</button>
+        <button class="card__add pbuy__go" type="button" data-pack="Full Plugin Pack" aria-label="Add 3 Plugins in 1 Pack to basket"><svg class="i-cart" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><svg class="i-tick" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.6 3.6 7.2-7.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="i-bin" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.4 6.2h11.2l-.8 9.4a1.5 1.5 0 01-1.5 1.4H6.7a1.5 1.5 0 01-1.5-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 6.2h14M8 3.4h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add bundle to cart</button>
       </span>
       <ul class="pbuy__meta">
         <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.4l5.2 2v4.1c0 3-2.1 5.7-5.2 7-3.1-1.3-5.2-4-5.2-7V3.4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M5.9 8l1.5 1.5L10.3 6.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>1-year licence</li>
