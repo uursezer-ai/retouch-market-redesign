@@ -1150,7 +1150,36 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 /* reserve two lines so every category label in the shelf sits on one baseline */
 
-/* ── collection controls, the way a storefront does it ─────────── */
+/* ── the shelf's controls, and the bar that carries them ───────── */
+/* They ride down the shelf with you: a sticky bar of their own, pinned under
+   the site bar for as long as there are packs under it, and carried off the
+   top with the section when the section ends. Its own row is what makes that
+   possible — an element can only travel inside the box it sits in, and the
+   head is 150px tall. At desktop it is pulled straight back onto the head's
+   last line, which is where it has always been. */
+.shelfbar{
+  position:sticky;top:calc(var(--nav-h) + var(--s-2));z-index:40;
+  display:flex;justify-content:flex-end;margin-bottom:var(--s-7);
+  pointer-events:none;
+}
+.shelfbar > *{pointer-events:auto}
+.shelfbar__watch{display:block;height:1px;margin-bottom:-1px}
+/* pinned, it is over the packs rather than over the page, so it takes a
+   plate of the section's own colour to sit on rather than letting a card
+   run under two floating buttons */
+.shelfbar::before{
+  content:"";position:absolute;z-index:-1;inset:-10px calc(-1 * var(--s-4));
+  border-radius:var(--r-panel);
+  background:rgba(246,249,252,.86);backdrop-filter:blur(10px);
+  box-shadow:0 1px 0 var(--border), 0 8px 24px rgba(16,32,58,.06);
+  opacity:0;transition:opacity var(--dur-2) var(--ease);
+}
+.shelfbar.is-pinned::before{opacity:1}
+@media (min-width:861px){
+  /* 40px of control and the head's own 32px gap: back onto the head's line */
+  .shelfbar{margin-top:calc(-1 * (var(--s-7) + 40px))}
+}
+@media (prefers-reduced-motion:reduce){.shelfbar::before{transition:none}}
 /* how many across, then in what order — the pair reads left to right the way
    the sentence does */
 .tools{display:flex;align-items:center;gap:var(--s-3);flex:none}
@@ -2597,6 +2626,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <h2>Original Signature Looks</h2>
         <p class="lede">For Lightroom Classic &amp; Camera Raw. Created by one of Türkiye&#8217;s most popular photographers.</p>
       </div>
+      <a class="vh" href="#">View store
+        <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+
+    <!-- the shelf's controls follow the shelf: pinned under the bar while
+         there are packs to sort, and gone with the section -->
+    <span class="shelfbar__watch" aria-hidden="true"></span>
+    <div class="shelfbar" data-shelfbar>
       <div class="tools">
         <div class="sort">
           <button class="sort__btn" type="button" id="colsBtn" aria-expanded="false" aria-haspopup="true" aria-controls="colsMenu">
@@ -2620,9 +2658,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           </div>
         </div>
       </div>
-      <a class="vh" href="#">View store
-        <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </a>
     </div>
 
     <div class="cards" id="presetGrid" data-reveal>
@@ -5150,6 +5185,19 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     });
     document.addEventListener('click', shutAll);
     document.addEventListener('keydown', function(e){ if(e.key === 'Escape') shutAll(); });
+
+    /* pinned or not: a one-pixel marker sits where the bar rests, and the bar
+       is pinned exactly when that marker has gone under the site bar. Cheaper
+       and steadier than measuring the bar itself on every scroll frame. */
+    var bar = document.querySelector('[data-shelfbar]'),
+        watch = document.querySelector('.shelfbar__watch');
+    if(bar && watch && window.IntersectionObserver){
+      var nav = parseInt(getComputedStyle(document.documentElement)
+        .getPropertyValue('--nav-h'), 10) || 64;
+      new IntersectionObserver(function(rows){
+        bar.classList.toggle('is-pinned', !rows[0].isIntersecting);
+      }, { rootMargin: -(nav + 8) + 'px 0px 0px 0px', threshold: 0 }).observe(watch);
+    }
   })();
 
   /* ---- hover scrub over a pack's sample shots ----
