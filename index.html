@@ -716,6 +716,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   transition:background var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
 }
 .ptabs button[aria-selected="true"] .ptab__no{background:var(--accent);color:var(--fg-on-accent)}
+/* the chosen plugin's name in the primary, so the eye finds it before it
+   finds the pill it sits in — 4.65:1 on the white pill, which clears AA */
+.ptabs button[aria-selected="true"] .ptab__nm{color:var(--accent)}
 /* and what it runs in after it — the same badge the tabs carried as cards */
 .ptab__apps{display:inline-flex;flex:none;gap:5px}
 .ptab__app{
