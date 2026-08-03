@@ -2054,9 +2054,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   background:#FFFFFF;color:#1B2436;
   box-shadow:0 16px 44px rgba(4,10,20,.24), 0 0 0 1px rgba(4,10,20,.06);
   font-size:var(--fs-2);line-height:var(--lh-normal);text-align:left;
-  opacity:0;transform:translateY(-6px);pointer-events:none;
+  opacity:0;transform:translateY(-6px);pointer-events:none;cursor:pointer;
   transition:opacity var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
 }
+/* out of the way until it is there to be dismissed */
+.carttip.is-on{pointer-events:auto}
 .carttip::after{
   content:"";position:absolute;bottom:100%;right:var(--point, 26px);
   border:7px solid transparent;border-bottom-color:#FFFFFF;
@@ -4049,6 +4051,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       tipEl = document.createElement('div');
       tipEl.className = 'carttip';
       tipEl.setAttribute('role', 'status');
+      /* read and done: pressing it puts it away rather than waiting it out */
+      tipEl.addEventListener('click', function(){
+        clearTimeout(tipGo);
+        tipEl.classList.remove('is-on');
+      });
       document.body.appendChild(tipEl);
     }
     tipEl.classList.toggle('carttip--one', !line);
@@ -4091,7 +4098,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       window.addEventListener('scroll', function(){ if(tipEl && tipEl.classList.contains('is-on')) place(); }, {passive:true});
       window.addEventListener('resize', function(){ if(tipEl && tipEl.classList.contains('is-on')) place(); });
     }
-    tipGo = setTimeout(function(){ tipEl.classList.remove('is-on'); }, 5200);
+    tipGo = setTimeout(function(){ tipEl.classList.remove('is-on'); }, 2600);
   }
 
   /* ---- the moment an offer lands ----
