@@ -525,6 +525,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   background-image:linear-gradient(145deg,rgba(104,88,255,.20),rgba(255,255,255,.04) 42%,rgba(45,92,210,.14));
   border-color:var(--accent);
 }
+/* once it is in the basket the price has done its job — what is left to say
+   is that it is yours, and the button says that on its own */
+.pbuy.pbuy--dark.is-added .pbuy__price{display:none}
 .pbuy.pbuy--dark.is-added:hover{transform:none}
 /* the travelling ring is the edge now, so no flat ring under it */
 .pbuy.pbuy--dark.is-added{box-shadow:none}
@@ -774,13 +777,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* the same pill the free packs wear in the bundle: filled accent, white on
    it, and a ring that breathes outwards without moving anything under it */
 .pbuy__best{
-  flex:none;display:inline-flex;align-items:center;gap:5px;
-  padding:5px var(--s-3);border-radius:var(--r-full);
+  flex:none;display:inline-flex;align-items:center;gap:4px;
+  padding:2px 7px;border-radius:var(--r-full);
   background:var(--accent);color:var(--fg-on-accent);border:1px solid rgba(255,255,255,.34);
-  font-size:var(--fs-2);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
+  font-size:10px;line-height:1.5;font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
   animation:freePulse 2.4s var(--ease) infinite alternate;
 }
-.pbuy__best svg{width:11px;height:11px;flex:none}
+.pbuy__best svg{width:9px;height:9px;flex:none}
 .pbuy__t{margin:0;min-width:0;font-size:var(--fs-7);font-weight:var(--fw-bold);
   line-height:var(--lh-snug);letter-spacing:var(--tr-heading);color:var(--fg);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -834,6 +837,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .pbuy__go.is-added:hover .i-tick,.pbuy__go.is-added:focus-visible .i-tick{display:none}
 .obuy.is-added:hover .i-bin,.obuy.is-added:focus-visible .i-bin,
 .pbuy__go.is-added:hover .i-bin,.pbuy__go.is-added:focus-visible .i-bin{display:block}
+/* unless the bundle is holding it: nothing to take out here, so the pointer
+   is told so rather than offered a way out that would not work */
+.pbuy__go.is-added[disabled],.pbuy__go.is-added[disabled]:hover{
+  background:var(--ok);color:#fff;box-shadow:none;cursor:default;opacity:1}
+.pbuy__go.is-added[disabled]:hover .i-tick{display:block}
+.pbuy__go.is-added[disabled]:hover .i-bin{display:none}
 @media (prefers-reduced-motion:reduce){.pbuy:hover{transform:none}}
 /* the column narrows before the band folds, and three promises on one line
    is worth four pixels a side */
@@ -1690,6 +1699,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   animation:freeRing 2.4s linear infinite;
 }
 .shell.is-bought::after{border-radius:calc(var(--r-panel) + 1px)}
+/* the band clips its own overflow to hold the glow layers, so a ring at
+   inset:-1px had all but half a pixel of itself cut away and read as nothing
+   at all. It sits inside the edge instead, and thick enough to be seen from
+   across the room. */
+.pbuy--dark.is-added::after{
+  inset:0;border-radius:var(--r-card);padding:2.5px;
+  background:conic-gradient(from var(--ring),
+    #6E63FF 0deg, #6E63FF 130deg,
+    #B9B2FF 200deg, #FFFFFF 240deg, #E4E1FF 258deg,
+    #8F87FF 294deg, #7B70FF 330deg, #6E63FF 360deg);
+  filter:drop-shadow(0 0 6px rgba(129,117,255,.55));
+}
 /* and the box breathes under it, on the same beat */
 @keyframes freeLift{
   from{box-shadow:0 10px 30px rgba(105,87,255,.14)}
@@ -2259,7 +2280,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       </span>
       <span class="pbuy__buy">
         <p class="pbuy__price"><s class="tnum">$299</s><b class="tnum">$149</b></p>
-        <button class="btn btn--primary btn--lg pbuy__go" type="button" data-packgo="Full Plugin Pack" aria-label="Add 3 Plugins in 1 Pack to basket"><svg class="i-cart" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><svg class="i-tick" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.6 3.6 7.2-7.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="i-bin" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.4 6.2h11.2l-.8 9.4a1.5 1.5 0 01-1.5 1.4H6.7a1.5 1.5 0 01-1.5-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 6.2h14M8 3.4h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add bundle to cart</button>
+        <button class="btn btn--primary btn--lg pbuy__go" type="button" data-packgo="Full Plugin Pack" aria-label="Add 3 Plugins in 1 Pack to basket"><svg class="i-cart" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><svg class="i-tick" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.6 3.6 7.2-7.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="i-bin" width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.4 6.2h11.2l-.8 9.4a1.5 1.5 0 01-1.5 1.4H6.7a1.5 1.5 0 01-1.5-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 6.2h14M8 3.4h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>Add to cart</button>
       </span>
       <ul class="pbuy__meta">
         <li><svg width="15" height="15" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 1.4l5.2 2v4.1c0 3-2.1 5.7-5.2 7-3.1-1.3-5.2-4-5.2-7V3.4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M5.9 8l1.5 1.5L10.3 6.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>1-year licence</li>
@@ -3959,7 +3980,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   (function(){
     var offer = document.querySelector('[data-offer]');
     if(!offer) return;
-    var PACKS = [{"name":"Full Plugin Pack","img":"images/boxes/full-plugin-pack.webp","imgs":["images/box-retouchx.png","images/box-lightroom-ai-color.png","images/box-us-photoshop-plugin.png"],"price":"$149","was":"$299","by":"Retouch Market","ini":"RM","first":true},{"name":"Lora Presets","img":"images/boxes/lora.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Solis Presets","img":"images/boxes/solis.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Terra Presets","img":"images/boxes/terra.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Jardin Presets","img":"images/boxes/jardin.webp","price":"$59","was":"$119","by":"Uğur Demir","ini":"UD"},{"name":"Mely Presets","img":"images/boxes/mely.webp","price":"$59","was":"$119","by":"Melih Süren","ini":"MS"},{"name":"Onyx Presets","img":"images/boxes/onyx.webp","price":"$59","was":"$119","by":"Adam Tahirov","ini":"AT"},{"name":"Doré Presets","img":"images/boxes/dore.webp","price":"$59","was":"$119","by":"Mücahit Güney","ini":"MG"},{"name":"Olbia LUTs","img":"images/boxes/olbia.webp","price":"$59","was":"$119","by":"Umut Kaçar","ini":"UK"},{"name":"Vela Presets","img":"images/boxes/vela.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Nord Presets","img":"images/boxes/nord.webp","price":"$59","was":"$119","by":"Melih Süren","ini":"MS"},{"name":"Aster LUTs","img":"images/boxes/aster.webp","price":"$59","was":"$119","by":"Adam Tahirov","ini":"AT"}];
+    var PACKS = [{"name":"Full Plugin Pack","img":"images/boxes/full-plugin-pack.webp","imgs":["images/box-lightroom-ai-color.png","images/box-retouchx.png","images/box-us-photoshop-plugin.png"],"price":"$149","was":"$299","by":"Retouch Market","ini":"RM","first":true},{"name":"Lora Presets","img":"images/boxes/lora.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Solis Presets","img":"images/boxes/solis.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Terra Presets","img":"images/boxes/terra.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Jardin Presets","img":"images/boxes/jardin.webp","price":"$59","was":"$119","by":"Uğur Demir","ini":"UD"},{"name":"Mely Presets","img":"images/boxes/mely.webp","price":"$59","was":"$119","by":"Melih Süren","ini":"MS"},{"name":"Onyx Presets","img":"images/boxes/onyx.webp","price":"$59","was":"$119","by":"Adam Tahirov","ini":"AT"},{"name":"Doré Presets","img":"images/boxes/dore.webp","price":"$59","was":"$119","by":"Mücahit Güney","ini":"MG"},{"name":"Olbia LUTs","img":"images/boxes/olbia.webp","price":"$59","was":"$119","by":"Umut Kaçar","ini":"UK"},{"name":"Vela Presets","img":"images/boxes/vela.webp","price":"$59","was":"$119","by":"Uğur Sezer","ini":"UŞ"},{"name":"Nord Presets","img":"images/boxes/nord.webp","price":"$59","was":"$119","by":"Melih Süren","ini":"MS"},{"name":"Aster LUTs","img":"images/boxes/aster.webp","price":"$59","was":"$119","by":"Adam Tahirov","ini":"AT"}];
     var DEALS = [{"get":3,"pay":2},{"get":5,"pay":3}];
     var row = offer.querySelector('[data-picks]');
     var panel = offer.querySelector('[data-custom]');
@@ -4950,8 +4971,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       go.classList.toggle('is-added', inCart || held);
       go.disabled = held;
       if(held){
-        go.innerHTML = TICK + 'In your bundle';
-        go.setAttribute('aria-label', pack + ' is already in the bundle in your basket');
+        /* the bundle is holding it, so it is already bought — the words say
+           that, not where it happens to be sitting */
+        go.innerHTML = TICK + 'Added to cart';
+        go.setAttribute('aria-label', pack + ' is already in your basket, in the bundle');
       } else if(inCart){
         go.innerHTML = hovering ? BIN + 'Remove' : TICK + 'Added to cart';
         go.setAttribute('aria-label', 'Remove ' + pack + ' from your basket');
