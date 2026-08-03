@@ -2067,6 +2067,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   border-radius:var(--r-full);background:#E7F6EE;color:#12784A;
 }
 .carttip b{display:block;font-size:var(--fs-4);font-weight:var(--fw-semibold);color:#0F1626}
+/* one line: nothing to sit above, so the mark centres on it */
+.carttip--one{align-items:center}
 .carttip span{color:#48566B}
 /* the basket answers as well, so the eye has somewhere to land */
 [data-basket].is-hit{animation:cartHit .5s var(--ease)}
@@ -2784,7 +2786,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   <span class="shelfbar__watch" aria-hidden="true"></span>
   <div class="shelfbar" data-shelfbar>
     <div class="wrap shelfbar__in">
-      <p class="lede shelfbar__say"><b class="shelfbar__where">Presets &amp; LUTs</b><span class="shelfbar__what">For Lightroom Classic &amp; Camera Raw.</span> Created by Türkiye&#8217;s leading photographers <span aria-hidden="true">&#10084;&#65039;</span><span class="shelfbar__hint">Change columns for a closer view <svg class="shelfbar__go" width="15" height="11" viewBox="0 0 15 11" fill="none" aria-hidden="true"><path d="M1 5.5h12M9.2 1.4l4.1 4.1-4.1 4.1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></p>
+      <p class="lede shelfbar__say"><b class="shelfbar__where">Presets &amp; LUTs</b><span class="shelfbar__what">For Lightroom Classic &amp; Camera Raw,</span> created by Türkiye&#8217;s leading photographers <span aria-hidden="true">&#10084;&#65039;</span><span class="shelfbar__hint">Change columns for a closer view <svg class="shelfbar__go" width="15" height="11" viewBox="0 0 15 11" fill="none" aria-hidden="true"><path d="M1 5.5h12M9.2 1.4l4.1 4.1-4.1 4.1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></p>
       <div class="tools">
         <div class="sort">
           <button class="sort__btn" type="button" id="colsBtn" aria-expanded="false" aria-haspopup="true" aria-controls="colsMenu">
@@ -4049,11 +4051,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       tipEl.setAttribute('role', 'status');
       document.body.appendChild(tipEl);
     }
+    tipEl.classList.toggle('carttip--one', !line);
     tipEl.innerHTML = '<span class="carttip__i" aria-hidden="true">' +
       '<svg width="16" height="16" viewBox="0 0 20 20" fill="none">' +
       '<path d="M4.6 10.4l3.6 3.6 7.2-7.6" stroke="currentColor" stroke-width="2.2" ' +
       'stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
-      '<span><b>' + title + '</b><span>' + line + '</span></span>';
+      '<span><b>' + title + '</b>' + (line ? '<span>' + line + '</span>' : '') + '</span>';
     /* measured against the basket rather than guessed: the bar is sticky, so
        wherever the page is, this is where the basket is */
     function place(){
@@ -4461,9 +4464,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       bill(true);
       var cleared = Cart.addBundle('Bestseller bundle', names());
       cheer(shell, saving);
-      basketNews('Bestseller bundle added', names().length + ' items in your cart.' +
-        (cleared.length ? ' It replaced what you had — you can add ' +
-          (cleared.length > 1 ? 'those' : 'that') + ' back any time.' : ''));
+      basketNews('Bestseller bundle added', cleared.length
+        ? 'It replaced what you had — you can add ' +
+          (cleared.length > 1 ? 'those' : 'that') + ' back any time.' : '');
     });
     go.addEventListener('pointerenter', function(){ if(bought) bill(true); });
     go.addEventListener('focus', function(){ if(bought) bill(true); });
@@ -5312,8 +5315,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       draw(true);
       if(inCart){
         cheer(band, SAVED);
-        basketNews('3 Plugins in 1 Pack added', Cart.size() + ' item' +
-          (Cart.size() > 1 ? 's' : '') + ' in your cart.');
+        basketNews('3 Plugins in 1 Pack added', '');
       }
     });
     go.addEventListener('pointerenter', function(){ draw(true); });
@@ -5364,6 +5366,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       on = !on;
       if(on){ Cart.add(name); } else { Cart.drop(name); }
       draw(true);
+      /* the same news the offers give, from the shelf: there is no
+         celebration to wait for here, so it goes straight to the basket */
+      if(on) cartTip(name + ' added', '');
     });
     btn.addEventListener('pointerenter', function(){ draw(true); });
     btn.addEventListener('pointerleave', function(){ draw(false); });
