@@ -1212,7 +1212,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 #results.is-2up .compare{cursor:zoom-out}
 /* below the breakpoint the row is already two across — nothing to promise */
 @media (max-width:1000px){#results .compare{cursor:default}}
-.zoom{flex:none}
+.zoom{flex:none;min-width:132px;justify-content:center}
 /* one glass, two signs: the upright stroke is the whole difference between
    asking for more and offering to give it back, so it is the only thing that
    moves — the glass itself never redraws */
@@ -4715,8 +4715,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      the indicator read. */
   document.querySelectorAll('[data-zoom]').forEach(function(btn){
     var sec = btn.closest('section');
+    /* the glass already turns its plus into a minus — the words follow it,
+       so the button names the next move rather than the one just made */
+    var say = btn.querySelector('span');
     function set(on){
       btn.setAttribute('aria-pressed', String(on));
+      if(say) say.textContent = on ? 'Zoom Out' : '2\u00d7 Zoom';
       sec.classList.toggle('is-2up', on);
       if(on) hintOff();
       window.dispatchEvent(new Event('resize'));
