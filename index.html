@@ -1987,7 +1987,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      black is 8.5:1 — and the pill is 8.8:1 against the navy it sits on, so
      it carries without a halo to help it */
   background:var(--star);color:#1A1206;
-  box-shadow:0 4px 12px rgba(4,10,20,.45);
+  /* two layers, because one soft one on a dark ground is a smudge: a tight
+     contact shadow under the pill and a wider fall beneath it, so it reads as
+     sitting above the tab rather than printed on it */
+  box-shadow:0 2px 4px rgba(4,10,20,.45), 0 8px 20px rgba(4,10,20,.55);
   font-size:10px;font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
 }
 .osbest svg{width:10px;height:10px;flex:none}
