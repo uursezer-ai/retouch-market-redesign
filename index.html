@@ -1977,23 +1977,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    takes room from the words underneath */
 .os button{position:relative}
 .osbest{
-  position:absolute;left:50%;bottom:calc(100% - 6px);z-index:3;
+  position:absolute;left:50%;bottom:calc(100% - 2px);z-index:2;
   transform:translateX(-50%);
-  display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
-  padding:5px 13px;border-radius:var(--r-full);
-  /* the rating star's gold, lifted a shade so it reads as light rather than
-     as paint, with the deeper one from the same family carrying the words.
-     Dark on gold: white here is 2.15:1 and unreadable at badge size. */
-  background:linear-gradient(180deg,#F7CE72,#EFB449);
-  color:#5A3B0B;
-  box-shadow:0 0 0 3px var(--bg), 0 6px 18px rgba(4,10,20,.5);
-  font-size:11px;font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
+  display:inline-flex;align-items:center;gap:5px;white-space:nowrap;
+  padding:4px 11px;border-radius:var(--r-full);
+  /* the rating star's own gold, which is the page's one warm colour and
+     already means "this is the good one". Dark type on it rather than white:
+     white on this gold is 2.15:1 and unreadable at badge size, while near
+     black is 8.5:1 — and the pill is 8.8:1 against the navy it sits on, so
+     it carries without a halo to help it */
+  background:var(--star);color:#1A1206;
+  box-shadow:0 4px 12px rgba(4,10,20,.45);
+  font-size:10px;font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
 }
-.osbest svg{width:11px;height:11px;flex:none;color:#7A4E08}
-.osbestrow{margin-top:var(--s-6)}
-/* the row grows to carry the badge: the mark sits on the chosen tab's top
-   edge, and the tab needs room under it for the words to keep their air */
-.osbestrow button{padding:var(--s-3) var(--s-7);font-size:var(--fs-4)}
+.osbest svg{width:10px;height:10px;flex:none}
+.osbestrow{margin-top:var(--s-5)}
 /* the tab it recommends wears the same gold: a warm edge and a warm glow, so
    the badge is the top of one object rather than a sticker on another */
 .os button:hover{color:var(--fg)}
@@ -2007,11 +2005,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .os--even button{flex:1 1 0;min-width:132px;justify-content:center}
 .offer2 .os{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.14)}
 .offer2 .os button[aria-checked="true"]{background:#fff;color:#111322;box-shadow:0 8px 25px rgba(0,0,0,.24)}
-/* except the one wearing the badge: it takes the badge's own gold as an edge
-   and a glow, so the two read as one object rather than a sticker on a tab */
-.offer2 .os.osbestrow button[aria-checked="true"]{
-  box-shadow:0 0 0 2px #EFB449, 0 0 26px rgba(239,180,73,.45), 0 8px 22px rgba(4,10,20,.28);
-}
 /* Steps and requirements are two views of the same block, stacked in one grid
    cell: whichever is showing, the column keeps the height of the taller one,
    so switching tabs never moves the video beside it. */
