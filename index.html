@@ -861,16 +861,23 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .pbuy__art{grid-area:art;display:flex;align-items:center;gap:var(--s-1)}
 /* side by side with air between them: three products, not one stack */
 .pbuy__art{gap:var(--s-2)}
+/* each box picks its own plugin, so each box is a button — bare, because the
+   picture is the control and a frame around it would only be a second one */
+.pbuy__pick{
+  display:block;padding:0;border:0;background:none;color:inherit;
+  border-radius:5px;cursor:pointer;
+}
+.pbuy__pick:focus-visible{outline:2px solid var(--accent-fg);outline-offset:3px}
 .pbuy__art img{
-  width:80px;height:107px;object-fit:contain;border-radius:4px;
+  display:block;width:80px;height:107px;object-fit:contain;border-radius:4px;
   transition:transform var(--dur-2) var(--ease), filter var(--dur-2) var(--ease);
 }
 /* three boxes on a shelf: the one you are looking at comes forward. It is the
    only way to tell them apart at 80px, and the name arrives with it. */
-.pbuy__art img:hover{
+.pbuy__pick:hover,.pbuy__pick:focus-visible{position:relative;z-index:2}
+.pbuy__pick:hover img,.pbuy__pick:focus-visible img{
   transform:translateY(-5px) scale(1.07);
   filter:drop-shadow(0 10px 18px rgba(4,10,20,.55));
-  position:relative;z-index:2;
 }
 @media (prefers-reduced-motion:reduce){.pbuy__art img{transition:none}}
 /* the pack's own name, at the weight a card title carries — the section
@@ -1368,9 +1375,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* the band is one line of things, so it arrives along that line: its three
    boxes, then what they are, then the price */
 .pbuy.is-arriving .pbuy__art img{animation:offerPart 560ms cubic-bezier(.22,.61,.24,1) both}
-.pbuy.is-arriving .pbuy__art img:nth-child(1){animation-delay:60ms}
-.pbuy.is-arriving .pbuy__art img:nth-child(2){animation-delay:130ms}
-.pbuy.is-arriving .pbuy__art img:nth-child(3){animation-delay:200ms}
+.pbuy.is-arriving .pbuy__pick:nth-child(1) img{animation-delay:60ms}
+.pbuy.is-arriving .pbuy__pick:nth-child(2) img{animation-delay:130ms}
+.pbuy.is-arriving .pbuy__pick:nth-child(3) img{animation-delay:200ms}
 .pbuy.is-arriving .pbuy__body{animation:offerLine 520ms cubic-bezier(.22,.61,.24,1) 210ms both}
 .pbuy.is-arriving .pbuy__meta li{animation:offerLine 480ms cubic-bezier(.22,.61,.24,1) both}
 .pbuy.is-arriving .pbuy__meta li:nth-child(1){animation-delay:300ms}
@@ -2935,10 +2942,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="pbuy pbuy--dark" data-lit>
       <span class="pbuy__glow" aria-hidden="true"></span>
       <span class="pbuy__dots" aria-hidden="true"></span>
-      <span class="pbuy__art" aria-hidden="true">
-        <img src="images/box-retouchx.png" alt="" data-tip="RetouchX" data-tip-n="1" loading="lazy" onerror="this.style.display='none'">
-        <img src="images/box-lightroom-ai-color.png" alt="" data-tip="Lightroom Ai Color" data-tip-n="2" loading="lazy" onerror="this.style.display='none'">
-        <img src="images/box-us-photoshop-plugin.png" alt="" data-tip="US Photoshop Plugin" data-tip-n="3" loading="lazy" onerror="this.style.display='none'">
+      <span class="pbuy__art">
+        <button class="pbuy__pick" type="button" data-pick="0" data-tip="RetouchX" data-tip-n="1" aria-label="Show RetouchX Plugin"><img src="images/box-retouchx.png" alt="" loading="lazy" onerror="this.style.display='none'"></button>
+        <button class="pbuy__pick" type="button" data-pick="1" data-tip="Lightroom Ai Color" data-tip-n="2" aria-label="Show Lightroom Ai Color Plugin"><img src="images/box-lightroom-ai-color.png" alt="" loading="lazy" onerror="this.style.display='none'"></button>
+        <button class="pbuy__pick" type="button" data-pick="2" data-tip="US Photoshop Plugin" data-tip-n="3" aria-label="Show US Photoshop Plugin"><img src="images/box-us-photoshop-plugin.png" alt="" loading="lazy" onerror="this.style.display='none'"></button>
       </span>
       <span class="pbuy__body">
         <span class="pbuy__head"><span class="pbuy__t">3 Plugins in 1 Pack</span><span class="pbuy__best"><svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3.2 1.4h7.6v1.2h1.9v1.5a2.9 2.9 0 01-2.4 2.85A3.6 3.6 0 017.7 8.6v1.9h2.1v1.3H4.2v-1.3h2.1V8.6a3.6 3.6 0 01-2.6-1.65A2.9 2.9 0 011.3 4.1V2.6h1.9zM2.5 3.8v.3a1.7 1.7 0 00.95 1.5A6 6 0 013.2 3.8zm9 0h-.7a6 6 0 01-.25 1.8 1.7 1.7 0 00.95-1.5z"/></svg>Bestseller</span><span class="vh">for Photoshop and Lightroom Classic</span></span>
@@ -5491,6 +5498,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       shown.scrollIntoView({block:'start', inline:'nearest', behavior: still ? 'auto' : 'smooth'});
     }
   }
+  /* the three boxes on the offer band are the same choice as the three tabs
+     below them, so pressing one does exactly what pressing its tab does */
+  document.querySelectorAll('.pbuy__pick[data-pick]').forEach(function(box){
+    box.addEventListener('click', function(){
+      selectPlugin(parseInt(box.getAttribute('data-pick'), 10) || 0);
+    });
+  });
   ptabs.forEach(function(tab, i){
     tab.addEventListener('click', function(){ selectPlugin(i); });
     tab.addEventListener('keydown', function(e){
@@ -6335,9 +6349,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   window.addEventListener('scroll', tipOff, {passive:true});
 
   /* anything else that carries words for the pointer gets the same bubble */
-  document.querySelectorAll('.pbuy__art img[data-tip]').forEach(function(el){
+  document.querySelectorAll('.pbuy__art [data-tip]').forEach(function(el){
     el.addEventListener('pointerenter', function(){ tipShow(el); });
     el.addEventListener('pointerleave', tipOff);
+    el.addEventListener('focus', function(){ tipShow(el); });
+    el.addEventListener('blur', tipOff);
   });
 
   /* ---- the basket half of a preset chip ----
