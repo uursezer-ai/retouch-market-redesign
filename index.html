@@ -499,7 +499,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    its own, a pool that follows the pointer, and a blurred blob that leans
    against it. Same colours, a shade quieter for a band this size — it is the
    same offer at the other end of the page. */
-.pbuy--dark{--px:50%;--py:40%;isolation:isolate}
+/* at rest the pool sits where the pack's name starts rather than in the
+   middle of the band — the light is on the thing being offered */
+.pbuy--dark{--px:43%;--py:27%;isolation:isolate}
+/* the closing panel is a column down the middle, so its light rests there */
+.cta{--px:50%;--py:38%}
 /* the mask has to be able to reach the corners the dots sit in */
 /* Every layer lives inside a box that is exactly the band, so the drift and
    the blob can hang past the corners without any of it counting as width the
@@ -5532,31 +5536,28 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       if(Math.abs(want.x - at.x) > .05 || Math.abs(want.y - at.y) > .05) raf = requestAnimationFrame(frame);
       else raf = 0;
     }
-    /* The light follows the room, not the card. Listening on the band itself
-       meant it only knew where you were once you were over it, and froze the
-       moment you left — which is backwards: light leans towards something
-       approaching before it arrives. It watches the document now and maps
-       wherever you are onto the band's own box, held to a little past its
-       edges so the pool stays on the surface it belongs to.
-       Only while the band is on screen: an offer three sections down has no
-       business costing a frame. */
-    var near = true;
-    if(window.IntersectionObserver){
-      near = false;
-      new IntersectionObserver(function(rows){
-        near = rows[0].isIntersecting;
-        if(near && !raf) raf = requestAnimationFrame(frame);
-      }, { rootMargin: '25% 0px' }).observe(band);
-    }
-    function hold(v){ return v < -25 ? -25 : v > 125 ? 125 : v; }
-    document.addEventListener('pointermove', function(e){
-      if(e.pointerType !== 'mouse' || !near) return;
+    /* The light belongs to the surface it is on, so it only answers a pointer
+       that is on that surface. Following the pointer across the whole page
+       meant a card lighting up for something happening three sections away,
+       which is a card reacting to nothing.
+       Where it sits when nobody is on it is the surface's own business: each
+       one declares its resting point in CSS and we take it from there, so the
+       pool starts where the panel wants it rather than always in the middle. */
+    var restX = parseFloat(getComputedStyle(band).getPropertyValue('--px')) || 50;
+    var restY = parseFloat(getComputedStyle(band).getPropertyValue('--py')) || 40;
+    want.x = at.x = restX; want.y = at.y = restY;
+    band.addEventListener('pointermove', function(e){
+      if(e.pointerType !== 'mouse') return;
       var r = band.getBoundingClientRect();
       if(!r.width || !r.height) return;
-      want.x = hold(((e.clientX - r.left) / r.width) * 100);
-      want.y = hold(((e.clientY - r.top) / r.height) * 100);
+      want.x = ((e.clientX - r.left) / r.width) * 100;
+      want.y = ((e.clientY - r.top) / r.height) * 100;
       if(!raf) raf = requestAnimationFrame(frame);
     }, {passive:true});
+    band.addEventListener('pointerleave', function(){
+      want.x = restX; want.y = restY;
+      if(!raf) raf = requestAnimationFrame(frame);
+    });
   });
 
   /* ---- hero film ----
