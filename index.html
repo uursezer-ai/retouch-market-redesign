@@ -1131,6 +1131,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   scrollbar-width:none;-ms-overflow-style:none;padding-bottom:var(--s-1);
 }
 .rail::-webkit-scrollbar{display:none}
+/* while a row is being dragged: the hand is holding the row, so the cursor
+   says so and nothing under it can be selected out from under the drag. The
+   resting cursor is left alone — a picture that opens still says it opens. */
+.deck__track.is-panning,.pchips.is-panning,.rail.is-panning,
+.deck__track.is-panning *,.pchips.is-panning *,.rail.is-panning *{
+  cursor:grabbing;
+  -webkit-user-select:none;user-select:none;
+}
 
 /* ════════════════════════════════════════════════════════════════
    6 · BEFORE / AFTER
@@ -1205,6 +1213,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .compare__range{
   position:absolute;inset:0;z-index:4;width:100%;height:100%;margin:0;
   appearance:none;-webkit-appearance:none;background:transparent;cursor:ew-resize;
+}
+/* On a mouse the slider is not the control — the reveal follows the pointer,
+   and the card's own job is to open and to be dragged along its row. Left
+   live it took the pointer for itself: the browser captures for a range the
+   moment it is pressed, so the row stopped moving after a few pixels and the
+   reveal jumped to wherever the hand had got to. It keeps its value, its
+   keyboard and its finger; it just stops answering the mouse. */
+@media (hover:hover) and (pointer:fine){
+  .compare__range{pointer-events:none}
 }
 /* a hairline thumb, not a wide one: a range maps its value across the track
    minus the thumb, so a wide thumb both puts the handle behind the pointer
@@ -1727,15 +1744,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    push, and a button would take chips off the line to say so. */
 .pbar .pchips__go{display:none;flex:none}
 /* the pair stands together at the end of the row rather than one at each
-   end: two halves of one control, in the order they move it. They close up
-   to 6px between them — but only while both are on the line, or the one
-   that is left would sit crooked against the chips. */
-.pbar .pchips__go[data-chipstep="-1"]:not([hidden]) + .pchips__go[data-chipstep="1"]{
+   end: two halves of one control, 6px apart, in the order they move it */
+.pbar .pchips__go[data-chipstep="-1"] + .pchips__go[data-chipstep="1"]{
   margin-left:calc(6px - var(--s-4));
 }
 @media (hover:hover) and (pointer:fine){
   .pbar .pchips__go{display:grid}
-  .pbar .pchips__go[hidden]{display:none}
 }
 .pchips.is-more-r{
   -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent);
@@ -1891,9 +1905,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* the same bubble, saying why something will not budge. It borrows the
    page's one warning colour and nothing else — a refusal that shouts is
    worse than the thing it is refusing. */
-.tipbox__warn{flex:none;width:17px;height:17px;color:var(--danger)}
-/* a refusal is not an answer, so it does not take the answering colour */
-.tipbox.is-warn{border-color:rgba(192,57,46,.34);color:var(--danger)}
+.tipbox__warn{flex:none;font-style:normal;font-size:15px;line-height:1}
+/* a refusal is not an answer, so it does not take the answering colour. Nor
+   is it an error — nothing has gone wrong, there is just an order to do it
+   in — so it wears the page's warm colour rather than its red, darkened to
+   where it can carry small type on white. */
+.tipbox.is-warn{border-color:rgba(232,163,61,.55);color:#8A5B0B}
 .tipbox.is-warn::after{border-top-color:var(--surface)}
 .tipbox.is-on{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.tipbox{transition:none}}
@@ -3642,8 +3659,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-10" aria-controls="bap-10" aria-selected="false">Nord</button><button class="pchip__buy" type="button" data-chipbuy="Nord Presets" data-tip="Add to cart" aria-label="Add Nord Presets to basket"><svg class="chipbuy__o" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="chipbuy__on" aria-hidden="true"><svg class="chipbuy__tick" width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M4.2 10.6l3.8 3.8 7.8-8.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span></button></span>
       <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-11" aria-controls="bap-11" aria-selected="false">Aster LUTs</button><button class="pchip__buy" type="button" data-chipbuy="Aster LUTs" data-tip="Add to cart" aria-label="Add Aster LUTs to basket"><svg class="chipbuy__o" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="chipbuy__on" aria-hidden="true"><svg class="chipbuy__tick" width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M4.2 10.6l3.8 3.8 7.8-8.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span></button></span>
       </div>
-      <button class="arrow pchips__go" type="button" data-chipstep="-1" aria-label="Earlier packs" hidden><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <button class="arrow pchips__go" type="button" data-chipstep="1" aria-label="More packs" hidden><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="arrow pchips__go" type="button" data-chipstep="-1" aria-label="Earlier packs" disabled><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="arrow pchips__go" type="button" data-chipstep="1" aria-label="More packs" disabled><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
   </div>
 
@@ -4593,7 +4610,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      out on its own — the bundle is the line in the basket, not the packs
      inside it — and a refusal nobody can read is a control that just broke,
      so every one of the three places you can press says why. */
-  var TIP_LOCKED = 'Cancel the bundle to remove it';
+  var TIP_LOCKED = 'Remove the bundle first.';
   function lockTip(el, locked){
     if(locked){ el.setAttribute('data-tip', TIP_LOCKED); el.setAttribute('data-tip-warn', ''); }
     else { el.removeAttribute('data-tip-warn'); }
@@ -5632,6 +5649,78 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
   /* ---- before / after ---- */
   var fine = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  /* ---- take hold of a row and it moves ----
+     Every sideways row on this page — the packs, the before/afters, the
+     videos, the tutorials, the walkthrough — scrolls, and a finger has always
+     been able to push one. A mouse had a wheel that will not turn sideways
+     and two arrows, which is a lot of pressing to see the fourth thing in a
+     row. So: press, drag, and the row comes with your hand.
+
+     It stays invisible until it is wanted. Nothing is captured, nothing is
+     prevented and no cursor changes until the pointer has travelled far
+     enough sideways to mean it — a press that does not travel is still a
+     press on whatever is under it. Past that point the click it would have
+     made is swallowed, so letting go of a card you dragged past does not
+     open it. */
+  var PAN_SLOP = 6;
+  /* raised the moment a row is taken hold of, not when it starts moving:
+     anything that follows the pointer for its own reasons asks this first
+     and holds still until the hand lets go */
+  var panning = false;
+  document.querySelectorAll('.deck__track, .pchips, .rail').forEach(function(el){
+    var from = null, live = false, off = null;
+    function eat(e){ e.stopPropagation(); e.preventDefault(); }
+    function stop(){
+      if(!from) return;
+      try { el.releasePointerCapture(from.id); } catch(err){}
+      var panned = live;
+      from = null; live = false;
+      el.classList.remove('is-panning');
+      /* the click is dispatched after pointerup, so the swallow is armed now
+         and cleared on the next turn of the loop — by which time the click
+         has either come and been eaten or was never coming */
+      if(panned) el.addEventListener('click', eat, true);
+      clearTimeout(off);
+      off = setTimeout(function(){
+        el.removeEventListener('click', eat, true);
+        panning = false;
+      }, 0);
+    }
+    el.addEventListener('pointerdown', function(e){
+      if(e.pointerType !== 'mouse' || e.button !== 0) return;
+      /* a row with nothing past its edge has nothing to give */
+      if(el.scrollWidth - el.clientWidth <= 2) return;
+      /* a control that drags on its own keeps its drag — except the slider
+         lying over a before/after, which covers the whole card and only
+         drags for a finger. On a mouse the reveal follows the pointer, so
+         there is nothing there to take away by dragging the row instead. */
+      if(e.target.closest('input:not(.compare__range), textarea, select')) return;
+      clearTimeout(off);
+      from = {x:e.clientX, y:e.clientY, left:el.scrollLeft, id:e.pointerId};
+      live = false;
+      panning = true;
+    });
+    el.addEventListener('pointermove', function(e){
+      if(!from || e.pointerId !== from.id) return;
+      var dx = e.clientX - from.x;
+      if(!live){
+        /* sideways, and enough of it: a hand moving down the page is reading,
+           not dragging */
+        if(Math.abs(dx) < PAN_SLOP || Math.abs(dx) <= Math.abs(e.clientY - from.y)) return;
+        live = true;
+        el.classList.add('is-panning');
+        try { el.setPointerCapture(from.id); } catch(err){}
+      }
+      e.preventDefault();
+      el.scrollLeft = from.left - dx;
+    });
+    el.addEventListener('pointerup', stop);
+    el.addEventListener('pointercancel', stop);
+    el.addEventListener('lostpointercapture', stop);
+    /* the browser would rather drag the picture out of the page */
+    el.addEventListener('dragstart', function(e){ if(from) e.preventDefault(); });
+  });
+
   document.querySelectorAll('[data-compare]').forEach(function(box){
     var range = box.querySelector('.compare__range');
     function draw(){ box.style.setProperty('--x', range.value + '%'); }
@@ -5642,12 +5731,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
        and a touch screen (no hover) still drags it. */
     if(fine){
       box.addEventListener('pointermove', function(e){
-        if(e.pointerType !== 'mouse') return;
+        /* the hand is moving the row, not asking to see under this frame —
+           the reveal freezes where it was until the row is let go */
+        if(e.pointerType !== 'mouse' || panning) return;
         var r = box.getBoundingClientRect();
         var pct = Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100));
         range.value = pct; draw();
       });
-      box.addEventListener('pointerleave', function(){ range.value = 50; draw(); });
+      box.addEventListener('pointerleave', function(){
+        if(panning) return;              /* dragged past, not left */
+        range.value = 50; draw();
+      });
     }
     draw();
   });
@@ -5898,8 +5992,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       var r = over > 2 && row.scrollLeft < over - 2;
       row.classList.toggle('is-more-l', l);
       row.classList.toggle('is-more-r', r);
+      /* both stay on the line, and the one with nowhere to go goes quiet —
+         the same way the rows of cards below carry their arrows. A control
+         that vanishes teaches you nothing about where you are. */
       goes.forEach(function(b){
-        b.hidden = b.getAttribute('data-chipstep') === '-1' ? !l : !r;
+        b.disabled = b.getAttribute('data-chipstep') === '-1' ? !l : !r;
       });
     }
     goes.forEach(function(b){
@@ -6517,14 +6614,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     tipBox.textContent = '';
     tipBox.classList.toggle('is-warn', el.hasAttribute('data-tip-warn'));
     if(el.hasAttribute('data-tip-warn')){
-      var warn = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      warn.setAttribute('class', 'tipbox__warn');
-      warn.setAttribute('viewBox', '0 0 20 20');
-      warn.setAttribute('fill', 'none');
+      var warn = document.createElement('i');
+      warn.className = 'tipbox__warn';
       warn.setAttribute('aria-hidden', 'true');
-      warn.innerHTML = '<path d="M10 2.6l7.4 13.2H2.6z" stroke="currentColor" stroke-width="1.6" '
-        + 'stroke-linejoin="round"/><path d="M10 7.7v3.4" stroke="currentColor" stroke-width="1.7" '
-        + 'stroke-linecap="round"/><circle cx="10" cy="13.6" r=".95" fill="currentColor"/>';
+      warn.textContent = '\uD83D\uDE15';        /* the confused face */
       tipBox.appendChild(warn);
     } else if(n){
       var mark = document.createElement('i');
