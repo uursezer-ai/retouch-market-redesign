@@ -1773,12 +1773,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   letter-spacing:var(--tr-heading);color:var(--fg);
 }
 .qa__q:hover{color:var(--accent-fg)}
-.qa__q svg{flex:none;color:var(--fg-faint);transition:transform var(--dur-2) var(--ease), color var(--dur-1) var(--ease)}
+.qa__q svg{flex:none;color:var(--fg-faint)}
 .qa[data-open="true"] .qa__q svg{transform:rotate(180deg);color:var(--accent)}
-/* No motion here on purpose. An answer that grows while you are already
-   reading the first line of it moves the words under the eye, and every one
-   of these is a sentence someone opened because they wanted it now. The
-   chevron turning is the whole acknowledgement this needs. */
+/* Nothing in this section moves. Not the answer, and not the mark beside the
+   question either — the chevron points down or it points up, and it changes
+   between the two the way a tick appears in a box, without a journey. Every
+   one of these is a sentence someone opened because they wanted it now, and
+   anything travelling next to it is one more thing to wait for. */
 .qa__a{display:none;padding:0 var(--s-8) var(--s-5) 0}
 .qa__a p{margin:0;font-size:var(--fs-4);line-height:var(--lh-relaxed);color:var(--fg-body);max-width:62ch}
 .qa[data-open="true"] .qa__a{display:block}
