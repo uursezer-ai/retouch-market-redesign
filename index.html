@@ -916,6 +916,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .ptabs button[aria-selected="true"] .ptab__nm{color:var(--accent)}
 /* and what it runs in after it — the same badge the tabs carried as cards */
 .ptab__apps{display:inline-flex;flex:none;gap:5px}
+/* the eyebrow can carry the apps it runs in: the same three marks the plugin
+   tabs wear, so the badge for "this works in Photoshop" is one thing on this
+   page and not two. They keep their own case against the eyebrow's caps —
+   LrC is a name, not a shout. */
+.eyebrow--apps{display:flex;align-items:center;gap:var(--s-3);flex-wrap:wrap}
+.eyebrow__apps{display:inline-flex;gap:5px;text-transform:none;letter-spacing:0}
 .ptab__app{
   display:grid;place-items:center;width:24px;height:22px;padding:0;
   border-radius:5px;border:1px solid var(--border-strong);color:var(--fg-muted);
@@ -2022,11 +2028,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    is it an error — nothing has gone wrong, there is just an order to do it
    in — so it wears the page's warm colour rather than its red, darkened to
    where it can carry small type on white. */
-/* filled rather than outlined: a refusal read as another answer while it was
-   a white bubble with a warm edge. The page's one warm colour carries it, and
-   near-black on that gold is 8.5:1 — the same pair the Best deal badge uses,
-   which is the only other thing here wearing it. */
-.tipbox.is-warn{--tip-fill:#E8A33D;--tip-edge:#CE8A22;color:#2A1B03}
+/* filled rather than outlined — a refusal read as another answer while it was
+   a white bubble with a warm edge — but the quiet half of the warm pair, not
+   the loud one. The gold at full strength belongs to the Best deal badge,
+   which is an invitation; this is a no, and a no that shouts is worse than
+   the thing it is refusing. Solid all the same: the fill is a colour, not a
+   wash, so it reads the same over the white page and over the dark band.
+   #7A4E06 on it is 6.4:1. */
+.tipbox.is-warn{--tip-fill:#FCEFD6;--tip-edge:#E8A33D;color:#7A4E06}
 .tipbox.is-on{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.tipbox{transition:none}}
 .bapanel[hidden]{display:none}
@@ -2878,7 +2887,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .carttip{
   position:fixed;z-index:60;width:max-content;max-width:min(320px, 84vw);
   display:flex;align-items:flex-start;gap:var(--s-3);
-  margin:0;padding:var(--s-4);border-radius:var(--r-card);
+  /* one line of news does not need a card's padding around a 30px disc: the
+     note comes out 48px tall, which is the height every other small control
+     on this page is */
+  margin:0;padding:var(--s-3) var(--s-4);border-radius:var(--r-card);
   /* something arriving in your basket is good news, so the note is the
      colour the page keeps for good news rather than a neutral card that
      happens to contain a green tick */
@@ -2906,10 +2918,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    parent in front: .carttip span sets the colour of everything inside and
    would otherwise put the note's own grey on this tick. */
 .carttip .carttip__i{
-  flex:none;display:grid;place-items:center;width:30px;height:30px;
+  flex:none;display:grid;place-items:center;width:24px;height:24px;
   border-radius:var(--r-full);background:var(--ok);color:#FFFFFF;
 }
-.carttip b{display:block;font-size:var(--fs-4);font-weight:var(--fw-semibold);color:#0C3320}
+.carttip b{display:block;font-size:var(--fs-3);font-weight:var(--fw-semibold);color:#0C3320}
 /* one line: nothing to sit above, so the mark centres on it */
 .carttip--one{align-items:center}
 .carttip span{color:#2E6349}
@@ -3200,7 +3212,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="hero__slides" id="heroSlides">
       <article class="slide is-on" role="group" aria-roledescription="slide" aria-label="1 of 3">
         <div class="slide__copy">
-          <p class="eyebrow">Best Presets &amp; Plugins</p>
+          <p class="eyebrow eyebrow--apps">Presets &amp; Plugins<span class="eyebrow__apps"><span class="ptab__app">Ps</span><span class="ptab__app">LrC</span><span class="ptab__app"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1" y="2.2" width="14" height="9.2" rx="1.6" stroke="currentColor" stroke-width="1.4"/><path d="M8 11.4v3M5.4 14.4h5.2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span></span><span class="vh"> — for Photoshop, Lightroom Classic and desktop</span></p>
           <div class="slide__title"><h1 id="heroTitle">One Vision.<br>One Workflow.<br>Signature Looks.</h1></div>
           <div class="hero__actions">
             <a class="btn btn--primary btn--lg" href="https://www.youtube.com/watch?v=EBNI8JHmJ4o" target="_blank" rel="noopener">Watch Full Video</a>
@@ -5019,7 +5031,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     }
     tipEl.classList.toggle('carttip--one', !line);
     tipEl.innerHTML = '<span class="carttip__i" aria-hidden="true">' +
-      '<svg width="16" height="16" viewBox="0 0 20 20" fill="none">' +
+      '<svg width="13" height="13" viewBox="0 0 20 20" fill="none">' +
       '<path d="M4.6 10.4l3.6 3.6 7.2-7.6" stroke="currentColor" stroke-width="2.2" ' +
       'stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
       '<span><b>' + title + '</b>' + (line ? '<span>' + line + '</span>' : '') + '</span>';
