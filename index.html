@@ -349,9 +349,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   animation:heroOut 150ms linear both;
 }
 @keyframes heroOut{to{opacity:0}}
-/* and the one arriving comes up under its own weight, the words first */
-.slide.is-on .slide__copy{animation:heroIn 340ms var(--ease) both}
-.slide.is-on .slide__media{animation:heroIn 340ms var(--ease) 70ms both}
+/* and the one arriving comes up under its own weight, the words first.
+   is-fresh, not is-on: with fill:both on is-on the first slide began at zero
+   opacity on every cold load, which put a fade in front of the largest text
+   on the page for no reason anyone asked for. It is a swap animation, so it
+   only runs on a swap. */
+.slide.is-on.is-fresh .slide__copy{animation:heroIn 340ms var(--ease) both}
+.slide.is-on.is-fresh .slide__media{animation:heroIn 340ms var(--ease) 70ms both}
 @keyframes heroIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 /* the button and the video end on the same line: the copy is a column with the
    actions pushed to its foot, and the frame is parked at the foot of its own
@@ -1771,29 +1775,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .qa__q:hover{color:var(--accent-fg)}
 .qa__q svg{flex:none;color:var(--fg-faint);transition:transform var(--dur-2) var(--ease), color var(--dur-1) var(--ease)}
 .qa[data-open="true"] .qa__q svg{transform:rotate(180deg);color:var(--accent)}
-/* an answer that appears is a jump; one that opens is an answer arriving.
-   A grid row from 0fr to 1fr is the only way to animate to a height nobody
-   has measured — the child carries the overflow, and its own fade waits for
-   the box to be most of the way open so the words do not slide behind an
-   edge that is still moving. */
-.qa__a{
-  display:grid;grid-template-rows:0fr;padding:0 var(--s-8) 0 0;
-  transition:grid-template-rows 200ms cubic-bezier(.4,0,.7,.2),
-             padding-bottom 200ms cubic-bezier(.4,0,.7,.2),
-             visibility 0s linear 200ms;
-  visibility:hidden;
-}
-.qa__a p{
-  margin:0;overflow:hidden;min-height:0;
-  font-size:var(--fs-4);line-height:var(--lh-relaxed);color:var(--fg-body);max-width:62ch;
-  opacity:0;transition:opacity 120ms linear;
-}
-.qa[data-open="true"] .qa__a{
-  grid-template-rows:1fr;padding-bottom:var(--s-5);visibility:visible;
-  transition:grid-template-rows 260ms var(--ease), padding-bottom 260ms var(--ease),
-             visibility 0s linear;
-}
-.qa[data-open="true"] .qa__a p{opacity:1;transition:opacity 180ms var(--ease) 80ms}
+/* No motion here on purpose. An answer that grows while you are already
+   reading the first line of it moves the words under the eye, and every one
+   of these is a sentence someone opened because they wanted it now. The
+   chevron turning is the whole acknowledgement this needs. */
+.qa__a{display:none;padding:0 var(--s-8) var(--s-5) 0}
+.qa__a p{margin:0;font-size:var(--fs-4);line-height:var(--lh-relaxed);color:var(--fg-body);max-width:62ch}
+.qa[data-open="true"] .qa__a{display:block}
 
 /* ════════════════════════════════════════════════════════════════
    9 · CLOSING OFFER
@@ -1928,9 +1916,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* Nothing here carries information the page does not also say in words, so
    all of it comes off in one place rather than being argued about per rule. */
 @media (prefers-reduced-motion:reduce){
-  .qa__a,.qa__a p,.qa[data-open="true"] .qa__a,.qa[data-open="true"] .qa__a p{transition:none}
   .slide.is-out{display:none;animation:none}
-  .slide.is-on .slide__copy,.slide.is-on .slide__media{animation:none}
+  .slide.is-on.is-fresh .slide__copy,.slide.is-on.is-fresh .slide__media{animation:none}
   .sort__menu,.sort__menu.is-on{transition:none;opacity:1;transform:none}
   .cart__n.is-hit{animation:none}
   .card.is-new{animation:none}
@@ -4293,6 +4280,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   function measure(fn){
     document.querySelectorAll('.slide h1').forEach(function(h1){
       var slide = h1.closest('.slide'), was = slide.hasAttribute('hidden');
+      if(slide.classList.contains('is-out')) return;   /* mid-swap, not ours */
       /* measure hidden slides too, without letting them flash */
       /* measured under the rules it will actually be shown with: pinned to the
          slider's own box, and wearing is-on — inline display:grid alone leaves
@@ -4319,9 +4307,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     /* the slider moves when someone moves it — there is no timer. A hero that
        changes under the reader takes the choice away and, with the headline
        being the whole slide, swaps the page's first sentence mid-read. */
-    var heroGo = null;
+    var heroGo = null, heroFresh = null, heroOn = false;
     function heroShow(i){
-      var from = hSlides[hIdx];
+      var from = heroOn ? hSlides[hIdx] : null;
       hIdx = (i + hSlides.length) % hSlides.length;
       var to = hSlides[hIdx];
       /* the one leaving is taken out of flow and left to fade over the one
@@ -4342,8 +4330,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             from.classList.remove('is-out');
             from.setAttribute('hidden','');
           }, 160);
+          /* the entrance belongs to the swap, not to the first paint */
+          clearTimeout(heroFresh);
+          hSlides.forEach(function(sl){ sl.classList.remove('is-fresh'); });
+          void to.offsetWidth;
+          to.classList.add('is-fresh');
+          heroFresh = setTimeout(function(){ to.classList.remove('is-fresh'); }, 460);
         }
       }
+      heroOn = true;
       hDots.forEach(function(d, n){ d.setAttribute('aria-current', String(n === hIdx)); });
       hCount.textContent = ('0' + (hIdx + 1)).slice(-2);
     }
@@ -5499,7 +5494,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             fresh++;
           }
           c.removeAttribute('hidden');
-        } else { c.setAttribute('hidden',''); c.classList.remove('is-new'); }
+        } else {
+          c.setAttribute('hidden','');
+          c.classList.remove('is-new');
+          c.style.animationDelay = '';
+        }
       });
       first = false;
       var left = cards.length - shown;
@@ -5567,7 +5566,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
        are, make the change, then put them back where they were and let them
        travel — the browser does the layout, the transform does the moving, so
        nothing is laid out twice. */
+    var moveGo = null, flying = [];
+    /* a change on top of a change: finish the one in the air first, or the
+       next one measures a card mid-flight and leaves it wherever it was */
+    function land(){
+      clearTimeout(moveGo);
+      flying.forEach(function(c){ c.style.transition = ''; c.style.transform = ''; });
+      flying = [];
+    }
     function move(change){
+      land();
       var kids = [].slice.call(grid.children).filter(function(c){ return !c.hidden; });
       if(still || !kids.length){ change(); return; }
       var from = kids.map(function(c){ return c.getBoundingClientRect(); });
@@ -5585,6 +5593,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         moved.push(c);
       });
       if(!moved.length) return;
+      flying = moved;
       requestAnimationFrame(function(){
         moved.forEach(function(c, n){
           /* the stagger stops at eight: past that it is a queue, not a hand */
@@ -5592,9 +5601,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           c.style.transform = '';
         });
       });
-      setTimeout(function(){
-        moved.forEach(function(c){ c.style.transition = ''; c.style.transform = ''; });
-      }, 320 + 8 * 12 + 60);
+      moveGo = setTimeout(land, 320 + 8 * 12 + 60);
     }
     /* re-append in order — the rank lives on each card as a data attribute */
     picker('sort', function(opt){
@@ -5755,6 +5762,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       }, wait);
     }
     if(still || !('IntersectionObserver' in window)) return;   /* left as written */
+    /* If the band is already on screen when the page opens, the figures have
+       been read by the time anything could animate them — rewriting them from
+       zero is a flicker on content the reader is looking at, and it competes
+       with the hero for the first second of the page. Written, then. The
+       count is for a band you scroll down to. */
+    if(stats[0].getBoundingClientRect().top < window.innerHeight) return;
     jobs.forEach(function(j){ write(j, 0); });
     var seen = false;
     var io = new IntersectionObserver(function(rows){
