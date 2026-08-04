@@ -1712,6 +1712,28 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   padding-bottom:var(--s-1);
 }
 .pchips::-webkit-scrollbar{display:none}
+/* the row will only get longer, so it scrolls — and when it has somewhere to
+   scroll it says so twice: a fade on the edge it carries on past, which a
+   finger can act on, and a button over that edge, which a mouse can. The
+   button is only there for a mouse; a finger already has the whole row to
+   push, and a button would take chips off the line to say so. */
+.pbar .pchips__go{display:none;flex:none}
+@media (hover:hover) and (pointer:fine){
+  .pbar .pchips__go{display:grid}
+  .pbar .pchips__go[hidden]{display:none}
+}
+.pchips.is-more-r{
+  -webkit-mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent);
+  mask-image:linear-gradient(to right,#000 calc(100% - 40px),transparent);
+}
+.pchips.is-more-l{
+  -webkit-mask-image:linear-gradient(to left,#000 calc(100% - 40px),transparent);
+  mask-image:linear-gradient(to left,#000 calc(100% - 40px),transparent);
+}
+.pchips.is-more-l.is-more-r{
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 40px,#000 calc(100% - 40px),transparent);
+  mask-image:linear-gradient(to right,transparent,#000 40px,#000 calc(100% - 40px),transparent);
+}
 /* A chip does two things, so it is two buttons in one pill: the name shows
    that pack's befores and afters, the basket buys it. They share an edge and
    a hairline between them, which is what says they are one control with two
@@ -3570,6 +3592,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       </div>
     </div>
     <div class="pbar" data-reveal>
+    <button class="arrow pchips__go" type="button" data-chipstep="-1" aria-label="Earlier packs" hidden><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <div class="pchips" role="tablist" aria-label="Preset packs">
       <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-0" aria-controls="bap-0" aria-selected="true">Lora</button><button class="pchip__buy" type="button" data-chipbuy="Lora Presets" data-tip="Add to cart" aria-label="Add Lora Presets to basket"><svg class="chipbuy__o" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="chipbuy__on" aria-hidden="true"><svg class="chipbuy__tick" width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M4.2 10.6l3.8 3.8 7.8-8.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span></button></span>
       <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-1" aria-controls="bap-1" aria-selected="false">Solis</button><button class="pchip__buy" type="button" data-chipbuy="Solis Presets" data-tip="Add to cart" aria-label="Add Solis Presets to basket"><svg class="chipbuy__o" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="chipbuy__on" aria-hidden="true"><svg class="chipbuy__tick" width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M4.2 10.6l3.8 3.8 7.8-8.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span></button></span>
@@ -3578,6 +3601,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-4" aria-controls="bap-4" aria-selected="false">Mely</button><button class="pchip__buy" type="button" data-chipbuy="Mely Presets" data-tip="Add to cart" aria-label="Add Mely Presets to basket"><svg class="chipbuy__o" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="chipbuy__on" aria-hidden="true"><svg class="chipbuy__tick" width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M4.2 10.6l3.8 3.8 7.8-8.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span></button></span>
       <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-5" aria-controls="bap-5" aria-selected="false">Onyx</button><button class="pchip__buy" type="button" data-chipbuy="Onyx Presets" data-tip="Add to cart" aria-label="Add Onyx Presets to basket"><svg class="chipbuy__o" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="chipbuy__on" aria-hidden="true"><svg class="chipbuy__tick" width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M4.2 10.6l3.8 3.8 7.8-8.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span></button></span>
       </div>
+      <button class="arrow pchips__go" type="button" data-chipstep="1" aria-label="More packs" hidden><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <button class="btn btn--secondary zoom" type="button" data-zoom aria-pressed="false">
         <svg class="zoom__i" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
           <circle cx="7.6" cy="7.6" r="5.6" stroke="currentColor" stroke-width="1.5"/>
@@ -5719,12 +5743,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   }
 
   (function(){
-    var chips = [].slice.call(document.querySelectorAll('.pchips [role="tab"]'));
+    var row = document.querySelector('.pchips');
+    if(!row) return;
+    var chips = [];
+    /* the chip that is showing, not the place it happens to be standing in —
+       the row re-orders under it and a remembered index would point at a
+       different pack afterwards */
+    var cAt = null;
+    function list(){ chips = [].slice.call(row.querySelectorAll('[role="tab"]')); }
+    list();
     if(!chips.length) return;
-    var cWas = 0;
+    cAt = chips[0];
+
     function pick(n){
-      var back = n < cWas;
-      cWas = n;
+      var back = chips.indexOf(cAt) > n;
+      cAt = chips[n];
       chips.forEach(function(c, i){
         var on = i === n;
         c.setAttribute('aria-selected', String(on));
@@ -5740,7 +5773,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       window.dispatchEvent(new Event('resize'));
       /* keep the chosen chip in view along its own row, without moving the
          page: centring it here and scrolling the section below would fight */
-      var row = chips[n].closest('.pchips');
       if(row.scrollWidth > row.clientWidth + 1){
         var pill = chips[n].closest('.pchip') || chips[n];
         row.scrollTo({left: pill.offsetLeft - (row.clientWidth - pill.offsetWidth) / 2,
@@ -5748,17 +5780,82 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       }
       toChips(chips[n]);
     }
-    chips.forEach(function(c, n){
-      c.tabIndex = n === 0 ? 0 : -1;
-      c.addEventListener('click', function(){ pick(n); });
+
+    chips.forEach(function(c){
+      c.tabIndex = -1;
+      c.addEventListener('click', function(){ pick(chips.indexOf(c)); });
       c.addEventListener('keydown', function(e){
         var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
         if(!d) return;
         e.preventDefault();
+        var n = chips.indexOf(c);
         var to = (n + d + chips.length) % chips.length;
         pick(to); chips[to].focus();
       });
     });
+    chips[0].tabIndex = 0;
+
+    /* ---- the arrows, and the fade under them ----
+       Both are answers to the same question — is there more this way — so
+       both are set from one measurement, and neither appears when the row
+       already fits. */
+    var goes = [].slice.call(document.querySelectorAll('[data-chipstep]'));
+    function step(){
+      var over = row.scrollWidth - row.clientWidth;
+      var l = over > 2 && row.scrollLeft > 2;
+      var r = over > 2 && row.scrollLeft < over - 2;
+      row.classList.toggle('is-more-l', l);
+      row.classList.toggle('is-more-r', r);
+      goes.forEach(function(b){
+        b.hidden = b.getAttribute('data-chipstep') === '-1' ? !l : !r;
+      });
+    }
+    goes.forEach(function(b){
+      b.addEventListener('click', function(){
+        /* most of a screenful, never less than a chip and a half: a press has
+           to move enough to be worth the press, and little enough that you
+           can still see where you were */
+        row.scrollBy({left: parseInt(b.getAttribute('data-chipstep'), 10)
+                        * Math.max(180, row.clientWidth * .8),
+                      behavior: still ? 'auto' : 'smooth'});
+      });
+    });
+    row.addEventListener('scroll', step, {passive:true});
+    window.addEventListener('resize', step);
+
+    /* ---- the row is the shelf's row ----
+       Same packs in the same order, so the two places a pack can be seen
+       never disagree about which is the popular one. The shelf says so by
+       the order of its own cards, and says when that changes. */
+    var grid = document.getElementById('presetGrid');
+    function packOf(pill){
+      var buy = pill.querySelector('[data-chipbuy]');
+      return buy ? buy.getAttribute('data-chipbuy') : '';
+    }
+    function follow(){
+      if(!grid) return;
+      var rank = {}, n = 0;
+      [].forEach.call(grid.children, function(card){
+        var t = card.querySelector('.card__t');
+        if(t) rank[t.textContent.trim()] = n++;
+      });
+      var pills = [].slice.call(row.children), were = pills.slice();
+      pills.sort(function(a, b){
+        /* a pack the shelf is not carrying has no rank to sort by, so it
+           keeps the place it already had, after everything the shelf ranks */
+        var ra = rank[packOf(a)], rb = rank[packOf(b)];
+        if(ra === undefined) ra = 1e6 + were.indexOf(a);
+        if(rb === undefined) rb = 1e6 + were.indexOf(b);
+        return ra - rb;
+      });
+      if(pills.every(function(p, i){ return p === were[i]; })) return;
+      pills.forEach(function(p){ row.appendChild(p); });
+      list();
+      step();
+    }
+    if(grid) grid.addEventListener('rm:sorted', follow);
+    follow();
+    step();
   })();
 
   /* ---- the lit surfaces answer the pointer ----
