@@ -1710,12 +1710,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .chipbuy__on{display:none}
 .pchip__buy:hover,.pchip__buy:focus-visible{color:var(--fg);background:var(--surface-sunken)}
 .pchip:has([aria-selected="true"]) .pchip__buy:hover{background:rgba(99,91,255,.10)}
-/* the same mark the basket's own note carries when something lands in it:
-   a soft green disc with the tick cut out of it, so "this one is in there"
-   looks the same wherever the page says it */
+/* A tick in a disc, the mark the basket's own note carries — but filled
+   rather than tinted. On a white chip a pale green disc with a green tick on
+   it was two soft greens on white and read as nothing from a foot away; the
+   disc is the colour now and the tick is cut out of it in white. */
 .chipbuy__on{
   place-items:center;width:22px;height:22px;border-radius:var(--r-full);
-  background:#E7F6EE;color:#12784A;
+  background:var(--ok);color:#FFFFFF;
+  box-shadow:0 1px 3px rgba(12,74,45,.35);
 }
 .pchip__buy.is-in .chipbuy__o{display:none}
 .pchip__buy.is-in .chipbuy__on{display:grid}
@@ -2043,7 +2045,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    takes room from the words underneath */
 .os button{position:relative}
 .osbest{
-  position:absolute;left:50%;bottom:calc(100% - 2px);z-index:2;
+  position:absolute;left:50%;bottom:calc(100% - 5px);z-index:2;
   transform:translateX(-50%);
   display:inline-flex;align-items:center;gap:5px;white-space:nowrap;
   padding:4px 11px;border-radius:var(--r-full);
