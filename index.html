@@ -2210,11 +2210,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   background:var(--surface);border:1px solid var(--border);
   border-radius:var(--r-panel);box-shadow:var(--sh-1);
 }
-/* the name of the half, on the panel's own top edge */
+/* the name of the half, on the panel's own top edge. A mark in front of it,
+   because a line of bold text alone at the top of a panel reads as the first
+   thing inside the panel rather than as the name of it. */
 .hpanel__hd{
+  display:flex;align-items:center;gap:var(--s-3);
   margin:0;padding:var(--s-4) var(--s-6);font-size:var(--fs-5);
   border-bottom:1px solid var(--border);
 }
+.hpanel__hd svg{flex:none;width:19px;height:19px;color:var(--accent-fg)}
 .hpanel__bd{display:flex;flex-direction:column;flex:1;padding:var(--s-6)}
 /* the film is the panel's full width: a frame inside a frame is one frame too
    many, and the header's rule is already the edge it needs */
@@ -2309,7 +2313,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   background:var(--n-300);margin-top:7px;
 }
 .steps{display:flex;flex-direction:column;gap:var(--s-5)}
-.steps li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 var(--s-4)}
+/* one line down the discs, so three stops read as one route rather than as
+   three separate things that happen to be numbered. Drawn per step from the
+   bottom of its own disc to the top of the next one, which is why it survives
+   a step growing a line of text taller. */
+.steps li{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:0 var(--s-4)}
+.steps li:not(:last-child)::before{
+  content:"";position:absolute;left:14px;transform:translateX(-50%);
+  top:31px;bottom:calc(var(--s-5) * -1 - 1px);
+  width:2px;border-radius:1px;background:var(--accent-bg);
+}
 .steps .n{
   grid-row:span 2;width:28px;height:28px;border-radius:var(--r-full);display:grid;place-items:center;
   background:var(--accent-bg);color:var(--accent-700);border:1px solid var(--accent-border);
@@ -4287,7 +4300,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
     <div class="help" data-reveal>
       <div class="hpanel help__do">
-        <h3 class="hpanel__hd">Installing</h3>
+        <h3 class="hpanel__hd"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2.6v9.1M6.4 8.4l3.6 3.6 3.6-3.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.2 13.4v2.2a1.8 1.8 0 001.8 1.8h10a1.8 1.8 0 001.8-1.8v-2.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>Installing</h3>
         <div class="player">
           <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" alt="Install walkthrough" loading="lazy" onerror="this.style.display='none'">
           <button class="play" aria-label="Play the install walkthrough">
@@ -4324,7 +4337,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       </div>
 
       <div class="hpanel help__ask" id="faq">
-        <h3 class="hpanel__hd">Questions</h3>
+        <h3 class="hpanel__hd"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="7.6" stroke="currentColor" stroke-width="1.7"/><path d="M7.9 7.9a2.15 2.15 0 114.05 1c-.35.65-1.2 1-1.65 1.55-.2.25-.3.55-.3.95" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="14.1" r=".95" fill="currentColor"/></svg>Questions</h3>
         <div class="hpanel__bd">
         <div id="faqList">
           <div class="qa" data-open="true">
