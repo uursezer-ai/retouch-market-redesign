@@ -501,7 +501,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    same offer at the other end of the page. */
 /* at rest the pool sits where the pack's name starts rather than in the
    middle of the band — the light is on the thing being offered */
-.pbuy--dark{--px:43%;--py:27%;isolation:isolate}
+/* where the light rests when nobody is on the band: in the gap between the
+   Lightroom box and the Photoshop one, level with them — the middle of the
+   three products it is selling, rather than a point picked off the grid */
+.pbuy--dark{--px:17%;--py:50%;isolation:isolate}
 /* the closing panel is a column down the middle, so its light rests there */
 .cta{--px:50%;--py:38%}
 
@@ -1689,18 +1692,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 #results.is-2up .compare{cursor:zoom-out}
 /* below the breakpoint the row is already two across — nothing to promise */
 @media (max-width:1000px){#results .compare{cursor:default}}
-.zoom{flex:none;min-width:132px;justify-content:center}
-/* one glass, two signs: the upright stroke is the whole difference between
-   asking for more and offering to give it back, so it is the only thing that
-   moves — the glass itself never redraws */
-.zoom__v{transform-box:fill-box;transform-origin:center;
-  transition:transform var(--dur-2) var(--ease), opacity var(--dur-2) var(--ease)}
-.zoom[aria-pressed="true"]{
-  border-color:var(--accent);color:var(--accent-fg);background:var(--accent-bg);
-}
-/* pressed, the row is already big — so the glass offers to take it back */
-.zoom[aria-pressed="true"] .zoom__v{transform:scaleY(0);opacity:0}
-
 /* the pack chips: a scrolling row of pills, the chosen one outlined rather
    than filled so the row reads as one control and not six buttons */
 /* one line: what you are looking at, and how big you want to see it */
@@ -1735,6 +1726,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    button is only there for a mouse; a finger already has the whole row to
    push, and a button would take chips off the line to say so. */
 .pbar .pchips__go{display:none;flex:none}
+/* the pair stands together at the end of the row rather than one at each
+   end: two halves of one control, in the order they move it. They close up
+   to 6px between them — but only while both are on the line, or the one
+   that is left would sit crooked against the chips. */
+.pbar .pchips__go[data-chipstep="-1"]:not([hidden]) + .pchips__go[data-chipstep="1"]{
+  margin-left:calc(6px - var(--s-4));
+}
 @media (hover:hover) and (pointer:fine){
   .pbar .pchips__go{display:grid}
   .pbar .pchips__go[hidden]{display:none}
@@ -1838,8 +1836,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .pchip__buy.is-in:hover .chipbuy__tick,.pchip__buy.is-in:focus-visible .chipbuy__tick{display:none}
 .pchip__buy.is-in:hover .chipbuy__x,.pchip__buy.is-in:focus-visible .chipbuy__x{display:block}
-/* the bundle is holding it: nothing to do here, and the chip says so */
-.pchip__buy[disabled]{color:var(--accent);opacity:.75;cursor:default;background:none}
+/* the bundle is holding it. It stays a real button — a dead one cannot be
+   hovered, and a refusal nobody can read is just a control that broke — so
+   it keeps the tick, refuses the press, and the bubble says why. */
+.pchip__buy.is-inbundle{color:var(--accent);cursor:not-allowed}
+.pchip__buy.is-inbundle:hover,.pchip__buy.is-inbundle:focus-visible{background:none}
+.pchip__buy.is-inbundle .chipbuy__on,
+.pchip__buy.is-inbundle:hover .chipbuy__on,.pchip__buy.is-inbundle:focus-visible .chipbuy__on{
+  background:var(--accent);box-shadow:0 1px 3px rgba(46,40,140,.35);
+}
+.pchip__buy.is-inbundle:hover .chipbuy__tick,.pchip__buy.is-inbundle:focus-visible .chipbuy__tick{display:block}
+.pchip__buy.is-inbundle:hover .chipbuy__x,.pchip__buy.is-inbundle:focus-visible .chipbuy__x{display:none}
 
 /* What pressing it would do, said before you press it. It cannot be drawn by
    the chip: the row of chips scrolls sideways, and a scroller clips whatever
@@ -1856,7 +1863,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   /* the page's secondary: a white card with the page's own edge, the way
      every other floating thing on it is built. The bubble is not the thing
      being pointed at and does not need to compete with it. */
-  background:var(--surface);color:var(--fg);
+  /* the bubble is the page's own surface; the words on it are the page's own
+     accent, so a name the pointer asked for reads as an answer rather than
+     as more body copy */
+  background:var(--surface);color:var(--accent);
   border:1px solid var(--border);
   font-size:var(--fs-4);font-weight:var(--fw-semibold);line-height:1.3;
   box-shadow:0 12px 28px rgba(16,32,58,.16), 0 2px 6px rgba(16,32,58,.10);
@@ -1878,6 +1888,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   /* it is an <i> for the markup's sake, not for the slant */
   font-size:11px;font-weight:var(--fw-bold);font-style:normal;line-height:1;
 }
+/* the same bubble, saying why something will not budge. It borrows the
+   page's one warning colour and nothing else — a refusal that shouts is
+   worse than the thing it is refusing. */
+.tipbox__warn{flex:none;width:17px;height:17px;color:var(--danger)}
+/* a refusal is not an answer, so it does not take the answering colour */
+.tipbox.is-warn{border-color:rgba(192,57,46,.34);color:var(--danger)}
+.tipbox.is-warn::after{border-top-color:var(--surface)}
 .tipbox.is-on{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.tipbox{transition:none}}
 .bapanel[hidden]{display:none}
@@ -1936,10 +1953,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   background:var(--bg);border-color:var(--danger);color:var(--danger);
 }
 /* already in the bundle: it is not a button any more, it is a label */
-.card__add.is-inbundle,.card__add.is-inbundle:hover{
+.card__add.is-inbundle,.card__add.is-inbundle:hover,.card__add.is-inbundle:focus-visible{
   background:var(--accent-bg);color:var(--accent-fg);border-color:var(--accent-border);
-  cursor:default;
+  cursor:not-allowed;
 }
+/* the band's own button, when the bundle is holding the pack it sells */
+.pbuy__go.is-inbundle,.pbuy__go.is-inbundle:hover{cursor:not-allowed}
 .card:has(.card__add.is-inbundle){border-color:var(--accent-border);background:var(--surface)}
 .card:has(.card__add.is-inbundle):hover{transform:none;box-shadow:none}
 .card:hover{transform:translateY(-3px);box-shadow:var(--sh-3);border-color:var(--border-strong)}
@@ -2401,7 +2420,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .prod.is-free::after{animation:none}
   .prod.is-free{animation:none}
   .pbuy--dark.is-added::after,.shell.is-bought::after{animation:none}
-  .zoom__v{transition:none}
 }
 /* no tile behind the box: the card is already a frame, and a second one
    inside it read as a box in a box and cost the render its room. The render
@@ -2571,8 +2589,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   position:fixed;z-index:60;width:max-content;max-width:min(320px, 84vw);
   display:flex;align-items:flex-start;gap:var(--s-3);
   margin:0;padding:var(--s-4);border-radius:var(--r-card);
-  background:#FFFFFF;color:#1B2436;
-  box-shadow:0 16px 44px rgba(4,10,20,.24), 0 0 0 1px rgba(4,10,20,.06);
+  /* something arriving in your basket is good news, so the note is the
+     colour the page keeps for good news rather than a neutral card that
+     happens to contain a green tick */
+  background:#E7F6EE;color:#123C28;
+  box-shadow:0 16px 44px rgba(8,54,34,.22), 0 0 0 1px rgba(26,127,75,.18);
   font-size:var(--fs-2);line-height:var(--lh-normal);text-align:left;
   opacity:0;transform:translateY(-10px) scale(.96);transform-origin:top right;
   pointer-events:none;cursor:pointer;
@@ -2582,7 +2603,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .carttip.is-on{pointer-events:auto}
 .carttip::after{
   content:"";position:absolute;bottom:100%;right:var(--point, 26px);
-  border:7px solid transparent;border-bottom-color:#FFFFFF;
+  border:7px solid transparent;border-bottom-color:#E7F6EE;
 }
 .carttip.is-on{opacity:1;transform:none}
 /* the same disc a chip wears when a pack is in the basket. Written with the
@@ -2592,10 +2613,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   flex:none;display:grid;place-items:center;width:30px;height:30px;
   border-radius:var(--r-full);background:var(--ok);color:#FFFFFF;
 }
-.carttip b{display:block;font-size:var(--fs-4);font-weight:var(--fw-semibold);color:#0F1626}
+.carttip b{display:block;font-size:var(--fs-4);font-weight:var(--fw-semibold);color:#0C3320}
 /* one line: nothing to sit above, so the mark centres on it */
 .carttip--one{align-items:center}
-.carttip span{color:#48566B}
+.carttip span{color:#2E6349}
 /* the basket answers as well, so the eye has somewhere to land */
 [data-basket].is-hit{animation:cartHit .58s cubic-bezier(.2,1.4,.34,1)}
 @keyframes cartHit{0%{transform:none}30%{transform:translateY(-7px) scale(1.14)}
@@ -2701,8 +2722,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 @media (max-width:1000px){
   .deck.deck--v{--v-per:3}
-  /* already two across here, so the toggle has nothing left to offer */
-  .zoom{display:none}
   /* the head stacks, the bundle wraps three across, and the price bar comes
      out from under the proof line */
   .shell{padding:var(--s-7)}
@@ -3600,7 +3619,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 <!-- ══════════ 7 · BEFORE / AFTER ══════════
      PLACEHOLDER DATA: the pack names are real, but which photograph belongs to
      which pack is a stand-in and every frame is drawn from the page's pool. -->
-<section class="section" id="results">
+<section class="section" id="results" data-zoomsec>
   <div class="wrap">
     <div class="section__head" data-reveal>
       <div>
@@ -3609,7 +3628,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       </div>
     </div>
     <div class="pbar" data-reveal>
-    <button class="arrow pchips__go" type="button" data-chipstep="-1" aria-label="Earlier packs" hidden><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     <div class="pchips" role="tablist" aria-label="Preset and LUT packs">
       <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-0" aria-controls="bap-0" aria-selected="true">Lora</button><button class="pchip__buy" type="button" data-chipbuy="Lora Presets" data-tip="Add to cart" aria-label="Add Lora Presets to basket"><svg class="chipbuy__o" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="chipbuy__on" aria-hidden="true"><svg class="chipbuy__tick" width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M4.2 10.6l3.8 3.8 7.8-8.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span></button></span>
       <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-1" aria-controls="bap-1" aria-selected="false">Solis</button><button class="pchip__buy" type="button" data-chipbuy="Solis Presets" data-tip="Add to cart" aria-label="Add Solis Presets to basket"><svg class="chipbuy__o" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="chipbuy__on" aria-hidden="true"><svg class="chipbuy__tick" width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M4.2 10.6l3.8 3.8 7.8-8.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span></button></span>
@@ -3624,16 +3642,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-10" aria-controls="bap-10" aria-selected="false">Nord</button><button class="pchip__buy" type="button" data-chipbuy="Nord Presets" data-tip="Add to cart" aria-label="Add Nord Presets to basket"><svg class="chipbuy__o" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="chipbuy__on" aria-hidden="true"><svg class="chipbuy__tick" width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M4.2 10.6l3.8 3.8 7.8-8.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span></button></span>
       <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-11" aria-controls="bap-11" aria-selected="false">Aster LUTs</button><button class="pchip__buy" type="button" data-chipbuy="Aster LUTs" data-tip="Add to cart" aria-label="Add Aster LUTs to basket"><svg class="chipbuy__o" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg><span class="chipbuy__on" aria-hidden="true"><svg class="chipbuy__tick" width="12" height="12" viewBox="0 0 20 20" fill="none"><path d="M4.2 10.6l3.8 3.8 7.8-8.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="11" height="11" viewBox="0 0 20 20" fill="none"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></span></button></span>
       </div>
+      <button class="arrow pchips__go" type="button" data-chipstep="-1" aria-label="Earlier packs" hidden><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <button class="arrow pchips__go" type="button" data-chipstep="1" aria-label="More packs" hidden><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-      <button class="btn btn--secondary zoom" type="button" data-zoom aria-pressed="false">
-        <svg class="zoom__i" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-          <circle cx="7.6" cy="7.6" r="5.6" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M11.7 11.7 16.2 16.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-          <path d="M4.9 7.6h5.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          <path class="zoom__v" d="M7.6 4.9v5.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <span>Zoom In</span>
-      </button>
     </div>
   </div>
 
@@ -4306,7 +4316,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      The photographs, names and handles come from the client's archive.
      PLACEHOLDER: five of the six quotes are written here rather than supplied,
      and no follower counts were given. -->
-<section class="section" id="voices">
+<section class="section" id="voices" data-zoomsec data-zoom-target=".vcard">
   <div class="wrap">
     <div class="section__head" data-reveal>
       <div>
@@ -4314,15 +4324,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <h2>Trusted by Professional Photographers</h2>
         <p class="lede">Studios and creators who shoot every week, editing with the same tools.</p>
       </div>
-      <button class="btn btn--secondary zoom" type="button" data-zoom data-zoom-target=".vcard" aria-pressed="false">
-        <svg class="zoom__i" width="16" height="16" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-          <circle cx="7.6" cy="7.6" r="5.6" stroke="currentColor" stroke-width="1.5"/>
-          <path d="M11.7 11.7 16.2 16.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-          <path d="M4.9 7.6h5.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          <path class="zoom__v" d="M7.6 4.9v5.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        </svg>
-        <span>Zoom In</span>
-      </button>
     </div>
   </div>
 
@@ -4588,6 +4589,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      ordinary shape of this everywhere it is done well: nothing the customer
      put in is thrown away silently, the overlap is folded in and named, and
      everything outside the bundle is left exactly where it was. */
+  /* One reason, written once. A pack the bundle is holding cannot be taken
+     out on its own — the bundle is the line in the basket, not the packs
+     inside it — and a refusal nobody can read is a control that just broke,
+     so every one of the three places you can press says why. */
+  var TIP_LOCKED = 'Cancel the bundle to remove it';
+  function lockTip(el, locked){
+    if(locked){ el.setAttribute('data-tip', TIP_LOCKED); el.setAttribute('data-tip-warn', ''); }
+    else { el.removeAttribute('data-tip-warn'); }
+    el.setAttribute('aria-disabled', String(!!locked));
+  }
+
   var Cart = (function(){
     var singles = {}, bundle = null, watchers = [];
     var say = document.querySelector('[data-status]');
@@ -5721,17 +5733,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      packs and every hidden row is already in the wider shape when it opens.
      The rows measure themselves off a resize, which is what the arrows and
      the indicator read. */
-  document.querySelectorAll('[data-zoom]').forEach(function(btn){
-    var sec = btn.closest('section');
-    /* the glass already turns its plus into a minus — the words follow it,
-       so the button names the next move rather than the one just made */
-    var say = btn.querySelector('span');
+  /* Zooming a row is the picture's own job: you press the picture. There is
+     no button any more — it said what the cursor already says, and the line
+     it stood on is a row of packs that needs the width. So the state lives on
+     the section, the cursor's own hint is the whole affordance, and below the
+     breakpoint where the row is already two across there is nothing to
+     toggle at all. */
+  var ZOOMABLE = '(min-width:1001px)';
+  document.querySelectorAll('[data-zoomsec]').forEach(function(sec){
+    var open = false;
+    function live(){ return !window.matchMedia || window.matchMedia(ZOOMABLE).matches; }
     /* the row widens under its own rule — the controller's only job is to
        keep the indicator and the arrows honest while it does */
     var zoomGo = null;
     function set(on){
-      btn.setAttribute('aria-pressed', String(on));
-      if(say) say.textContent = on ? 'Zoom Out' : 'Zoom In';
+      open = on;
       sec.classList.toggle('is-2up', on);
       if(on) hintOff();
       window.dispatchEvent(new Event('resize'));
@@ -5745,18 +5761,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         if(Date.now() - t0 < 520) zoomGo = setTimeout(keep, 80);
       })();
     }
-    btn.addEventListener('click', function(){
-      set(btn.getAttribute('aria-pressed') !== 'true');
-      toChips(btn);
-    });
-
-    /* the picture is what you want bigger, so it is the other way in. A
-       click and not a drag: the split follows the pointer across this same
-       surface, so anything that travelled was someone comparing, not asking.
-       And only while the button is there to agree with — below the
-       breakpoint the row is already two across and there is nothing to
-       toggle. */
-    var target = btn.getAttribute('data-zoom-target') || '[data-compare]';
+    /* the picture is what you want bigger, so it is the way in. A click and
+       not a drag: the split follows the pointer across this same surface, so
+       anything that travelled was someone comparing, not asking. */
+    var target = sec.getAttribute('data-zoom-target') || '[data-compare]';
 
     /* the hint rides the cursor while it is over something that opens, and
        says nothing once it is open: the second press is the obvious one */
@@ -5768,7 +5776,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     function hintOff(){ hint.classList.remove('is-on'); }
     sec.addEventListener('pointermove', function(e){
       if(e.pointerType !== 'mouse') return hintOff();
-      if(sec.classList.contains('is-2up') || getComputedStyle(btn).display === 'none') return hintOff();
+      if(sec.classList.contains('is-2up') || !live()) return hintOff();
       if(!e.target.closest(target)) return hintOff();
       /* measured, so it never has to guess how wide it is */
       var w = hint.offsetWidth, h = hint.offsetHeight;
@@ -5781,6 +5789,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     }, {passive:true});
     sec.addEventListener('pointerleave', hintOff);
     window.addEventListener('scroll', hintOff, {passive:true});
+    /* dragged narrower than the breakpoint, the row is two across on its own
+       and the wide state has nothing left to mean */
+    if(window.matchMedia){
+      var mq = window.matchMedia(ZOOMABLE);
+      (mq.addEventListener ? mq.addEventListener.bind(mq, 'change') : mq.addListener.bind(mq))(
+        function(){ if(!live() && open) set(false); });
+    }
     var from = null;
     sec.addEventListener('pointerdown', function(e){
       from = e.target.closest(target) ? {x:e.clientX, y:e.clientY} : null;
@@ -5790,8 +5805,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       if(!pic || !from) return;
       from = (Math.abs(e.clientX - from.x) < 6 && Math.abs(e.clientY - from.y) < 6) ? from : null;
       if(!from) return;
-      if(getComputedStyle(btn).display === 'none') return;
-      set(btn.getAttribute('aria-pressed') !== 'true');
+      if(!live()) return;
+      set(!open);
     });
   });
 
@@ -6103,12 +6118,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     function draw(hovering){
       var held = Cart.covered(pack);
       go.classList.toggle('is-added', inCart || held);
-      go.disabled = held;
+      go.classList.toggle('is-inbundle', held);
+      lockTip(go, held);
       if(held){
-        /* the bundle is holding it, so it is already bought — the words say
-           that, not where it happens to be sitting */
-        go.innerHTML = TICK + 'Added to cart';
-        go.setAttribute('aria-label', pack + ' is already in your basket, in the bundle');
+        /* the bundle is holding it, so the words say where it is rather than
+           that it arrived — and pressing will not take it back out */
+        go.innerHTML = TICK + 'In your bundle';
+        go.setAttribute('aria-label', pack + ' is in the bundle in your basket — cancel the bundle to remove it');
       } else if(inCart){
         go.innerHTML = hovering ? BIN + 'Remove' : TICK + 'Added to cart';
         go.setAttribute('aria-label', 'Remove ' + pack + ' from your basket');
@@ -6130,7 +6146,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       return b && o ? Math.round(money(o.textContent) - money(b.textContent)) : 0;
     })();
     go.addEventListener('click', function(){
-      if(go.disabled) return;
+      if(Cart.covered(pack)){ tipShow(go); return; }
       inCart = !inCart;
       if(inCart){ Cart.add(pack); } else { Cart.drop(pack); }
       draw(true);
@@ -6139,10 +6155,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         basketNews('3 Plugins in 1 Pack added', '');
       }
     });
-    go.addEventListener('pointerenter', function(){ draw(true); });
-    go.addEventListener('focus', function(){ draw(true); });
-    go.addEventListener('pointerleave', function(){ draw(false); });
-    go.addEventListener('blur', function(){ draw(false); });
+    go.addEventListener('pointerenter', function(){ draw(true); if(Cart.covered(pack)) tipShow(go); });
+    go.addEventListener('focus', function(){ draw(true); if(Cart.covered(pack)) tipShow(go); });
+    go.addEventListener('pointerleave', function(){ draw(false); tipOff(); });
+    go.addEventListener('blur', function(){ draw(false); tipOff(); });
     draw(false);
   })();
 
@@ -6164,10 +6180,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       var inBundle = Cart.covered(name);
       btn.classList.toggle('is-added', on || inBundle);
       btn.classList.toggle('is-inbundle', inBundle);
-      btn.disabled = inBundle;
+      lockTip(btn, inBundle);
       btn.setAttribute('aria-pressed', String(on || inBundle));
       btn.setAttribute('aria-label', inBundle
-        ? name + ' is already in the bundle in your basket'
+        ? name + ' is in the bundle in your basket — cancel the bundle to remove it'
         : (on ? 'Remove ' + name + ' from' : 'Add ' + name + ' to') + ' basket');
       /* in the basket and under the pointer, it offers the way out — the
          state is the border and the fill, so the words are free to be the
@@ -6186,7 +6202,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     });
     btn.addEventListener('click', function(e){
       e.preventDefault();
-      if(Cart.covered(name)) return;
+      if(Cart.covered(name)){ tipShow(btn); return; }
       on = !on;
       if(on){ Cart.add(name); } else { Cart.drop(name); }
       draw(true);
@@ -6194,10 +6210,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
          celebration to wait for here, so it goes straight to the basket */
       if(on) cartTip(name + ' added', '');
     });
-    btn.addEventListener('pointerenter', function(){ draw(true); });
-    btn.addEventListener('pointerleave', function(){ draw(false); });
-    btn.addEventListener('focus', function(){ draw(true); });
-    btn.addEventListener('blur', function(){ draw(false); });
+    btn.addEventListener('pointerenter', function(){ draw(true); if(Cart.covered(name)) tipShow(btn); });
+    btn.addEventListener('pointerleave', function(){ draw(false); tipOff(); });
+    btn.addEventListener('focus', function(){ draw(true); if(Cart.covered(name)) tipShow(btn); });
+    btn.addEventListener('blur', function(){ draw(false); tipOff(); });
   });
 
   /* ---- the shelf is twelve deep ----
@@ -6499,7 +6515,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
        band are a set, and which of the three is half of what you are asking */
     var n = el.getAttribute('data-tip-n');
     tipBox.textContent = '';
-    if(n){
+    tipBox.classList.toggle('is-warn', el.hasAttribute('data-tip-warn'));
+    if(el.hasAttribute('data-tip-warn')){
+      var warn = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      warn.setAttribute('class', 'tipbox__warn');
+      warn.setAttribute('viewBox', '0 0 20 20');
+      warn.setAttribute('fill', 'none');
+      warn.setAttribute('aria-hidden', 'true');
+      warn.innerHTML = '<path d="M10 2.6l7.4 13.2H2.6z" stroke="currentColor" stroke-width="1.6" '
+        + 'stroke-linejoin="round"/><path d="M10 7.7v3.4" stroke="currentColor" stroke-width="1.7" '
+        + 'stroke-linecap="round"/><circle cx="10" cy="13.6" r=".95" fill="currentColor"/>';
+      tipBox.appendChild(warn);
+    } else if(n){
       var mark = document.createElement('i');
       mark.className = 'tipbox__n';
       mark.textContent = n;
@@ -6543,12 +6570,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     function draw(){
       var held = Cart.covered(name);
       btn.classList.toggle('is-in', on || held);
-      btn.disabled = held;
+      btn.classList.toggle('is-inbundle', held);
+      lockTip(btn, held);
       /* the bubble says the action; the pack's name is on the chip beside it
          and does not need saying twice */
       if(held){
-        btn.setAttribute('data-tip', 'In your bundle');
-        btn.setAttribute('aria-label', name + ' is already in the bundle in your basket');
+        btn.setAttribute('aria-label', name + ' is in the bundle in your basket — cancel the bundle to remove it');
       } else if(on){
         btn.setAttribute('data-tip', 'Remove');
         btn.setAttribute('aria-label', 'Remove ' + name + ' from basket');
@@ -6570,7 +6597,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     btn.addEventListener('click', function(e){
       e.preventDefault();
       e.stopPropagation();                    /* the name half is not what was pressed */
-      if(Cart.covered(name)) return;
+      if(Cart.covered(name)){ tipShow(btn); return; }
       on = !on;
       if(on){ Cart.add(name); cartTip(name + ' added', ''); } else { Cart.drop(name); }
       draw();
