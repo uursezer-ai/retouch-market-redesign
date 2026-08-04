@@ -258,8 +258,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .iconbtn:hover{background:var(--surface-sunken);color:var(--fg)}
 .iconbtn[aria-expanded="true"]{background:var(--surface-sunken);color:var(--fg)}
 /* the number is the fact; when it changes it says so once */
-.cart__n.is-hit{animation:countHit 240ms cubic-bezier(.2,1.4,.36,1)}
-@keyframes countHit{0%{transform:scale(1)}42%{transform:scale(1.18)}100%{transform:scale(1)}}
+.cart__n.is-hit{animation:countHit 380ms cubic-bezier(.2,1.5,.32,1)}
+@keyframes countHit{0%{transform:scale(1)}38%{transform:scale(1.36)}68%{transform:scale(.94)}100%{transform:scale(1)}}
 .cart__n{
   position:absolute;top:2px;right:2px;min-width:18px;height:18px;padding:0 3px;
   border-radius:var(--r-full);background:var(--accent);color:var(--fg-on-accent);
@@ -346,20 +346,24 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    business drawing the eye. */
 .slide.is-out{
   position:absolute;left:0;right:0;top:0;pointer-events:none;z-index:1;
-  animation:heroOut 150ms linear both;
 }
-@keyframes heroOut{to{opacity:0}}
-/* and the one arriving comes up under its own weight, the words first.
-   Two entrances, and the difference is the point. A swap fades, because you
-   already have the old slide to look at. The first paint does not: the
-   headline is the largest thing on the page and the first thing anyone
-   reads, so it arrives legible and simply settles — movement, no veil. */
-.slide.is-on.is-fresh .slide__copy{animation:heroIn 340ms var(--ease) both}
-.slide.is-on.is-fresh .slide__media{animation:heroIn 340ms var(--ease) 70ms both}
-@keyframes heroIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.slide.is-on.is-first .slide__copy{animation:heroSettle 420ms var(--ease) both}
-.slide.is-on.is-first .slide__media{animation:heroSettle 420ms var(--ease) 90ms both}
-@keyframes heroSettle{from{transform:translateY(12px)}to{transform:none}}
+/* Nothing on arrival. The page opening is not an event the page should
+   comment on, and a fade in front of the headline is a fade in front of the
+   first thing anyone reads.
+   A swap is an event, and it is the reader's own — so it goes the way they
+   sent it. Next brings the new slide in from the right and takes the old one
+   off to the left; back does the reverse. Direction is the whole message: it
+   says a row moved, not that something blinked. */
+.slide.is-on.is-fresh .slide__copy{animation:heroInR 380ms var(--ease) both}
+.slide.is-on.is-fresh .slide__media{animation:heroInR 380ms var(--ease) 60ms both}
+.slide.is-on.is-fresh.is-back .slide__copy,
+.slide.is-on.is-fresh.is-back .slide__media{animation-name:heroInL}
+@keyframes heroInR{from{opacity:0;transform:translateX(34px)}to{opacity:1;transform:none}}
+@keyframes heroInL{from{opacity:0;transform:translateX(-34px)}to{opacity:1;transform:none}}
+.slide.is-out{animation:heroOutL 240ms var(--ease) both}
+.slide.is-out.is-back{animation-name:heroOutR}
+@keyframes heroOutL{to{opacity:0;transform:translateX(-24px)}}
+@keyframes heroOutR{to{opacity:0;transform:translateX(24px)}}
 /* the button and the video end on the same line: the copy is a column with the
    actions pushed to its foot, and the frame is parked at the foot of its own
    column. Whatever slack the two columns differ by now falls above the video
@@ -1175,30 +1179,111 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 /* reserve two lines so every category label in the shelf sits on one baseline */
 
-/* a card arriving from Load more comes up the way the section did */
-@keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
-.card.is-new{animation:cardIn var(--dur-3) var(--ease) both}
-
-/* Zoom In and Zoom Out change how much of a row you are looking at, and the
-   row used to arrive at its new size with no account of having changed. The
-   cards settle into it instead, and from the side they came from: zoomed in
-   they were smaller a moment ago, so they grow the last of the way; zoomed
-   out they were larger, so they come down onto it. Transform and opacity
-   only — a row of twelve pictures resizing costs the compositor, not the
-   layout — and no standing transition, so a hover is still a hover. */
-#results.is-zooming .deck--ba [data-badeck-track] > *,
-#voices.is-zooming .deck--v [data-badeck-track] > *{
-  animation:zoomDown 420ms var(--ease) both;
+/* A pack arriving on the shelf. The first version set opacity on the element
+   and then took it off a frame before the animation's own first frame, which
+   is a card at full strength for one frame and then gone again — the flicker.
+   The waiting state is the animation itself, held: fill:both parks the card
+   at the start of it, paused, from the moment the script runs, and reaching
+   the shelf simply lets it play. There is no frame in between for anything
+   to happen in. */
+@keyframes cardIn{
+  from{opacity:0;transform:translateY(16px)}
+  to{opacity:1;transform:none}
 }
-#results.is-zooming.is-2up .deck--ba [data-badeck-track] > *,
-#voices.is-zooming.is-2up .deck--v [data-badeck-track] > *{
-  animation-name:zoomUp;
-}
-@keyframes zoomUp{0%{transform:scale(.955);opacity:.5}100%{transform:none;opacity:1}}
-@keyframes zoomDown{0%{transform:scale(1.045);opacity:.5}100%{transform:none;opacity:1}}
+.card.is-waiting{animation:cardIn 520ms var(--ease) both;animation-play-state:paused}
+.card.is-waiting.is-go{animation-play-state:running}
+.card.is-new{animation:cardIn 520ms var(--ease) both}
 @media (prefers-reduced-motion:reduce){
-  #results.is-zooming .deck--ba [data-badeck-track] > *,
-  #voices.is-zooming .deck--v [data-badeck-track] > *{animation:none}
+  .card.is-waiting,.card.is-waiting.is-go,.card.is-new{animation:none}
+}
+
+/* Zoom In and Zoom Out give the row a different size, and the honest way to
+   show that is to let the size itself change — not to fade the cards down and
+   back, which is what the first version did and where the flicker came from.
+   A card that dims and undims has gone away and come back, and nothing here
+   goes anywhere: it grows.
+   The number of cards across is a registered custom property, so it holds a
+   real number rather than a token, and a real number can be interpolated. The
+   row goes from three across to two across through two and a half — every
+   card widening together, at one speed, with the scroller keeping up on its
+   own. Nothing is transformed and nothing is faded. */
+@property --ba-per{syntax:"<number>";inherits:true;initial-value:3}
+@property --v-per{syntax:"<number>";inherits:true;initial-value:5}
+.deck--ba,.deck--v{transition:--ba-per 460ms cubic-bezier(.3,.72,.24,1),
+                              --v-per 460ms cubic-bezier(.3,.72,.24,1)}
+@media (prefers-reduced-motion:reduce){.deck--ba,.deck--v{transition:none}}
+
+/* ── the two offers arriving ────────────────────────────────────
+   Both of these are the page asking for money, and both used to appear whole
+   — one block sliding up, everything inside it already in place. They come in
+   as what they are made of instead: the products first, one after another,
+   then the words about them, then the way to buy. Nothing overshoots and
+   nothing bounces; each piece travels a short distance on a long tail and
+   stops. You notice the offer without being asked to look at it.
+   Once, on the way in — the class comes off afterwards, so re-drawing the
+   bundle never replays it. Held at the head of the animation from the moment
+   the script runs and released when you reach the offer: an observer that
+   fires after the parts are already on screen would otherwise blank them and
+   start again, which is the flicker, not the entrance. */
+@keyframes offerPart{
+  from{opacity:0;transform:translateY(22px) scale(.965)}
+  to{opacity:1;transform:none}
+}
+@keyframes offerLine{
+  from{opacity:0;transform:translateY(12px)}
+  to{opacity:1;transform:none}
+}
+.shell.is-arriving .prod{animation:offerPart 620ms cubic-bezier(.22,.61,.24,1) both}
+.shell.is-arriving .prod:nth-child(1){animation-delay:60ms}
+.shell.is-arriving .prod:nth-child(2){animation-delay:130ms}
+.shell.is-arriving .prod:nth-child(3){animation-delay:200ms}
+.shell.is-arriving .prod:nth-child(4){animation-delay:270ms}
+.shell.is-arriving .prod:nth-child(5){animation-delay:340ms}
+.shell.is-arriving .ofoot{animation:offerLine 560ms cubic-bezier(.22,.61,.24,1) 400ms both}
+.shell.is-arriving .oswitch{animation:offerLine 520ms cubic-bezier(.22,.61,.24,1) 120ms both}
+/* and one pass of light across the panel as it settles — the whole surface
+   acknowledging that it arrived, at an opacity you would not catch twice */
+.shell.is-arriving::before{
+  content:"";position:absolute;inset:0;z-index:4;pointer-events:none;
+  border-radius:inherit;
+  background:linear-gradient(105deg, transparent 38%, rgba(255,255,255,.10) 50%, transparent 62%);
+  background-size:260% 100%;
+  animation:offerSheen 1250ms cubic-bezier(.3,.5,.2,1) 260ms both;
+}
+@keyframes offerSheen{from{background-position:180% 0;opacity:0}
+  18%{opacity:1}to{background-position:-60% 0;opacity:0}}
+
+/* the band is one line of things, so it arrives along that line: its three
+   boxes, then what they are, then the price */
+.pbuy.is-arriving .pbuy__art img{animation:offerPart 560ms cubic-bezier(.22,.61,.24,1) both}
+.pbuy.is-arriving .pbuy__art img:nth-child(1){animation-delay:60ms}
+.pbuy.is-arriving .pbuy__art img:nth-child(2){animation-delay:130ms}
+.pbuy.is-arriving .pbuy__art img:nth-child(3){animation-delay:200ms}
+.pbuy.is-arriving .pbuy__body{animation:offerLine 520ms cubic-bezier(.22,.61,.24,1) 210ms both}
+.pbuy.is-arriving .pbuy__meta li{animation:offerLine 480ms cubic-bezier(.22,.61,.24,1) both}
+.pbuy.is-arriving .pbuy__meta li:nth-child(1){animation-delay:300ms}
+.pbuy.is-arriving .pbuy__meta li:nth-child(2){animation-delay:350ms}
+.pbuy.is-arriving .pbuy__meta li:nth-child(3){animation-delay:400ms}
+.pbuy.is-arriving .pbuy__meta li:nth-child(4){animation-delay:450ms}
+.pbuy.is-arriving .pbuy__buy{animation:offerBuy 560ms cubic-bezier(.22,.61,.24,1) 330ms both}
+@keyframes offerBuy{
+  from{opacity:0;transform:translateY(10px) scale(.94)}
+  to{opacity:1;transform:none}
+}
+/* paused until you reach it */
+.shell.is-arriving .prod,.shell.is-arriving .ofoot,.shell.is-arriving .oswitch,
+.shell.is-arriving::before,
+.pbuy.is-arriving .pbuy__art img,.pbuy.is-arriving .pbuy__body,
+.pbuy.is-arriving .pbuy__meta li,.pbuy.is-arriving .pbuy__buy{animation-play-state:paused}
+.shell.is-arriving.is-go .prod,.shell.is-arriving.is-go .ofoot,
+.shell.is-arriving.is-go .oswitch,.shell.is-arriving.is-go::before,
+.pbuy.is-arriving.is-go .pbuy__art img,.pbuy.is-arriving.is-go .pbuy__body,
+.pbuy.is-arriving.is-go .pbuy__meta li,.pbuy.is-arriving.is-go .pbuy__buy{animation-play-state:running}
+@media (prefers-reduced-motion:reduce){
+  .shell.is-arriving .prod,.shell.is-arriving .ofoot,.shell.is-arriving .oswitch,
+  .shell.is-arriving::before,
+  .pbuy.is-arriving .pbuy__art img,.pbuy.is-arriving .pbuy__body,
+  .pbuy.is-arriving .pbuy__meta li,.pbuy.is-arriving .pbuy__buy{animation:none}
 }
 
 /* ── the moment an offer lands ─────────────────────────────────── */
@@ -1265,10 +1350,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   100%{opacity:0;transform:translate(-50%,-50%) rotate(var(--a)) translateX(var(--d)) scale(1)}
 }
 @keyframes cheerRise{to{transform:none;opacity:1}}
-@keyframes cheerPop{0%{transform:scale(.25)}55%{transform:scale(1.26)}78%{transform:scale(.95)}100%{transform:scale(1)}}
-/* the number lands after the tick and overshoots with it */
-.cheer.is-on .cheer__sum{animation:cheerSum .6s cubic-bezier(.2,1.36,.34,1) .1s backwards}
-@keyframes cheerSum{0%{transform:scale(.72);opacity:0}40%{opacity:1}62%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes cheerPop{0%{transform:scale(.2) rotate(-18deg)}52%{transform:scale(1.32) rotate(4deg)}
+  76%{transform:scale(.93) rotate(0)}100%{transform:scale(1)}}
+/* the number lands after the tick and overshoots harder than it does */
+.cheer.is-on .cheer__sum{animation:cheerSum .66s cubic-bezier(.18,1.5,.32,1) .1s backwards}
+@keyframes cheerSum{0%{transform:scale(.55);opacity:0}34%{opacity:1}60%{transform:scale(1.12)}
+  80%{transform:scale(.98)}100%{transform:scale(1)}}
+/* and the words under it come up behind the number */
+.cheer.is-on .cheer__lead{animation:cheerLead .5s var(--ease) .18s backwards}
+@keyframes cheerLead{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 /* one ring going out from the middle, the shock of it */
 .cheer__wave{
   position:absolute;left:50%;top:50%;width:60px;height:60px;border-radius:var(--r-full);
@@ -1276,6 +1366,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   transform:translate(-50%,-50%) scale(.3);
 }
 .cheer.is-on .cheer__wave{animation:cheerWave .95s cubic-bezier(.12,.72,.24,1) .04s forwards}
+.cheer__wave--wide{border-color:rgba(255,255,255,.5)}
+.cheer.is-on .cheer__wave--wide{animation:cheerWave 1.15s cubic-bezier(.12,.72,.24,1) .16s forwards}
 @keyframes cheerWave{
   0%{opacity:.9;transform:translate(-50%,-50%) scale(.3);border-width:3px}
   100%{opacity:0;transform:translate(-50%,-50%) scale(9);border-width:1px}
@@ -1322,7 +1414,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .shelfbar__say{
   margin:0;min-width:0;max-width:none;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  transition:font-size var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
 }
 /* pinned it is a label on a toolbar rather than the section's opening line,
    and steps down to the size a toolbar wants */
@@ -1337,13 +1428,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    rest the head above is still doing the talking */
 .shelfbar__hint{display:none;margin-left:var(--s-3);color:inherit}
 .shelfbar.is-pinned .shelfbar__hint{display:inline-flex;align-items:center;gap:6px}
-.shelfbar__go{flex:none;animation:shelfNudge 1.5s var(--ease) infinite}
-@keyframes shelfNudge{
-  0%,58%,100%{transform:translateX(0)}
-  70%{transform:translateX(5px)}
-  84%{transform:translateX(1px)}
-}
-@media (prefers-reduced-motion:reduce){.shelfbar__go{animation:none}}
+.shelfbar__go{flex:none}
 @media (max-width:1180px){.shelfbar__say{display:none}}
 .shelfbar__watch{display:block;height:1px;margin-bottom:-1px}
 @media (min-width:861px){
@@ -1944,7 +2029,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 @media (prefers-reduced-motion:reduce){
   .slide.is-out{display:none;animation:none}
   .slide.is-on.is-fresh .slide__copy,.slide.is-on.is-fresh .slide__media,
-  .slide.is-on.is-first .slide__copy,.slide.is-on.is-first .slide__media{animation:none}
+  .slide.is-out{animation:none}
   .sort__menu,.sort__menu.is-on{transition:none;opacity:1;transform:none}
   .cart__n.is-hit{animation:none}
   .card.is-new{animation:none}
@@ -2124,8 +2209,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   background:#FFFFFF;color:#1B2436;
   box-shadow:0 16px 44px rgba(4,10,20,.24), 0 0 0 1px rgba(4,10,20,.06);
   font-size:var(--fs-2);line-height:var(--lh-normal);text-align:left;
-  opacity:0;transform:translateY(-6px);pointer-events:none;cursor:pointer;
-  transition:opacity var(--dur-2) var(--ease), transform var(--dur-2) var(--ease);
+  opacity:0;transform:translateY(-10px) scale(.96);transform-origin:top right;
+  pointer-events:none;cursor:pointer;
+  transition:opacity 200ms var(--ease), transform 320ms cubic-bezier(.2,1.35,.34,1);
 }
 /* out of the way until it is there to be dismissed */
 .carttip.is-on{pointer-events:auto}
@@ -2143,8 +2229,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .carttip--one{align-items:center}
 .carttip span{color:#48566B}
 /* the basket answers as well, so the eye has somewhere to land */
-[data-basket].is-hit{animation:cartHit .5s var(--ease)}
-@keyframes cartHit{0%{transform:none}35%{transform:translateY(-4px) scale(1.08)}100%{transform:none}}
+[data-basket].is-hit{animation:cartHit .58s cubic-bezier(.2,1.4,.34,1)}
+@keyframes cartHit{0%{transform:none}30%{transform:translateY(-7px) scale(1.14)}
+  62%{transform:translateY(1px) scale(.98)}100%{transform:none}}
 @media (prefers-reduced-motion:reduce){.carttip{transition:none}[data-basket].is-hit{animation:none}}
 /* the bundle is bought: tuning it now would mean changing something that is
    already in the basket, so the offer is the only button left */
@@ -4212,7 +4299,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           'deg;--d:' + Math.round(far * (ring ? 1 : 0.62)) +
           'px;animation-delay:' + (0.04 + i * 0.022).toFixed(2) + 's"></i>';
       }
-      sparks += '<i class="cheer__wave"></i>';
+      sparks += '<i class="cheer__wave"></i><i class="cheer__wave cheer__wave--wide"></i>';
     }
     box.innerHTML = '<span class="cheer__wash"></span><span class="cheer__in">' +
       '<span class="cheer__tick">' + TICKBIG + '</span>' +
@@ -4334,7 +4421,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     /* the slider moves when someone moves it — there is no timer. A hero that
        changes under the reader takes the choice away and, with the headline
        being the whole slide, swaps the page's first sentence mid-read. */
-    var heroGo = null, heroFresh = null, heroOn = false;
+    var heroGo = null, heroFresh = null, heroOn = false, hWas = 0;
     function heroShow(i){
       var from = heroOn ? hSlides[hIdx] : null;
       hIdx = (i + hSlides.length) % hSlides.length;
@@ -4351,25 +4438,26 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       if(from && from !== to){
         if(still){ from.setAttribute('hidden',''); }
         else {
+          /* which way the row went, so both slides travel the same way */
+          var span = hSlides.length;
+          var step = ((hIdx - hWas) % span + span) % span;
+          var back = step > span / 2;
+          clearTimeout(heroFresh);
+          hSlides.forEach(function(sl){ sl.classList.remove('is-fresh', 'is-back'); });
           from.classList.add('is-out');
+          if(back) from.classList.add('is-back');
           from.removeAttribute('hidden');
           heroGo = setTimeout(function(){
-            from.classList.remove('is-out');
+            from.classList.remove('is-out', 'is-back');
             from.setAttribute('hidden','');
-          }, 160);
-          /* the entrance belongs to the swap, not to the first paint */
-          clearTimeout(heroFresh);
-          hSlides.forEach(function(sl){ sl.classList.remove('is-fresh'); });
+          }, 260);
           void to.offsetWidth;
           to.classList.add('is-fresh');
-          heroFresh = setTimeout(function(){ to.classList.remove('is-fresh'); }, 460);
+          if(back) to.classList.add('is-back');
+          heroFresh = setTimeout(function(){ to.classList.remove('is-fresh', 'is-back'); }, 460);
         }
       }
-      /* the first one settles into place rather than fading up */
-      if(!heroOn && !still){
-        to.classList.add('is-first');
-        setTimeout(function(){ to.classList.remove('is-first'); }, 560);
-      }
+      hWas = hIdx;
       heroOn = true;
       hDots.forEach(function(d, n){ d.setAttribute('aria-current', String(n === hIdx)); });
       hCount.textContent = ('0' + (hIdx + 1)).slice(-2);
@@ -5128,22 +5216,24 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     /* the glass already turns its plus into a minus — the words follow it,
        so the button names the next move rather than the one just made */
     var say = btn.querySelector('span');
+    /* the row widens under its own rule — the controller's only job is to
+       keep the indicator and the arrows honest while it does */
     var zoomGo = null;
     function set(on){
       btn.setAttribute('aria-pressed', String(on));
-      /* the row is about to be a different size — let its cards arrive at it
-         rather than simply be it */
-      if(!still){
-        clearTimeout(zoomGo);
-        sec.classList.remove('is-zooming');
-        void sec.offsetWidth;
-        sec.classList.add('is-zooming');
-        zoomGo = setTimeout(function(){ sec.classList.remove('is-zooming'); }, 520);
-      }
       if(say) say.textContent = on ? 'Zoom Out' : 'Zoom In';
       sec.classList.toggle('is-2up', on);
       if(on) hintOff();
       window.dispatchEvent(new Event('resize'));
+      if(still) return;
+      /* the cards are still moving for the next half second, and everything
+         that measures them has to be told more than once */
+      clearTimeout(zoomGo);
+      var t0 = Date.now();
+      (function keep(){
+        window.dispatchEvent(new Event('resize'));
+        if(Date.now() - t0 < 520) zoomGo = setTimeout(keep, 80);
+      })();
     }
     btn.addEventListener('click', function(){
       set(btn.getAttribute('aria-pressed') !== 'true');
@@ -5755,6 +5845,33 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   });
   syncToTop();
 
+  /* ---- the two offers arrive as what they are made of ----
+     One class, added the first time you reach the offer and taken off when it
+     has finished, so nothing the bundle redraws afterwards replays it. */
+  (function(){
+    if(still || !('IntersectionObserver' in window)) return;
+    [['.shell', 1700], ['.pbuy', 1150]].forEach(function(pair){
+      var el = document.querySelector(pair[0]);
+      if(!el) return;
+      el.classList.add('is-arriving');
+      var done = false;
+      function go(){
+        if(done) return;
+        done = true;
+        el.classList.add('is-go');
+        setTimeout(function(){ el.classList.remove('is-arriving', 'is-go'); }, pair[1]);
+      }
+      var io = new IntersectionObserver(function(rows){
+        if(!rows[0].isIntersecting) return;
+        io.disconnect();
+        go();
+      }, { rootMargin: '0px 0px -12% 0px', threshold: 0 });
+      io.observe(el);
+      /* content must never depend on an observer firing */
+      setTimeout(go, 2500);
+    });
+  })();
+
   /* ---- the shelf comes in a pack at a time ----
      The grid used to arrive as one block, which on a row of twelve products
      is a single event where there should be twelve. Each card comes up on the
@@ -5766,26 +5883,28 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     var grid = document.getElementById('presetGrid');
     if(!grid || still || !('IntersectionObserver' in window)) return;
     var cards = [].slice.call(grid.children);
-    cards.forEach(function(c){ c.style.opacity = '0'; });
+    /* parked at the head of their own entrance from the moment this runs */
+    cards.forEach(function(c, n){
+      c.style.animationDelay = Math.min(n, 7) * 55 + 'ms';
+      c.classList.add('is-waiting');
+    });
+    function letGo(){
+      cards.forEach(function(c){ c.classList.add('is-go'); });
+      setTimeout(function(){
+        cards.forEach(function(c){
+          c.classList.remove('is-waiting', 'is-go');
+          c.style.animationDelay = '';
+        });
+      }, 520 + 7 * 55 + 100);
+    }
     var io = new IntersectionObserver(function(rows){
       if(!rows[0].isIntersecting) return;
       io.disconnect();
-      var n = 0;
-      cards.forEach(function(c){
-        c.style.opacity = '';
-        if(c.hidden) return;
-        c.style.animationDelay = Math.min(n, 8) * 40 + 'ms';
-        c.classList.add('is-new');
-        n++;
-      });
-      setTimeout(function(){
-        cards.forEach(function(c){ c.classList.remove('is-new'); c.style.animationDelay = ''; });
-      }, 450 + 8 * 40 + 80);
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0 });
+      letGo();
+    }, { rootMargin: '0px 0px -10% 0px', threshold: 0 });
     io.observe(grid);
-    /* the same safety net the page's own reveal carries: content must never
-       depend on an observer firing */
-    setTimeout(function(){ cards.forEach(function(c){ c.style.opacity = ''; }); }, 2500);
+    /* content must never depend on an observer firing */
+    setTimeout(letGo, 2500);
   })();
 
   /* ---- the numbers arrive ----
