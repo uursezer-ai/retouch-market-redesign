@@ -350,13 +350,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 @keyframes heroOut{to{opacity:0}}
 /* and the one arriving comes up under its own weight, the words first.
-   is-fresh, not is-on: with fill:both on is-on the first slide began at zero
-   opacity on every cold load, which put a fade in front of the largest text
-   on the page for no reason anyone asked for. It is a swap animation, so it
-   only runs on a swap. */
+   Two entrances, and the difference is the point. A swap fades, because you
+   already have the old slide to look at. The first paint does not: the
+   headline is the largest thing on the page and the first thing anyone
+   reads, so it arrives legible and simply settles — movement, no veil. */
 .slide.is-on.is-fresh .slide__copy{animation:heroIn 340ms var(--ease) both}
 .slide.is-on.is-fresh .slide__media{animation:heroIn 340ms var(--ease) 70ms both}
 @keyframes heroIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.slide.is-on.is-first .slide__copy{animation:heroSettle 420ms var(--ease) both}
+.slide.is-on.is-first .slide__media{animation:heroSettle 420ms var(--ease) 90ms both}
+@keyframes heroSettle{from{transform:translateY(12px)}to{transform:none}}
 /* the button and the video end on the same line: the copy is a column with the
    actions pushed to its foot, and the frame is parked at the foot of its own
    column. Whatever slack the two columns differ by now falls above the video
@@ -1176,6 +1179,28 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 @keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .card.is-new{animation:cardIn var(--dur-3) var(--ease) both}
 
+/* Zoom In and Zoom Out change how much of a row you are looking at, and the
+   row used to arrive at its new size with no account of having changed. The
+   cards settle into it instead, and from the side they came from: zoomed in
+   they were smaller a moment ago, so they grow the last of the way; zoomed
+   out they were larger, so they come down onto it. Transform and opacity
+   only — a row of twelve pictures resizing costs the compositor, not the
+   layout — and no standing transition, so a hover is still a hover. */
+#results.is-zooming .deck--ba [data-badeck-track] > *,
+#voices.is-zooming .deck--v [data-badeck-track] > *{
+  animation:zoomDown 420ms var(--ease) both;
+}
+#results.is-zooming.is-2up .deck--ba [data-badeck-track] > *,
+#voices.is-zooming.is-2up .deck--v [data-badeck-track] > *{
+  animation-name:zoomUp;
+}
+@keyframes zoomUp{0%{transform:scale(.955);opacity:.5}100%{transform:none;opacity:1}}
+@keyframes zoomDown{0%{transform:scale(1.045);opacity:.5}100%{transform:none;opacity:1}}
+@media (prefers-reduced-motion:reduce){
+  #results.is-zooming .deck--ba [data-badeck-track] > *,
+  #voices.is-zooming .deck--v [data-badeck-track] > *{animation:none}
+}
+
 /* ── the moment an offer lands ─────────────────────────────────── */
 /* Taking an offer is the good news on this page, so it is allowed to look
    like it. The offer's own area fills with what you just saved, counts it up,
@@ -1918,7 +1943,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    all of it comes off in one place rather than being argued about per rule. */
 @media (prefers-reduced-motion:reduce){
   .slide.is-out{display:none;animation:none}
-  .slide.is-on.is-fresh .slide__copy,.slide.is-on.is-fresh .slide__media{animation:none}
+  .slide.is-on.is-fresh .slide__copy,.slide.is-on.is-fresh .slide__media,
+  .slide.is-on.is-first .slide__copy,.slide.is-on.is-first .slide__media{animation:none}
   .sort__menu,.sort__menu.is-on{transition:none;opacity:1;transform:none}
   .cart__n.is-hit{animation:none}
   .card.is-new{animation:none}
@@ -2861,7 +2887,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   </div>
 
   <div class="wrap">
-    <div class="cards" id="presetGrid" data-reveal>
+    <div class="cards" id="presetGrid">
       <article class="card" data-popular="1" data-added="9">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75" alt="Sample graded with Lora Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
@@ -4339,6 +4365,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           heroFresh = setTimeout(function(){ to.classList.remove('is-fresh'); }, 460);
         }
       }
+      /* the first one settles into place rather than fading up */
+      if(!heroOn && !still){
+        to.classList.add('is-first');
+        setTimeout(function(){ to.classList.remove('is-first'); }, 560);
+      }
       heroOn = true;
       hDots.forEach(function(d, n){ d.setAttribute('aria-current', String(n === hIdx)); });
       hCount.textContent = ('0' + (hIdx + 1)).slice(-2);
@@ -5097,8 +5128,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     /* the glass already turns its plus into a minus — the words follow it,
        so the button names the next move rather than the one just made */
     var say = btn.querySelector('span');
+    var zoomGo = null;
     function set(on){
       btn.setAttribute('aria-pressed', String(on));
+      /* the row is about to be a different size — let its cards arrive at it
+         rather than simply be it */
+      if(!still){
+        clearTimeout(zoomGo);
+        sec.classList.remove('is-zooming');
+        void sec.offsetWidth;
+        sec.classList.add('is-zooming');
+        zoomGo = setTimeout(function(){ sec.classList.remove('is-zooming'); }, 520);
+      }
       if(say) say.textContent = on ? 'Zoom Out' : 'Zoom In';
       sec.classList.toggle('is-2up', on);
       if(on) hintOff();
@@ -5714,6 +5755,39 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   });
   syncToTop();
 
+  /* ---- the shelf comes in a pack at a time ----
+     The grid used to arrive as one block, which on a row of twelve products
+     is a single event where there should be twelve. Each card comes up on the
+     same 450ms the rest of the page reveals on, 40ms after the one before it,
+     and the stagger stops at eight so the last row does not have to wait for
+     the first. It is the same rule a card from Load more uses — one way of
+     arriving on this shelf, whichever door it comes through. */
+  (function(){
+    var grid = document.getElementById('presetGrid');
+    if(!grid || still || !('IntersectionObserver' in window)) return;
+    var cards = [].slice.call(grid.children);
+    cards.forEach(function(c){ c.style.opacity = '0'; });
+    var io = new IntersectionObserver(function(rows){
+      if(!rows[0].isIntersecting) return;
+      io.disconnect();
+      var n = 0;
+      cards.forEach(function(c){
+        c.style.opacity = '';
+        if(c.hidden) return;
+        c.style.animationDelay = Math.min(n, 8) * 40 + 'ms';
+        c.classList.add('is-new');
+        n++;
+      });
+      setTimeout(function(){
+        cards.forEach(function(c){ c.classList.remove('is-new'); c.style.animationDelay = ''; });
+      }, 450 + 8 * 40 + 80);
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0 });
+    io.observe(grid);
+    /* the same safety net the page's own reveal carries: content must never
+       depend on an observer firing */
+    setTimeout(function(){ cards.forEach(function(c){ c.style.opacity = ''; }); }, 2500);
+  })();
+
   /* ---- the numbers arrive ----
      The four figures over the fold are the page's only claim about itself,
      and they sat there as finished text. They count up once, the first time
@@ -5763,12 +5837,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       }, wait);
     }
     if(still || !('IntersectionObserver' in window)) return;   /* left as written */
-    /* If the band is already on screen when the page opens, the figures have
-       been read by the time anything could animate them — rewriting them from
-       zero is a flicker on content the reader is looking at, and it competes
-       with the hero for the first second of the page. Written, then. The
-       count is for a band you scroll down to. */
-    if(stats[0].getBoundingClientRect().top < window.innerHeight) return;
+    /* Zeroed here rather than in the observer: this block runs at the foot of
+       the body, so the figures are set before the first paint and nobody sees
+       them written and then unwritten. */
     jobs.forEach(function(j){ write(j, 0); });
     var seen = false;
     var io = new IntersectionObserver(function(rows){
