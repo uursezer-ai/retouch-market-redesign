@@ -295,7 +295,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   transition:background var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
 }
 .iconbtn:hover{background:var(--surface-sunken);color:var(--fg)}
-.iconbtn[aria-expanded="true"]{background:var(--surface-sunken);color:var(--fg)}
+/* held open: the same wash as hover, one step firmer, so it reads as pressed
+   rather than as a tile that arrived from somewhere else */
+.iconbtn[aria-expanded="true"]{background:var(--n-100);color:var(--fg)}
 /* the number is the fact; when it changes it says so once */
 .cart__n.is-hit{animation:countHit 380ms cubic-bezier(.2,1.5,.32,1)}
 @keyframes countHit{0%{transform:scale(1)}38%{transform:scale(1.36)}68%{transform:scale(.94)}100%{transform:scale(1)}}
@@ -751,8 +753,45 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .nav.is-dark .nav__links a:hover,.nav.is-dark .iconbtn:hover{color:#fff}
 .nav.is-dark .nav__links a,.nav.is-dark .iconbtn{color:#D3DAE8}
 .nav.is-dark .nav__links a:hover,.nav.is-dark .iconbtn:hover{background:rgba(255,255,255,.08)}
+.nav.is-dark .iconbtn[aria-expanded="true"]{background:rgba(255,255,255,.16);color:#fff}
 .nav.is-dark .cart__n{border-color:#080C18}
 .nav.is-dark.is-stuck{box-shadow:none}
+/* ── the search drawer, on whichever ground the bar is on ─────────
+   It hangs off the bottom of the bar, so it is the bar: same blur, same
+   translucency, same edge. It was built for a white page and opened white
+   over the hero, which made the bar and the drawer read as two parts from
+   two different pages.
+
+   And while it is open the bar itself takes a ground even over the hero,
+   where it is otherwise transparent: an open drawer needs something to hang
+   from, and a transparent bar over a drawer is a seam. */
+.nav.is-dark.is-search{
+  background:rgba(8,12,24,.86);
+  backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px);
+}
+.nav.is-dark .searchbar{
+  background:rgba(8,12,24,.86);
+  backdrop-filter:saturate(180%) blur(14px);-webkit-backdrop-filter:saturate(180%) blur(14px);
+  border-bottom-color:rgba(255,255,255,.14);
+  box-shadow:0 18px 40px -18px rgba(0,0,0,.7);
+}
+.nav.is-dark .searchbar__field input{
+  background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.20);color:#fff;
+}
+.nav.is-dark .searchbar__field input::placeholder{color:#9AA6BE}
+.nav.is-dark .searchbar__field svg{color:#9AA6BE}
+.nav.is-dark .searchbar__field input:focus{
+  border-color:#8F87FF;box-shadow:0 0 0 3px rgba(143,135,255,.26);
+}
+/* the way out of the drawer, in the ground's own outline rather than the
+   white page's */
+.nav.is-dark .searchbar .btn--secondary{
+  background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.22);color:#fff;
+  box-shadow:none;
+}
+.nav.is-dark .searchbar .btn--secondary:hover{
+  background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.34);
+}
 @media (prefers-reduced-motion:reduce){
   .topband__glow{animation:none}
   .topband__glow::before,.topband__glow::after{display:none}
@@ -1945,10 +1984,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   /* the bubble is the page's own surface; the words on it are the page's own
      accent, so a name the pointer asked for reads as an answer rather than
      as more body copy */
-  background:var(--surface);color:var(--accent);
+  background:var(--tip-fill);color:var(--accent);
   /* one variable for the edge, so the point can be drawn in whatever the box
      is wearing rather than in a colour of its own */
-  --tip-edge:var(--border);
+  --tip-edge:var(--border);--tip-fill:var(--surface);
   border:1px solid var(--tip-edge);
   font-size:var(--fs-4);font-weight:var(--fw-semibold);line-height:1.3;
   box-shadow:0 14px 34px rgba(16,32,58,.22), 0 3px 8px rgba(16,32,58,.13);
@@ -1964,7 +2003,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   border:7px solid transparent;
 }
 .tipbox::before{border-top-color:var(--tip-edge)}
-.tipbox::after{border-top-color:var(--surface);margin-top:-1.5px;border-width:6px}
+.tipbox::after{border-top-color:var(--tip-fill);margin-top:-1.5px;border-width:6px}
 /* a number in front of the name, where the thing being named is one of a
    numbered set */
 /* and the count keeps the primary — it is the one thing in here that is
@@ -1983,7 +2022,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    is it an error — nothing has gone wrong, there is just an order to do it
    in — so it wears the page's warm colour rather than its red, darkened to
    where it can carry small type on white. */
-.tipbox.is-warn{--tip-edge:rgba(232,163,61,.55);color:#8A5B0B}
+/* filled rather than outlined: a refusal read as another answer while it was
+   a white bubble with a warm edge. The page's one warm colour carries it, and
+   near-black on that gold is 8.5:1 — the same pair the Best deal badge uses,
+   which is the only other thing here wearing it. */
+.tipbox.is-warn{--tip-fill:#E8A33D;--tip-edge:#CE8A22;color:#2A1B03}
 .tipbox.is-on{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.tipbox{transition:none}}
 .bapanel[hidden]{display:none}
@@ -6416,6 +6459,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       sInput  = document.getElementById('searchInput');
   function searchOpen(on, refocus){
     sBar.classList.toggle('is-on', on);
+    /* the bar is transparent over the hero; with the drawer out it needs a
+       ground, or the two read as separate objects */
+    var bar = document.getElementById('nav');
+    if(bar) bar.classList.toggle('is-search', on);
     sToggle.setAttribute('aria-expanded', String(on));
     if(on){ sInput.focus(); } else if(refocus !== false){ sToggle.focus(); }
   }
