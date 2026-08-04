@@ -537,15 +537,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   transform:translate(var(--gx,0px), var(--gy,0px));
   transition:transform .15s ease-out;
 }
-/* the lattice, lit only under the pointer. Ruled rather than dotted here —
-   the same 28px pitch the other two use, drawn as lines instead of points.
-   A hairline covers far more of its cell than a dot does, so it is carried at
-   a fifth of the dots' alpha and lands at the same weight on the eye. */
+/* the lattice, lit only under the pointer */
 .cta__spot{
   position:absolute;inset:0;z-index:-2;pointer-events:none;border-radius:inherit;
-  background-image:
-    linear-gradient(to right, rgba(178,172,255,.20) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(178,172,255,.20) 1px, transparent 1px);
+  background-image:radial-gradient(rgba(178,172,255,.408) 1px, transparent 1.5px);
   background-size:28px 28px;
   -webkit-mask:radial-gradient(280px circle at var(--px) var(--py), #000 0%, rgba(0,0,0,.35) 40%, transparent 70%);
   mask:radial-gradient(280px circle at var(--px) var(--py), #000 0%, rgba(0,0,0,.35) 40%, transparent 70%);
@@ -2144,6 +2139,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      black is 8.5:1 — and the pill is 8.8:1 against the navy it sits on, so
      it carries without a halo to help it */
   background:var(--star);color:#1A1206;
+  /* and the least shadow that still lifts it off the tab it is sitting on —
+     one short, soft drop, no spread and no glow */
+  box-shadow:0 2px 6px rgba(4,8,20,.30);
   font-size:10px;font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
 }
 .osbest svg{width:10px;height:10px;flex:none}
