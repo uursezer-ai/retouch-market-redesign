@@ -2267,13 +2267,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .helpme__i svg{width:21px;height:21px}
 .helpme__say h4{margin:0;font-size:var(--fs-5)}
 .helpme__say p{margin:var(--s-1) 0 0;font-size:var(--fs-3);line-height:var(--lh-normal);color:var(--fg-body)}
-.helpme__go-btn{flex:none;white-space:nowrap}
+.helpme__go-btn{flex:none;white-space:nowrap;gap:var(--s-2)}
+/* the mark says the press leaves the page — it opens a mail client */
+.helpme__out{flex:none;transition:transform var(--dur-2) var(--ease)}
+.helpme__go-btn:hover .helpme__out{transform:translate(2px,-2px)}
+@media (prefers-reduced-motion:reduce){.helpme__out{transition:none}}
 /* the two promises, under the rule, written the way the offer band writes
    its four — a mark, the words, and a hairline between rather than a dot */
 .helpme__has{
   list-style:none;margin:var(--s-5) 0 0;padding:var(--s-5) 0 0;
   border-top:1px solid var(--accent-border);
-  display:flex;align-items:center;flex-wrap:wrap;gap:var(--s-3) 0;
+  /* centred under the note, not tucked against its left edge */
+  display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:var(--s-3) 0;
   font-size:var(--fs-4);font-weight:var(--fw-medium);color:var(--fg);
 }
 .helpme__has li{display:inline-flex;align-items:center;gap:var(--s-3);
@@ -4440,9 +4445,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <span class="helpme__i" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><rect x="2.2" y="4.4" width="15.6" height="11.2" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M2.9 5.6l7.1 5.1 7.1-5.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
             <div class="helpme__say">
               <h4>Need help?</h4>
-              <p>Send us a screen recording showing where you are having trouble, and we will sort it out quickly.</p>
+              <p>Email us your question along with a screen recording. We&#8217;ll resolve it quickly.</p>
             </div>
-            <a class="btn btn--primary helpme__go-btn" href="#">Email support</a>
+            <a class="btn btn--primary helpme__go-btn" href="#" aria-label="Email support">Email <svg class="helpme__out" width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M4.4 9.6L9.9 4.1M5.2 4.1h4.7v4.7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
           </div>
           <ul class="helpme__has">
             <li><svg viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M10.1 1.6L3.6 10.1h4.1l-.4 6.3 6.6-8.6H9.7z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Fast response</li>
