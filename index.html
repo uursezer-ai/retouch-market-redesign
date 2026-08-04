@@ -257,6 +257,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .iconbtn:hover{background:var(--surface-sunken);color:var(--fg)}
 .iconbtn[aria-expanded="true"]{background:var(--surface-sunken);color:var(--fg)}
+/* the number is the fact; when it changes it says so once */
+.cart__n.is-hit{animation:countHit 240ms cubic-bezier(.2,1.4,.36,1)}
+@keyframes countHit{0%{transform:scale(1)}42%{transform:scale(1.18)}100%{transform:scale(1)}}
 .cart__n{
   position:absolute;top:2px;right:2px;min-width:18px;height:18px;padding:0 3px;
   border-radius:var(--r-full);background:var(--accent);color:var(--fg-on-accent);
@@ -333,10 +336,23 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .hero{padding:var(--s-9) 0 var(--s-8);background:var(--bg);position:relative}
 
 .slide{display:none}
-.slide.is-on{
+.slide.is-on,.slide.is-out{
   display:grid;grid-template-columns:minmax(0,1fr) minmax(0,540px);
   gap:var(--s-10);align-items:stretch;
 }
+/* the slide leaving keeps its place for a sixth of a second, out of flow, so
+   the two cross instead of the page blinking through its own background. It
+   only fades — nothing moves out, because a thing on its way out has no
+   business drawing the eye. */
+.slide.is-out{
+  position:absolute;left:0;right:0;top:0;pointer-events:none;z-index:1;
+  animation:heroOut 150ms linear both;
+}
+@keyframes heroOut{to{opacity:0}}
+/* and the one arriving comes up under its own weight, the words first */
+.slide.is-on .slide__copy{animation:heroIn 340ms var(--ease) both}
+.slide.is-on .slide__media{animation:heroIn 340ms var(--ease) 70ms both}
+@keyframes heroIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
 /* the button and the video end on the same line: the copy is a column with the
    actions pushed to its foot, and the frame is parked at the foot of its own
    column. Whatever slack the two columns differ by now falls above the video
@@ -1152,6 +1168,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 /* reserve two lines so every category label in the shelf sits on one baseline */
 
+/* a card arriving from Load more comes up the way the section did */
+@keyframes cardIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.card.is-new{animation:cardIn var(--dur-3) var(--ease) both}
+
 /* ── the moment an offer lands ─────────────────────────────────── */
 /* Taking an offer is the good news on this page, so it is allowed to look
    like it. The offer's own area fills with what you just saved, counts it up,
@@ -1323,6 +1343,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .sort__menu{
   position:absolute;top:calc(100% + 6px);right:0;z-index:60;min-width:190px;padding:var(--s-1);
   border-radius:var(--r-control);background:var(--surface);border:1px solid var(--border);box-shadow:var(--sh-2);
+}
+.sort__menu{
+  transform-origin:top right;opacity:0;transform:translateY(-6px);
+  transition:opacity 100ms linear, transform 100ms linear;
+}
+.sort__menu.is-on{
+  opacity:1;transform:none;
+  transition:opacity 140ms var(--ease), transform 140ms var(--ease);
 }
 .sort__menu[hidden]{display:none}
 .sort__menu button{
@@ -1743,9 +1771,29 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .qa__q:hover{color:var(--accent-fg)}
 .qa__q svg{flex:none;color:var(--fg-faint);transition:transform var(--dur-2) var(--ease), color var(--dur-1) var(--ease)}
 .qa[data-open="true"] .qa__q svg{transform:rotate(180deg);color:var(--accent)}
-.qa__a{display:none;padding:0 var(--s-8) var(--s-5) 0}
-.qa__a p{margin:0;font-size:var(--fs-4);line-height:var(--lh-relaxed);color:var(--fg-body);max-width:62ch}
-.qa[data-open="true"] .qa__a{display:block}
+/* an answer that appears is a jump; one that opens is an answer arriving.
+   A grid row from 0fr to 1fr is the only way to animate to a height nobody
+   has measured — the child carries the overflow, and its own fade waits for
+   the box to be most of the way open so the words do not slide behind an
+   edge that is still moving. */
+.qa__a{
+  display:grid;grid-template-rows:0fr;padding:0 var(--s-8) 0 0;
+  transition:grid-template-rows 200ms cubic-bezier(.4,0,.7,.2),
+             padding-bottom 200ms cubic-bezier(.4,0,.7,.2),
+             visibility 0s linear 200ms;
+  visibility:hidden;
+}
+.qa__a p{
+  margin:0;overflow:hidden;min-height:0;
+  font-size:var(--fs-4);line-height:var(--lh-relaxed);color:var(--fg-body);max-width:62ch;
+  opacity:0;transition:opacity 120ms linear;
+}
+.qa[data-open="true"] .qa__a{
+  grid-template-rows:1fr;padding-bottom:var(--s-5);visibility:visible;
+  transition:grid-template-rows 260ms var(--ease), padding-bottom 260ms var(--ease),
+             visibility 0s linear;
+}
+.qa[data-open="true"] .qa__a p{opacity:1;transition:opacity 180ms var(--ease) 80ms}
 
 /* ════════════════════════════════════════════════════════════════
    9 · CLOSING OFFER
@@ -1877,7 +1925,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   from{box-shadow:0 10px 30px rgba(105,87,255,.14)}
   to  {box-shadow:0 16px 54px rgba(105,87,255,.42)}
 }
+/* Nothing here carries information the page does not also say in words, so
+   all of it comes off in one place rather than being argued about per rule. */
 @media (prefers-reduced-motion:reduce){
+  .qa__a,.qa__a p,.qa[data-open="true"] .qa__a,.qa[data-open="true"] .qa__a p{transition:none}
+  .slide.is-out{display:none;animation:none}
+  .slide.is-on .slide__copy,.slide.is-on .slide__media{animation:none}
+  .sort__menu,.sort__menu.is-on{transition:none;opacity:1;transform:none}
+  .cart__n.is-hit{animation:none}
+  .card.is-new{animation:none}
   .prod.is-free::after{animation:none}
   .prod.is-free{animation:none}
   .pbuy--dark.is-added::after,.shell.is-bought::after{animation:none}
@@ -2207,7 +2263,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   /* mobile order: image, then headline, then button — the sample photo is
      the pitch for a preset pack, and 16:9 stays short enough that the
      headline and CTA still land in the first screen */
-  .slide.is-on{grid-template-columns:1fr;gap:var(--s-6)}
+  .slide.is-on,.slide.is-out{grid-template-columns:1fr;gap:var(--s-6)}
   .slide__media{order:1}
   .slide__copy{order:2}
   .hero__slides{position:relative}
@@ -3982,9 +4038,23 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       return n + (bundle ? bundle.packs.length : 0);
     }
     var link = document.querySelector('[data-basket]');
+    /* the badge opens at nought and every change after that is a change */
+    var shown = 0, countGo = null;
     function draw(msg){
       var n = size();
-      if(basketCount) basketCount.textContent = String(n);
+      if(basketCount){
+        basketCount.textContent = String(n);
+        /* only on a change, and only after the first draw — the page does not
+           open by congratulating you on an empty basket */
+        if(shown !== n && !still){
+          basketCount.classList.remove('is-hit');
+          void basketCount.offsetWidth;
+          basketCount.classList.add('is-hit');
+          clearTimeout(countGo);
+          countGo = setTimeout(function(){ basketCount.classList.remove('is-hit'); }, 300);
+        }
+        shown = n;
+      }
       if(link) link.setAttribute('aria-label',
         'Basket, ' + (n ? n + ' item' + (n > 1 ? 's' : '') : 'empty'));
       if(say && msg) say.textContent = msg;
@@ -4249,13 +4319,31 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     /* the slider moves when someone moves it — there is no timer. A hero that
        changes under the reader takes the choice away and, with the headline
        being the whole slide, swaps the page's first sentence mid-read. */
+    var heroGo = null;
     function heroShow(i){
+      var from = hSlides[hIdx];
       hIdx = (i + hSlides.length) % hSlides.length;
+      var to = hSlides[hIdx];
+      /* the one leaving is taken out of flow and left to fade over the one
+         arriving — hiding it in the same frame is what made the swap a cut */
+      clearTimeout(heroGo);
       hSlides.forEach(function(sl, n){
         var on = n === hIdx;
         sl.classList.toggle('is-on', on);
-        if(on){ sl.removeAttribute('hidden'); } else { sl.setAttribute('hidden',''); }
+        if(on){ sl.removeAttribute('hidden'); sl.classList.remove('is-out'); }
+        else if(sl !== from){ sl.setAttribute('hidden',''); sl.classList.remove('is-out'); }
       });
+      if(from && from !== to){
+        if(still){ from.setAttribute('hidden',''); }
+        else {
+          from.classList.add('is-out');
+          from.removeAttribute('hidden');
+          heroGo = setTimeout(function(){
+            from.classList.remove('is-out');
+            from.setAttribute('hidden','');
+          }, 160);
+        }
+      }
       hDots.forEach(function(d, n){ d.setAttribute('aria-current', String(n === hIdx)); });
       hCount.textContent = ('0' + (hIdx + 1)).slice(-2);
     }
@@ -5395,9 +5483,25 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     var PAGE = 12, shown = PAGE;
     var count = more.querySelector('[data-more-count]'),
         go = more.querySelector('[data-more-go]');
+    var first = true;
     function draw(){
       var cards = [].slice.call(grid.children);
-      cards.forEach(function(c, i){ if(i < shown){ c.removeAttribute('hidden'); } else { c.setAttribute('hidden',''); } });
+      var fresh = 0;
+      cards.forEach(function(c, i){
+        if(i < shown){
+          /* only the ones that were not there a moment ago, and only the
+             first six of them — a stagger past that is a wait */
+          if(!first && !still && c.hasAttribute('hidden') && fresh < 6){
+            c.classList.remove('is-new');
+            c.style.animationDelay = (fresh * 40) + 'ms';
+            void c.offsetWidth;
+            c.classList.add('is-new');
+            fresh++;
+          }
+          c.removeAttribute('hidden');
+        } else { c.setAttribute('hidden',''); c.classList.remove('is-new'); }
+      });
+      first = false;
       var left = cards.length - shown;
       more.hidden = left <= 0;
       count.textContent = 'Showing ' + Math.min(shown, cards.length) + ' of ' + cards.length + ' packs';
@@ -5422,14 +5526,29 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           menu = document.getElementById(id + 'Menu'),
           now = document.getElementById(id + 'Now');
       if(!btn || !menu) return;
-      function close(){ btn.setAttribute('aria-expanded', 'false'); menu.setAttribute('hidden', ''); }
+      /* hidden is what a screen reader goes by and the class is what the eye
+         goes by, so they are set a frame apart on the way in and a fade apart
+         on the way out */
+      var shutGo = null;
+      function close(){
+        clearTimeout(shutGo);
+        btn.setAttribute('aria-expanded', 'false');
+        menu.classList.remove('is-on');
+        if(still){ menu.setAttribute('hidden', ''); return; }
+        shutGo = setTimeout(function(){ menu.setAttribute('hidden', ''); }, 110);
+      }
       shut.push(close);
       btn.addEventListener('click', function(e){
         e.stopPropagation();
         var open = btn.getAttribute('aria-expanded') === 'true';
         /* one open at a time: the other one is in the way of this one */
         shutAll();
-        if(!open){ btn.setAttribute('aria-expanded', 'true'); menu.removeAttribute('hidden'); }
+        if(!open){
+          clearTimeout(shutGo);
+          btn.setAttribute('aria-expanded', 'true');
+          menu.removeAttribute('hidden');
+          requestAnimationFrame(function(){ menu.classList.add('is-on'); });
+        }
       });
       menu.addEventListener('click', function(e){ e.stopPropagation(); });
       menu.querySelectorAll('button').forEach(function(opt){
@@ -5444,18 +5563,57 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         });
       });
     }
+    /* Cards that teleport make you find your place again. Measure where they
+       are, make the change, then put them back where they were and let them
+       travel — the browser does the layout, the transform does the moving, so
+       nothing is laid out twice. */
+    function move(change){
+      var kids = [].slice.call(grid.children).filter(function(c){ return !c.hidden; });
+      if(still || !kids.length){ change(); return; }
+      var from = kids.map(function(c){ return c.getBoundingClientRect(); });
+      change();
+      var now = [].slice.call(grid.children).filter(function(c){ return !c.hidden; });
+      var to = now.map(function(c){ return c.getBoundingClientRect(); });
+      var moved = [];
+      now.forEach(function(c, n){
+        var k = kids.indexOf(c);
+        if(k < 0) return;
+        var dx = Math.round(from[k].left - to[n].left), dy = Math.round(from[k].top - to[n].top);
+        if(!dx && !dy) return;
+        c.style.transition = 'none';
+        c.style.transform = 'translate(' + dx + 'px,' + dy + 'px)';
+        moved.push(c);
+      });
+      if(!moved.length) return;
+      requestAnimationFrame(function(){
+        moved.forEach(function(c, n){
+          /* the stagger stops at eight: past that it is a queue, not a hand */
+          c.style.transition = 'transform 320ms var(--ease) ' + Math.min(n, 8) * 12 + 'ms';
+          c.style.transform = '';
+        });
+      });
+      setTimeout(function(){
+        moved.forEach(function(c){ c.style.transition = ''; c.style.transform = ''; });
+      }, 320 + 8 * 12 + 60);
+    }
     /* re-append in order — the rank lives on each card as a data attribute */
     picker('sort', function(opt){
       var key = opt.getAttribute('data-sort');
-      [].slice.call(grid.children)
-        .sort(function(a, b){ return a.getAttribute('data-' + key) - b.getAttribute('data-' + key); })
-        .forEach(function(card){ grid.appendChild(card); });
+      move(function(){
+        [].slice.call(grid.children)
+          .sort(function(a, b){ return a.getAttribute('data-' + key) - b.getAttribute('data-' + key); })
+          .forEach(function(card){ grid.appendChild(card); });
+        /* the shelf is twelve deep and the twelve have just changed */
+        grid.dispatchEvent(new CustomEvent('rm:sorted'));
+      });
     });
     /* and the grid takes the width you ask for, until the window is too
        narrow to give it — then the breakpoints have the last word */
     picker('cols', function(opt){
-      grid.classList.remove('is-cols-2', 'is-cols-3', 'is-cols-4');
-      grid.classList.add('is-cols-' + opt.getAttribute('data-cols'));
+      move(function(){
+        grid.classList.remove('is-cols-2', 'is-cols-3', 'is-cols-4');
+        grid.classList.add('is-cols-' + opt.getAttribute('data-cols'));
+      });
     });
     document.addEventListener('click', shutAll);
     document.addEventListener('keydown', function(e){ if(e.key === 'Escape') shutAll(); });
@@ -5547,6 +5705,66 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     window.scrollTo({top:0, behavior: still ? 'auto' : 'smooth'});
   });
   syncToTop();
+
+  /* ---- the numbers arrive ----
+     The four figures over the fold are the page's only claim about itself,
+     and they sat there as finished text. They count up once, the first time
+     you reach them, in the order you read them — the same ease-out the
+     saving uses, so the page has one way of counting.
+     The shape of each is kept exactly: the separators, the decimal, the plus
+     and the stars beside the rating are all left where they were. */
+  (function(){
+    var stats = [].slice.call(document.querySelectorAll('.pstat dd'));
+    if(!stats.length) return;
+    var jobs = stats.map(function(dd){
+      /* the first text node only — the rating's stars are a sibling and are
+         not ours to touch */
+      var node = null, i;
+      for(i = 0; i < dd.childNodes.length; i++){
+        if(dd.childNodes[i].nodeType === 3 && /\d/.test(dd.childNodes[i].textContent)){
+          node = dd.childNodes[i]; break;
+        }
+      }
+      if(!node) return null;
+      var m = /^(\D*)([\d,.]*\d)(\D*)$/.exec(node.textContent.trim());
+      if(!m) return null;
+      var raw = m[2], dot = raw.indexOf('.');
+      return {
+        node: node, head: m[1], tail: m[3],
+        end: parseFloat(raw.replace(/,/g, '')),
+        dp: dot < 0 ? 0 : raw.length - dot - 1,
+        group: raw.indexOf(',') > -1
+      };
+    }).filter(Boolean);
+    if(!jobs.length) return;
+
+    function write(j, v){
+      var t = j.dp ? v.toFixed(j.dp) : String(Math.round(v));
+      if(j.group) t = t.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      j.node.textContent = j.head + t + j.tail;
+    }
+    function run(j, wait){
+      var t0 = 0, RUN = 900;
+      setTimeout(function(){
+        requestAnimationFrame(function step(t){
+          if(!t0) t0 = t;
+          var k = Math.min(1, (t - t0) / RUN);
+          write(j, j.end * (1 - Math.pow(1 - k, 3)));
+          if(k < 1) requestAnimationFrame(step);
+        });
+      }, wait);
+    }
+    if(still || !('IntersectionObserver' in window)) return;   /* left as written */
+    jobs.forEach(function(j){ write(j, 0); });
+    var seen = false;
+    var io = new IntersectionObserver(function(rows){
+      if(seen || !rows[0].isIntersecting) return;
+      seen = true;
+      io.disconnect();
+      jobs.forEach(function(j, n){ run(j, n * 90); });
+    }, { threshold: 0.4 });
+    io.observe(stats[0].closest('.proof') || stats[0]);
+  })();
 
   /* ---- reveal on scroll ---- */
   var targets = [].slice.call(document.querySelectorAll('[data-reveal]'));
