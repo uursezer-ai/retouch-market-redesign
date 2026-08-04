@@ -2723,6 +2723,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .oproof__faces img:first-child{margin-left:0}
 .oact{display:flex;flex-direction:column;align-items:flex-end;gap:var(--s-3)}
+/* what the offer is worth, under the button that takes it. Quiet on purpose:
+   the button is the thing to press and a second bright object beside it would
+   only split the eye. The amount is the one word set in the ground's own
+   white — everything around it stays the body colour. */
+.osave{
+  display:flex;align-items:center;gap:var(--s-2);
+  margin:0;font-size:var(--fs-3);line-height:1.3;color:var(--fg-body);
+}
+.osave svg{flex:none;color:var(--accent-fg)}
+.osave b{font-weight:var(--fw-semibold);color:var(--fg);font-variant-numeric:tabular-nums}
+.osave[hidden]{display:none}
 /* Where what you just bought went. A warning before the press read as an
    error on a page whose whole job is to say yes; the news belongs after the
    press, at the basket, pointing at the thing that just changed. */
@@ -3749,6 +3760,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <button class="btn btn--secondary btn--lg" type="button" data-customize aria-expanded="false" aria-controls="bundlePicker">Customize bundle</button>
             <button class="btn btn--primary btn--lg obuy" type="button" data-go disabled></button>
           </span>
+          <p class="osave" data-save hidden></p>
         </div>
       </div>
     </div>
@@ -5197,6 +5209,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     var BIN = '<svg class="obuy__i" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.4 6.2h11.2l-.8 9.4a1.5 1.5 0 01-1.5 1.4H6.7a1.5 1.5 0 01-1.5-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M3 6.2h14M8 3.4h4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>';
     var TICK = '<svg class="obuy__i" width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.6 10.4l3.6 3.6 7.2-7.6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     var bought = false, shell = offer.closest('.shell') || offer, saving = 0;
+    var save = offer.querySelector('[data-save]');
+    var SAVETAG = '<svg width="15" height="15" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="M8.6 1.7H3.4a1.7 1.7 0 00-1.7 1.7v5.2c0 .45.18.88.5 1.2l6 6a1.7 1.7 0 002.4 0l4.6-4.6a1.7 1.7 0 000-2.4l-6-6a1.7 1.7 0 00-1.2-.5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="5.7" cy="5.7" r="1.05" fill="currentColor"/></svg>';
     var tabs = [].slice.call(offer.querySelectorAll('[data-deal]'));
     /* the best value is the one on offer, so it is the one already chosen —
        filled with the five the page has been arguing for */
@@ -5287,6 +5301,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       go.innerHTML = short > 0
         ? 'Choose ' + short + ' more pack' + (short > 1 ? 's' : '')
         : CART + 'Get ' + state.get + ', Pay ' + d.pay + ' — $' + bill + ' <s>$' + full + '</s>';
+      /* the gap between the two prices on the button, said in words — and
+         only once there is a bundle to price */
+      if(save){
+        save.hidden = short > 0;
+        if(short === 0){
+          save.innerHTML = SAVETAG + 'You save <b>$' + saving + '</b> \u00B7 ' +
+            Math.round(saving / full * 100) + '% off';
+        }
+      }
       syncOpen();
       /* the short version, for anyone who cannot see the row change */
       var status = offer.querySelector('[data-status]');
