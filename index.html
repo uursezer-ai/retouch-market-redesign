@@ -128,8 +128,11 @@
   --gutter:var(--s-6);
   --nav-h:64px;
   /* the one warm colour on the page, for the one thing that recommends
-     itself — dark enough that white on it clears AA at badge size */
-  --warm:#BC4E1B;
+     itself. Deep rather than bright: a saturated orange on a navy ground
+     vibrates at the edges, and this badge sits on navy. White on it is
+     5.16:1, and it is 3.66:1 against the ground it sits on, so it separates
+     without shouting. */
+  --warm:#C2410C;
   --section-y:var(--s-10);
 
   /* ── Motion ─────────────────────────────────────────────────── */
@@ -372,9 +375,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 @keyframes heroOutR{to{opacity:0;transform:translateX(24px)}}
 /* arriving at the hero — which is the page opening — the same two things
    come up rather than across: there is nothing to have come from */
-.slide.is-on.is-first .slide__title{animation:heroUp 520ms var(--ease) both}
-.slide.is-on.is-first .hero__actions{animation:heroUp 520ms var(--ease) 120ms both}
-@keyframes heroUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.slide.is-on.is-first .slide__title{animation:heroUp 680ms cubic-bezier(.2,.64,.22,1) both}
+.slide.is-on.is-first .hero__actions{animation:heroUp 680ms cubic-bezier(.2,.64,.22,1) 150ms both}
+@keyframes heroUp{
+  from{opacity:0;transform:translateY(30px) scale(.985)}
+  to{opacity:1;transform:none}
+}
 /* the button and the video end on the same line: the copy is a column with the
    actions pushed to its foot, and the frame is parked at the foot of its own
    column. Whatever slack the two columns differ by now falls above the video
@@ -1247,14 +1253,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   from{opacity:0;transform:translateY(12px)}
   to{opacity:1;transform:none}
 }
-.shell.is-arriving .prod{animation:offerPart 620ms cubic-bezier(.22,.61,.24,1) both}
-.shell.is-arriving .prod:nth-child(1){animation-delay:60ms}
-.shell.is-arriving .prod:nth-child(2){animation-delay:130ms}
-.shell.is-arriving .prod:nth-child(3){animation-delay:200ms}
-.shell.is-arriving .prod:nth-child(4){animation-delay:270ms}
-.shell.is-arriving .prod:nth-child(5){animation-delay:340ms}
-.shell.is-arriving .ofoot{animation:offerLine 560ms cubic-bezier(.22,.61,.24,1) 400ms both}
-.shell.is-arriving .oswitch{animation:offerLine 520ms cubic-bezier(.22,.61,.24,1) 120ms both}
+.shell.is-arriving .prod{animation:offerPart 780ms cubic-bezier(.22,.61,.24,1) both}
+.shell.is-arriving .prod:nth-child(1){animation-delay:120ms}
+.shell.is-arriving .prod:nth-child(2){animation-delay:250ms}
+.shell.is-arriving .prod:nth-child(3){animation-delay:380ms}
+.shell.is-arriving .prod:nth-child(4){animation-delay:510ms}
+.shell.is-arriving .prod:nth-child(5){animation-delay:640ms}
+.shell.is-arriving .ofoot{animation:offerLine 700ms cubic-bezier(.22,.61,.24,1) 780ms both}
+.shell.is-arriving .oswitch{animation:offerLine 620ms cubic-bezier(.22,.61,.24,1) 180ms both}
 /* and one pass of light across the panel as it settles — the whole surface
    acknowledging that it arrived, at an opacity you would not catch twice.
    The band gets the same pass a beat earlier, since it has less to cross:
@@ -1265,14 +1271,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   border-radius:inherit;
   background:linear-gradient(105deg, transparent 38%, rgba(255,255,255,.10) 50%, transparent 62%);
   background-size:260% 100%;
-  animation:offerSheen 1250ms cubic-bezier(.3,.5,.2,1) 260ms both;
+  animation:offerSheen 1500ms cubic-bezier(.3,.5,.2,1) 900ms both;
 }
 /* on the band it runs shorter and brighter — a 149px band crossed at the
    panel's pace would read as a smear rather than a pass */
 .pbuy.is-arriving::after{
   z-index:5;
   background:linear-gradient(105deg, transparent 40%, rgba(255,255,255,.13) 50%, transparent 60%);
-  animation-duration:950ms;animation-delay:300ms;
+  animation-duration:1100ms;animation-delay:420ms;
 }
 @keyframes offerSheen{from{background-position:180% 0;opacity:0}
   18%{opacity:1}to{background-position:-60% 0;opacity:0}}
@@ -1289,7 +1295,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .pbuy.is-arriving .pbuy__meta li:nth-child(2){animation-delay:350ms}
 .pbuy.is-arriving .pbuy__meta li:nth-child(3){animation-delay:400ms}
 .pbuy.is-arriving .pbuy__meta li:nth-child(4){animation-delay:450ms}
-.pbuy.is-arriving .pbuy__buy{animation:offerBuy 560ms cubic-bezier(.22,.61,.24,1) 330ms both}
+.pbuy.is-arriving .pbuy__buy{animation:offerBuy 620ms cubic-bezier(.22,.61,.24,1) 380ms both}
 @keyframes offerBuy{
   from{opacity:0;transform:translateY(10px) scale(.94)}
   to{opacity:1;transform:none}
@@ -1865,15 +1871,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    takes room from the words underneath */
 .os button{position:relative}
 .osbest{
-  position:absolute;left:50%;bottom:calc(100% - 4px);z-index:2;
+  position:absolute;left:50%;bottom:calc(100% + 3px);z-index:2;
   transform:translateX(-50%);
   display:inline-flex;align-items:center;gap:5px;white-space:nowrap;
   padding:4px 11px;border-radius:var(--r-full);
   background:var(--warm);color:#FFFFFF;
-  /* it sat far enough into the button to read as part of it, and a badge
-     that overlaps a label is competing with it. It clears the edge now, and
-     the glow is what ties the two together instead of the overlap */
-  box-shadow:0 0 0 3px rgba(226,112,63,.18), 0 6px 20px rgba(214,105,58,.5);
+  /* clear of the button entirely — a badge overlapping a label competes with
+     the label, and the label is the thing you press. No halo either: a glow
+     round a small warm object on a dark ground is what makes it buzz */
+  box-shadow:0 4px 12px rgba(4,10,20,.45);
   font-size:10px;font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
 }
 .osbest svg{width:10px;height:10px;flex:none}
@@ -5442,17 +5448,31 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       if(Math.abs(want.x - at.x) > .05 || Math.abs(want.y - at.y) > .05) raf = requestAnimationFrame(frame);
       else raf = 0;
     }
-    band.addEventListener('pointermove', function(e){
-      if(e.pointerType !== 'mouse') return;
+    /* The light follows the room, not the card. Listening on the band itself
+       meant it only knew where you were once you were over it, and froze the
+       moment you left — which is backwards: light leans towards something
+       approaching before it arrives. It watches the document now and maps
+       wherever you are onto the band's own box, held to a little past its
+       edges so the pool stays on the surface it belongs to.
+       Only while the band is on screen: an offer three sections down has no
+       business costing a frame. */
+    var near = true;
+    if(window.IntersectionObserver){
+      near = false;
+      new IntersectionObserver(function(rows){
+        near = rows[0].isIntersecting;
+        if(near && !raf) raf = requestAnimationFrame(frame);
+      }, { rootMargin: '25% 0px' }).observe(band);
+    }
+    function hold(v){ return v < -25 ? -25 : v > 125 ? 125 : v; }
+    document.addEventListener('pointermove', function(e){
+      if(e.pointerType !== 'mouse' || !near) return;
       var r = band.getBoundingClientRect();
-      want.x = ((e.clientX - r.left) / r.width) * 100;
-      want.y = ((e.clientY - r.top) / r.height) * 100;
+      if(!r.width || !r.height) return;
+      want.x = hold(((e.clientX - r.left) / r.width) * 100);
+      want.y = hold(((e.clientY - r.top) / r.height) * 100);
       if(!raf) raf = requestAnimationFrame(frame);
     }, {passive:true});
-    band.addEventListener('pointerleave', function(){
-      want.x = 50; want.y = 40;
-      if(!raf) raf = requestAnimationFrame(frame);
-    });
   });
 
   /* ---- hero film ----
@@ -5918,7 +5938,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      has finished, so nothing the bundle redraws afterwards replays it. */
   (function(){
     if(still || !('IntersectionObserver' in window)) return;
-    [['.shell', 1700], ['.pbuy', 1150]].forEach(function(pair){
+    /* -30% on the bundle: it is a tall panel, and a rule that fires as its
+       first pixel appears has the whole thing over before you have finished
+       scrolling to it */
+    [['.shell', 2600, '-30%'], ['.pbuy', 1400, '-12%']].forEach(function(pair){
       var el = document.querySelector(pair[0]);
       if(!el) return;
       el.classList.add('is-arriving');
@@ -5933,7 +5956,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         if(!rows[0].isIntersecting) return;
         io.disconnect();
         go();
-      }, { rootMargin: '0px 0px -12% 0px', threshold: 0 });
+      }, { rootMargin: '0px 0px ' + pair[2] + ' 0px', threshold: 0 });
       io.observe(el);
       /* content must never depend on an observer firing */
       setTimeout(go, 2500);
