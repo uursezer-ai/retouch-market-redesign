@@ -506,40 +506,83 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .cta{--px:50%;--py:38%}
 
 /* ── the last panel's own ground ─────────────────────────────────
-   Three attempts taught the same lesson twice: several light sources on one
-   small panel make lumps, and lumps behind sentences are worse than no light
-   at all. One source, then. The panel deepens from a lit top edge to a dark
-   floor, a single wide glow sits behind the words where they need separating
-   from it, and a broad low band of the brand's blue lifts the bottom corners
-   so the panel does not end in a flat black line.
-   Nothing is blurred and nothing overlaps, so there is nothing to band or
-   blotch — every stop runs the full width of the box. */
+   Every earlier attempt was the same attempt: coloured light poured over a
+   dark gradient. So stop pouring. This page sells the look a photograph is
+   given, and the panel that closes it is a photograph — one shot wide open
+   at night, focused past everything in it.
+
+   What that means, in order of what you see:
+     · the far lights fall out of focus into discs, each with a rim a shade
+       brighter than its middle, which is what a lens actually does to a
+       point of light and what no gradient can imitate;
+     · they are graded rather than tinted — cold indigo through most of the
+       frame, two warm ones off to the side, the split-tone every preset on
+       this page is built on;
+     · the ground under them is a city's glow coming up from below the
+       bottom edge, not a wash coming down;
+     · and the lens closes the corners itself, so the discs dim as they
+       reach them.
+
+   The discs sit clear of the column the words are in, and nothing here is a
+   blur filter or an edge — every layer is one soft-stopped ellipse. */
 .cta__sky,.cta__spot{
   position:absolute;inset:0;z-index:-2;pointer-events:none;border-radius:inherit;
 }
 .cta__sky{
-  background:
-    /* the light is off to one side rather than dead centre, which is what
-       stops a symmetrical panel reading as a gradient someone applied */
-    radial-gradient(90% 120% at 82% 8%, rgba(120,104,255,.30) 0%, rgba(120,104,255,.08) 42%, rgba(120,104,255,0) 70%),
-    radial-gradient(80% 110% at 12% 96%, rgba(58,104,225,.26) 0%, rgba(58,104,225,.06) 44%, rgba(58,104,225,0) 72%),
-    /* and the ground it falls on: a long diagonal rather than a level one, so
-       the corners are never the same colour as each other */
-    linear-gradient(152deg, #151C38 0%, #0D1224 38%, #090D1B 68%, #0B1024 100%);
+  background-repeat:no-repeat;
+  background-image:
+    /* the lens shuts its own corners down, but not so hard that the horizon
+       under it goes with them */
+    radial-gradient(122% 128% at 50% 34%, rgba(4,7,16,0) 56%, rgba(4,7,16,.20) 82%, rgba(4,7,16,.40) 100%),
+
+    /* the far lights. Small, and near enough to focus that their rims are the
+       brightest thing in the frame — this is the whole tell of a wide-open
+       lens, and the reason the panel reads as a photograph and not a wash */
+    radial-gradient(ellipse closest-side, rgba(166,154,255,.20) 0 54%, rgba(214,208,255,.33) 80%, rgba(166,154,255,0) 100%),
+    radial-gradient(ellipse closest-side, rgba(104,148,250,.19) 0 54%, rgba(168,200,255,.31) 80%, rgba(104,148,250,0) 100%),
+    radial-gradient(ellipse closest-side, rgba(158,146,255,.165) 0 56%, rgba(206,200,255,.28) 80%, rgba(158,146,255,0) 100%),
+    /* one the grade left warm, the way a split tone leaves a highlight */
+    radial-gradient(ellipse closest-side, rgba(240,180,96,.14) 0 54%, rgba(252,214,152,.23) 80%, rgba(240,180,96,0) 100%),
+
+    /* the middle distance — half the brightness, twice the size */
+    radial-gradient(ellipse closest-side, rgba(146,132,255,.09) 0 62%, rgba(190,182,255,.115) 86%, rgba(146,132,255,0) 100%),
+    radial-gradient(ellipse closest-side, rgba(82,128,238,.085) 0 62%, rgba(146,180,255,.11) 86%, rgba(82,128,238,0) 100%),
+    radial-gradient(ellipse closest-side, rgba(232,163,61,.065) 0 62%, rgba(248,206,140,.085) 86%, rgba(232,163,61,0) 100%),
+
+    /* and the near ones, so far out of focus they are only air */
+    radial-gradient(ellipse closest-side, rgba(132,120,250,.055) 0%, rgba(132,120,250,.03) 52%, rgba(132,120,250,0) 100%),
+    radial-gradient(ellipse closest-side, rgba(70,112,228,.05) 0%, rgba(70,112,228,.028) 52%, rgba(70,112,228,0) 100%),
+
+    /* the ground: a city throwing its glow up from below the bottom edge,
+       rather than a wash coming down from above it */
+    radial-gradient(165% 104% at 50% 111%, #3A4699 0%, #222C68 20%, #141B40 42%, #0A0E22 72%, #070A16 100%);
+  background-size:
+    100% 100%,
+     38px  38px,   30px  30px,   52px  52px,   34px 34px,
+    150px 136px,  176px 160px,  110px 100px,
+    380px 340px,  440px 400px,
+    100% 100%;
+  background-position:
+    50% 50%,
+    12% 26%,      90% 34%,      20% 62%,      79% 78%,
+     6% 82%,      93% 14%,      70% 96%,
+    22%  8%,      88% 92%,
+    50% 50%;
 }
 /* the pointer changes the brightness, the way the two offers do */
 .cta__spot{
-  background:radial-gradient(680px circle at var(--px) var(--py), rgba(152,138,255,.18), transparent 62%);
+  background:radial-gradient(720px circle at var(--px) var(--py), rgba(152,140,255,.16), transparent 64%);
 }
 /* the bed the words are read off, so the type never sits on a lit patch */
 .cta::after{
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;
-  background:radial-gradient(66% 54% at 50% 44%, rgba(6,10,22,.44) 0%, rgba(6,10,22,.16) 60%, rgba(6,10,22,0) 100%);
+  background:radial-gradient(62% 50% at 50% 42%, rgba(5,8,18,.38) 0%, rgba(5,8,18,.12) 62%, rgba(5,8,18,0) 100%);
 }
-/* one hairline along the top edge, where the light is coming from */
+/* one hairline along the bottom edge, which is the side the light is on.
+   Inside the box, because the panel clips */
 .cta::before{
-  content:"";position:absolute;left:10%;right:10%;top:-1px;height:1px;z-index:1;
-  background:linear-gradient(90deg, transparent, rgba(176,166,255,.5), transparent);
+  content:"";position:absolute;left:12%;right:12%;bottom:0;height:1px;z-index:1;
+  background:linear-gradient(90deg, transparent, rgba(150,158,255,.42), transparent);
   pointer-events:none;
 }
 
@@ -4347,8 +4390,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <div class="cta__in">
         <p class="cta__faces" aria-hidden="true"><span class="cta__ring"><img src="images/testimonials/dugunumuzvar/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/zariffilm/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/ugurdemir/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/ekrulila/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/celalcanik/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/mucahitguney/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"></span></p>
         <p class="eyebrow">10.000+ Profesyonel Fotoğrafçı</p>
-        <h2 id="startTitle">Teknik detaylarda boğulmadan,<br>instagram akışlarını değiştirdi.</h2>
-        <p class="lede">Türkiye&#8217;nin önde gelen fotoğrafçıları, hem daha hızlı çalışıp<br>hem de imza renklerini oluşturmak için RetouchMarket&#8217;i kullanıyor.</p>
+        <h2 id="startTitle">Teknik detaylarda boğulmadan, <br>instagram akışlarını değiştirdi.</h2>
+        <p class="lede">Türkiye&#8217;nin önde gelen fotoğrafçıları, hem daha hızlı çalışıp <br>hem de imza renklerini oluşturmak için RetouchMarket&#8217;i kullanıyor.</p>
         <a class="btn btn--primary btn--lg cta__go" href="#offer">
           <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 6.6h13.2l-.95 9.9a1.6 1.6 0 01-1.6 1.4H5.95a1.6 1.6 0 01-1.6-1.4z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M7.1 8.4V5.5a2.9 2.9 0 015.8 0v2.9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
           Kendi paketini oluştur
