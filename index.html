@@ -2195,7 +2195,26 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* ════════════════════════════════════════════════════════════════
    6 · HOW TO INSTALL
    ════════════════════════════════════════════════════════════════ */
-.install{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:var(--s-10);align-items:center}
+/* ── installing, and what people ask while they are doing it ──────
+   Two sections became one. Down the middle a hairline rather than a plain
+   gap: the two halves are one place to get help, not two columns that
+   happen to be standing next to each other. The film and the switch under
+   it read top to bottom on the left; the questions open on the right, and
+   nothing above the fold is spent saying either of those things twice. */
+.help{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  /* stretch, not start: the rule between them is the taller column's full
+     height or it reads as a line that gave up half way down */
+  column-gap:var(--s-9);align-items:stretch;
+}
+.help__ask{border-left:1px solid var(--border);padding-left:var(--s-9)}
+/* the switch sits under the film instead of beside it — one column, read
+   downwards, which is what buys the height back */
+.help__do .os{margin-top:var(--s-7)}
+.help__t{margin:0 0 var(--s-4);font-size:var(--fs-6)}
+/* the way out when the six answers are not the one you needed. It sits with
+   the heading, where a section's second action goes on this page. */
+.help__mail{flex:none;align-self:flex-end;white-space:nowrap}
 .os{
   display:inline-flex;gap:var(--s-1);padding:var(--s-1);margin-bottom:var(--s-6);
   /* room over the switch for anything a choice wants to wear */
@@ -2269,10 +2288,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* ════════════════════════════════════════════════════════════════
    7 · FAQ — left-aligned like every other section, sticky head
    ════════════════════════════════════════════════════════════════ */
-.faq{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:var(--s-10);align-items:start}
-.faq__head{position:sticky;top:calc(var(--nav-h) + var(--s-8))}
-.faq__head .lede{font-size:var(--fs-5);max-width:38ch}
-.faq__support{margin-top:var(--s-6)}
 .qa{border-top:1px solid var(--border)}
 .qa:last-of-type{border-bottom:1px solid var(--border)}
 /* the h3 exists for the document outline only — the button carries the styling */
@@ -2732,7 +2747,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 @media (max-width:1100px){
   .rail{--per-view:5}
   .slide.is-on{grid-template-columns:minmax(0,1fr) minmax(0,440px);gap:var(--s-8)}
-  .install,.faq{gap:var(--s-8)}
+  .help{column-gap:var(--s-8)}
+  .help__ask{padding-left:var(--s-8)}
 
   /* the gallery narrows faster than the list does, so it drops to two across
      before the list would start outrunning it */
@@ -2772,9 +2788,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .slide__media{order:1}
   .slide__copy{order:2}
   .hero__slides{position:relative}
-  .faq{grid-template-columns:1fr;gap:var(--s-7)}
-  .faq__head{position:static}
-  .faq__head .lede{max-width:60ch}
+  /* stacked, the hairline goes across instead of down */
+  .help{grid-template-columns:1fr;row-gap:var(--s-8)}
+  .help__ask{border-left:0;border-top:1px solid var(--border);padding-left:0;padding-top:var(--s-8)}
 }
 @media (max-width:860px){
   .rail{--per-view:3}
@@ -2783,7 +2799,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   /* swipe carries the row on a phone, so the arrows step aside */
   .deck__arrows{display:none}
   .ptabs{grid-template-columns:1fr;gap:var(--s-2);padding-inline:var(--gutter)}
-      .install{grid-template-columns:1fr;gap:var(--s-8)}
   .footer__top{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-8)}
   .section__head{flex-direction:column;align-items:flex-start;gap:var(--s-5)}
   /* still four across — the type steps down instead of the row breaking */
@@ -4225,29 +4240,34 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
 
 <!-- ══════════ 9 · HOW TO INSTALL ══════════ -->
+<!-- ══════════ 9 · INSTALLING &amp; QUESTIONS ══════════
+     One section, two columns. These were two full-height sections talking to
+     the same person at the same moment — how do I set this up, and what should
+     I know before I buy — so they are one place now, with a hairline down the
+     middle instead of a screen of scrolling in between. -->
 <section class="section" id="install">
   <div class="wrap">
     <div class="section__head" data-reveal>
       <div>
-        <p class="eyebrow">Installing</p>
+        <p class="eyebrow">Installing &amp; questions</p>
         <h2>Ready in One Click</h2>
         <p class="lede">Install everything automatically with the RetouchMarket App.</p>
       </div>
+      <a class="link help__mail" href="#">Email support <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
 
-    <div class="install" data-reveal>
-      <div class="player">
-        <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" alt="Install walkthrough" loading="lazy" onerror="this.style.display='none'">
-        <button class="play" aria-label="Play the install walkthrough">
-          <svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg>
-        </button>
-        <span class="player__dur tnum">2:08</span>
-                <div class="player__foot">
-                  <span class="player__cap">Installing plugins and presets</span>
-                </div>
-      </div>
-
-      <div>
+    <div class="help" data-reveal>
+      <div class="help__do">
+        <div class="player">
+          <img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F68440068-b5b3-48e3-8d33-fe8f109f4d72-1775992531988-690770233.webp&amp;w=1080&amp;q=75" alt="Install walkthrough" loading="lazy" onerror="this.style.display='none'">
+          <button class="play" aria-label="Play the install walkthrough">
+            <svg width="17" height="19" viewBox="0 0 17 19" fill="currentColor" aria-hidden="true"><path d="M16 8.2a1.5 1.5 0 010 2.6L2.8 18.5A1.5 1.5 0 010 17.2V1.8A1.5 1.5 0 012.8.5L16 8.2z"/></svg>
+          </button>
+          <span class="player__dur tnum">2:08</span>
+                  <div class="player__foot">
+                    <span class="player__cap">Installing plugins and presets</span>
+                  </div>
+        </div>
         <div class="os" role="tablist" aria-label="Installation">
           <button type="button" role="tab" aria-selected="true" aria-controls="osp-steps" id="ost-steps">Mac &amp; Win</button>
           <button type="button" role="tab" aria-selected="false" aria-controls="osp-req" id="ost-req" tabindex="-1">Requirements</button>
@@ -4269,64 +4289,52 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</section>
 
-<!-- ══════════ 10 · FAQ ══════════ -->
-<section class="section section--tint" id="faq">
-  <div class="wrap">
-    <div class="faq">
-      <div class="faq__head" data-reveal>
-        <p class="eyebrow">Questions</p>
-        <h2>Before you buy</h2>
-        <p class="lede">The six things people ask us most.</p>
-        <a class="link faq__support" href="#">Email support
-          <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </a>
-      </div>
-
-      <div id="faqList">
-        <div class="qa" data-open="true">
-          <h3 class="qa__h"><button class="qa__q" aria-expanded="true">Which apps do these work with?
-            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          </button></h3>
-          <div class="qa__a"><p>The plugins run in Lightroom Classic and Photoshop, and RetouchX Plugin also runs as a standalone desktop app. Presets come as XMP for desktop and DNG for Lightroom mobile, so one purchase covers both.</p></div>
-        </div>
-        <div class="qa">
-          <h3 class="qa__h"><button class="qa__q" aria-expanded="false">Is it a subscription?
-            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          </button></h3>
-          <div class="qa__a"><p>No. You pay once and the files are yours, updates included. There is nothing to cancel.</p></div>
-        </div>
-        <div class="qa">
-          <h3 class="qa__h"><button class="qa__q" aria-expanded="false">Will the plugins run on my machine?
-            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          </button></h3>
-          <div class="qa__a"><p>Yes on macOS with Intel or Apple silicon, and on Windows 10 and 11. The interface is available in Turkish, English and ten more languages.</p></div>
-        </div>
-        <div class="qa">
-          <h3 class="qa__h"><button class="qa__q" aria-expanded="false">Do presets work on any photo?
-            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          </button></h3>
-          <div class="qa__a"><p>They are built for portrait, wedding, maternity and newborn work. Apply the look, then nudge exposure and white balance for your light — that is the intended workflow, not a workaround.</p></div>
-        </div>
-        <div class="qa">
-          <h3 class="qa__h"><button class="qa__q" aria-expanded="false">How do I get my files?
-            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          </button></h3>
-          <div class="qa__a"><p>Instantly. The download link appears on the confirmation screen and stays in your account library, so you can re-download after a new laptop.</p></div>
-        </div>
-        <div class="qa">
-          <h3 class="qa__h"><button class="qa__q" aria-expanded="false">What if something will not install?
-            <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
-          </button></h3>
-          <div class="qa__a"><p>Send us a screenshot and we will get it running or refund you. Digital purchases otherwise follow the distance sales contract linked in the footer.</p></div>
+      <div class="help__ask" id="faq">
+        <h3 class="help__t">Before you buy</h3>
+        <div id="faqList">
+          <div class="qa" data-open="true">
+            <h3 class="qa__h"><button class="qa__q" aria-expanded="true">Which apps do these work with?
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </button></h3>
+            <div class="qa__a"><p>The plugins run in Lightroom Classic and Photoshop, and RetouchX Plugin also runs as a standalone desktop app. Presets come as XMP for desktop and DNG for Lightroom mobile, so one purchase covers both.</p></div>
+          </div>
+          <div class="qa">
+            <h3 class="qa__h"><button class="qa__q" aria-expanded="false">Is it a subscription?
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </button></h3>
+            <div class="qa__a"><p>No. You pay once and the files are yours, updates included. There is nothing to cancel.</p></div>
+          </div>
+          <div class="qa">
+            <h3 class="qa__h"><button class="qa__q" aria-expanded="false">Will the plugins run on my machine?
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </button></h3>
+            <div class="qa__a"><p>Yes on macOS with Intel or Apple silicon, and on Windows 10 and 11. The interface is available in Turkish, English and ten more languages.</p></div>
+          </div>
+          <div class="qa">
+            <h3 class="qa__h"><button class="qa__q" aria-expanded="false">Do presets work on any photo?
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </button></h3>
+            <div class="qa__a"><p>They are built for portrait, wedding, maternity and newborn work. Apply the look, then nudge exposure and white balance for your light — that is the intended workflow, not a workaround.</p></div>
+          </div>
+          <div class="qa">
+            <h3 class="qa__h"><button class="qa__q" aria-expanded="false">How do I get my files?
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </button></h3>
+            <div class="qa__a"><p>Instantly. The download link appears on the confirmation screen and stays in your account library, so you can re-download after a new laptop.</p></div>
+          </div>
+          <div class="qa">
+            <h3 class="qa__h"><button class="qa__q" aria-expanded="false">What if something will not install?
+              <svg width="12" height="8" viewBox="0 0 12 8" fill="none" aria-hidden="true"><path d="M1 1l5 5 5-5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            </button></h3>
+            <div class="qa__a"><p>Send us a screenshot and we will get it running or refund you. Digital purchases otherwise follow the distance sales contract linked in the footer.</p></div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </section>
+
 
 
 <!-- ══════════ 11 · TESTIMONIALS ══════════
