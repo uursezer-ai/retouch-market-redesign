@@ -506,65 +506,39 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .cta{--px:50%;--py:38%}
 
 /* ── the last panel's own ground ─────────────────────────────────
-   Not an offer, so not lit like one: no pool on a table, no dot grid. This
-   is weather. Four fields of colour, each one blurred past the point of
-   having an edge, drifting at their own rate as you move — so what is behind
-   the words is depth rather than drawing.
-   The first version put thin rings back there, and a hairline crossing a
-   sentence is a scratch on the lens: the eye keeps finding it and the line
-   of text breaks over it. Nothing in here has an edge to find. */
+   Three attempts taught the same lesson twice: several light sources on one
+   small panel make lumps, and lumps behind sentences are worse than no light
+   at all. One source, then. The panel deepens from a lit top edge to a dark
+   floor, a single wide glow sits behind the words where they need separating
+   from it, and a broad low band of the brand's blue lifts the bottom corners
+   so the panel does not end in a flat black line.
+   Nothing is blurred and nothing overlaps, so there is nothing to band or
+   blotch — every stop runs the full width of the box. */
 .cta__sky,.cta__spot{
-  position:absolute;inset:0;z-index:-2;pointer-events:none;
-  overflow:hidden;border-radius:inherit;
+  position:absolute;inset:0;z-index:-2;pointer-events:none;border-radius:inherit;
 }
-/* they do not move with you: the two offers answer a pointer by brightening
-   under it, and this answers the same way. Weather that slid about as well
-   would be a second thing happening behind the words. */
-.cta__arc{position:absolute;border-radius:50%}
-/* the violet mass rising from below, the widest and the warmest */
-.cta__arc--1{
-  left:50%;bottom:-58%;width:132%;height:118%;
-  background:radial-gradient(50% 50% at 50% 50%, rgba(116,98,255,.42) 0%, rgba(116,98,255,.14) 46%, rgba(116,98,255,0) 72%);
-  filter:blur(48px);
-  transform:translateX(-50%);
-}
-/* a colder one leaning in from the right, and higher */
-.cta__arc--2{
-  right:-16%;top:-32%;width:78%;height:126%;
-  background:radial-gradient(50% 50% at 50% 50%, rgba(52,110,235,.34) 0%, rgba(52,110,235,.10) 48%, rgba(52,110,235,0) 74%);
-  filter:blur(56px);
-}
-/* and one on the far side, faint enough to be atmosphere rather than colour */
-.cta__arc--3{
-  left:-20%;top:-24%;width:72%;height:112%;
-  background:radial-gradient(50% 50% at 50% 50%, rgba(158,104,255,.24) 0%, rgba(158,104,255,.07) 50%, rgba(158,104,255,0) 76%);
-  filter:blur(64px);
-}
-/* the line of light along the foot that the violet is rising out of */
-.cta__horizon{
-  position:absolute;left:50%;bottom:-24%;width:120%;height:52%;
-  transform:translateX(-50%);
-  background:radial-gradient(50% 52% at 50% 50%, rgba(140,124,255,.30), rgba(140,124,255,0) 66%);
-  filter:blur(40px);
-}
-/* and the one that follows you over all of it */
-.cta__spot{
+.cta__sky{
   background:
-    radial-gradient(640px circle at var(--px) var(--py), rgba(140,124,255,.20), transparent 64%),
-    radial-gradient(420px circle at calc(var(--px) + 14%) calc(var(--py) + 20%), rgba(56,116,235,.12), transparent 68%);
+    /* the glow the words are read against, wide enough to have no edge */
+    radial-gradient(120% 78% at 50% 34%, rgba(108,92,255,.26) 0%, rgba(108,92,255,.09) 46%, rgba(108,92,255,0) 78%),
+    /* light lifting off the floor */
+    radial-gradient(150% 46% at 50% 108%, rgba(74,116,235,.24) 0%, rgba(74,116,235,0) 70%),
+    /* and the panel's own depth, top to bottom */
+    linear-gradient(180deg, #131A33 0%, #0C1122 46%, #070B16 100%);
+}
+/* the pointer changes the brightness, the way the two offers do */
+.cta__spot{
+  background:radial-gradient(660px circle at var(--px) var(--py), rgba(146,132,255,.16), transparent 60%);
 }
 /* the bed the words are read off, so the type never sits on a lit patch */
 .cta::after{
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;
-  background:
-    radial-gradient(70% 56% at 50% 44%, rgba(6,10,22,.80) 0%, rgba(6,10,22,.40) 58%, rgba(6,10,22,0) 100%),
-    radial-gradient(126% 92% at 50% 38%, rgba(4,8,18,0) 48%, rgba(4,8,18,.5) 100%);
+  background:radial-gradient(66% 54% at 50% 44%, rgba(6,10,22,.44) 0%, rgba(6,10,22,.16) 60%, rgba(6,10,22,0) 100%);
 }
-/* one hairline along the top edge — the only line in here, and it is the
-   panel's own edge rather than something crossing it */
+/* one hairline along the top edge, where the light is coming from */
 .cta::before{
-  content:"";position:absolute;left:14%;right:14%;top:-1px;height:1px;z-index:1;
-  background:linear-gradient(90deg, transparent, rgba(168,156,255,.45), transparent);
+  content:"";position:absolute;left:10%;right:10%;top:-1px;height:1px;z-index:1;
+  background:linear-gradient(90deg, transparent, rgba(176,166,255,.5), transparent);
   pointer-events:none;
 }
 
@@ -1306,6 +1280,23 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                               --v-per 460ms cubic-bezier(.3,.72,.24,1)}
 @media (prefers-reduced-motion:reduce){.deck--ba,.deck--v{transition:none}}
 
+/* ── a tab's answer arrives ─────────────────────────────────────
+   Pressing a tab used to swap one block for another between two frames,
+   which is fast but reads as a glitch: nothing tells you the page did what
+   you asked, so the eye has to go looking for what changed. The panel comes
+   up instead — a short rise and a fade, quick enough that it never delays
+   the answer, long enough that you see the answer arrive. */
+@keyframes panelIn{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:none}
+}
+.panel.is-fresh,.bapanel.is-fresh,.osp.is-fresh{
+  animation:panelIn 420ms var(--ease) both;
+}
+@media (prefers-reduced-motion:reduce){
+  .panel.is-fresh,.bapanel.is-fresh,.osp.is-fresh{animation:none}
+}
+
 /* ── the two offers arriving ────────────────────────────────────
    Both of these are the page asking for money, and both used to appear whole
    — one block sliding up, everything inside it already in place. They come in
@@ -1701,7 +1692,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
              border-color var(--dur-1) var(--ease), box-shadow var(--dur-1) var(--ease);
 }
 .pchip__pick{
-  height:100%;padding:0 var(--s-5) 0 var(--s-6);border-radius:var(--r-full) 0 0 var(--r-full);
+  height:100%;padding:0 var(--s-7) 0 var(--s-7);border-radius:var(--r-full) 0 0 var(--r-full);
   color:inherit;font-size:var(--fs-4);font-weight:var(--fw-medium);white-space:nowrap;
 }
 .pchip__buy{
@@ -1758,6 +1749,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   transition:background var(--dur-1) var(--ease);
 }
 .chipbuy__x{display:none}
+/* the mark comes up to meet the pointer */
+.chipbuy__o,.chipbuy__on{transition:transform var(--dur-1) var(--ease)}
+.pchip__buy:hover .chipbuy__o,.pchip__buy:focus-visible .chipbuy__o,
+.pchip__buy:hover .chipbuy__on,.pchip__buy:focus-visible .chipbuy__on{transform:scale(1.14)}
+@media (prefers-reduced-motion:reduce){.chipbuy__o,.chipbuy__on{transition:none}}
 .pchip__buy.is-in .chipbuy__o{display:none}
 .pchip__buy.is-in .chipbuy__on{display:grid}
 /* In the basket and under the pointer, the disc stays a disc and changes
@@ -1779,17 +1775,30 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    leans out of it — which is why the first version of this was invisible. One
    bubble on the page, moved to whichever mark is being looked at. */
 .tipbox{
-  position:fixed;z-index:70;pointer-events:none;white-space:nowrap;
-  padding:6px var(--s-3);border-radius:8px;
-  background:var(--n-900);color:var(--n-0);
-  font-size:var(--fs-2);font-weight:var(--fw-medium);line-height:1.35;
-  box-shadow:0 8px 22px rgba(4,10,20,.28);
+  position:fixed;z-index:90;pointer-events:none;white-space:nowrap;
+  padding:8px var(--s-4);border-radius:9px;
+  /* the page's own colour, brought with it: this is appended to the body and
+     has to read the same over a white shelf and over a dark band, so it does
+     not inherit whichever one it happens to be floating above. White on the
+     accent is 4.65:1 at this size and weight, which clears AA. */
+  display:flex;align-items:center;gap:var(--s-2);
+  background:var(--accent);color:#FFFFFF;
+  border:1px solid rgba(255,255,255,.22);
+  font-size:var(--fs-4);font-weight:var(--fw-semibold);line-height:1.3;
+  box-shadow:0 10px 26px rgba(60,44,180,.36), 0 2px 6px rgba(4,10,20,.24);
   opacity:0;transform:translateY(3px);
   transition:opacity var(--dur-1) var(--ease), transform var(--dur-1) var(--ease);
 }
 .tipbox::after{
   content:"";position:absolute;top:100%;left:var(--point,50%);transform:translateX(-50%);
-  border:6px solid transparent;border-top-color:var(--n-900);
+  border:7px solid transparent;border-top-color:var(--accent);
+}
+/* a number in front of the name, where the thing being named is one of a
+   numbered set */
+.tipbox__n{
+  flex:none;display:grid;place-items:center;width:20px;height:20px;
+  border-radius:var(--r-full);background:rgba(255,255,255,.22);
+  font-size:11px;font-weight:var(--fw-bold);line-height:1;
 }
 .tipbox.is-on{opacity:1;transform:none}
 @media (prefers-reduced-motion:reduce){.tipbox{transition:none}}
@@ -2892,9 +2901,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <span class="pbuy__glow" aria-hidden="true"></span>
       <span class="pbuy__dots" aria-hidden="true"></span>
       <span class="pbuy__art" aria-hidden="true">
-        <img src="images/box-retouchx.png" alt="" data-tip="RetouchX Plugin" loading="lazy" onerror="this.style.display='none'">
-        <img src="images/box-lightroom-ai-color.png" alt="" data-tip="Lightroom Ai Color Plugin" loading="lazy" onerror="this.style.display='none'">
-        <img src="images/box-us-photoshop-plugin.png" alt="" data-tip="US Photoshop Plugin" loading="lazy" onerror="this.style.display='none'">
+        <img src="images/box-retouchx.png" alt="" data-tip="RetouchX" data-tip-n="1" loading="lazy" onerror="this.style.display='none'">
+        <img src="images/box-lightroom-ai-color.png" alt="" data-tip="Lightroom Ai Color" data-tip-n="2" loading="lazy" onerror="this.style.display='none'">
+        <img src="images/box-us-photoshop-plugin.png" alt="" data-tip="US Photoshop Plugin" data-tip-n="3" loading="lazy" onerror="this.style.display='none'">
       </span>
       <span class="pbuy__body">
         <span class="pbuy__head"><span class="pbuy__t">3 Plugins in 1 Pack</span><span class="pbuy__best"><svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3.2 1.4h7.6v1.2h1.9v1.5a2.9 2.9 0 01-2.4 2.85A3.6 3.6 0 017.7 8.6v1.9h2.1v1.3H4.2v-1.3h2.1V8.6a3.6 3.6 0 01-2.6-1.65A2.9 2.9 0 011.3 4.1V2.6h1.9zM2.5 3.8v.3a1.7 1.7 0 00.95 1.5A6 6 0 013.2 3.8zm9 0h-.7a6 6 0 01-.25 1.8 1.7 1.7 0 00.95-1.5z"/></svg>Bestseller</span><span class="vh">for Photoshop and Lightroom Classic</span></span>
@@ -4318,7 +4327,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 <section class="section section--last" id="start" aria-labelledby="startTitle" lang="tr">
   <div class="wrap">
     <div class="cta pbuy--dark" data-lit data-reveal>
-      <span class="cta__sky" aria-hidden="true"><i class="cta__arc cta__arc--1"></i><i class="cta__arc cta__arc--2"></i><i class="cta__arc cta__arc--3"></i><i class="cta__horizon"></i></span>
+      <span class="cta__sky" aria-hidden="true"></span>
       <span class="cta__spot" aria-hidden="true"></span>
       <div class="cta__in">
         <p class="cta__faces" aria-hidden="true"><span class="cta__ring"><img src="images/testimonials/dugunumuzvar/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/zariffilm/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/ugurdemir/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/ekrulila/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/celalcanik/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/mucahitguney/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"></span></p>
@@ -5416,7 +5425,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         var panel = document.getElementById(id);
         if(!panel) return;
         panel.classList.toggle('is-on', on);
-        if(on){ panel.removeAttribute('hidden'); } else { panel.setAttribute('hidden',''); }
+        if(on){ panel.removeAttribute('hidden'); rmFreshen(panel); }
+        else { panel.setAttribute('hidden',''); }
       });
     });
     /* the new deck starts on its first video, not wherever the last plugin's
@@ -5668,7 +5678,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         var panel = document.getElementById(c.getAttribute('aria-controls'));
         if(!panel) return;
         panel.classList.toggle('is-on', on);
-        if(on){ panel.removeAttribute('hidden'); } else { panel.setAttribute('hidden',''); }
+        if(on){ panel.removeAttribute('hidden'); rmFreshen(panel); }
+        else { panel.setAttribute('hidden',''); }
       });
       /* the row that just appeared has never been measured — its arrows and
          thumb would still be showing the last one's position */
@@ -6172,7 +6183,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         t.setAttribute('aria-selected', String(on));
         t.tabIndex = on ? 0 : -1;
         var panel = document.getElementById(t.getAttribute('aria-controls') || '');
-        if(panel) panel.classList.toggle('is-on', on);
+        if(panel){
+          panel.classList.toggle('is-on', on);
+          if(on) rmFreshen(panel);
+        }
       });
     }
     tabs.forEach(function(t, i){
@@ -6250,13 +6264,23 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       document.body.appendChild(tipBox);
     }
     clearTimeout(tipHide);
-    tipBox.textContent = say;
+    /* a number in front of it when the thing has one — the three boxes on the
+       band are a set, and which of the three is half of what you are asking */
+    var n = el.getAttribute('data-tip-n');
+    tipBox.textContent = '';
+    if(n){
+      var mark = document.createElement('i');
+      mark.className = 'tipbox__n';
+      mark.textContent = n;
+      tipBox.appendChild(mark);
+    }
+    tipBox.appendChild(document.createTextNode(say));
     /* measured after the words are in, so a long one is placed as a long one */
     var r = el.getBoundingClientRect(), w = tipBox.offsetWidth;
     var mid = r.left + r.width / 2;
     var left = Math.max(8, Math.min(document.documentElement.clientWidth - 8 - w, mid - w / 2));
     tipBox.style.left = Math.round(left) + 'px';
-    tipBox.style.top = Math.round(r.top - tipBox.offsetHeight - 9) + 'px';
+    tipBox.style.top = Math.round(r.top - tipBox.offsetHeight - 11) + 'px';
     tipBox.style.setProperty('--point', Math.round(mid - left) + 'px');
     requestAnimationFrame(function(){ tipBox.classList.add('is-on'); });
   }
@@ -6331,6 +6355,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     });
     draw();
   });
+
+  /* the panel a tab has just opened comes up rather than appearing. Restarted
+     rather than queued, so pressing along a row of tabs answers every press. */
+  var freshGo = null;
+  function freshen(panel){
+    if(still || !panel) return;
+    panel.classList.remove('is-fresh');
+    void panel.offsetWidth;
+    panel.classList.add('is-fresh');
+    clearTimeout(freshGo);
+    freshGo = setTimeout(function(){
+      document.querySelectorAll('.is-fresh').forEach(function(el){ el.classList.remove('is-fresh'); });
+    }, 480);
+  }
+  window.rmFreshen = freshen;
 
   /* ---- the shelf comes in a pack at a time ----
      The grid used to arrive as one block, which on a row of twelve products
