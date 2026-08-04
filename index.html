@@ -506,63 +506,71 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .cta{--px:50%;--py:38%}
 
 /* ── the last panel's own ground ─────────────────────────────────
-   The two offers are lit like a product on a table: a pool under the
-   pointer and a dot grid to catch it. This is not an offer, so it is lit
-   like a stage instead — two shafts coming down from above the frame, a
-   pool where they land, and a wash that follows you across the boards.
-   Same palette, different room. Everything sits under a vignette that
-   deepens towards the edges, so the words in the middle keep a dark, even
-   bed to be read off whatever the lights are doing. */
-.cta__stage,.cta__spot{
+   Not an offer, so not lit like one. What the two offers do is hold a pool
+   of light under the pointer against a dot grid; this holds something
+   further off — three thin arcs of light rising out of the bottom edge, a
+   horizon glowing under them, and a wash that follows you over the top. It
+   reads as looking out at something rather than down at something, which is
+   what a closing panel is for.
+   The arcs are drawn as rings far bigger than the panel with only their top
+   sliver showing, so their curve is long and shallow. Nothing here carries
+   information — under it all is an even dark bed the words are read off. */
+.cta__sky,.cta__spot{
   position:absolute;inset:0;z-index:-2;pointer-events:none;
   overflow:hidden;border-radius:inherit;
 }
-.cta__beam{
-  position:absolute;top:-34%;width:min(420px,36%);height:152%;
-  transform-origin:50% 0;filter:blur(38px);
-  transition:transform .25s ease-out;
+.cta__arc{
+  position:absolute;left:50%;border-radius:50%;
+  border:1px solid transparent;
+  transform:translate(-50%, 0) translateX(calc(var(--gx,0px) * .5));
+  transition:transform .3s ease-out;
 }
-.cta__beam--l{
-  left:6%;
-  background:linear-gradient(180deg, rgba(124,104,255,.34) 0%, rgba(124,104,255,.12) 42%, transparent 74%);
-  transform:rotate(14deg) translateX(var(--gx,0px));
+/* each one wider, flatter and fainter than the last */
+.cta__arc--1{
+  width:150%;aspect-ratio:1.9;bottom:-118%;
+  border-color:rgba(146,132,255,.62);
+  box-shadow:0 0 46px rgba(112,94,255,.42), inset 0 0 70px rgba(108,90,255,.16);
 }
-.cta__beam--r{
-  right:6%;
-  background:linear-gradient(180deg, rgba(52,108,235,.30) 0%, rgba(52,108,235,.10) 44%, transparent 74%);
-  transform:rotate(-14deg) translateX(calc(var(--gx,0px) * -1));
+.cta__arc--2{
+  width:190%;aspect-ratio:2.1;bottom:-150%;
+  border-color:rgba(96,138,246,.40);
+  box-shadow:0 0 38px rgba(70,116,235,.28);
+  transform:translate(-50%, 0) translateX(calc(var(--gx,0px) * .8));
 }
-/* where the two of them land */
-.cta__floor{
-  position:absolute;left:50%;bottom:-26%;width:88%;height:56%;
-  transform:translateX(-50%) translateY(calc(var(--gy,0px) * .4));
-  background:radial-gradient(58% 62% at 50% 50%, rgba(98,86,255,.24), rgba(98,86,255,0) 72%);
-  filter:blur(22px);
-  transition:transform .25s ease-out;
+.cta__arc--3{
+  width:240%;aspect-ratio:2.4;bottom:-190%;
+  border-color:rgba(154,146,255,.22);
+  transform:translate(-50%, 0) translateX(calc(var(--gx,0px) * 1.15));
 }
-/* and the one that follows you */
+/* the light the arcs are rising out of */
+.cta__horizon{
+  position:absolute;left:50%;bottom:-30%;width:112%;height:62%;
+  transform:translateX(-50%) translateY(calc(var(--gy,0px) * .35));
+  background:radial-gradient(50% 56% at 50% 50%, rgba(112,96,255,.46), rgba(112,96,255,0) 70%);
+  filter:blur(24px);
+  transition:transform .3s ease-out;
+}
+/* and the wash that follows you over all of it */
 .cta__spot{
-  z-index:-2;
   background:
-    radial-gradient(560px circle at var(--px) var(--py), rgba(132,116,255,.24), transparent 62%),
-    radial-gradient(360px circle at calc(var(--px) + 12%) calc(var(--py) + 22%), rgba(56,116,235,.16), transparent 66%);
+    radial-gradient(620px circle at var(--px) var(--py), rgba(132,116,255,.22), transparent 62%),
+    radial-gradient(400px circle at calc(var(--px) + 14%) calc(var(--py) + 20%), rgba(56,116,235,.14), transparent 66%);
 }
-/* the bed the words are read off: nothing above 55% of the way out from the
-   middle, so the type never sits on a lit patch */
+/* the bed the words are read off, so the type never sits on a lit patch */
 .cta::after{
   content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;border-radius:inherit;
   background:
-    radial-gradient(78% 66% at 50% 48%, rgba(6,10,22,.72) 0%, rgba(6,10,22,.34) 55%, rgba(6,10,22,0) 100%),
-    radial-gradient(130% 100% at 50% 50%, rgba(4,8,18,0) 42%, rgba(4,8,18,.6) 100%);
+    radial-gradient(72% 58% at 50% 42%, rgba(6,10,22,.74) 0%, rgba(6,10,22,.34) 58%, rgba(6,10,22,0) 100%),
+    radial-gradient(120% 86% at 50% 34%, rgba(4,8,18,0) 46%, rgba(4,8,18,.42) 100%);
 }
-/* one hairline of light along the top edge, the way a lit stage has one */
+/* one hairline along the top edge, the way a lit room has one */
 .cta::before{
   content:"";position:absolute;left:12%;right:12%;top:-1px;height:1px;z-index:1;
-  background:linear-gradient(90deg, transparent, rgba(168,156,255,.55), transparent);
+  background:linear-gradient(90deg, transparent, rgba(168,156,255,.5), transparent);
   pointer-events:none;
 }
 @media (prefers-reduced-motion:reduce){
-  .cta__beam,.cta__floor{transition:none}
+  .cta__arc,.cta__horizon{transition:none}
 }
 /* the mask has to be able to reach the corners the dots sit in */
 /* Every layer lives inside a box that is exactly the band, so the drift and
@@ -1710,6 +1718,42 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .chipbuy__on{display:none}
 .pchip__buy:hover,.pchip__buy:focus-visible{color:var(--fg);background:var(--surface-sunken)}
 .pchip:has([aria-selected="true"]) .pchip__buy:hover{background:rgba(99,91,255,.10)}
+/* Twenty-two pixels is not enough room for a change to be noticed on its
+   own, so the chip says it: the whole pill flashes once in the colour of what
+   just happened, and the mark that replaces the old one arrives with a pop
+   rather than simply being there. Green going in, red coming out — the same
+   two colours the rest of the page adds and removes in. */
+.pchip.is-taking{animation:chipTake 620ms var(--ease)}
+.pchip.is-giving{animation:chipGive 560ms var(--ease)}
+@keyframes chipTake{
+  0%{box-shadow:0 0 0 0 rgba(26,127,75,.55)}
+  22%{box-shadow:0 0 0 5px rgba(26,127,75,.28)}
+  100%{box-shadow:0 0 0 12px rgba(26,127,75,0)}
+}
+@keyframes chipGive{
+  0%{box-shadow:0 0 0 0 rgba(192,57,46,.5)}
+  22%{box-shadow:0 0 0 5px rgba(192,57,46,.24)}
+  100%{box-shadow:0 0 0 12px rgba(192,57,46,0)}
+}
+/* and the mark itself lands */
+.pchip.is-taking .chipbuy__on{animation:chipPop 520ms cubic-bezier(.2,1.5,.32,1)}
+@keyframes chipPop{
+  0%{transform:scale(.2) rotate(-25deg)}
+  55%{transform:scale(1.28) rotate(4deg)}
+  78%{transform:scale(.94)}
+  100%{transform:scale(1)}
+}
+.pchip.is-giving .chipbuy__o{animation:chipBack 440ms cubic-bezier(.2,1.35,.34,1)}
+@keyframes chipBack{
+  0%{transform:scale(.55);opacity:0}
+  60%{opacity:1;transform:scale(1.12)}
+  100%{transform:scale(1);opacity:1}
+}
+@media (prefers-reduced-motion:reduce){
+  .pchip.is-taking,.pchip.is-giving,
+  .pchip.is-taking .chipbuy__on,.pchip.is-giving .chipbuy__o{animation:none}
+}
+
 /* A tick in a disc, the mark the basket's own note carries — but filled
    rather than tinted. On a white chip a pale green disc with a green tick on
    it was two soft greens on white and read as nothing from a foot away; the
@@ -4272,7 +4316,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 <section class="section section--last" id="start" aria-labelledby="startTitle" lang="tr">
   <div class="wrap">
     <div class="cta pbuy--dark" data-lit data-reveal>
-      <span class="cta__stage" aria-hidden="true"><i class="cta__beam cta__beam--l"></i><i class="cta__beam cta__beam--r"></i><i class="cta__floor"></i></span>
+      <span class="cta__sky" aria-hidden="true"><i class="cta__arc cta__arc--1"></i><i class="cta__arc cta__arc--2"></i><i class="cta__arc cta__arc--3"></i><i class="cta__horizon"></i></span>
       <span class="cta__spot" aria-hidden="true"></span>
       <div class="cta__in">
         <p class="cta__faces" aria-hidden="true"><span class="cta__ring"><img src="images/testimonials/dugunumuzvar/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/zariffilm/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/ugurdemir/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/ekrulila/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/celalcanik/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/mucahitguney/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"></span></p>
@@ -6208,7 +6252,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   document.querySelectorAll('[data-chipbuy]').forEach(function(btn){
     var name = btn.getAttribute('data-chipbuy');
     var short = name.replace(/\s+Presets$/, '');
-    var on = false;
+    var pill = btn.closest('.pchip') || btn;
+    var on = false, beat = null;
     function draw(){
       var held = Cart.covered(name);
       btn.classList.toggle('is-in', on || held);
@@ -6242,6 +6287,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       if(on){ Cart.add(name); cartTip(name + ' added', ''); } else { Cart.drop(name); }
       draw();
       tipShow(btn);           /* the words change with the state under them */
+      /* the pill says what just happened, since the mark alone is 22px of it */
+      if(!still){
+        pill.classList.remove('is-taking', 'is-giving');
+        void pill.offsetWidth;
+        pill.classList.add(on ? 'is-taking' : 'is-giving');
+        clearTimeout(beat);
+        beat = setTimeout(function(){
+          pill.classList.remove('is-taking', 'is-giving');
+        }, 700);
+      }
     });
     draw();
   });
