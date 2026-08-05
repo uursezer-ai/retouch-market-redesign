@@ -1751,13 +1751,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    nothing to swap over when the bar sticks. */
 .shelfbar__say{display:inline-flex;align-items:center;gap:var(--s-3)}
 .shelfbar__apps{display:inline-flex;gap:5px;flex:none}
-/* outlined, at the size the tabs use plus a little room: filled they took
-   the eye before the sentence did, and these two are a footnote to the line,
-   not its subject. The hairline keeps them quiet; the extra width keeps the
-   letters from crowding it. */
+/* filled in the ink of the sentence they sit beside, so they read as part
+   of that line rather than as a second voice on it — and they follow it
+   when the bar pins and the copy darkens. */
 .shelfbar__apps .ptab__app{
   width:28px;height:24px;font-size:11px;
+  background:var(--fg-body);border-color:transparent;color:var(--n-0);
 }
+.shelfbar.is-pinned .shelfbar__apps .ptab__app{background:var(--fg)}
 @media (max-width:1180px){.shelfbar__say{display:none}}
 .shelfbar__watch{display:block;height:1px;margin-bottom:-1px}
 @media (min-width:861px){
@@ -4780,7 +4781,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="section__head" data-reveal>
       <div>
         <p class="eyebrow">Installing &amp; questions</p>
-        <h2>1-click installation and support</h2>
+        <h2>Easy installation and fast support</h2>
       </div>
     </div>
 
