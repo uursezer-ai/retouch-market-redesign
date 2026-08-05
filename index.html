@@ -942,6 +942,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .ptabs button[aria-selected="true"] .ptab__app{
   background:var(--accent);border-color:transparent;color:var(--fg-on-accent);
 }
+/* a heading can carry them too. Sized in the heading's own em so they hold
+   their proportion as it clamps down, and filled in the heading's ink —
+   at 38px an outline beside that weight reads as a gap in the line. */
+.head--apps{display:block}
+.head__apps{
+  display:inline-flex;gap:.20em;margin-left:.30em;
+  vertical-align:.02em;letter-spacing:0;white-space:nowrap;
+}
+.head__apps .ptab__app{
+  font-size:max(10px,.30em);width:2.55em;height:2.10em;border-radius:.44em;
+  background:var(--fg);border-color:transparent;color:var(--n-0);
+}
 /* below the breakpoint the names would be shoulder to shoulder — let the row
    scroll and give each button back its own width */
 @media (max-width:1000px){
@@ -1743,39 +1755,41 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .shelfbar__in > *{pointer-events:auto}
 /* the section's own line travels with them: it says what the shelf is, which
    is worth having in front of you while you are working your way down it */
-.shelfbar__say{
-  margin:0;min-width:0;max-width:none;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
+.shelfbar__say{margin:0;min-width:0;max-width:none}
 /* pinned it is a label on a toolbar rather than the section's opening line,
    and steps down to the size a toolbar wants */
 .shelfbar.is-pinned .shelfbar__say{
   font-size:var(--fs-4);color:var(--fg);font-weight:var(--fw-semibold);
 }
-/* Two lines at rest: what the shelf holds and what those files open in, then
-   who made them. Pinned, the second line goes — a toolbar wants the name and
-   nothing else, and the credit has already been read by then. */
+/* the line swaps when the bar pins. At rest the heading right above it has
+   just said what the shelf is, so the line under it credits the people who
+   shot these. Pinned, the heading is gone and the line takes its job back —
+   what these are and what they open in. */
 .shelfbar__say{display:block}
-.shelfbar__name{
-  display:flex;align-items:center;gap:var(--s-3);
-  min-width:0;white-space:nowrap;
+.shelfbar__by{display:block}
+/* the pinned line is a toolbar label and holds to one row, ellipsis and all;
+   the credit line above is running text and may wrap on a narrow screen */
+.shelfbar__pin{
+  display:none;align-items:center;gap:var(--s-3);min-width:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
 }
-.shelfbar__by{
-  display:block;margin-top:5px;white-space:nowrap;
-  font-size:var(--fs-4);color:var(--fg-muted);font-weight:var(--fw-regular);
-}
-.shelfbar__cam{font-style:normal;line-height:1}
 .shelfbar.is-pinned .shelfbar__by{display:none}
+.shelfbar.is-pinned .shelfbar__pin{display:flex}
+.shelfbar__cam{font-style:normal;line-height:1}
 .shelfbar__apps{display:inline-flex;gap:5px;flex:none}
-/* filled in the ink of the sentence they sit beside, so they read as part
-   of that line rather than as a second voice on it — and they follow it
-   when the bar pins and the copy darkens. */
+/* filled in the ink of the sentence they sit beside, so they read as part of
+   that line rather than as a second voice on it */
 .shelfbar__apps .ptab__app{
   width:28px;height:24px;font-size:11px;
-  background:var(--fg-body);border-color:transparent;color:var(--n-0);
+  background:var(--fg);border-color:transparent;color:var(--n-0);
 }
-.shelfbar.is-pinned .shelfbar__apps .ptab__app{background:var(--fg)}
-@media (max-width:1180px){.shelfbar__say{display:none}}
+/* narrow, the pinned bar has only enough room for the controls — but at rest
+   the line is the section's subtitle and stays, on its own row */
+@media (max-width:1180px){
+  .shelfbar__in{flex-wrap:wrap;gap:var(--s-4)}
+  .shelfbar__say{flex:1 1 100%}
+  .shelfbar.is-pinned .shelfbar__say{display:none}
+}
 .shelfbar__watch{display:block;height:1px;margin-bottom:-1px}
 @media (min-width:861px){
   /* the head ends at the heading, and this row is the line under it — the
@@ -3716,7 +3730,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="section__head" data-reveal>
       <div>
         <p class="eyebrow">Presets &amp; LUTs</p>
-        <h2>Original Signature Looks</h2>
+        <h2 class="head--apps">Original Signature Presets<span class="head__apps" aria-hidden="true"><span class="ptab__app">Ps</span><span class="ptab__app">LrC</span></span><span class="vh"> — for Photoshop and Lightroom Classic</span></h2>
       </div>
       <a class="vh" href="#">View store
         <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -3732,8 +3746,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   <div class="shelfbar" data-shelfbar>
     <div class="wrap shelfbar__in">
       <p class="lede shelfbar__say">
-        <span class="shelfbar__name">Original Signature Presets<span class="shelfbar__apps" aria-hidden="true"><span class="ptab__app">Ps</span><span class="ptab__app">LrC</span></span><span class="vh"> — for Photoshop and Lightroom Classic</span></span>
         <span class="shelfbar__by">Created by Türkiye&rsquo;s most popular photographers <span class="shelfbar__cam" aria-hidden="true">&#128248;</span></span>
+        <span class="shelfbar__pin">Original presets for Lightroom Classic &amp; Camera Raw<span class="shelfbar__apps" aria-hidden="true"><span class="ptab__app">LrC</span><span class="ptab__app">Ps</span></span><span class="vh"> — for Lightroom Classic and Photoshop</span></span>
       </p>
       <div class="tools">
         <div class="colspick">
