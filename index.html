@@ -847,7 +847,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    SECTION SHELL — identical rhythm and head structure everywhere
    ════════════════════════════════════════════════════════════════ */
 .section{padding:var(--section-y) 0}
-.section--tint{background:var(--bg-subtle);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+/* Where two sections share a ground they used to meet with nothing between
+   them — the tinted ones carried their own edges and the white ones simply
+   ran together. One rule instead: every section that follows another one
+   carries the hairline at the join. The tint keeps only its colour, because
+   its bottom edge is the next section's top edge and two 1px lines touching
+   are a 2px line. */
+.section--tint{background:var(--bg-subtle)}
+.section + .section{border-top:1px solid var(--border)}
 .section__head{display:flex;align-items:flex-end;justify-content:space-between;gap:var(--s-8);margin-bottom:var(--s-7)}
 /* 24ch was the longest heading on the page until the before/after one; the
    cap only limits, so widening it changes nothing for the shorter ones */
