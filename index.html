@@ -2149,10 +2149,22 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   display:inline-flex;align-items:center;gap:6px;
   font-size:var(--fs-2);font-weight:var(--fw-bold);letter-spacing:.045em;text-transform:uppercase;
   padding:6px var(--s-3) 6px 10px;border-radius:var(--r-full);
-  background:#FFFFFF;color:var(--n-900);
-  box-shadow:0 2px 4px rgba(10,25,50,.18), 0 6px 16px -6px rgba(10,25,50,.34),
-             0 0 0 1px rgba(10,25,50,.06);
+  /* each badge is dressed in its own mark's colour, at the strength the page
+     keeps for a tinted surface rather than a filled one: the fill is the pale
+     end, the words and the hairline the deep end of the same hue. Every pair
+     clears 5.8:1, because a badge on a photograph has one job. */
+  background:var(--chip-bg, #FFFFFF);color:var(--chip-fg, var(--n-900));
+  box-shadow:0 2px 4px rgba(10,25,50,.16), 0 6px 16px -6px rgba(10,25,50,.30),
+             0 0 0 1px var(--chip-edge, rgba(10,25,50,.06));
 }
+/* 🏆 gold, the colour a trophy is */
+.chip--best{--chip-bg:#FCEFD6;--chip-fg:#7A4E06;--chip-edge:rgba(122,78,6,.20)}
+/* 🔥 the warm red the page removes things in, at its palest */
+.chip--hot{--chip-bg:#FDE7E1;--chip-fg:#9A3B22;--chip-edge:rgba(154,59,34,.20)}
+/* 💎 blue, which is what Apple draws that stone as */
+.chip--pick{--chip-bg:#E3F0FA;--chip-fg:#1F5B85;--chip-edge:rgba(31,91,133,.20)}
+/* ✨ the page's own accent — the colour everything here means "new" in */
+.chip--new{--chip-bg:var(--accent-bg);--chip-fg:var(--accent-700);--chip-edge:rgba(71,64,184,.22)}
 .chip__e{
   font-size:14px;line-height:1;letter-spacing:0;
   /* an emoji is a picture, not a letter: the uppercasing above must not try */
@@ -3683,7 +3695,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="card" data-popular="1" data-added="9">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75" alt="Sample graded with Lora Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="chip"><span class="chip__e" aria-hidden="true">🏆</span>Bestseller</span>
+          <span class="chip chip--best"><span class="chip__e" aria-hidden="true">🏆</span>Bestseller</span>
           <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
         </span>
         <div class="card__body">
@@ -3699,7 +3711,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="card" data-popular="2" data-added="8">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75" alt="Sample graded with Solis Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fae36a300-b579-4302-9c3c-951bfb80e0ee-1775992530619-236172178.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="chip"><span class="chip__e" aria-hidden="true">🔥</span>Popular</span>
+          <span class="chip chip--hot"><span class="chip__e" aria-hidden="true">🔥</span>Popular</span>
           <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
         </span>
         <div class="card__body">
@@ -3795,7 +3807,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="card" data-popular="8" data-added="1">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75" alt="Sample graded with Olbia LUTs" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="chip"><span class="chip__e" aria-hidden="true">✨</span>New</span>
+          <span class="chip chip--new"><span class="chip__e" aria-hidden="true">✨</span>New</span>
           <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
         </span>
         <div class="card__body">
@@ -3827,7 +3839,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="card" data-popular="10" data-added="0">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=750&amp;q=75" alt="Sample graded with Vela Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F310ee48f-a53c-4a9d-be83-e60536493dd1-1775992531836-446807741.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="chip"><span class="chip__e" aria-hidden="true">⭐</span>Editor's Choice</span>
+          <span class="chip chip--pick"><span class="chip__e" aria-hidden="true">💎</span>Editor's Choice</span>
           <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
         </span>
         <div class="card__body">
@@ -3859,7 +3871,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="card" data-popular="12" data-added="0">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=750&amp;q=75" alt="Sample graded with Aster LUTs" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="chip"><span class="chip__e" aria-hidden="true">✨</span>New</span>
+          <span class="chip chip--new"><span class="chip__e" aria-hidden="true">✨</span>New</span>
           <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
         </span>
         <div class="card__body">
