@@ -2147,8 +2147,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .chip{
   position:absolute;top:var(--s-3);left:var(--s-3);
   display:inline-flex;align-items:center;gap:6px;
-  font-size:var(--fs-2);font-weight:var(--fw-bold);letter-spacing:.045em;text-transform:uppercase;
-  padding:6px var(--s-3) 6px 10px;border-radius:var(--r-full);
+  font-size:var(--fs-1);font-weight:var(--fw-bold);letter-spacing:.05em;text-transform:uppercase;
+  padding:5px var(--s-3) 5px 9px;border-radius:var(--r-full);
   /* each badge is dressed in its own mark's colour, at the strength the page
      keeps for a tinted surface rather than a filled one: the fill is the pale
      end, the words and the hairline the deep end of the same hue. Every pair
@@ -2158,15 +2158,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
              0 0 0 1px var(--chip-edge, rgba(10,25,50,.06));
 }
 /* 🏆 gold, the colour a trophy is */
-.chip--best{--chip-bg:#FCEFD6;--chip-fg:#7A4E06;--chip-edge:rgba(122,78,6,.20)}
+.chip--best{--chip-bg:#FDF4E3;--chip-fg:#7C5107;--chip-edge:rgba(124,81,7,.26)}
 /* 🔥 the warm red the page removes things in, at its palest */
-.chip--hot{--chip-bg:#FDE7E1;--chip-fg:#9A3B22;--chip-edge:rgba(154,59,34,.20)}
+.chip--hot{--chip-bg:#FDEDE8;--chip-fg:#9C3D22;--chip-edge:rgba(156,61,34,.26)}
 /* 💎 blue, which is what Apple draws that stone as */
-.chip--pick{--chip-bg:#E3F0FA;--chip-fg:#1F5B85;--chip-edge:rgba(31,91,133,.20)}
-/* ✨ the page's own accent — the colour everything here means "new" in */
-.chip--new{--chip-bg:var(--accent-bg);--chip-fg:var(--accent-700);--chip-edge:rgba(71,64,184,.22)}
+.chip--pick{--chip-bg:#E9F2FB;--chip-fg:#215D87;--chip-edge:rgba(33,93,135,.26)}
+/* 🌟 the star is gold like the trophy, so the badge takes the page's accent
+   instead — three warm badges in one row and none of them is telling you
+   anything the others are not. New is the one thing here the page already
+   has a colour for. */
+.chip--new{--chip-bg:var(--accent-bg);--chip-fg:var(--accent-700);--chip-edge:rgba(71,64,184,.26)}
 .chip__e{
-  font-size:14px;line-height:1;letter-spacing:0;
+  font-size:13px;line-height:1;letter-spacing:0;
   /* an emoji is a picture, not a letter: the uppercasing above must not try */
   text-transform:none;
 }
@@ -3807,7 +3810,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="card" data-popular="8" data-added="1">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75" alt="Sample graded with Olbia LUTs" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="chip chip--new"><span class="chip__e" aria-hidden="true">✨</span>New</span>
+          <span class="chip chip--new"><span class="chip__e" aria-hidden="true">🌟</span>New</span>
           <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
         </span>
         <div class="card__body">
@@ -3871,7 +3874,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="card" data-popular="12" data-added="0">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=750&amp;q=75" alt="Sample graded with Aster LUTs" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="chip chip--new"><span class="chip__e" aria-hidden="true">✨</span>New</span>
+          <span class="chip chip--new"><span class="chip__e" aria-hidden="true">🌟</span>New</span>
           <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
         </span>
         <div class="card__body">
