@@ -1751,13 +1751,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    nothing to swap over when the bar sticks. */
 .shelfbar__say{display:inline-flex;align-items:center;gap:var(--s-3)}
 .shelfbar__apps{display:inline-flex;gap:5px;flex:none}
-/* solid on the bar rather than outlined: at this size a hairline chip reads
-   as an empty box, and these two are the only thing on the line carrying a
-   fact rather than a word. Filled in the page's darkest navy, which is what
-   the sentence beside them is set in. */
+/* outlined, at the size the tabs use plus a little room: filled they took
+   the eye before the sentence did, and these two are a footnote to the line,
+   not its subject. The hairline keeps them quiet; the extra width keeps the
+   letters from crowding it. */
 .shelfbar__apps .ptab__app{
   width:28px;height:24px;font-size:11px;
-  background:var(--n-900);border-color:transparent;color:#FFFFFF;
 }
 @media (max-width:1180px){.shelfbar__say{display:none}}
 .shelfbar__watch{display:block;height:1px;margin-bottom:-1px}
