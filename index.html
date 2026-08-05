@@ -889,18 +889,22 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 /* above the video, not on it. Pick the plugin, then watch its clips — and
    nothing covers the frame you came to look at. */
-/* the plugin switcher is the same segmented control the install section
-   uses: one row of names, the chosen one lifted out of the track. The cards
-   it replaced repeated the box art the offer band above already shows. */
+/* the plugin switcher is the underlined tab row the install section uses:
+   names on the page's own ground with a rule under the live one. No track, no
+   pill — three plugin names are a table of contents for the video below them,
+   and a sunken box around them made a choice out of what is really a heading.
+   The cards it replaced repeated the box art the offer band above shows. */
 /* .os.ptabs, not .ptabs: the segmented control's own display rule sits
    further down the sheet and at equal weight the later one would win */
 .os.ptabs{
   /* the column's own width, so the row sits square under the offer above it */
-  display:flex;margin-inline:var(--inset);margin-bottom:var(--s-5);
+  display:flex;margin-inline:var(--inset);margin-bottom:var(--s-6);
   overflow-x:auto;overscroll-behavior-x:contain;
   scrollbar-width:none;-ms-overflow-style:none;
   /* clear of the sticky bar, the same allowance the decks take */
   scroll-margin-top:calc(var(--nav-h) + var(--s-4));
+  /* the row's own rule, which the live tab's sits on top of */
+  padding:0;background:none;border:0;border-bottom:1px solid var(--border);border-radius:0;
 }
 .ptabs::-webkit-scrollbar{display:none}
 /* Positioned, so the visually-hidden text inside it is contained by the
@@ -913,7 +917,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 /* a disc and two badges want more room than a word does — written with the
    track's own class so it outranks .os button further down the sheet */
-.os.ptabs button{padding-block:var(--s-3)}
+.os.ptabs button{
+  padding:var(--s-4) var(--s-3);border-radius:0;
+  font-size:var(--fs-4);letter-spacing:var(--tr-heading);
+  /* -1px so the live tab's rule lands on the row's own, not under it */
+  border-bottom:2px solid transparent;margin-bottom:-1px;
+  transition:color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
+}
+.os.ptabs button:hover{color:var(--fg)}
 .ptab__nm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 /* the count in front of the name: three plugins, and this is the first */
 .ptab__no{
@@ -922,39 +933,33 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   font-size:11px;font-weight:var(--fw-bold);line-height:1;
   transition:background var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
 }
-/* the live tab: the accent's palest wash with the accent drawn round it. The
-   line is inset rather than a border, so nothing on the row shifts by a pixel
-   when the choice moves, and the track keeps its own geometry. */
+/* the live tab: the accent, and a rule under it in the same */
 .os.ptabs button[aria-selected="true"]{
-  background:#F3F2FD;box-shadow:inset 0 0 0 1px var(--accent);
+  background:none;box-shadow:none;color:var(--accent-fg);border-bottom-color:var(--accent);
 }
-.ptabs button[aria-selected="true"] .ptab__no{background:var(--fg);color:var(--n-0)}
-/* the chosen plugin's name stays the page's ink: the accent is the number's
-   job here, and one accent per control is enough to say which is live */
-.ptabs button[aria-selected="true"] .ptab__nm{color:var(--fg)}
+/* the number and the marks come with it — one colour saying one thing, the
+   way the install section's tabs do */
+.ptabs button[aria-selected="true"] .ptab__no{background:var(--accent);color:var(--fg-on-accent)}
+.ptabs button[aria-selected="true"] .ptab__nm{color:var(--accent-fg)}
 /* and what it runs in after it — the same badge the tabs carried as cards */
 .ptab__apps{display:inline-flex;flex:none;gap:5px}
 /* the row centres these on its line box, and a line box carries descender
    room the capitals beside them never use — so they land about a pixel low.
    Measured off the rendered pixels, not guessed, and put back. */
-.ptab__apps .ptab__app{position:relative;top:-1px}
+.ptab__apps .ptab__app,.ptab__no{position:relative;top:-0.8px}
 /* the eyebrow can carry the apps it runs in: the same three marks the plugin
    tabs wear, so the badge for "this works in Photoshop" is one thing on this
    page and not two. They keep their own case against the eyebrow's caps —
    LrC is a name, not a shout. */
 .eyebrow--apps{display:flex;align-items:center;gap:var(--s-3);flex-wrap:wrap}
 .eyebrow__apps{display:inline-flex;gap:5px;text-transform:none;letter-spacing:0}
-/* square and drawn rather than filled: these name what the plugins open in,
-   which is a footnote to the headline under them, and a filled block at this
-   size read as three buttons you could press. Square because they are marks,
-   not labels, and a square holds two letters or a glyph equally well. */
-.eyebrow__apps .ptab__app{
-  width:28px;height:28px;font-size:11px;border-radius:7px;
-  /* the near-white the accent washes to: over this ground the muted grey the
-     marks inherit went dim enough to read as switched off */
-  color:#F3F2FD;border-color:#F3F2FD;
-}
-.eyebrow__apps .ptab__app svg{width:15px;height:15px}
+/* the eyebrow's marks are the ones every other place uses, at the size and
+   weight they were drawn at: bigger and whiter they took the line off the
+   headline under them, and taller they made this slide taller than the two
+   beside it, which moved the whole hero every time it turned. */
+/* and the line holds that height whichever slide is showing, so nothing on
+   the page below it shifts when the slide changes */
+#hero .eyebrow{min-height:22px;display:flex;align-items:center;flex-wrap:wrap;gap:var(--s-3)}
 .ptab__app{
   display:grid;place-items:center;width:24px;height:22px;padding:0;
   border-radius:5px;border:1px solid var(--border-strong);color:var(--fg-muted);
@@ -966,7 +971,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    white pill it sits on is already saying which tab is live, and the accent
    is spent on the things you can press elsewhere on this page */
 .ptabs button[aria-selected="true"] .ptab__app{
-  background:var(--fg);border-color:transparent;color:var(--n-0);
+  background:none;border-color:var(--accent-border);color:var(--accent-fg);
 }
 /* below the breakpoint the names would be shoulder to shoulder — let the row
    scroll and give each button back its own width */
@@ -1990,7 +1995,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   transition:background var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
 }
 .pchip__pick{
-  padding:8px 14px 8px 18px;border-radius:var(--r-full);
+  padding:8px 20px 8px 24px;border-radius:var(--r-full);
   color:var(--fg);font-size:var(--fs-4);font-weight:var(--fw-medium);
   letter-spacing:-0.01em;white-space:nowrap;
 }
@@ -2030,17 +2035,25 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .chipbuy__on{display:none}
 .pchip__buy.is-in .chipbuy__o{display:none}
 .pchip__buy.is-in .chipbuy__on{display:block}
-/* written through .pchip so it carries the same weight as the looked-at
-   rule above and, being later, wins it: a chip can be both at once, and when
-   it is, the body is purple and the disc is green — never one colour saying
-   two things */
+/* written through .pchip so it carries the same weight as the looked-at rule
+   above and, being later, wins it: a chip can be both at once, and when it
+   is, the body is purple and the disc is green — never one colour saying two
+   things. Filled, not tinted: this is a fact about the basket, and the basket
+   says its facts in the green it says everything else in. */
 .pchip .pchip__buy.is-in{
-  background:var(--ok-bg);color:var(--ok);box-shadow:inset 0 0 0 1px var(--ok-edge);
+  background:var(--ok);color:#FFFFFF;box-shadow:0 1px 3px rgba(12,74,45,.35);
 }
-/* pressing it again takes it out, so under the pointer it fills */
+/* pressing it again takes it out, so under the pointer it becomes the red the
+   rest of the page removes things in — the pale one, because this is an
+   offer, not a warning — and the tick becomes the cross it would leave */
 .pchip .pchip__buy.is-in:hover,.pchip .pchip__buy.is-in:focus-visible{
-  background:var(--ok);color:#FFFFFF;box-shadow:none;
+  background:#FBEDEB;color:var(--danger);box-shadow:inset 0 0 0 1px rgba(192,57,46,.30);
 }
+.chipbuy__x{display:none}
+.pchip .pchip__buy.is-in:hover .chipbuy__on,
+.pchip .pchip__buy.is-in:focus-visible .chipbuy__on{display:none}
+.pchip .pchip__buy.is-in:hover .chipbuy__x,
+.pchip .pchip__buy.is-in:focus-visible .chipbuy__x{display:block}
 /* the mark answers the press, and only the mark */
 .pchip__buy.is-beat .chipbuy__on{animation:chipPop 420ms cubic-bezier(.2,1.5,.32,1)}
 .pchip__buy.is-beat .chipbuy__o{animation:chipBack 380ms cubic-bezier(.2,1.4,.34,1)}
@@ -2062,30 +2075,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 /* the bundle is holding it. It stays a real button — a dead one cannot be
    hovered, and a refusal nobody can read is just a control that broke — so it
-   keeps the tick, refuses the press, and the bubble says why. It is the one
-   place the disc wears the accent, because the bundle is what is holding it. */
+   keeps the green and the tick, because it IS in the basket; it just refuses
+   the press, and the bubble says why. */
 .pchip .pchip__buy.is-inbundle,
 .pchip .pchip__buy.is-inbundle:hover,.pchip .pchip__buy.is-inbundle:focus-visible{
-  background:var(--accent-bg);color:var(--accent);
-  box-shadow:inset 0 0 0 1px var(--accent-border);
+  background:var(--ok);color:#FFFFFF;box-shadow:0 1px 3px rgba(12,74,45,.35);
   cursor:not-allowed;transform:none;
 }
-
-/* the price is the same for every pack, so it is said once above the row
-   rather than seven times inside it */
-.pprice{
-  display:flex;align-items:center;gap:var(--s-3);flex-wrap:wrap;
-  margin:0 0 var(--s-4);color:var(--fg-body);font-size:var(--fs-4);
-}
-.pprice__now{color:var(--fg);font-size:var(--fs-5);font-weight:var(--fw-bold)}
-.pprice__was{color:var(--fg-muted);font-size:var(--fs-2)}
-.pprice__off{
-  padding:3px 8px;border-radius:5px;
-  /* the deeper green: at 12px bold the lighter one lands on 4.46 against this
-     tint, which is under AA by a whisker */
-  background:var(--ok-bg);color:var(--ok-700);border:1px solid var(--ok-edge);
-  font-size:var(--fs-1);font-weight:var(--fw-bold);line-height:1.25;
-}
+.pchip .pchip__buy.is-inbundle .chipbuy__on,
+.pchip .pchip__buy.is-inbundle:hover .chipbuy__on,
+.pchip .pchip__buy.is-inbundle:focus-visible .chipbuy__on{display:block}
+.pchip .pchip__buy.is-inbundle:hover .chipbuy__x,
+.pchip .pchip__buy.is-inbundle:focus-visible .chipbuy__x{display:none}
 
 /* What pressing it would do, said before you press it. It cannot be drawn by
    the chip: the row of chips scrolls sideways, and a scroller clips whatever
@@ -2888,15 +2889,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .prod__drop{
   position:absolute;left:var(--s-1);right:var(--s-1);top:var(--s-4);bottom:var(--s-1);z-index:2;
   height:48px;margin-block:auto;
-  display:grid;place-items:center;border-radius:8px;
-  border:1px solid rgba(255,154,154,.34);background:rgba(120,22,32,.24);color:var(--danger-fg);
+  display:flex;align-items:center;justify-content:center;border-radius:8px;
+  border:1px solid rgba(232,163,61,.40);background:rgba(120,80,16,.28);color:#F3C57C;
   font-size:var(--fs-4);font-weight:var(--fw-semibold);letter-spacing:-.008em;
+  gap:var(--s-2);
   opacity:0;pointer-events:none;
   transition:opacity var(--dur-1) var(--ease), background var(--dur-1) var(--ease),
              color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
 }
 .prod:hover .prod__drop,.prod:focus-within .prod__drop{opacity:1;pointer-events:auto}
-.prod__drop:hover{background:rgba(168,32,48,.52);color:#fff;border-color:var(--danger-fg)}
+.prod__drop:hover{background:rgba(176,116,18,.55);color:#fff;border-color:#F3C57C}
+.prod__drop-i{flex:none}
 /* nothing hovers on a touch screen, so there it keeps a row of its own */
 @media (hover:none){
   .prod__by,.prod__t{opacity:1 !important}
@@ -4069,23 +4072,20 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <h2>Before &amp; After: See It in Action</h2>
       </div>
     </div>
-    <p class="pprice" data-reveal>Every preset <b class="pprice__now">$59</b>
-      <s class="pprice__was">$119</s>
-      <span class="pprice__off">50% off</span></p>
     <div class="pbar" data-reveal>
     <div class="pchips" role="tablist" aria-label="Preset and LUT packs">
-      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-0" aria-controls="bap-0" aria-selected="true">Lora</button><button class="pchip__buy" type="button" data-chipbuy="Lora Presets" data-tip="Add to cart" aria-label="Add Lora Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
-      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-1" aria-controls="bap-1" aria-selected="false">Solis</button><button class="pchip__buy" type="button" data-chipbuy="Solis Presets" data-tip="Add to cart" aria-label="Add Solis Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
-      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-2" aria-controls="bap-2" aria-selected="false">Terra</button><button class="pchip__buy" type="button" data-chipbuy="Terra Presets" data-tip="Add to cart" aria-label="Add Terra Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
-      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-3" aria-controls="bap-3" aria-selected="false">Jardin</button><button class="pchip__buy" type="button" data-chipbuy="Jardin Presets" data-tip="Add to cart" aria-label="Add Jardin Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
-      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-4" aria-controls="bap-4" aria-selected="false">Mely</button><button class="pchip__buy" type="button" data-chipbuy="Mely Presets" data-tip="Add to cart" aria-label="Add Mely Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
-      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-5" aria-controls="bap-5" aria-selected="false">Onyx</button><button class="pchip__buy" type="button" data-chipbuy="Onyx Presets" data-tip="Add to cart" aria-label="Add Onyx Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
-      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-6" aria-controls="bap-6" aria-selected="false">Doré</button><button class="pchip__buy" type="button" data-chipbuy="Doré Presets" data-tip="Add to cart" aria-label="Add Doré Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
-      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-7" aria-controls="bap-7" aria-selected="false">Olbia LUTs</button><button class="pchip__buy" type="button" data-chipbuy="Olbia LUTs" data-tip="Add to cart" aria-label="Add Olbia LUTs to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
-      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-8" aria-controls="bap-8" aria-selected="false">Demo</button><button class="pchip__buy" type="button" data-chipbuy="Demo Presets" data-tip="Add to cart" aria-label="Add Demo Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
-      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-9" aria-controls="bap-9" aria-selected="false">Vela</button><button class="pchip__buy" type="button" data-chipbuy="Vela Presets" data-tip="Add to cart" aria-label="Add Vela Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
-      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-10" aria-controls="bap-10" aria-selected="false">Nord</button><button class="pchip__buy" type="button" data-chipbuy="Nord Presets" data-tip="Add to cart" aria-label="Add Nord Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
-      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-11" aria-controls="bap-11" aria-selected="false">Aster LUTs</button><button class="pchip__buy" type="button" data-chipbuy="Aster LUTs" data-tip="Add to cart" aria-label="Add Aster LUTs to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></span>
+      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-0" aria-controls="bap-0" aria-selected="true">Lora</button><button class="pchip__buy" type="button" data-chipbuy="Lora Presets" data-tip="Add to cart" aria-label="Add Lora Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="13" height="13" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></span>
+      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-1" aria-controls="bap-1" aria-selected="false">Solis</button><button class="pchip__buy" type="button" data-chipbuy="Solis Presets" data-tip="Add to cart" aria-label="Add Solis Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="13" height="13" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></span>
+      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-2" aria-controls="bap-2" aria-selected="false">Terra</button><button class="pchip__buy" type="button" data-chipbuy="Terra Presets" data-tip="Add to cart" aria-label="Add Terra Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="13" height="13" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></span>
+      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-3" aria-controls="bap-3" aria-selected="false">Jardin</button><button class="pchip__buy" type="button" data-chipbuy="Jardin Presets" data-tip="Add to cart" aria-label="Add Jardin Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="13" height="13" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></span>
+      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-4" aria-controls="bap-4" aria-selected="false">Mely</button><button class="pchip__buy" type="button" data-chipbuy="Mely Presets" data-tip="Add to cart" aria-label="Add Mely Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="13" height="13" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></span>
+      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-5" aria-controls="bap-5" aria-selected="false">Onyx</button><button class="pchip__buy" type="button" data-chipbuy="Onyx Presets" data-tip="Add to cart" aria-label="Add Onyx Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="13" height="13" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></span>
+      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-6" aria-controls="bap-6" aria-selected="false">Doré</button><button class="pchip__buy" type="button" data-chipbuy="Doré Presets" data-tip="Add to cart" aria-label="Add Doré Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="13" height="13" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></span>
+      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-7" aria-controls="bap-7" aria-selected="false">Olbia LUTs</button><button class="pchip__buy" type="button" data-chipbuy="Olbia LUTs" data-tip="Add to cart" aria-label="Add Olbia LUTs to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="13" height="13" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></span>
+      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-8" aria-controls="bap-8" aria-selected="false">Demo</button><button class="pchip__buy" type="button" data-chipbuy="Demo Presets" data-tip="Add to cart" aria-label="Add Demo Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="13" height="13" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></span>
+      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-9" aria-controls="bap-9" aria-selected="false">Vela</button><button class="pchip__buy" type="button" data-chipbuy="Vela Presets" data-tip="Add to cart" aria-label="Add Vela Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="13" height="13" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></span>
+      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-10" aria-controls="bap-10" aria-selected="false">Nord</button><button class="pchip__buy" type="button" data-chipbuy="Nord Presets" data-tip="Add to cart" aria-label="Add Nord Presets to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="13" height="13" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></span>
+      <span class="pchip" role="none"><button class="pchip__pick" type="button" role="tab" id="bat-11" aria-controls="bap-11" aria-selected="false">Aster LUTs</button><button class="pchip__buy" type="button" data-chipbuy="Aster LUTs" data-tip="Add to cart" aria-label="Add Aster LUTs to basket"><svg class="chipbuy__o" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 4.4v11.2M4.4 10h11.2" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg><svg class="chipbuy__on" width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4.2 10.4l3.9 3.9 7.7-8.1" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg><svg class="chipbuy__x" width="13" height="13" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5.4 5.4l9.2 9.2M14.6 5.4l-9.2 9.2" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg></button></span>
       </div>
       <button class="arrow pchips__go" type="button" data-chipstep="-1" aria-label="Earlier packs" disabled><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <button class="arrow pchips__go" type="button" data-chipstep="1" aria-label="More packs" disabled><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M1.5 1l4 4.5-4 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -5640,7 +5640,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
        you are looking at it, Remove when you are over the thing that would
        take it back */
     function bill(hovering){
-      go.innerHTML = (hovering ? BIN + 'Remove' : TICK + 'Added to cart');
+      go.innerHTML = (hovering ? BIN + 'Remove bundle' : TICK + 'Added to cart');
       go.setAttribute('aria-label', 'Remove the bundle from your basket');
     }
     /* what the bundle is holding, by name, so the basket can fold the
@@ -5680,6 +5680,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     go.addEventListener('pointerleave', function(){ if(bought) bill(false); });
     go.addEventListener('blur', function(){ if(bought) bill(false); });
 
+    var SWAPMARK = '<svg class="prod__drop-i" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 7.4h11.1M11.6 4.4l3 3M16.6 12.6H5.5M8.4 15.6l-3-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     var GIFT = '<svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M12.2 4.2h-1.6a2.2 2.2 0 00.3-1.1A2.1 2.1 0 007 1.9a2.1 2.1 0 00-3.9 1.2 2.2 2.2 0 00.3 1.1H1.8a.6.6 0 00-.6.6v1.9a.6.6 0 00.6.6h.3v5a.6.6 0 00.6.6h3.7V4.2zm-4.9 0H5.2a1.1 1.1 0 111.1-1.1zm.9 0V3.1a1.1 1.1 0 111.1 1.1zm-.7 8.7h3.7a.6.6 0 00.6-.6v-5h.3a.6.6 0 00.6-.6V4.8a.6.6 0 00-.6-.6H7.5z"/></svg>';
     function box(id, n, isFree){
       var p = PACKS[id];
@@ -5695,9 +5696,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       var body = el('figcaption', 'prod__body',
         '<span class="prod__by"><span class="avatar">' + esc(p.ini) + '</span><b>' + esc(p.by) + '</b></span>' +
         '<h3 class="prod__t">' + esc(p.name) + '</h3>' +
-        '<button class="prod__drop" type="button">Remove</button>');
+        '<button class="prod__drop" type="button">' + SWAPMARK + 'Change</button>');
       var drop = body.querySelector('.prod__drop');
-      drop.setAttribute('aria-label', 'Remove ' + p.name + ' from the bundle');
+      drop.setAttribute('aria-label', 'Change ' + p.name + ' for another pack');
       drop.addEventListener('click', function(){ state.picks.splice(n, 1); render(); });
       f.appendChild(body);
       return f;
