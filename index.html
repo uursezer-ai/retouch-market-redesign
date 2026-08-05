@@ -917,18 +917,30 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   font-size:11px;font-weight:var(--fw-bold);line-height:1;
   transition:background var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
 }
-.ptabs button[aria-selected="true"] .ptab__no{background:var(--accent);color:var(--fg-on-accent)}
+.ptabs button[aria-selected="true"] .ptab__no{background:var(--fg);color:var(--n-0)}
 /* the chosen plugin's name stays the page's ink: the accent is the number's
    job here, and one accent per control is enough to say which is live */
 .ptabs button[aria-selected="true"] .ptab__nm{color:var(--fg)}
 /* and what it runs in after it — the same badge the tabs carried as cards */
 .ptab__apps{display:inline-flex;flex:none;gap:5px}
+/* the row centres these on its line box, and a line box carries descender
+   room the capitals beside them never use — so they land about a pixel low.
+   Measured off the rendered pixels, not guessed, and put back. */
+.ptab__apps .ptab__app{position:relative;top:-1px}
 /* the eyebrow can carry the apps it runs in: the same three marks the plugin
    tabs wear, so the badge for "this works in Photoshop" is one thing on this
    page and not two. They keep their own case against the eyebrow's caps —
    LrC is a name, not a shout. */
 .eyebrow--apps{display:flex;align-items:center;gap:var(--s-3);flex-wrap:wrap}
 .eyebrow__apps{display:inline-flex;gap:5px;text-transform:none;letter-spacing:0}
+/* filled in the accent and square, over a ground where a hairline chip has
+   almost nothing to draw itself against. Square because these are marks, not
+   labels, and a square holds two letters or a glyph equally well. */
+.eyebrow__apps .ptab__app{
+  width:28px;height:28px;font-size:11px;border-radius:7px;
+  background:var(--accent);border-color:transparent;color:var(--fg-on-accent);
+}
+.eyebrow__apps .ptab__app svg{width:15px;height:15px}
 .ptab__app{
   display:grid;place-items:center;width:24px;height:22px;padding:0;
   border-radius:5px;border:1px solid var(--border-strong);color:var(--fg-muted);
@@ -936,11 +948,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   transition:background var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease),
              color var(--dur-2) var(--ease);
 }
-/* the live tab fills its marks, the way the number beside them is filled —
-   selected, the whole button is one solid statement rather than an outline
-   inside an outline */
+/* the live tab fills its number and its marks, but in the page's ink: the
+   white pill it sits on is already saying which tab is live, and the accent
+   is spent on the things you can press elsewhere on this page */
 .ptabs button[aria-selected="true"] .ptab__app{
-  background:var(--accent);border-color:transparent;color:var(--fg-on-accent);
+  background:var(--fg);border-color:transparent;color:var(--n-0);
 }
 /* below the breakpoint the names would be shoulder to shoulder — let the row
    scroll and give each button back its own width */
@@ -1765,6 +1777,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .shelfbar.is-pinned .shelfbar__pin{display:flex}
 .shelfbar__cam{font-style:normal;line-height:1}
 .shelfbar__apps{display:inline-flex;gap:5px;flex:none}
+.shelfbar__apps .ptab__app{position:relative;top:-1.5px}
 /* filled in the ink of the sentence they sit beside, so they read as part of
    that line rather than as a second voice on it */
 .shelfbar__apps .ptab__app{
@@ -2678,6 +2691,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    that leans against it. Same colours — it is meant to read as the same room
    at the other end of the page. */
 .offer2{background:var(--bg);border-top:1px solid var(--border);color:var(--fg-body)}
+/* jumped to from the nav and from the closing call, and this one is a
+   full-bleed dark band: the 16px every other anchor leaves under the bar
+   shows up here as a white sliver, so it lands flush against it */
+.offer2{scroll-margin-top:var(--nav-h)}
 .offer2,.footer{--px:50%;--py:40%}
 .offer2__glow{
   position:absolute;inset:-20% -10%;z-index:-1;pointer-events:none;
