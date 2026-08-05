@@ -917,6 +917,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   font-size:11px;font-weight:var(--fw-bold);line-height:1;
   transition:background var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
 }
+/* the live tab lifts on the page's secondary ground rather than plain
+   white: over a sunken track, white was the brightest thing in the section
+   and pulled harder than the plugin it was naming */
+.ptabs button[aria-selected="true"]{background:var(--bg-subtle)}
 .ptabs button[aria-selected="true"] .ptab__no{background:var(--fg);color:var(--n-0)}
 /* the chosen plugin's name stays the page's ink: the accent is the number's
    job here, and one accent per control is enough to say which is live */
@@ -933,12 +937,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    LrC is a name, not a shout. */
 .eyebrow--apps{display:flex;align-items:center;gap:var(--s-3);flex-wrap:wrap}
 .eyebrow__apps{display:inline-flex;gap:5px;text-transform:none;letter-spacing:0}
-/* filled in the accent and square, over a ground where a hairline chip has
-   almost nothing to draw itself against. Square because these are marks, not
-   labels, and a square holds two letters or a glyph equally well. */
+/* square and drawn rather than filled: these name what the plugins open in,
+   which is a footnote to the headline under them, and a filled block at this
+   size read as three buttons you could press. Square because they are marks,
+   not labels, and a square holds two letters or a glyph equally well. */
 .eyebrow__apps .ptab__app{
   width:28px;height:28px;font-size:11px;border-radius:7px;
-  background:var(--accent);border-color:transparent;color:var(--fg-on-accent);
 }
 .eyebrow__apps .ptab__app svg{width:15px;height:15px}
 .ptab__app{
@@ -1767,11 +1771,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    what these are and what they open in. */
 .shelfbar__say{display:block}
 .shelfbar__by{display:block}
-/* the pinned line is a toolbar label and holds to one row, ellipsis and all;
-   the credit line above is running text and may wrap on a narrow screen */
+/* the pinned line is a toolbar label and holds to one row. It does not clip:
+   the marks stand taller than the line box they sit in, so an overflow box
+   drawn to the text would cut their tops off. */
 .shelfbar__pin{
   display:none;align-items:center;gap:var(--s-3);min-width:0;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap;
 }
 .shelfbar.is-pinned .shelfbar__by{display:none}
 .shelfbar.is-pinned .shelfbar__pin{display:flex}
