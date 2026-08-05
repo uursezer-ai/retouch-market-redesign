@@ -1769,6 +1769,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    out what you were on. Built out of the segmented control this page already
    uses — a sunken track, a white pill on the live one — at the size the bar
    is set in. The mark counts the columns it gives you. */
+/* the control says what it is, in the words the bar is written in */
+.colspick{flex:none;display:inline-flex;align-items:center;gap:var(--s-3)}
+.colspick__t{
+  font-size:var(--fs-3);font-weight:var(--fw-semibold);color:var(--fg-body);
+  white-space:nowrap;
+}
 .cols{
   flex:none;display:inline-flex;gap:2px;padding:3px;
   border-radius:var(--r-control);background:var(--surface-sunken);
@@ -1782,13 +1788,20 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .cols button b{font-weight:inherit;font-variant-numeric:tabular-nums}
 .cols button:hover{color:var(--fg)}
-.cols button[aria-checked="true"]{background:var(--surface);color:var(--fg);box-shadow:var(--sh-1)}
+/* the live one is filled rather than lifted: this is the only control on the
+   bar you set and leave, so it should be readable at a glance from across the
+   row rather than found by looking for the one with a shadow under it */
+.cols button[aria-checked="true"]{
+  background:var(--accent);color:var(--fg-on-accent);
+  box-shadow:0 1px 2px rgba(71,64,184,.35);
+}
 .cols__i{flex:none;width:13px;height:13px;color:var(--n-400)}
 .cols button:hover .cols__i{color:var(--fg-body)}
-.cols button[aria-checked="true"] .cols__i{color:var(--accent)}
+.cols button[aria-checked="true"] .cols__i{color:var(--fg-on-accent)}
 @media (prefers-reduced-motion:reduce){.cols button{transition:none}}
 @media (max-width:620px){
   .cols button{padding:5px 7px;gap:4px}
+  .colspick__t{display:none}
 }
 
 .tools{display:flex;align-items:center;gap:var(--s-3);flex:none}
@@ -3697,10 +3710,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="wrap shelfbar__in">
       <p class="lede shelfbar__say"><b class="shelfbar__where">Presets &amp; LUTs</b><span class="shelfbar__what">For Lightroom Classic &amp; Camera Raw,</span> created by Türkiye&#8217;s popular photographers <span aria-hidden="true">&#10084;&#65039;</span></p>
       <div class="tools">
-        <div class="cols" role="radiogroup" aria-label="Grid width" data-tip="Fewer columns, larger preview" data-tip-below>
+        <div class="colspick">
+        <span class="colspick__t" id="colsLabel">View</span>
+        <div class="cols" role="radiogroup" aria-labelledby="colsLabel" data-tip="Fewer columns, larger preview" data-tip-below>
           <button type="button" role="radio" data-cols="2" aria-checked="false" aria-label="2 columns"><svg class="cols__i" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1.60" y="2.8" width="5.60" height="10.4" rx="1.00"/><rect x="8.80" y="2.8" width="5.60" height="10.4" rx="1.00"/></svg><b>2</b></button>
           <button type="button" role="radio" data-cols="3" aria-checked="false" aria-label="3 columns"><svg class="cols__i" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1.60" y="2.8" width="3.20" height="10.4" rx="1.00"/><rect x="6.40" y="2.8" width="3.20" height="10.4" rx="1.00"/><rect x="11.20" y="2.8" width="3.20" height="10.4" rx="1.00"/></svg><b>3</b></button>
           <button type="button" role="radio" data-cols="4" aria-checked="true" aria-label="4 columns"><svg class="cols__i" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1.60" y="2.8" width="2.00" height="10.4" rx="1.00"/><rect x="5.20" y="2.8" width="2.00" height="10.4" rx="1.00"/><rect x="8.80" y="2.8" width="2.00" height="10.4" rx="1.00"/><rect x="12.40" y="2.8" width="2.00" height="10.4" rx="1.00"/></svg><b>4</b></button>
+        </div>
         </div>
         <div class="sort">
           <button class="sort__btn" type="button" id="sortBtn" aria-expanded="false" aria-haspopup="true" aria-controls="sortMenu">
