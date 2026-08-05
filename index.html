@@ -918,9 +918,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   transition:background var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
 }
 .ptabs button[aria-selected="true"] .ptab__no{background:var(--accent);color:var(--fg-on-accent)}
-/* the chosen plugin's name in the primary, so the eye finds it before it
-   finds the pill it sits in — 4.65:1 on the white pill, which clears AA */
-.ptabs button[aria-selected="true"] .ptab__nm{color:var(--accent)}
+/* the chosen plugin's name stays the page's ink: the accent is the number's
+   job here, and one accent per control is enough to say which is live */
+.ptabs button[aria-selected="true"] .ptab__nm{color:var(--fg)}
 /* and what it runs in after it — the same badge the tabs carried as cards */
 .ptab__apps{display:inline-flex;flex:none;gap:5px}
 /* the eyebrow can carry the apps it runs in: the same three marks the plugin
@@ -940,18 +940,23 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    selected, the whole button is one solid statement rather than an outline
    inside an outline */
 .ptabs button[aria-selected="true"] .ptab__app{
-  background:var(--accent);border-color:transparent;color:var(--fg-on-accent);
+  background:var(--fg);border-color:transparent;color:var(--n-0);
 }
 /* a heading can carry them too. Sized in the heading's own em so they hold
    their proportion as it clamps down, and filled in the heading's ink —
    at 38px an outline beside that weight reads as a gap in the line. */
 .head--apps{display:block}
 .head__apps{
-  display:inline-flex;gap:.20em;margin-left:.30em;
-  vertical-align:.02em;letter-spacing:0;white-space:nowrap;
+  display:inline-flex;gap:.18em;margin-left:.30em;
+  /* raised off the baseline until the square's middle sits on the middle of
+     the capitals beside it — measured, not guessed, and in the heading's own
+     em so it holds as the heading clamps down */
+  vertical-align:.22em;letter-spacing:0;white-space:nowrap;
 }
+/* square, and about as tall as those capitals, so the pair reads as part of
+   the line rather than as something dropped under it */
 .head__apps .ptab__app{
-  font-size:max(10px,.30em);width:2.55em;height:2.10em;border-radius:.44em;
+  font-size:max(9.5px,.285em);width:2.72em;height:2.72em;border-radius:.55em;
   background:var(--fg);border-color:transparent;color:var(--n-0);
 }
 /* below the breakpoint the names would be shoulder to shoulder — let the row
@@ -2076,10 +2081,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   /* the page's secondary: a white card with the page's own edge, the way
      every other floating thing on it is built. The bubble is not the thing
      being pointed at and does not need to compete with it. */
-  /* the bubble is the page's own surface; the words on it are the page's own
-     accent, so a name the pointer asked for reads as an answer rather than
-     as more body copy */
-  background:var(--tip-fill);color:var(--accent);
+  /* the bubble is the page's own surface, and the words on it are its own
+     ink — the numbered disc beside them is the one accent the bubble needs */
+  background:var(--tip-fill);color:var(--fg);
   /* one variable for the edge, so the point can be drawn in whatever the box
      is wearing rather than in a colour of its own */
   --tip-edge:var(--border);--tip-fill:var(--surface);
@@ -4039,8 +4043,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   <div class="wrap">
     <div class="section__head" data-reveal>
       <div>
-        <p class="eyebrow">Before / after</p>
-        <h2>Choose a Preset. See the Difference.</h2>
+        <p class="eyebrow">Explore the Presets</p>
+        <h2>Before &amp; After: See It in Action</h2>
       </div>
     </div>
     <div class="pbar" data-reveal>
