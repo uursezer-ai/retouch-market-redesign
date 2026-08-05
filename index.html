@@ -1746,14 +1746,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .shelfbar.is-pinned .shelfbar__say{
   font-size:var(--fs-4);color:var(--fg);font-weight:var(--fw-semibold);
 }
-/* and it changes what it says: at rest the head above it has just named the
-   section, so the line describes it. Pinned, the head is gone off the top and
-   the line says where you are instead. */
-.shelfbar__where{display:none}
-.shelfbar.is-pinned .shelfbar__where{display:inline}
-.shelfbar.is-pinned .shelfbar__what{display:none}
-/* and it points at the control it is talking about — pinned only, since at
-   rest the head above is still doing the talking */
+/* One line in both states now: it names what the shelf holds and what those
+   files open in, which is as true pinned as it is at rest — so there is
+   nothing to swap over when the bar sticks. */
+.shelfbar__say{display:inline-flex;align-items:center;gap:var(--s-3)}
+.shelfbar__apps{display:inline-flex;gap:5px;flex:none}
 @media (max-width:1180px){.shelfbar__say{display:none}}
 .shelfbar__watch{display:block;height:1px;margin-bottom:-1px}
 @media (min-width:861px){
@@ -1777,8 +1774,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .cols{
   flex:none;display:inline-flex;gap:2px;padding:3px;
-  border-radius:var(--r-control);background:var(--surface-sunken);
-  border:1px solid var(--border);
+  border-radius:var(--r-control);
+  /* white with a hairline, the same surface the Popular control beside it is
+     on — two controls on one bar should be standing on the same thing */
+  background:var(--surface);border:1px solid var(--border);
 }
 .cols button{
   display:inline-flex;align-items:center;gap:6px;
@@ -3708,7 +3707,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   <span class="shelfbar__watch" aria-hidden="true"></span>
   <div class="shelfbar" data-shelfbar>
     <div class="wrap shelfbar__in">
-      <p class="lede shelfbar__say"><b class="shelfbar__where">Presets &amp; LUTs</b><span class="shelfbar__what">For Lightroom Classic &amp; Camera Raw,</span> created by Türkiye&#8217;s popular photographers <span aria-hidden="true">&#10084;&#65039;</span></p>
+      <p class="lede shelfbar__say">Original presets for Lightroom Classic &amp; Camera Raw<span class="shelfbar__apps" aria-hidden="true"><span class="ptab__app">Ps</span><span class="ptab__app">LrC</span></span><span class="vh"> — for Photoshop and Lightroom Classic</span></p>
       <div class="tools">
         <div class="colspick">
         <span class="colspick__t" id="colsLabel">View</span>
