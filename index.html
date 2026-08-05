@@ -933,9 +933,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   display:grid;place-items:center;width:24px;height:22px;padding:0;
   border-radius:5px;border:1px solid var(--border-strong);color:var(--fg-muted);
   font-size:10px;font-weight:var(--fw-bold);line-height:1;
-  transition:border-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
+  transition:background var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease),
+             color var(--dur-2) var(--ease);
 }
-.ptabs button[aria-selected="true"] .ptab__app{border-color:var(--accent-border);color:var(--accent-700)}
+/* the live tab fills its marks, the way the number beside them is filled —
+   selected, the whole button is one solid statement rather than an outline
+   inside an outline */
+.ptabs button[aria-selected="true"] .ptab__app{
+  background:var(--accent);border-color:transparent;color:var(--fg-on-accent);
+}
 /* below the breakpoint the names would be shoulder to shoulder — let the row
    scroll and give each button back its own width */
 @media (max-width:1000px){
@@ -1746,10 +1752,20 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .shelfbar.is-pinned .shelfbar__say{
   font-size:var(--fs-4);color:var(--fg);font-weight:var(--fw-semibold);
 }
-/* One line in both states now: it names what the shelf holds and what those
-   files open in, which is as true pinned as it is at rest — so there is
-   nothing to swap over when the bar sticks. */
-.shelfbar__say{display:inline-flex;align-items:center;gap:var(--s-3)}
+/* Two lines at rest: what the shelf holds and what those files open in, then
+   who made them. Pinned, the second line goes — a toolbar wants the name and
+   nothing else, and the credit has already been read by then. */
+.shelfbar__say{display:block}
+.shelfbar__name{
+  display:flex;align-items:center;gap:var(--s-3);
+  min-width:0;white-space:nowrap;
+}
+.shelfbar__by{
+  display:block;margin-top:5px;white-space:nowrap;
+  font-size:var(--fs-4);color:var(--fg-muted);font-weight:var(--fw-regular);
+}
+.shelfbar__cam{font-style:normal;line-height:1}
+.shelfbar.is-pinned .shelfbar__by{display:none}
 .shelfbar__apps{display:inline-flex;gap:5px;flex:none}
 /* filled in the ink of the sentence they sit beside, so they read as part
    of that line rather than as a second voice on it — and they follow it
@@ -3715,11 +3731,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   <span class="shelfbar__watch" aria-hidden="true"></span>
   <div class="shelfbar" data-shelfbar>
     <div class="wrap shelfbar__in">
-      <p class="lede shelfbar__say">Original presets for Lightroom Classic &amp; Camera Raw<span class="shelfbar__apps" aria-hidden="true"><span class="ptab__app">Ps</span><span class="ptab__app">LrC</span></span><span class="vh"> — for Photoshop and Lightroom Classic</span></p>
+      <p class="lede shelfbar__say">
+        <span class="shelfbar__name">Original Signature Presets<span class="shelfbar__apps" aria-hidden="true"><span class="ptab__app">Ps</span><span class="ptab__app">LrC</span></span><span class="vh"> — for Photoshop and Lightroom Classic</span></span>
+        <span class="shelfbar__by">Created by Türkiye&rsquo;s most popular photographers <span class="shelfbar__cam" aria-hidden="true">&#128248;</span></span>
+      </p>
       <div class="tools">
         <div class="colspick">
-        <span class="colspick__t" id="colsLabel">View</span>
-        <div class="cols" role="radiogroup" aria-labelledby="colsLabel" data-tip="Fewer columns, larger preview" data-tip-below>
+        <span class="colspick__t" id="colsLabel">Large view</span>
+        <div class="cols" role="radiogroup" aria-labelledby="colsLabel">
           <button type="button" role="radio" data-cols="2" aria-checked="false" aria-label="2 columns"><svg class="cols__i" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1.60" y="2.8" width="5.60" height="10.4" rx="1.00"/><rect x="8.80" y="2.8" width="5.60" height="10.4" rx="1.00"/></svg><b>2</b></button>
           <button type="button" role="radio" data-cols="3" aria-checked="false" aria-label="3 columns"><svg class="cols__i" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1.60" y="2.8" width="3.20" height="10.4" rx="1.00"/><rect x="6.40" y="2.8" width="3.20" height="10.4" rx="1.00"/><rect x="11.20" y="2.8" width="3.20" height="10.4" rx="1.00"/></svg><b>3</b></button>
           <button type="button" role="radio" data-cols="4" aria-checked="true" aria-label="4 columns"><svg class="cols__i" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1.60" y="2.8" width="2.00" height="10.4" rx="1.00"/><rect x="5.20" y="2.8" width="2.00" height="10.4" rx="1.00"/><rect x="8.80" y="2.8" width="2.00" height="10.4" rx="1.00"/><rect x="12.40" y="2.8" width="2.00" height="10.4" rx="1.00"/></svg><b>4</b></button>
@@ -7082,7 +7101,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   window.addEventListener('scroll', tipOff, {passive:true});
 
   /* anything else that carries words for the pointer gets the same bubble */
-  document.querySelectorAll('.pbuy__art [data-tip], .cols[data-tip]').forEach(function(el){
+  document.querySelectorAll('.pbuy__art [data-tip]').forEach(function(el){
     el.addEventListener('pointerenter', function(){ tipShow(el); });
     el.addEventListener('pointerleave', tipOff);
     el.addEventListener('focus', function(){ tipShow(el); });
