@@ -940,24 +940,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    selected, the whole button is one solid statement rather than an outline
    inside an outline */
 .ptabs button[aria-selected="true"] .ptab__app{
-  background:var(--fg);border-color:transparent;color:var(--n-0);
-}
-/* a heading can carry them too. Sized in the heading's own em so they hold
-   their proportion as it clamps down, and filled in the heading's ink —
-   at 38px an outline beside that weight reads as a gap in the line. */
-.head--apps{display:block}
-.head__apps{
-  display:inline-flex;gap:.18em;margin-left:.30em;
-  /* raised off the baseline until the square's middle sits on the middle of
-     the capitals beside it — measured, not guessed, and in the heading's own
-     em so it holds as the heading clamps down */
-  vertical-align:.22em;letter-spacing:0;white-space:nowrap;
-}
-/* square, and about as tall as those capitals, so the pair reads as part of
-   the line rather than as something dropped under it */
-.head__apps .ptab__app{
-  font-size:max(9.5px,.285em);width:2.72em;height:2.72em;border-radius:.55em;
-  background:var(--fg);border-color:transparent;color:var(--n-0);
+  background:var(--accent);border-color:transparent;color:var(--fg-on-accent);
 }
 /* below the breakpoint the names would be shoulder to shoulder — let the row
    scroll and give each button back its own width */
@@ -3527,7 +3510,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 6 of 7: Masking hair edges"></button>
                 <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 7 of 7: Saving your own recipe"></button>
               </div>
-              <button class="deck__play is-playing" type="button" data-deck-toggle aria-label="Pause the RetouchX Plugin carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
+              <button class="deck__play" type="button" data-deck-toggle aria-label="Play the RetouchX Plugin carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
             </div>
             <div class="deck__arrows">
               <button class="arrow" type="button" data-deck-step="-1" aria-label="Previous video"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -3621,7 +3604,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 6 of 7: Split toning shadows"></button>
                 <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 7 of 7: Exporting a preset pack"></button>
               </div>
-              <button class="deck__play is-playing" type="button" data-deck-toggle aria-label="Pause the Lightroom Ai Color Plugin carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
+              <button class="deck__play" type="button" data-deck-toggle aria-label="Play the Lightroom Ai Color Plugin carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
             </div>
             <div class="deck__arrows">
               <button class="arrow" type="button" data-deck-step="-1" aria-label="Previous video"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -3715,7 +3698,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
                 <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 6 of 7: Cleaning up backgrounds"></button>
                 <button class="deck__dot" type="button" aria-current="false" aria-label="Go to video 7 of 7: Sharpening for print"></button>
               </div>
-              <button class="deck__play is-playing" type="button" data-deck-toggle aria-label="Pause the US Photoshop Plugin carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
+              <button class="deck__play" type="button" data-deck-toggle aria-label="Play the US Photoshop Plugin carousel"><svg class="i-play" width="11" height="13" viewBox="0 0 11 13" fill="currentColor" aria-hidden="true"><path d="M10.2 5.6a1 1 0 010 1.8l-8.7 5A1 1 0 010 11.5v-10A1 1 0 011.5.6l8.7 5z"/></svg><svg class="i-pause" width="10" height="12" viewBox="0 0 10 12" fill="currentColor" aria-hidden="true"><rect x="0" y="0" width="3.4" height="12" rx="1.1"/><rect x="6.6" y="0" width="3.4" height="12" rx="1.1"/></svg></button>
             </div>
             <div class="deck__arrows">
               <button class="arrow" type="button" data-deck-step="-1" aria-label="Previous video"><svg width="7" height="11" viewBox="0 0 7 11" fill="none" aria-hidden="true"><path d="M5.5 1L1.5 5.5 5.5 10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
@@ -3734,7 +3717,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="section__head" data-reveal>
       <div>
         <p class="eyebrow">Presets &amp; LUTs</p>
-        <h2 class="head--apps">Original Signature Presets<span class="head__apps" aria-hidden="true"><span class="ptab__app">Ps</span><span class="ptab__app">LrC</span></span><span class="vh"> — for Photoshop and Lightroom Classic</span></h2>
+        <h2>Original Signature Presets &amp; LUTs</h2>
       </div>
       <a class="vh" href="#">View store
         <svg width="13" height="10" viewBox="0 0 13 10" fill="none" aria-hidden="true"><path d="M1 5h10M8 1.5L11.5 5 8 8.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -3750,8 +3733,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   <div class="shelfbar" data-shelfbar>
     <div class="wrap shelfbar__in">
       <p class="lede shelfbar__say">
-        <span class="shelfbar__by">Created by Türkiye&rsquo;s most popular photographers <span class="shelfbar__cam" aria-hidden="true">&#128248;</span></span>
-        <span class="shelfbar__pin">Original presets for Lightroom Classic &amp; Camera Raw<span class="shelfbar__apps" aria-hidden="true"><span class="ptab__app">LrC</span><span class="ptab__app">Ps</span></span><span class="vh"> — for Lightroom Classic and Photoshop</span></span>
+        <span class="shelfbar__by">Created by Türkiye&rsquo;s most popular photographers <span class="shelfbar__cam" aria-hidden="true">&#128142;</span></span>
+        <span class="shelfbar__pin">Presets for Camera Raw &amp; Lightroom Classic<span class="shelfbar__apps" aria-hidden="true"><span class="ptab__app">Ps</span><span class="ptab__app">LrC</span></span><span class="vh"> — for Photoshop and Lightroom Classic</span></span>
       </p>
       <div class="tools">
         <div class="colspick">
@@ -4043,7 +4026,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   <div class="wrap">
     <div class="section__head" data-reveal>
       <div>
-        <p class="eyebrow">Explore the Presets</p>
+        <p class="eyebrow">Explore Presets</p>
         <h2>Before &amp; After: See It in Action</h2>
       </div>
     </div>
@@ -5841,7 +5824,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     var idx = 0,
         want = null,      /* where a scroll we started is heading, or null */
         timer = null, settle = null, raf = 0,
-        playing = !still, near = false, seen = false;
+        /* the deck waits to be asked. Three of these sit one under another in
+           the plugins section, and a page that starts playing at you the
+           moment it loads is a page you turn the sound off on — even muted,
+           the movement takes the read away from the copy beside it. */
+        playing = false, near = false, seen = false;
 
     /* on screen, on the live tab, and not switched off */
     function awake(){
