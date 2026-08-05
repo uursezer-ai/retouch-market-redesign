@@ -1754,9 +1754,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .shelfbar.is-pinned .shelfbar__what{display:none}
 /* and it points at the control it is talking about — pinned only, since at
    rest the head above is still doing the talking */
-.shelfbar__hint{display:none;margin-left:var(--s-3);color:var(--fg-muted);font-weight:var(--fw-regular)}
-.shelfbar.is-pinned .shelfbar__hint{display:inline-flex;align-items:center;gap:6px}
-.shelfbar__go{flex:none}
 @media (max-width:1180px){.shelfbar__say{display:none}}
 .shelfbar__watch{display:block;height:1px;margin-bottom:-1px}
 @media (min-width:861px){
@@ -1767,6 +1764,33 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 @media (prefers-reduced-motion:reduce){.shelfbar{transition:none}}
 /* how many across, then in what order — the pair reads left to right the way
    the sentence does */
+/* Three widths on the line rather than one behind a menu: the choice is
+   small, closed and worth seeing, and a dropdown made you open it to find
+   out what you were on. Built out of the segmented control this page already
+   uses — a sunken track, a white pill on the live one — at the size the bar
+   is set in. The mark counts the columns it gives you. */
+.cols{
+  flex:none;display:inline-flex;gap:2px;padding:3px;
+  border-radius:var(--r-control);background:var(--surface-sunken);
+  border:1px solid var(--border);
+}
+.cols button{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:5px 9px;border-radius:7px;
+  font-size:var(--fs-3);font-weight:var(--fw-semibold);color:var(--fg-muted);
+  transition:background var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+}
+.cols button b{font-weight:inherit;font-variant-numeric:tabular-nums}
+.cols button:hover{color:var(--fg)}
+.cols button[aria-checked="true"]{background:var(--surface);color:var(--fg);box-shadow:var(--sh-1)}
+.cols__i{flex:none;width:13px;height:13px;color:var(--n-400)}
+.cols button:hover .cols__i{color:var(--fg-body)}
+.cols button[aria-checked="true"] .cols__i{color:var(--accent)}
+@media (prefers-reduced-motion:reduce){.cols button{transition:none}}
+@media (max-width:620px){
+  .cols button{padding:5px 7px;gap:4px}
+}
+
 .tools{display:flex;align-items:center;gap:var(--s-3);flex:none}
 .sort{position:relative;flex:none}
 .sort__btn{
@@ -2025,6 +2049,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .tipbox::before{border-top-color:var(--tip-edge)}
 .tipbox::after{border-top-color:var(--tip-fill);margin-top:-1.5px;border-width:6px}
+/* under it instead of over it, for anything living against the top of the
+   window — a bubble above a pinned bar is a bubble behind the bar */
+.tipbox.is-below::before,.tipbox.is-below::after{top:auto;bottom:100%;border-top-color:transparent}
+.tipbox.is-below::before{border-bottom-color:var(--tip-edge)}
+.tipbox.is-below::after{border-bottom-color:var(--tip-fill);margin-top:0;margin-bottom:-1.5px}
 /* a number in front of the name, where the thing being named is one of a
    numbered set */
 /* and the count keeps the primary — it is the one thing in here that is
@@ -3666,18 +3695,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   <span class="shelfbar__watch" aria-hidden="true"></span>
   <div class="shelfbar" data-shelfbar>
     <div class="wrap shelfbar__in">
-      <p class="lede shelfbar__say"><b class="shelfbar__where">Presets &amp; LUTs</b><span class="shelfbar__what">For Lightroom Classic &amp; Camera Raw,</span> created by Türkiye&#8217;s popular photographers <span aria-hidden="true">&#10084;&#65039;</span><span class="shelfbar__hint">Change columns for a closer view <svg class="shelfbar__go" width="15" height="11" viewBox="0 0 15 11" fill="none" aria-hidden="true"><path d="M1 5.5h12M9.2 1.4l4.1 4.1-4.1 4.1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></p>
+      <p class="lede shelfbar__say"><b class="shelfbar__where">Presets &amp; LUTs</b><span class="shelfbar__what">For Lightroom Classic &amp; Camera Raw,</span> created by Türkiye&#8217;s popular photographers <span aria-hidden="true">&#10084;&#65039;</span></p>
       <div class="tools">
-        <div class="sort">
-          <button class="sort__btn" type="button" id="colsBtn" aria-expanded="false" aria-haspopup="true" aria-controls="colsMenu">
-            <svg class="sort__i" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.6" y="2.8" width="3.4" height="10.4" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="6.3" y="2.8" width="3.4" height="10.4" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="2.8" width="3.4" height="10.4" rx="1" stroke="currentColor" stroke-width="1.5"/></svg><span class="vh">Grid width: </span><b id="colsNow">4 Columns</b>
-            <svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" aria-hidden="true"><path d="M1 1l3.5 3.5L8 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          </button>
-          <div class="sort__menu" id="colsMenu" role="menu" aria-label="Grid width" hidden>
-            <button type="button" role="menuitemradio" data-cols="2" aria-current="false">2 Columns</button>
-            <button type="button" role="menuitemradio" data-cols="3" aria-current="false">3 Columns</button>
-            <button type="button" role="menuitemradio" data-cols="4" aria-current="true">4 Columns</button>
-          </div>
+        <div class="cols" role="radiogroup" aria-label="Grid width" data-tip="Fewer columns, larger preview" data-tip-below>
+          <button type="button" role="radio" data-cols="2" aria-checked="false" aria-label="2 columns"><svg class="cols__i" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1.60" y="2.8" width="5.60" height="10.4" rx="1.00"/><rect x="8.80" y="2.8" width="5.60" height="10.4" rx="1.00"/></svg><b>2</b></button>
+          <button type="button" role="radio" data-cols="3" aria-checked="false" aria-label="3 columns"><svg class="cols__i" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1.60" y="2.8" width="3.20" height="10.4" rx="1.00"/><rect x="6.40" y="2.8" width="3.20" height="10.4" rx="1.00"/><rect x="11.20" y="2.8" width="3.20" height="10.4" rx="1.00"/></svg><b>3</b></button>
+          <button type="button" role="radio" data-cols="4" aria-checked="true" aria-label="4 columns"><svg class="cols__i" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1.60" y="2.8" width="2.00" height="10.4" rx="1.00"/><rect x="5.20" y="2.8" width="2.00" height="10.4" rx="1.00"/><rect x="8.80" y="2.8" width="2.00" height="10.4" rx="1.00"/><rect x="12.40" y="2.8" width="2.00" height="10.4" rx="1.00"/></svg><b>4</b></button>
         </div>
         <div class="sort">
           <button class="sort__btn" type="button" id="sortBtn" aria-expanded="false" aria-haspopup="true" aria-controls="sortMenu">
@@ -6830,12 +6853,35 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     });
     /* and the grid takes the width you ask for, until the window is too
        narrow to give it — then the breakpoints have the last word */
-    picker('cols', function(opt){
-      move(function(){
-        grid.classList.remove('is-cols-2', 'is-cols-3', 'is-cols-4');
-        grid.classList.add('is-cols-' + opt.getAttribute('data-cols'));
+    /* the width is a radio group on the bar now: no menu to open, no label to
+       keep in step with what is checked */
+    (function(){
+      var group = document.querySelector('.cols');
+      if(!group) return;
+      var opts = [].slice.call(group.querySelectorAll('[data-cols]'));
+      function set(opt){
+        if(opt.getAttribute('aria-checked') === 'true') return;
+        opts.forEach(function(o){
+          o.setAttribute('aria-checked', String(o === opt));
+          o.tabIndex = o === opt ? 0 : -1;
+        });
+        move(function(){
+          grid.classList.remove('is-cols-2', 'is-cols-3', 'is-cols-4');
+          grid.classList.add('is-cols-' + opt.getAttribute('data-cols'));
+        });
+      }
+      opts.forEach(function(o, n){
+        o.tabIndex = o.getAttribute('aria-checked') === 'true' ? 0 : -1;
+        o.addEventListener('click', function(){ set(o); });
+        o.addEventListener('keydown', function(e){
+          var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+          if(!d) return;
+          e.preventDefault();
+          var to = opts[(n + d + opts.length) % opts.length];
+          set(to); to.focus();
+        });
       });
-    });
+    })();
     document.addEventListener('click', shutAll);
     document.addEventListener('keydown', function(e){ if(e.key === 'Escape') shutAll(); });
 
@@ -6998,7 +7044,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     var mid = r.left + r.width / 2;
     var left = Math.max(8, Math.min(document.documentElement.clientWidth - 8 - w, mid - w / 2));
     tipBox.style.left = Math.round(left) + 'px';
-    tipBox.style.top = Math.round(r.top - tipBox.offsetHeight - 11) + 'px';
+    var below = el.hasAttribute('data-tip-below');
+    tipBox.classList.toggle('is-below', below);
+    tipBox.style.top = Math.round(below ? r.bottom + 11
+                                        : r.top - tipBox.offsetHeight - 11) + 'px';
     tipBox.style.setProperty('--point', Math.round(mid - left) + 'px');
     requestAnimationFrame(function(){ tipBox.classList.add('is-on'); });
   }
@@ -7010,7 +7059,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   window.addEventListener('scroll', tipOff, {passive:true});
 
   /* anything else that carries words for the pointer gets the same bubble */
-  document.querySelectorAll('.pbuy__art [data-tip]').forEach(function(el){
+  document.querySelectorAll('.pbuy__art [data-tip], .cols[data-tip]').forEach(function(el){
     el.addEventListener('pointerenter', function(){ tipShow(el); });
     el.addEventListener('pointerleave', tipOff);
     el.addEventListener('focus', function(){ tipShow(el); });
