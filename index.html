@@ -2058,13 +2058,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* ════════════════════════════════════════════════════════════════
    5 · PRESETS
    ════════════════════════════════════════════════════════════════ */
-.cards{--cols:3;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:var(--s-6)}
+.cards{--cols:4;display:grid;grid-template-columns:repeat(var(--cols),minmax(0,1fr));gap:var(--s-6)}
 .cards.is-cols-2{--cols:2}
 .cards.is-cols-3{--cols:3}
 .cards.is-cols-4{--cols:4}
 /* four across wants room the page does not have below this, and the
-   breakpoints keep the last word however wide you asked for */
-@media (max-width:1120px){.cards.is-cols-4{--cols:3}}
+   breakpoints keep the last word however wide you asked for — the bare
+   .cards is in here too now, since four is what it opens on */
+@media (max-width:1120px){.cards,.cards.is-cols-4{--cols:3}}
 .card[hidden]{display:none}
 .presets__more{display:flex;flex-direction:column;align-items:center;gap:var(--s-4);margin-top:var(--s-9)}
 /* display:flex on the class outranks [hidden]'s display:none, so the block
@@ -3654,13 +3655,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <div class="tools">
         <div class="sort">
           <button class="sort__btn" type="button" id="colsBtn" aria-expanded="false" aria-haspopup="true" aria-controls="colsMenu">
-            <svg class="sort__i" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.6" y="2.8" width="3.4" height="10.4" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="6.3" y="2.8" width="3.4" height="10.4" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="2.8" width="3.4" height="10.4" rx="1" stroke="currentColor" stroke-width="1.5"/></svg><span class="vh">Grid width: </span><b id="colsNow">3 Columns</b>
+            <svg class="sort__i" width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.6" y="2.8" width="3.4" height="10.4" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="6.3" y="2.8" width="3.4" height="10.4" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="2.8" width="3.4" height="10.4" rx="1" stroke="currentColor" stroke-width="1.5"/></svg><span class="vh">Grid width: </span><b id="colsNow">4 Columns</b>
             <svg class="chev" width="9" height="6" viewBox="0 0 9 6" fill="none" aria-hidden="true"><path d="M1 1l3.5 3.5L8 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </button>
           <div class="sort__menu" id="colsMenu" role="menu" aria-label="Grid width" hidden>
             <button type="button" role="menuitemradio" data-cols="2" aria-current="false">2 Columns</button>
-            <button type="button" role="menuitemradio" data-cols="3" aria-current="true">3 Columns</button>
-            <button type="button" role="menuitemradio" data-cols="4" aria-current="false">4 Columns</button>
+            <button type="button" role="menuitemradio" data-cols="3" aria-current="false">3 Columns</button>
+            <button type="button" role="menuitemradio" data-cols="4" aria-current="true">4 Columns</button>
           </div>
         </div>
         <div class="sort">
@@ -3678,7 +3679,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   </div>
 
   <div class="wrap">
-    <div class="cards" id="presetGrid">
+    <div class="cards is-cols-4" id="presetGrid">
       <article class="card" data-popular="1" data-added="9">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fd299a2a3-00e6-4061-8b38-61be1f91acde-1739115160205-429945997.webp&amp;w=750&amp;q=75" alt="Sample graded with Lora Presets" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F621cbd22-ed9e-4a1a-ab75-9e3557e9cede-1775994209220-744593997.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F4245aae6-f2e0-42be-89a9-8c0caa45318f-1739115673505-263768861.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F7fc7b0fd-d949-40fe-8109-2bea917b10ec-1775992530456-649840503.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
@@ -4719,7 +4720,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <div class="section__head" data-reveal>
       <div>
         <p class="eyebrow">Installing &amp; questions</p>
-        <h2>One-click installation and fast support</h2>
+        <h2>1-click installation and support</h2>
       </div>
     </div>
 
