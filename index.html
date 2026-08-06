@@ -1625,6 +1625,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      turned two lines into four */
   max-width:none;margin-inline:auto;
 }
+/* the score the page opened with, said once more where the decision is made:
+   the faces under it are who gave it, so it belongs above them rather than
+   after them. Small — a footnote to the sentence below, not a claim of its
+   own. */
+.cta__rate{
+  display:flex;align-items:center;justify-content:center;gap:var(--s-2);
+  margin:0 0 var(--s-4);font-size:var(--fs-3);color:var(--fg-muted);flex-wrap:wrap;
+}
+.cta__rate .stars{display:inline-flex;align-items:center;gap:2px;color:var(--star)}
+.cta__rate .stars svg{width:13px;height:13px;flex:none}
+.cta__rate b{color:var(--fg);font-size:var(--fs-4);font-weight:var(--fw-bold)}
 /* the people the page has just been quoting, standing together */
 .cta__faces{
   display:flex;align-items:center;justify-content:center;gap:var(--s-6);
@@ -4838,6 +4849,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <span class="cta__spot" aria-hidden="true"></span>
     <div class="wrap">
       <div class="cta__in">
+        <p class="cta__rate"><span class="stars" aria-hidden="true"><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg></span><b class="tnum">4,8</b><span class="cta__rate-n tnum">&#183; 15.000+ de&#287;erlendirme</span><span class="vh">5 &#252;zerinden 4,8, 15.000+ de&#287;erlendirmeye g&#246;re</span></p>
         <p class="cta__faces" aria-hidden="true"><span class="cta__ring"><img src="images/testimonials/dugunumuzvar/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/zariffilm/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/ugurdemir/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/ekrulila/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/celalcanik/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"><img src="images/testimonials/mucahitguney/pp.webp" alt="" loading="lazy" width="72" height="72" onerror="this.style.display='none'"></span></p>
         <p class="eyebrow">10.000+ Profesyonel Fotoğrafçının Tercihi</p>
         <h2 id="startTitle" class="cta__say">Türkiye&#8217;nin önde gelen fotoğrafçıları, <br>imza renklerini oluşturmak ve <br>daha hızlı çalışmak için RetouchMarket&#8217;i seçiyor.</h2>
