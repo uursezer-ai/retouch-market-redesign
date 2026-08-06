@@ -1042,11 +1042,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .pbuy__best{
   flex:none;display:inline-flex;align-items:center;gap:4px;
   padding:2px 7px;border-radius:var(--r-full);
-  background:var(--accent);color:var(--fg-on-accent);border:1px solid rgba(255,255,255,.34);
+  /* the trophy's own colour, not the page's accent: filled in the accent with
+     a ring round it and a pulse under it, this label was wearing everything
+     the page keeps for things you press — and it is a fact about the pack,
+     not an offer. The amber is the one the ratings use and the bundle's
+     Change button borrows; it is never an accent. */
+  background:rgba(232,163,61,.16);color:#F3C57C;border:1px solid rgba(232,163,61,.42);
   font-size:10px;line-height:1.5;font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
-  animation:freePulse 2.4s var(--ease) infinite alternate;
 }
-.pbuy__best svg{width:9px;height:9px;flex:none}
+/* the same trophy the shelf's badge wears, so "bestseller" is one mark on
+   this page and not two — and an emoji is a picture, which the uppercasing
+   above must not try to letterspace */
+.pbuy__best-e{flex:none;font-size:11px;line-height:1;letter-spacing:0;text-transform:none}
 .pbuy__t{margin:0;min-width:0;font-size:var(--fs-7);font-weight:var(--fw-bold);
   line-height:var(--lh-snug);letter-spacing:var(--tr-heading);color:var(--fg);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -3448,7 +3455,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         <button class="pbuy__pick" type="button" data-pick="2" data-tip="US Photoshop Plugin" data-tip-n="3" aria-label="Show US Photoshop Plugin"><img src="images/box-us-photoshop-plugin.png" alt="" loading="lazy" onerror="this.style.display='none'"></button>
       </span>
       <span class="pbuy__body">
-        <span class="pbuy__head"><span class="pbuy__t">3 Plugins in 1 Pack</span><span class="pbuy__best"><svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M3.2 1.4h7.6v1.2h1.9v1.5a2.9 2.9 0 01-2.4 2.85A3.6 3.6 0 017.7 8.6v1.9h2.1v1.3H4.2v-1.3h2.1V8.6a3.6 3.6 0 01-2.6-1.65A2.9 2.9 0 011.3 4.1V2.6h1.9zM2.5 3.8v.3a1.7 1.7 0 00.95 1.5A6 6 0 013.2 3.8zm9 0h-.7a6 6 0 01-.25 1.8 1.7 1.7 0 00.95-1.5z"/></svg>Bestseller</span><span class="vh">for Photoshop and Lightroom Classic</span></span>
+        <span class="pbuy__head"><span class="pbuy__t">3 Plugins in 1 Pack</span><span class="pbuy__best"><span class="pbuy__best-e" aria-hidden="true">&#127942;</span>Bestseller</span><span class="vh">for Photoshop and Lightroom Classic</span></span>
         <p class="pbuy__sub">RetouchX + Lightroom Ai Color + US Photoshop Plugin</p>
       </span>
       <span class="pbuy__buy">
@@ -5640,7 +5647,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
        you are looking at it, Remove when you are over the thing that would
        take it back */
     function bill(hovering){
-      go.innerHTML = (hovering ? BIN + 'Remove bundle' : TICK + 'Bundle added');
+      go.innerHTML = (hovering ? BIN + 'Remove Bundle' : TICK + 'Bundle Added');
       go.setAttribute('aria-label', 'Remove the bundle from your basket');
     }
     /* what the bundle is holding, by name, so the basket can fold the
@@ -6703,7 +6710,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         go.innerHTML = TICK + 'In your bundle';
         go.setAttribute('aria-label', pack + ' is in the bundle in your basket — cancel the bundle to remove it');
       } else if(inCart){
-        go.innerHTML = hovering ? BIN + 'Remove' : TICK + 'Added to cart';
+        go.innerHTML = hovering ? BIN + 'Remove Plugin Pack' : TICK + 'Plugin Pack Added';
         go.setAttribute('aria-label', 'Remove ' + pack + ' from your basket');
       } else {
         go.innerHTML = OFFER;
