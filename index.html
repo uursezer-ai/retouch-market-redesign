@@ -1454,12 +1454,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    the shelf simply lets it play. There is no frame in between for anything
    to happen in. */
 @keyframes cardIn{
-  from{opacity:0;transform:translateY(16px)}
+  from{opacity:0;transform:translateY(22px) scale(.984)}
   to{opacity:1;transform:none}
 }
-.card.is-waiting{animation:cardIn 520ms var(--ease) both;animation-play-state:paused}
+/* the same 820ms and the same soft tail the three card rows use: this shelf
+   is the fourth row of cards on the page and had no business arriving on a
+   different clock */
+.card.is-waiting{animation:cardIn 820ms cubic-bezier(.16,1,.3,1) both;animation-play-state:paused}
 .card.is-waiting.is-go{animation-play-state:running}
-.card.is-new{animation:cardIn 520ms var(--ease) both}
+.card.is-new{animation:cardIn 820ms cubic-bezier(.16,1,.3,1) both}
 @media (prefers-reduced-motion:reduce){
   .card.is-waiting,.card.is-waiting.is-go,.card.is-new{animation:none}
 }
@@ -1488,11 +1491,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    one resolves in place, which is what a tab panel does everywhere else.
    Short, because the row above it has already told you what changed. */
 @keyframes panelIn{
-  from{opacity:0;transform:scale(.988)}
-  to{opacity:1;transform:none}
+  from{opacity:0}
+  to{opacity:1}
 }
+/* the panel itself only has to stop being the old one — the entrance is its
+   cards, dealt out on the same clock the three card rows use, so pressing a
+   tab and scrolling to a row feel like the same page */
 .panel.is-fresh,.bapanel.is-fresh,.osp.is-fresh{
-  animation:panelIn 320ms var(--ease) both;
+  animation:panelIn 220ms var(--ease) both;
 }
 @media (prefers-reduced-motion:reduce){
   .panel.is-fresh,.bapanel.is-fresh,.osp.is-fresh{animation:none}
@@ -1509,11 +1515,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    The delay is set per card by the script, and capped, so a row of twelve
    does not take a second and a half to finish. */
 @keyframes rowIn{
-  from{opacity:0;transform:translateY(18px) scale(.986)}
+  from{opacity:0;transform:translateY(22px) scale(.984)}
   to{opacity:1;transform:none}
 }
 [data-arrive].is-arriving > *{
-  animation:rowIn 520ms cubic-bezier(.22,.61,.24,1) var(--d,0ms) both;
+  /* long and soft: most of the travel is over in the first third and the rest
+     is the card settling, which is what makes a row of them read as calm
+     rather than as a queue being processed. The beat between cards is set in
+     script — see --d — and both were too quick to watch before. */
+  animation:rowIn 820ms cubic-bezier(.16,1,.3,1) var(--d,0ms) both;
   animation-play-state:paused;
 }
 [data-arrive].is-arriving.is-go > *{animation-play-state:running}
@@ -2993,11 +3003,72 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .choices::-webkit-scrollbar{width:6px}
 .choices::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:var(--r-full)}
 .choices::-webkit-scrollbar-track{background:transparent}
+/* How far along the bundle is, drawn rather than counted out in a sentence.
+   The bar is the whole point: a number tells you where you are, a bar tells
+   you how much is left without being read. It fills on the same soft curve
+   the cards arrive on, so the panel has one motion and not two. */
+/* the sentence under the heading says the same thing the bar does, so it is
+   kept for the screen reader and taken off the page — except when it carries
+   the one thing the bar cannot say, which is that you have hit the limit */
+.custom__hint{
+  position:absolute;width:1px;height:1px;margin:-1px;padding:0;
+  overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;
+}
+.custom__hint.is-say{
+  position:static;width:auto;height:auto;margin:var(--s-2) 0 0;
+  overflow:visible;clip:auto;clip-path:none;white-space:normal;
+  color:var(--star);font-size:var(--fs-3);
+}
+.prog{margin:0 0 var(--s-5)}
+.prog__line{
+  display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-4);
+  margin:0 0 var(--s-3);font-size:var(--fs-3);
+}
+.prog__t{color:var(--fg);font-weight:var(--fw-semibold)}
+.prog__pct{color:var(--accent-fg);font-weight:var(--fw-semibold)}
+.prog__track{
+  display:block;position:relative;height:8px;border-radius:var(--r-full);overflow:hidden;
+  background:rgba(255,255,255,.09);
+}
+.prog__fill{
+  display:block;height:100%;width:0;border-radius:var(--r-full);
+  background:linear-gradient(90deg, var(--accent-700), var(--accent));
+  transition:width 620ms cubic-bezier(.16,1,.3,1), background 300ms var(--ease);
+}
+/* while there is still something to choose, a slow sheen runs along the part
+   that is filled — enough to say the bar is live, not enough to watch */
+.prog__fill::after{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(100deg, transparent 20%, rgba(255,255,255,.34) 50%, transparent 80%);
+  transform:translateX(-100%);
+  animation:progSheen 2.6s var(--ease) infinite;
+}
+@keyframes progSheen{
+  0%{transform:translateX(-100%)}
+  60%,100%{transform:translateX(100%)}
+}
+/* full is done, and done does not need to keep announcing itself */
+.prog.is-full .prog__fill{background:linear-gradient(90deg, var(--ok-700), var(--ok))}
+.prog.is-full .prog__pct{color:var(--ok-fg, #7BD8A6)}
+.prog.is-full .prog__fill::after{animation:none;opacity:0}
+@media (prefers-reduced-motion:reduce){
+  .prog__fill{transition:none}
+  .prog__fill::after{animation:none;opacity:0}
+}
 .choice{
-  position:relative;min-width:0;padding:var(--s-3) var(--s-4);border-radius:10px;text-align:left;
+  position:relative;min-width:0;padding:var(--s-3);border-radius:10px;text-align:left;
+  display:flex;align-items:center;gap:var(--s-3);
   border:1px solid var(--border);background:rgba(255,255,255,.03);
   transition:border-color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
 }
+/* the box, at the size a thumbnail can still be read at — contain, not cover,
+   because these are packshots and cropping one takes its title off */
+.choice__shot{
+  flex:none;display:grid;place-items:center;width:38px;height:48px;
+  border-radius:6px;overflow:hidden;background:rgba(255,255,255,.05);
+}
+.choice__shot img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.choice__txt{min-width:0;flex:1 1 auto}
 .choice:hover{border-color:var(--border-strong)}
 .choice b{
   display:block;padding-right:var(--s-6);line-height:var(--lh-snug);
@@ -3025,7 +3096,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .choice__by span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .choice[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-bg)}
 .choice[aria-pressed="true"]::after{
-  content:"✓";position:absolute;right:var(--s-4);top:var(--s-3);
+  content:"✓";position:absolute;right:var(--s-3);top:var(--s-3);
   font-size:var(--fs-3);font-weight:var(--fw-bold);color:var(--accent-fg);
 }
 
@@ -4073,6 +4144,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <p class="custom__hint" data-hint aria-live="polite"></p>
           </div>
           <button class="btn btn--secondary custom__done" type="button" data-done>Done</button>
+        </div>
+        <div class="prog" data-prog>
+          <p class="prog__line">
+            <b class="prog__t">Your bundle: <span class="tnum" data-prog-n>0 / 5</span></b>
+            <span class="prog__pct tnum" data-prog-p>0%</span>
+          </p>
+          <span class="prog__track" aria-hidden="true"><i class="prog__fill" data-prog-fill></i></span>
         </div>
         <div class="choices" data-choices></div>
       </div>
@@ -5633,9 +5711,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         else if(short === 0) open(false);
       }
       was = short;
+      /* the sentence is the screen reader's; the bar is everyone else's */
       hint.textContent = short > 0
         ? list.length + ' of ' + state.get + ' chosen — pick ' + short + ' more.'
         : state.get + ' of ' + state.get + ' chosen. Your bundle is ready.';
+      hint.classList.remove('is-say');
+      if(prog){
+        var pct = Math.round((list.length / state.get) * 100);
+        progN.textContent = list.length + ' / ' + state.get;
+        progP.textContent = short > 0 ? pct + '%' : 'Ready';
+        progFill.style.width = pct + '%';
+        prog.classList.toggle('is-full', short === 0);
+      }
       go.disabled = short > 0;
       /* any change to the bundle is a new bundle, so the confirmation goes */
       if(bought){
@@ -5727,9 +5814,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         art +
         '<span class="prod__no">' + pad(n + 1) + '</span>' +
         (isFree ? '<span class="prod__badge">' + GIFT + 'Free</span>' : '')));
+      /* the name first, the maker under it: what you chose, then who made it */
       var body = el('figcaption', 'prod__body',
-        '<span class="prod__by"><span class="avatar">' + esc(p.ini) + '</span><b>' + esc(p.by) + '</b></span>' +
         '<h3 class="prod__t">' + esc(p.name) + '</h3>' +
+        '<span class="prod__by"><span class="avatar">' + esc(p.ini) + '</span><b>' + esc(p.by) + '</b></span>' +
         '<button class="prod__drop" type="button">' + SWAPMARK + 'Change</button>');
       var drop = body.querySelector('.prod__drop');
       drop.setAttribute('aria-label', 'Change ' + p.name + ' for another pack');
@@ -5755,9 +5843,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       var b = el('button', 'choice');
       b.type = 'button';
       b.setAttribute('aria-pressed', String(on));
-      b.innerHTML = '<b><i>' + esc(p.name) + '</i></b>' +
-        '<span class="choice__by"><span class="avatar">' + esc(p.ini) + '</span>' +
-        '<span>' + esc(p.by) + '</span></span>';
+      /* the box first, then what it is: a list of twelve names is a list to
+         read, and a list of twelve boxes is a shelf to pick from */
+      b.innerHTML =
+        '<span class="choice__shot" aria-hidden="true"><img src="' +
+          esc((p.imgs || [p.img])[0]) + '" alt="" loading="lazy" ' +
+          'onerror="this.style.display=\'none\'"></span>' +
+        '<span class="choice__txt">' +
+          '<b><i>' + esc(p.name) + '</i></b>' +
+          '<span class="choice__by"><span class="avatar">' + esc(p.ini) + '</span>' +
+          '<span>' + esc(p.by) + '</span></span>' +
+        '</span>';
       /* measured once the row is in the document: what the name has left to
          show is what it will travel, and nothing else */
       requestAnimationFrame(function(){
@@ -5773,6 +5869,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           /* the bundle is already full — say so where the eye is, rather than
              swapping something out behind your back */
           hint.textContent = 'That is ' + state.get + ' already — take one out to add another.';
+          hint.classList.add('is-say');
           panel.classList.remove('is-bad');
           void panel.offsetWidth;
           panel.classList.add('is-bad');
@@ -5795,6 +5892,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
        closes it. Done is shut while the bundle is short — there is nothing
        to be done about an open picker except finish choosing — and green
        once it is not, because that is the end of the job. */
+    var prog = offer.querySelector('[data-prog]');
+    var progN = prog && prog.querySelector('[data-prog-n]');
+    var progP = prog && prog.querySelector('[data-prog-p]');
+    var progFill = prog && prog.querySelector('[data-prog-fill]');
     var doneBtn = offer.querySelector('[data-done]');
     function syncOpen(){
       var on = !panel.hidden;
@@ -7103,37 +7204,53 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   });
   syncToTop();
 
-  /* ---- the three card rows are dealt out ----
-     One entrance for the three sections that are the same shape: a row you
-     push sideways. The row is found rather than marked, because the
-     before/after row lives inside whichever panel is showing. */
+  /* ---- rows of cards are dealt out ----
+     One entrance for every row of cards on the page: the three sections that
+     are the same shape, and the panel a plugin tab has just opened. The row
+     is found rather than marked, because the before/after row lives inside
+     whichever panel is showing. */
+  var STEP = 95, CAP = 7, RUN = 820;
+  /* deal(row) parks every card at the head of its entrance and, on the next
+     frame, lets them go — one beat apart, capped so a row of twelve does not
+     take a second and a half to finish. Safe to call again on the same row:
+     it clears whatever the last call left. */
+  function deal(row, hold){
+    if(still || !row) return function(){};
+    var kids = [].slice.call(row.children);
+    if(!kids.length) return function(){};
+    kids.forEach(function(k, i){ k.style.setProperty('--d', Math.min(i, CAP) * STEP + 'ms'); });
+    row.setAttribute('data-arrive', '');
+    row.classList.remove('is-go');
+    void row.offsetWidth;
+    row.classList.add('is-arriving');
+    var timer = null;
+    function clear(){
+      clearTimeout(timer);
+      row.classList.remove('is-arriving', 'is-go');
+      row.removeAttribute('data-arrive');
+      kids.forEach(function(k){ k.style.removeProperty('--d'); });
+    }
+    function go(){
+      row.classList.add('is-go');
+      /* off again once it has played, so nothing the row redraws later —
+         a new panel, a pack going into the basket — replays it */
+      timer = setTimeout(clear, CAP * STEP + RUN + 150);
+    }
+    if(!hold) go();
+    return go;
+  }
   (function(){
     if(still || !('IntersectionObserver' in window)) return;
-    var STEP = 70, CAP = 7, RUN = 520;
     [['#results',   '.bapanel:not([hidden]) [data-badeck-track]'],
      ['#tutorials', '.rail'],
      ['#voices',    '[data-badeck-track]']].forEach(function(pair){
       var sec = document.querySelector(pair[0]); if(!sec) return;
       var row = sec.querySelector(pair[1]); if(!row) return;
-      var kids = [].slice.call(row.children); if(!kids.length) return;
-      kids.forEach(function(k, i){ k.style.setProperty('--d', Math.min(i, CAP) * STEP + 'ms'); });
-      row.setAttribute('data-arrive', '');
-      row.classList.add('is-arriving');
-      var done = false;
-      function go(){
-        if(done) return;
-        done = true;
-        row.classList.add('is-go');
-        /* off again once it has played, so nothing the row redraws later —
-           a new panel, a pack going into the basket — replays it */
-        setTimeout(function(){
-          row.classList.remove('is-arriving', 'is-go');
-          row.removeAttribute('data-arrive');
-          kids.forEach(function(k){ k.style.removeProperty('--d'); });
-        }, CAP * STEP + RUN + 120);
-      }
+      var go = deal(row, true);            /* held at the head of it */
+      var fired = false;
       var io = new IntersectionObserver(function(rows){
-        if(!rows[0].isIntersecting) return;
+        if(!rows[0].isIntersecting || fired) return;
+        fired = true;
         io.disconnect();
         go();
       }, { rootMargin: '0px 0px -14% 0px', threshold: 0 });
@@ -7297,6 +7414,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     panel.classList.remove('is-fresh', 'is-back');
     void panel.offsetWidth;
     panel.classList.add('is-fresh');
+    /* and the cards inside it arrive the way every other row of cards does —
+       a panel that only faded read as the page redrawing rather than as an
+       answer to the press */
+    var row = panel.querySelector('[data-deck-track], [data-badeck-track], .rail');
+    if(row) deal(row);
     clearTimeout(freshGo);
     freshGo = setTimeout(function(){
       document.querySelectorAll('.is-fresh').forEach(function(el){
@@ -7319,7 +7441,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     var cards = [].slice.call(grid.children);
     /* parked at the head of their own entrance from the moment this runs */
     cards.forEach(function(c, n){
-      c.style.animationDelay = Math.min(n, 7) * 55 + 'ms';
+      c.style.animationDelay = Math.min(n, 7) * 95 + 'ms';
       c.classList.add('is-waiting');
     });
     function letGo(){
@@ -7329,7 +7451,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           c.classList.remove('is-waiting', 'is-go');
           c.style.animationDelay = '';
         });
-      }, 520 + 7 * 55 + 100);
+      }, 820 + 7 * 95 + 120);
     }
     var io = new IntersectionObserver(function(rows){
       if(!rows[0].isIntersecting) return;
