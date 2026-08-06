@@ -2975,7 +2975,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
 /* the picker: one panel for the bundle, not a menu hanging off a box */
 .custom{
-  margin-top:var(--s-6);padding:var(--s-6);border-radius:var(--r-card);
+  margin-top:var(--s-5);padding:var(--s-5);border-radius:var(--r-card);
   background:rgba(0,0,0,.34);border:1px solid var(--accent-border);
 }
 .custom[hidden]{display:none}
@@ -2983,7 +2983,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .custom.is-bad{border-color:#E66C91;animation:nudge .34s var(--ease)}
 .custom.is-bad .custom__hint{color:#FF88A8}
 @keyframes nudge{25%{transform:translateX(-5px)}50%{transform:translateX(5px)}75%{transform:translateX(-3px)}}
-.custom__top{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s-4);margin-bottom:var(--s-5)}
+.custom__top{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--s-4);margin-bottom:var(--s-4)}
 .custom__done{flex:none}
 /* the bar under it is about paying, and you are not paying yet — it stands
    down while the panel is open, so choosing swaps one block for another
@@ -2997,8 +2997,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s-3);
   /* rows of one height, so three of them is an exact frame rather than a
      guess that shifts when a name wraps */
-  grid-auto-rows:72px;
-  max-height:calc(72px * 3 + var(--s-3) * 2);overflow-y:auto;overscroll-behavior:contain;
+  grid-auto-rows:66px;
+  max-height:calc(66px * 2 + var(--s-3));overflow-y:auto;overscroll-behavior:contain;
   scrollbar-width:thin;scrollbar-color:var(--border-strong) transparent;
   /* room for the bar so it never sits on a name */
   padding-right:var(--s-2);margin-right:calc(var(--s-2) * -1);
@@ -3030,15 +3030,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    picker is empty, a nudge while it fills, and what you earned once it is
    full. The one warning it carries goes amber. */
 .custom__hint{
-  margin:var(--s-2) 0 0;font-size:var(--fs-3);color:var(--fg-muted);
+  margin:6px 0 0;font-size:var(--fs-3);color:var(--fg-muted);
   transition:color var(--dur-2) var(--ease);
 }
-.custom__hint.is-good{color:var(--ok-fg, #7BD8A6)}
+/* nothing to say, no room taken */
+.custom__hint:empty{display:none}
 .custom__hint.is-say{color:var(--star)}
-.prog{margin:0 0 var(--s-5)}
+.prog{margin:0 0 var(--s-4)}
 .prog__line{
   display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-4);
-  margin:0 0 var(--s-3);font-size:var(--fs-3);
+  margin:0 0 var(--s-2);font-size:var(--fs-3);
 }
 .prog__t{color:var(--fg);font-weight:var(--fw-semibold)}
 .prog__pct{color:var(--accent-fg);font-weight:var(--fw-semibold)}
@@ -5739,6 +5740,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
          needs an invitation, a nearly-full one needs a nudge, and a full one
          needs to say what it just earned you rather than repeat the count */
       var free = d.get - d.pay;
+      /* only while there is something left to do. Full, the bar is at the end
+         and already says Ready in green — a sentence under it saying the same
+         thing again is a line of height for nothing. */
       hint.textContent =
         list.length === 0
           ? 'Pick any ' + state.get + ' — ' + free + ' of them come free.'
@@ -5746,9 +5750,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
           ? short + ' more to go. Any pack on the shelf counts.'
         : short === 1
           ? 'One more and ' + free + ' of the ' + state.get + ' are on us.'
-        : 'All ' + state.get + ' chosen — you are paying for ' + d.pay + '.';
+        : '';
       hint.classList.remove('is-say', 'is-good');
-      if(short === 0) hint.classList.add('is-good');
       if(prog){
         var pct = Math.round((list.length / state.get) * 100);
         progN.textContent = list.length + ' / ' + state.get;
