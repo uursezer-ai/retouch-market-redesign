@@ -1481,29 +1481,44 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 @media (prefers-reduced-motion:reduce){.deck--ba,.deck--v{transition:none}}
 
 /* ── a tab's answer arrives ─────────────────────────────────────
-   A row of tabs is a row: pressing the one to the right should bring its
-   panel in from the right, and pressing back should bring it from the left.
-   Rising from underneath said "something new" but not "you moved along a
-   row", which is the one thing the reader already knows and the page should
-   agree with. It is the same language the hero swaps in.
-   Long tail, no overshoot, and a shade under full size at the start so the
-   panel settles into place rather than sliding into it. */
-@keyframes panelInR{
-  from{opacity:0;transform:translateX(30px) scale(.994)}
-  to{opacity:1;transform:none}
-}
-@keyframes panelInL{
-  from{opacity:0;transform:translateX(-30px) scale(.994)}
+   A dissolve, and a hair of scale under it. The panel holds a video the
+   width of the column, and travelling that much picture sideways past the
+   tabs read as the page being rearranged rather than as an answer to a
+   press. Nothing moves now: the old panel is simply not there and the new
+   one resolves in place, which is what a tab panel does everywhere else.
+   Short, because the row above it has already told you what changed. */
+@keyframes panelIn{
+  from{opacity:0;transform:scale(.988)}
   to{opacity:1;transform:none}
 }
 .panel.is-fresh,.bapanel.is-fresh,.osp.is-fresh{
-  animation:panelInR 460ms cubic-bezier(.16,.84,.28,1) both;
-}
-.panel.is-fresh.is-back,.bapanel.is-fresh.is-back,.osp.is-fresh.is-back{
-  animation-name:panelInL;
+  animation:panelIn 320ms var(--ease) both;
 }
 @media (prefers-reduced-motion:reduce){
   .panel.is-fresh,.bapanel.is-fresh,.osp.is-fresh{animation:none}
+}
+
+/* ── three rows of cards, one entrance ──────────────────────────
+   Before/after, tutorials and testimonials are the same thing three times: a
+   row of cards you push sideways. They arrive the same way — card after card,
+   each a beat behind the one before it, so the row reads as being dealt out
+   rather than as a block that faded. Held paused from the moment the script
+   runs and released when you reach the row, for the same reason the offers
+   are: an observer that fires after the cards are already on screen would
+   blank them and start again, which is a flicker, not an entrance.
+   The delay is set per card by the script, and capped, so a row of twelve
+   does not take a second and a half to finish. */
+@keyframes rowIn{
+  from{opacity:0;transform:translateY(18px) scale(.986)}
+  to{opacity:1;transform:none}
+}
+[data-arrive].is-arriving > *{
+  animation:rowIn 520ms cubic-bezier(.22,.61,.24,1) var(--d,0ms) both;
+  animation-play-state:paused;
+}
+[data-arrive].is-arriving.is-go > *{animation-play-state:running}
+@media (prefers-reduced-motion:reduce){
+  [data-arrive].is-arriving > *{animation:none}
 }
 
 /* ── the two offers arriving ────────────────────────────────────
@@ -3426,7 +3441,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <div class="pstat"><span class="pstat__i" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M7.4 10a3.1 3.1 0 100-6.2 3.1 3.1 0 000 6.2zM7.4 11.3c-3.2 0-5.6 2-5.6 4.5 0 .5.4.9.9.9h9.4c.5 0 .9-.4.9-.9 0-2.5-2.4-4.5-5.6-4.5zM14.4 10.1a2.7 2.7 0 100-5.4 2.7 2.7 0 000 5.4zM14.4 11.4c-.5 0-1 .1-1.5.2 1.2 1.1 1.9 2.6 1.9 4.2 0 .3 0 .6-.1.9h2.9c.5 0 .9-.4.9-.9 0-2.4-1.8-4.4-4.1-4.4z"/></svg></span><dt>Photographers</dt><dd class="tnum">10,000+</dd></div>
       <div class="pstat"><span class="pstat__i" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.4l2.5 5.1 5.6.8-4.1 4 1 5.6L10 14.2 5 16.9l1-5.6-4.1-4 5.6-.8z"/></svg></span><dt>Rating</dt><dd class="tnum">4.8<span class="stars" aria-hidden="true"><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg></span></dd></div>
       <div class="pstat"><span class="pstat__i" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M15 2.6H5A2.6 2.6 0 002.4 5.2v6.1A2.6 2.6 0 005 13.9h.6v3a.7.7 0 001.1.6l4.1-3.6H15a2.6 2.6 0 002.6-2.6V5.2A2.6 2.6 0 0015 2.6z"/></svg></span><dt>Reviews</dt><dd class="tnum">15,000+</dd></div>
-      <div class="pstat"><span class="pstat__i" aria-hidden="true"><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M10 1.6a8.4 8.4 0 100 16.8 8.4 8.4 0 000-16.8zm5.9 5.7h-2.4a12.9 12.9 0 00-1.4-4 6.9 6.9 0 013.8 4zM10 3.2c.8 1.1 1.5 2.5 1.9 4.1H8.1c.4-1.6 1-3 1.9-4.1zM3.2 10c0-.9.1-1.8.4-2.7h2.8a14.6 14.6 0 000 5.4H3.6c-.3-.9-.4-1.8-.4-2.7zm.9 4.2h2.4c.3 1.5.8 2.8 1.4 4a6.9 6.9 0 01-3.8-4zm2.4-8.4H4.1a6.9 6.9 0 013.8-4 12.9 12.9 0 00-1.4 4zM10 16.8c-.9-1.1-1.5-2.5-1.9-4.1h3.8c-.4 1.6-1 3-1.9 4.1zm2.2-5.7H7.8a13 13 0 010-5.4h4.4a13 13 0 010 5.4zm-.1 7.1c.6-1.2 1.1-2.5 1.4-4h2.4a6.9 6.9 0 01-3.8 4zm2.5-5.7a14.6 14.6 0 000-5.4h2.8a7 7 0 010 5.4h-2.8z"/></svg></span><dt>Languages</dt><dd class="tnum">12</dd></div>
+      <div class="pstat"><span class="pstat__i" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2.2 5.1h6.9M5.6 3.2v1.9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M7.4 5.1c0 2.9-2 5.2-5.2 6.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M3.7 7.9c1 1.7 2.5 2.9 4.4 3.6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10.2 17.4l3.4-8.4 3.4 8.4M11.5 14.6h4.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><dt>Languages</dt><dd class="tnum">12</dd></div>
     </dl>
   </div>
 </section>
@@ -3925,7 +3940,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="card" data-popular="8" data-added="1">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75" alt="Sample graded with Olbia LUTs" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F66a3c664-9c33-4b1b-b4d3-4de336f2965e-1775992531022-534875096.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F1d0caea2-a0bb-46ce-8c3f-20a932fd5705-1775992531157-104381471.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="chip chip--new"><span class="chip__e" aria-hidden="true">🌟</span>New</span>
+          <span class="chip chip--new"><span class="chip__e" aria-hidden="true">&#127881;</span>New</span>
           <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
         </span>
         <div class="card__body">
@@ -3989,7 +4004,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <article class="card" data-popular="12" data-added="0">
         <span class="card__img" data-scrub>
           <img class="is-on" src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F0b8df23a-8afb-4aed-8fb4-20de74aeb6c0-1775992531413-132634813.webp&amp;w=750&amp;q=75" alt="Sample graded with Aster LUTs" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fcedf02ae-a071-4030-a53b-3e9f1c7bb0c5-1775992530901-677100445.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2Fb258f8cc-953e-4f22-970b-db2ae74a74ba-1775992531281-305943234.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'"><img src="https://retouchmarket.com/_next/image?url=https%3A%2F%2Fapi.retouchmarket.com%2Fimages%2F3f5c5d53-b0c7-4333-b9cc-c29525539145-1775992530757-642040520.webp&amp;w=750&amp;q=75" alt="" aria-hidden="true" loading="lazy" onerror="this.style.display='none'">
-          <span class="chip chip--new"><span class="chip__e" aria-hidden="true">🌟</span>New</span>
+          <span class="chip chip--new"><span class="chip__e" aria-hidden="true">&#127881;</span>New</span>
           <span class="card__seg" aria-hidden="true"><i class="is-on"></i><i class=""></i><i class=""></i><i class=""></i></span>
         </span>
         <div class="card__body">
@@ -4099,7 +4114,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     </div>
   </div>
 
-  <div data-reveal>
+  <div>
     <div class="bapanel is-on" id="bap-0" role="tabpanel" aria-labelledby="bat-0">
       <div class="deck deck--ba" data-badeck role="group" aria-roledescription="carousel" aria-label="Lora Presets before and after">
         <div class="deck__track" data-badeck-track>
@@ -4571,7 +4586,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     </div>
   </div>
 
-  <div class="strip" data-reveal>
+  <div class="strip">
     <div class="rail">
 
         <a class="reel" href="#">
@@ -4677,7 +4692,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     </div>
   </div>
 
-  <div class="deck deck--v" data-badeck role="group" aria-roledescription="carousel" aria-label="What photographers say" data-reveal>
+  <div class="deck deck--v" data-badeck role="group" aria-roledescription="carousel" aria-label="What photographers say">
     <div class="deck__track" data-badeck-track>
                         <figure class="vcard">
           <div class="vcard__shot" data-scrub>
@@ -7076,6 +7091,44 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   });
   syncToTop();
 
+  /* ---- the three card rows are dealt out ----
+     One entrance for the three sections that are the same shape: a row you
+     push sideways. The row is found rather than marked, because the
+     before/after row lives inside whichever panel is showing. */
+  (function(){
+    if(still || !('IntersectionObserver' in window)) return;
+    var STEP = 70, CAP = 7, RUN = 520;
+    [['#results',   '.bapanel:not([hidden]) [data-badeck-track]'],
+     ['#tutorials', '.rail'],
+     ['#voices',    '[data-badeck-track]']].forEach(function(pair){
+      var sec = document.querySelector(pair[0]); if(!sec) return;
+      var row = sec.querySelector(pair[1]); if(!row) return;
+      var kids = [].slice.call(row.children); if(!kids.length) return;
+      kids.forEach(function(k, i){ k.style.setProperty('--d', Math.min(i, CAP) * STEP + 'ms'); });
+      row.setAttribute('data-arrive', '');
+      row.classList.add('is-arriving');
+      var done = false;
+      function go(){
+        if(done) return;
+        done = true;
+        row.classList.add('is-go');
+        /* off again once it has played, so nothing the row redraws later —
+           a new panel, a pack going into the basket — replays it */
+        setTimeout(function(){
+          row.classList.remove('is-arriving', 'is-go');
+          row.removeAttribute('data-arrive');
+          kids.forEach(function(k){ k.style.removeProperty('--d'); });
+        }, CAP * STEP + RUN + 120);
+      }
+      var io = new IntersectionObserver(function(rows){
+        if(!rows[0].isIntersecting) return;
+        io.disconnect();
+        go();
+      }, { rootMargin: '0px 0px -14% 0px', threshold: 0 });
+      io.observe(row);
+    });
+  })();
+
   /* ---- the two offers arrive as what they are made of ----
      One class, added the first time you reach the offer and taken off when it
      has finished, so nothing the bundle redraws afterwards replays it. */
@@ -7222,21 +7275,22 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     draw();
   });
 
-  /* the panel a tab has just opened comes up rather than appearing. Restarted
-     rather than queued, so pressing along a row of tabs answers every press. */
+  /* the panel a tab has just opened resolves rather than appearing. Restarted
+     rather than queued, so pressing along a row of tabs answers every press.
+     `back` is still taken so callers need not change, but the panel no longer
+     leans on it — a dissolve has no direction to go in. */
   var freshGo = null;
   function freshen(panel, back){
     if(still || !panel) return;
     panel.classList.remove('is-fresh', 'is-back');
     void panel.offsetWidth;
     panel.classList.add('is-fresh');
-    if(back) panel.classList.add('is-back');
     clearTimeout(freshGo);
     freshGo = setTimeout(function(){
       document.querySelectorAll('.is-fresh').forEach(function(el){
         el.classList.remove('is-fresh', 'is-back');
       });
-    }, 520);
+    }, 380);
   }
   window.rmFreshen = freshen;
 
