@@ -1491,14 +1491,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    one resolves in place, which is what a tab panel does everywhere else.
    Short, because the row above it has already told you what changed. */
 @keyframes panelIn{
-  from{opacity:0}
-  to{opacity:1}
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:none}
 }
-/* the panel itself only has to stop being the old one — the entrance is its
-   cards, dealt out on the same clock the three card rows use, so pressing a
-   tab and scrolling to a row feel like the same page */
+/* One element moving, not twelve. Dealing the panel's own cards out looked
+   right on paper and stuttered in practice: each of those cards carries a
+   video frame, and animating a dozen of them at once is more than a frame's
+   worth of compositing. The panel arrives as a single layer instead — same
+   language as the rows, a fraction of the work. */
 .panel.is-fresh,.bapanel.is-fresh,.osp.is-fresh{
-  animation:panelIn 220ms var(--ease) both;
+  animation:panelIn 420ms cubic-bezier(.16,1,.3,1) both;
+  will-change:opacity, transform;
 }
 @media (prefers-reduced-motion:reduce){
   .panel.is-fresh,.bapanel.is-fresh,.osp.is-fresh{animation:none}
@@ -3007,18 +3010,31 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    The bar is the whole point: a number tells you where you are, a bar tells
    you how much is left without being read. It fills on the same soft curve
    the cards arrive on, so the panel has one motion and not two. */
-/* the sentence under the heading says the same thing the bar does, so it is
-   kept for the screen reader and taken off the page — except when it carries
-   the one thing the bar cannot say, which is that you have hit the limit */
+/* it does not disappear, it closes: the panel keeps its own height for a
+   beat, then folds while it fades. The overflow is only clipped while it is
+   folding, so nothing inside it is cut off the rest of the time. */
+.custom.is-shutting{
+  overflow:hidden;
+  animation:customShut 600ms cubic-bezier(.4,0,.2,1) both;
+}
+@keyframes customShut{
+  0%{opacity:1;transform:none;max-height:1200px}
+  25%{opacity:1;transform:none;max-height:1200px}
+  100%{opacity:0;transform:translateY(-8px) scale(.985);max-height:0;
+       margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0}
+}
+@media (prefers-reduced-motion:reduce){.custom.is-shutting{animation:none}}
+
+/* the line under the heading is the instruction, not the count — the bar
+   does the counting. It changes with where you are: an invitation when the
+   picker is empty, a nudge while it fills, and what you earned once it is
+   full. The one warning it carries goes amber. */
 .custom__hint{
-  position:absolute;width:1px;height:1px;margin:-1px;padding:0;
-  overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap;
+  margin:var(--s-2) 0 0;font-size:var(--fs-3);color:var(--fg-muted);
+  transition:color var(--dur-2) var(--ease);
 }
-.custom__hint.is-say{
-  position:static;width:auto;height:auto;margin:var(--s-2) 0 0;
-  overflow:visible;clip:auto;clip-path:none;white-space:normal;
-  color:var(--star);font-size:var(--fs-3);
-}
+.custom__hint.is-good{color:var(--ok-fg, #7BD8A6)}
+.custom__hint.is-say{color:var(--star)}
 .prog{margin:0 0 var(--s-5)}
 .prog__line{
   display:flex;align-items:baseline;justify-content:space-between;gap:var(--s-4);
@@ -3032,8 +3048,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .prog__fill{
   display:block;height:100%;width:0;border-radius:var(--r-full);
-  background:linear-gradient(90deg, var(--accent-700), var(--accent));
-  transition:width 620ms cubic-bezier(.16,1,.3,1), background 300ms var(--ease);
+  /* the gradient belongs to the track, not to the fill: it is sized to the
+     whole bar and the fill simply uncovers more of it, so the colour you see
+     is where you are rather than a wash that restretches every time. Indigo
+     at the start, through blue, into the green that means finished. */
+  background-image:linear-gradient(90deg,
+    #5A4BE8 0%, #6E5BFF 28%, #4C8DF6 58%, #22A6C9 80%, #1FBF87 100%);
+  background-size:calc(100% * 100 / max(var(--pct, 1), 1)) 100%;
+  background-repeat:no-repeat;
+  transition:width 620ms cubic-bezier(.16,1,.3,1),
+             background-size 620ms cubic-bezier(.16,1,.3,1);
 }
 /* while there is still something to choose, a slow sheen runs along the part
    that is filled — enough to say the bar is live, not enough to watch */
@@ -3048,7 +3072,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   60%,100%{transform:translateX(100%)}
 }
 /* full is done, and done does not need to keep announcing itself */
-.prog.is-full .prog__fill{background:linear-gradient(90deg, var(--ok-700), var(--ok))}
 .prog.is-full .prog__pct{color:var(--ok-fg, #7BD8A6)}
 .prog.is-full .prog__fill::after{animation:none;opacity:0}
 @media (prefers-reduced-motion:reduce){
@@ -5708,19 +5731,32 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
          hand on a finished bundle would shut again under your finger */
       if(was !== null && was !== short){
         if(short > 0 && was === 0) open(true);
-        else if(short === 0) open(false);
+        /* let the bar reach the end and say Ready before the panel goes */
+        else if(short === 0) open(false, true);
       }
       was = short;
-      /* the sentence is the screen reader's; the bar is everyone else's */
-      hint.textContent = short > 0
-        ? list.length + ' of ' + state.get + ' chosen — pick ' + short + ' more.'
-        : state.get + ' of ' + state.get + ' chosen. Your bundle is ready.';
-      hint.classList.remove('is-say');
+      /* what to do next, in the words of wherever you are: an empty picker
+         needs an invitation, a nearly-full one needs a nudge, and a full one
+         needs to say what it just earned you rather than repeat the count */
+      var free = d.get - d.pay;
+      hint.textContent =
+        list.length === 0
+          ? 'Pick any ' + state.get + ' — ' + free + ' of them come free.'
+        : short > 1
+          ? short + ' more to go. Any pack on the shelf counts.'
+        : short === 1
+          ? 'One more and ' + free + ' of the ' + state.get + ' are on us.'
+        : 'All ' + state.get + ' chosen — you are paying for ' + d.pay + '.';
+      hint.classList.remove('is-say', 'is-good');
+      if(short === 0) hint.classList.add('is-good');
       if(prog){
         var pct = Math.round((list.length / state.get) * 100);
         progN.textContent = list.length + ' / ' + state.get;
         progP.textContent = short > 0 ? pct + '%' : 'Ready';
         progFill.style.width = pct + '%';
+        /* the fill uncovers the track's gradient rather than carrying its
+           own, so the colour is a reading of how far along you are */
+        progFill.style.setProperty('--pct', pct);
         prog.classList.toggle('is-full', short === 0);
       }
       go.disabled = short > 0;
@@ -5882,8 +5918,28 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       return b;
     }
 
-    function open(on){
-      panel.hidden = !on;
+    /* Opening is instant — you asked for it. Closing is not: the picker shuts
+       itself the moment the fifth pack lands, and a panel that vanishes under
+       your hand reads as a glitch rather than as the job being finished. It
+       collapses instead, and only after the bar has had a moment to fill. */
+    var shutGo = null;
+    function open(on, soft){
+      clearTimeout(shutGo);
+      if(on){
+        panel.classList.remove('is-shutting');
+        panel.hidden = false;
+      } else if(soft && !panel.hidden && !still){
+        panel.classList.add('is-shutting');
+        shutGo = setTimeout(function(){
+          panel.classList.remove('is-shutting');
+          panel.hidden = true;
+          panel.classList.remove('is-bad');
+          syncOpen();
+        }, 620);
+      } else {
+        panel.classList.remove('is-shutting');
+        panel.hidden = true;
+      }
       openBtn.setAttribute('aria-expanded', String(on));
       if(!on) panel.classList.remove('is-bad');
       syncOpen();
@@ -7414,11 +7470,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     panel.classList.remove('is-fresh', 'is-back');
     void panel.offsetWidth;
     panel.classList.add('is-fresh');
-    /* and the cards inside it arrive the way every other row of cards does —
-       a panel that only faded read as the page redrawing rather than as an
-       answer to the press */
-    var row = panel.querySelector('[data-deck-track], [data-badeck-track], .rail');
-    if(row) deal(row);
     clearTimeout(freshGo);
     freshGo = setTimeout(function(){
       document.querySelectorAll('.is-fresh').forEach(function(el){
