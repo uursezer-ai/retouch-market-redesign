@@ -2995,12 +2995,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--s-3);
   /* rows of one height, so three of them is an exact frame rather than a
      guess that shifts when a name wraps */
-  grid-auto-rows:66px;
+  grid-auto-rows:70px;
   /* three and a half rows: a row cut in half is the only honest way a
      scroller says there is more under it. Twelve packs fill exactly three,
      so today nothing is cut and nothing scrolls — the half row appears the
      moment a thirteenth pack does. */
-  max-height:calc(66px * 3.5 + var(--s-3) * 3);overflow-y:auto;overscroll-behavior:contain;
+  max-height:calc(70px * 3.5 + var(--s-3) * 3);overflow-y:auto;overscroll-behavior:contain;
   scrollbar-width:thin;scrollbar-color:var(--border-strong) transparent;
   /* room for the bar so it never sits on a name */
   padding-right:var(--s-2);margin-right:calc(var(--s-2) * -1);
@@ -3012,20 +3012,55 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    The bar is the whole point: a number tells you where you are, a bar tells
    you how much is left without being read. It fills on the same soft curve
    the cards arrive on, so the panel has one motion and not two. */
-/* it does not disappear, it closes: the panel keeps its own height for a
-   beat, then folds while it fades. The overflow is only clipped while it is
-   folding, so nothing inside it is cut off the rest of the time. */
+/* It leaves rather than collapsing. Animating height, padding, margin and
+   border together meant re-laying out the panel and everything under it on
+   every frame — measured at eight frames in four hundred milliseconds, which
+   is the stutter. Opacity and transform cost the compositor nothing, so the
+   panel fades and lifts smoothly and the space it held closes in one step
+   once it is gone. One clean movement beats a smooth idea that drops frames. */
 .custom.is-shutting{
-  overflow:hidden;
-  animation:customShut 600ms cubic-bezier(.4,0,.2,1) both;
+  opacity:0;transform:translateY(-10px) scale(.99);
+  transform-origin:50% 0;pointer-events:none;
+  transition:opacity 300ms var(--ease), transform 340ms cubic-bezier(.4,0,.2,1);
+  will-change:opacity, transform;
 }
-@keyframes customShut{
-  0%{opacity:1;transform:none;max-height:1200px}
-  25%{opacity:1;transform:none;max-height:1200px}
-  100%{opacity:0;transform:translateY(-8px) scale(.985);max-height:0;
-       margin-top:0;margin-bottom:0;padding-top:0;padding-bottom:0}
+@media (prefers-reduced-motion:reduce){.custom.is-shutting{transition:none}}
+
+/* ── finishing it is an event ────────────────────────────────────
+   The fifth pack lands and three things say so at once, in the order you
+   would notice them: the bar completes and rings once, a tick pops in beside
+   the word Ready, and the button you would have pressed wakes up. Only then
+   does the panel fold. Without this the panel simply disappeared and the
+   work you had just done went with it. */
+@keyframes progRing{
+  0%{box-shadow:0 0 0 0 rgba(31,191,135,.5)}
+  70%{box-shadow:0 0 0 7px rgba(31,191,135,0)}
+  100%{box-shadow:0 0 0 0 rgba(31,191,135,0)}
 }
-@media (prefers-reduced-motion:reduce){.custom.is-shutting{animation:none}}
+.prog.is-full .prog__track{animation:progRing 820ms var(--ease) 1}
+/* one sweep of light down the finished bar, rather than the slow loop it
+   runs while there is still something to choose */
+.prog.is-full .prog__fill::after{animation:progSweep 620ms var(--ease) 1 both}
+@keyframes progSweep{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+@keyframes tickIn{
+  0%{opacity:0;transform:scale(.4) rotate(-18deg)}
+  60%{opacity:1;transform:scale(1.18) rotate(3deg)}
+  100%{opacity:1;transform:scale(1)}
+}
+.prog__tick{
+  display:inline-block;margin-right:.3em;
+  animation:tickIn 420ms cubic-bezier(.2,1.5,.32,1) both;
+}
+@keyframes doneWake{
+  0%{transform:scale(1);box-shadow:0 0 0 0 rgba(31,191,135,.45)}
+  45%{transform:scale(1.05)}
+  100%{transform:scale(1);box-shadow:0 0 0 13px rgba(31,191,135,0)}
+}
+.custom.is-done-now .custom__done{animation:doneWake 760ms var(--ease) 1}
+@media (prefers-reduced-motion:reduce){
+  .prog.is-full .prog__track,.prog.is-full .prog__fill::after,
+  .prog__tick,.custom.is-done-now .custom__done{animation:none}
+}
 
 /* the line under the heading is the instruction, not the count — the bar
    does the counting. It changes with where you are: an invitation when the
@@ -3043,20 +3078,22 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* the heading is gone: "Customize your selection" was a label for a panel
    you opened by pressing Customize bundle, which had already said it. What is
    left is the state — how far along, what to do next — and the way out. */
-.prog{margin:0 0 var(--s-4)}
+/* One grid for the block, so the words and the bar share a column and the
+   share lands over the end of the bar rather than over the button beside it.
+   Done takes the second column across both rows, centred against them. */
+.prog{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;
+  column-gap:var(--s-5);row-gap:var(--s-3);align-items:center;
+  margin:0 0 var(--s-4);
+}
 .prog__line{
-  display:flex;align-items:baseline;gap:var(--s-3);
-  margin:0 0 var(--s-3);font-size:var(--fs-3);
+  grid-column:1;display:flex;align-items:baseline;gap:var(--s-3);
+  margin:0;font-size:var(--fs-3);
 }
 .prog__t{flex:none;color:var(--fg);font-weight:var(--fw-semibold)}
-/* the share sits at the far end of the words, over the end of the bar */
 .prog__pct{margin-left:auto;flex:none}
-/* the bar and the way out share a line, the bar taking whatever the button
-   leaves — and the two are centred on each other rather than sitting on a
-   shared baseline, which for an 8px bar beside a 44px button is the only
-   alignment that looks deliberate */
-.prog__row{display:flex;align-items:center;gap:var(--s-5)}
-.prog__track{flex:1 1 auto;min-width:0}
+.prog__track{grid-column:1}
+.custom__done{grid-column:2;grid-row:1 / span 2;align-self:center}
 .prog__pct{color:var(--accent-fg);font-weight:var(--fw-semibold)}
 .prog__track{
   display:block;position:relative;height:8px;border-radius:var(--r-full);overflow:hidden;
@@ -3077,6 +3114,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 /* while there is still something to choose, a slow sheen runs along the part
    that is filled — enough to say the bar is live, not enough to watch */
+.prog__fill{position:relative;overflow:hidden}
 .prog__fill::after{
   content:"";position:absolute;inset:0;
   background:linear-gradient(100deg, transparent 20%, rgba(255,255,255,.34) 50%, transparent 80%);
@@ -3089,7 +3127,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 /* full is done, and done does not need to keep announcing itself */
 .prog.is-full .prog__pct{color:var(--ok-fg, #7BD8A6)}
-.prog.is-full .prog__fill::after{animation:none;opacity:0}
 @media (prefers-reduced-motion:reduce){
   .prog__fill{transition:none}
   .prog__fill::after{animation:none;opacity:0}
@@ -3100,13 +3137,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   border:1px solid var(--border);background:rgba(255,255,255,.03);
   transition:border-color var(--dur-1) var(--ease), background var(--dur-1) var(--ease);
 }
-/* the box, at the size a thumbnail can still be read at — contain, not cover,
-   because these are packshots and cropping one takes its title off */
+/* the box, whole. A percentage max-height on a grid item resolves against an
+   area that is not yet definite, so it was quietly ignored: the packshot came
+   out 59px tall in a 48px frame and lost its bottom eleven pixels. Sized
+   outright instead, with contain doing the fitting. */
 .choice__shot{
-  flex:none;display:grid;place-items:center;width:38px;height:48px;
+  flex:none;width:34px;height:46px;
   border-radius:6px;overflow:hidden;background:rgba(255,255,255,.05);
 }
-.choice__shot img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.choice__shot img{width:100%;height:100%;object-fit:contain;display:block}
 .choice__txt{min-width:0;flex:1 1 auto}
 .choice:hover{border-color:var(--border-strong)}
 .choice b{
@@ -3923,7 +3962,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       </p>
       <div class="tools">
         <div class="colspick">
-        <span class="colspick__t" id="colsLabel">Large view</span>
+        <span class="colspick__t" id="colsLabel">View</span>
         <div class="cols" role="radiogroup" aria-labelledby="colsLabel">
           <button type="button" role="radio" data-cols="2" aria-checked="false" aria-label="2 columns"><svg class="cols__i" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1.60" y="2.8" width="5.60" height="10.4" rx="1.00"/><rect x="8.80" y="2.8" width="5.60" height="10.4" rx="1.00"/></svg><b>2</b></button>
           <button type="button" role="radio" data-cols="3" aria-checked="false" aria-label="3 columns"><svg class="cols__i" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><rect x="1.60" y="2.8" width="3.20" height="10.4" rx="1.00"/><rect x="6.40" y="2.8" width="3.20" height="10.4" rx="1.00"/><rect x="11.20" y="2.8" width="3.20" height="10.4" rx="1.00"/></svg><b>3</b></button>
@@ -4184,10 +4223,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
             <span class="custom__hint" data-hint aria-live="polite"></span>
             <span class="prog__pct tnum" data-prog-p>0%</span>
           </p>
-          <div class="prog__row">
-            <span class="prog__track" aria-hidden="true"><i class="prog__fill" data-prog-fill></i></span>
-            <button class="btn btn--secondary custom__done" type="button" data-done>Done</button>
-          </div>
+          <span class="prog__track" aria-hidden="true"><i class="prog__fill" data-prog-fill></i></span>
+          <button class="btn btn--secondary custom__done" type="button" data-done>Done</button>
         </div>
         <div class="choices" data-choices></div>
       </div>
@@ -5768,12 +5805,27 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       if(prog){
         var pct = Math.round((list.length / state.get) * 100);
         progN.textContent = list.length + ' / ' + state.get;
-        progP.textContent = short > 0 ? pct + '%' : 'Ready';
+        if(short > 0){
+          progP.textContent = pct + '%';
+        } else if(!/Ready/.test(progP.textContent)){
+          /* built rather than typed, so the tick can be animated on its own
+             and does not replay every time something else redraws */
+          progP.innerHTML = '<span class="prog__tick" aria-hidden="true">&#10003;</span>Ready';
+        }
         progFill.style.width = pct + '%';
         /* the fill uncovers the track's gradient rather than carrying its
            own, so the colour is a reading of how far along you are */
         progFill.style.setProperty('--pct', pct);
+        var wasFull = prog.classList.contains('is-full');
         prog.classList.toggle('is-full', short === 0);
+        /* the button you would have pressed wakes up, once, on the change */
+        if(short === 0 && !wasFull){
+          panel.classList.remove('is-done-now');
+          void panel.offsetWidth;
+          panel.classList.add('is-done-now');
+        } else if(short > 0){
+          panel.classList.remove('is-done-now');
+        }
       }
       go.disabled = short > 0;
       /* any change to the bundle is a new bundle, so the confirmation goes */
@@ -5938,22 +5990,30 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
        itself the moment the fifth pack lands, and a panel that vanishes under
        your hand reads as a glitch rather than as the job being finished. It
        collapses instead, and only after the bar has had a moment to fill. */
-    var shutGo = null;
+    var shutGo = null, shutHold = null;
+    function unshut(){
+      panel.classList.remove('is-shutting');
+      panel.style.height = '';
+    }
     function open(on, soft){
-      clearTimeout(shutGo);
+      clearTimeout(shutGo); clearTimeout(shutHold);
       if(on){
-        panel.classList.remove('is-shutting');
+        unshut();
         panel.hidden = false;
       } else if(soft && !panel.hidden && !still){
-        panel.classList.add('is-shutting');
-        shutGo = setTimeout(function(){
-          panel.classList.remove('is-shutting');
-          panel.hidden = true;
-          panel.classList.remove('is-bad');
-          syncOpen();
-        }, 620);
+        /* hold while the bar finishes and the tick lands — the fold is the
+           last beat of that, not a replacement for it */
+        shutHold = setTimeout(function(){
+          panel.classList.add('is-shutting');
+          shutGo = setTimeout(function(){
+            unshut();
+            panel.hidden = true;
+            panel.classList.remove('is-bad');
+            syncOpen();
+          }, 360);
+        }, 900);
       } else {
-        panel.classList.remove('is-shutting');
+        unshut();
         panel.hidden = true;
       }
       openBtn.setAttribute('aria-expanded', String(on));
