@@ -3671,8 +3671,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .wa__sky::before{
   content:"";position:absolute;inset:0;
   background:
-    radial-gradient(560px circle at var(--px) var(--py),rgba(99,91,255,.22),transparent 64%),
-    radial-gradient(420px circle at calc(var(--px) - 34%) calc(var(--py) + 34%),rgba(70,64,190,.12),transparent 66%);
+    radial-gradient(760px circle at var(--px) var(--py),rgba(99,91,255,.32),transparent 64%),
+    radial-gradient(560px circle at calc(var(--px) - 34%) calc(var(--py) + 34%),rgba(70,64,190,.17),transparent 66%);
 }
 /* the blob that used to lag behind the pointer was the last of the wash, and
    on a black ground it read as a stain rather than as light */
@@ -3689,15 +3689,16 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .wa__locks{
   z-index:-3;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='58' height='58' viewBox='0 0 58 58' fill='none' stroke='rgba(163,170,214,0.13)' stroke-width='1.4'%3E%3Crect x='22' y='27' width='14' height='11' rx='2.6'/%3E%3Cpath d='M25.4 27v-3.2a3.6 3.6 0 017.2 0V27' stroke-linecap='round'/%3E%3C/svg%3E");
-  -webkit-mask:radial-gradient(230px circle at var(--px) var(--py),transparent 38%,#000 76%);
-  mask:radial-gradient(230px circle at var(--px) var(--py),transparent 38%,#000 76%);
+  -webkit-mask:radial-gradient(330px circle at var(--px) var(--py),transparent 38%,#000 76%);
+  mask:radial-gradient(330px circle at var(--px) var(--py),transparent 38%,#000 76%);
 }
 .wa__keys{
   z-index:-2;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='58' height='58' viewBox='0 0 58 58' fill='none' stroke='rgba(167,162,255,0.72)' stroke-width='1.65' stroke-linecap='round'%3E%3Ccircle cx='24' cy='29' r='4.2'/%3E%3Cpath d='M28.2 29H37M34.6 29v3.2M31.6 29v2.4'/%3E%3C/svg%3E");
-  /* the same soft landing the page's grid has: full at the centre, a third at 40% */
-  -webkit-mask:radial-gradient(230px circle at var(--px) var(--py),#000 0%,rgba(0,0,0,.35) 40%,transparent 72%);
-  mask:radial-gradient(230px circle at var(--px) var(--py),#000 0%,rgba(0,0,0,.35) 40%,transparent 72%);
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='58' height='58' viewBox='0 0 58 58' fill='none' stroke='rgba(178,173,255,0.92)' stroke-width='1.75' stroke-linecap='round'%3E%3Ccircle cx='24' cy='29' r='4.2'/%3E%3Cpath d='M28.2 29H37M34.6 29v3.2M31.6 29v2.4'/%3E%3C/svg%3E");
+  /* wider than it was, and it holds its strength further out: full to a third
+     of the way, half at two thirds, gone by the edge */
+  -webkit-mask:radial-gradient(330px circle at var(--px) var(--py),#000 0%,#000 34%,rgba(0,0,0,.5) 64%,transparent 78%);
+  mask:radial-gradient(330px circle at var(--px) var(--py),#000 0%,#000 34%,rgba(0,0,0,.5) 64%,transparent 78%);
 }
 /* the column the words stand in stays clear: the scrim is over both fields,
    and comes down in four stops rather than two so it reads as a softening
@@ -3738,12 +3739,25 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   white-space:nowrap;
 }
 .wa__feats svg{width:15px;height:15px;flex:none;color:var(--em)}
-/* the closing call's own button, in the band's own colour — and answering
-   the pointer the way every other button on this page does: one step darker,
-   one step further off the page. It was going lighter, which nothing else
-   here does. */
-.wa__go{background:var(--em);color:#05130F;box-shadow:0 10px 34px rgba(40,200,130,.40)}
-.wa__go:hover{background:var(--em-deep);box-shadow:0 14px 40px rgba(40,200,130,.52)}
+/* they are not buttons and should not pretend to be: a step up in the tint
+   and the edge, a pixel of lift, and the mark brightens. Nothing that asks
+   to be pressed. */
+.wa__feats li{
+  transition:background var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease),
+             color var(--dur-1) var(--ease), transform var(--dur-1) var(--ease);
+}
+.wa__feats li:hover{
+  background:rgba(59,224,138,.16);border-color:rgba(59,224,138,.42);
+  color:#E6FBF0;transform:translateY(-1px);
+}
+.wa__feats li:hover svg{color:var(--em-soft, #8FF0BE)}
+@media (prefers-reduced-motion:reduce){.wa__feats li,.wa__feats li:hover{transition:none;transform:none}}
+/* the closing call's own button, in the page's own primary — the green was a
+   second thing to press on a page where one colour has always meant "press
+   this". It keeps the closing call's glow, in that colour, and the hover the
+   primary already has: one step darker, one step further off the page. */
+.wa__go{box-shadow:0 10px 34px rgba(99,91,255,.42)}
+.wa__go:hover{box-shadow:0 14px 40px rgba(99,91,255,.52)}
 .wa .cta__note svg{color:var(--em)}
 @media (max-width:620px){ .wa__go{width:100%} }
 
