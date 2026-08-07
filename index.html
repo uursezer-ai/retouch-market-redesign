@@ -2140,6 +2140,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    bubble on the page, moved to whichever mark is being looked at. */
 .tipbox{
   position:fixed;z-index:90;pointer-events:none;white-space:nowrap;
+  /* the bubble is measured the moment its words change, and a measurement
+     after a change forces the browser to lay out whatever is dirty. Contained,
+     the only dirty thing is the bubble — without it, sweeping a row of faces
+     asks the whole page to re-measure itself once per face. Layout and style
+     only: paint containment would clip the point it draws outside its box. */
+  contain:layout style;
   padding:8px var(--s-4);border-radius:9px;
   /* the page's own colour, brought with it: this is appended to the body and
      has to read the same over a white shelf and over a dark band, so it does
@@ -3256,13 +3262,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    the crowd whole — the same move the three plugin boxes make on the band. */
 .oface{
   display:block;flex:none;border-radius:var(--r-full);margin-left:-12px;
-  transition:transform var(--dur-2) var(--ease), filter var(--dur-2) var(--ease);
+  /* transform and opacity only, and each face keeps its own layer: sweeping
+     the row moves six of these at once, and anything the compositor cannot
+     do alone is a dropped frame per face. A drop-shadow filter was doing
+     exactly that — it re-rasterised the picture every frame. */
+  will-change:transform, opacity;
+  transition:transform var(--dur-2) var(--ease), opacity var(--dur-2) var(--ease);
 }
 .oface:first-child{margin-left:0}
-.oface:hover,.oface:focus-visible{
-  position:relative;z-index:2;
-  transform:translateY(-3px) scale(1.12);
-  filter:drop-shadow(0 10px 16px rgba(4,10,20,.55));
+/* the rest of the crowd stands back, so the one under the pointer is the
+   only one lit and there is nothing to read past */
+.oproof__faces:hover .oface,.oproof__faces:focus-within .oface{opacity:.34}
+.oproof__faces:hover .oface:hover,.oproof__faces .oface:focus-visible{
+  position:relative;z-index:2;opacity:1;
+  transform:translateY(-4px) scale(1.24);
+  box-shadow:0 12px 22px -6px rgba(4,10,20,.7);
 }
 .oface:focus-visible{outline:2px solid var(--accent-fg);outline-offset:3px}
 .oproof__faces img{
@@ -3273,8 +3287,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   border:1px solid var(--border-strong);background:var(--surface-sunken);
 }
 @media (prefers-reduced-motion:reduce){
-  .oface{transition:none}
-  .oface:hover,.oface:focus-visible{transform:none}
+  .oface{transition:none;will-change:auto}
+  .oproof__faces:hover .oface:hover,.oproof__faces .oface:focus-visible{transform:none}
 }
 /* the score on top, what it is drawn from underneath */
 .oproof__rate{
@@ -4327,7 +4341,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
       <div class="ofoot">
         <p class="oproof">
-          <span class="oproof__faces"><a class="oface" href="#voices" data-at="@mucahitguney" data-tip="@mucahitguney" data-tip-below aria-label="Mücahit Güney on Instagram, @mucahitguney — read what they said"><img src="images/testimonials/mucahitguney/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a><a class="oface" href="#voices" data-at="@zariffilm" data-tip="@zariffilm" data-tip-below aria-label="Zarif Film on Instagram, @zariffilm — read what they said"><img src="images/testimonials/zariffilm/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a><a class="oface" href="#voices" data-at="@ugurdemir" data-tip="@ugurdemir" data-tip-below aria-label="Uğur Demir on Instagram, @ugurdemir — read what they said"><img src="images/testimonials/ugurdemir/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a><a class="oface" href="#voices" data-at="@dugunumuzvar" data-tip="@dugunumuzvar" data-tip-below aria-label="Düğünümüz Var on Instagram, @dugunumuzvar — read what they said"><img src="images/testimonials/dugunumuzvar/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a><a class="oface" href="#voices" data-at="@celalcanik" data-tip="@celalcanik" data-tip-below aria-label="Celal Canık on Instagram, @celalcanik — read what they said"><img src="images/testimonials/celalcanik/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a><a class="oface" href="#voices" data-at="@ekrulila" data-tip="@ekrulila" data-tip-below aria-label="Ekrulila on Instagram, @ekrulila — read what they said"><img src="images/testimonials/ekrulila/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a></span>
+          <span class="oproof__faces"><a class="oface" href="#voices" data-at="@ekrulila" data-tip="@ekrulila" data-tip-below aria-label="Ekrulila on Instagram, @ekrulila — read what they said"><img src="images/testimonials/ekrulila/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a><a class="oface" href="#voices" data-at="@mucahitguney" data-tip="@mucahitguney" data-tip-below aria-label="Mücahit Güney on Instagram, @mucahitguney — read what they said"><img src="images/testimonials/mucahitguney/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a><a class="oface" href="#voices" data-at="@celalcanik" data-tip="@celalcanik" data-tip-below aria-label="Celal Canık on Instagram, @celalcanik — read what they said"><img src="images/testimonials/celalcanik/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a><a class="oface" href="#voices" data-at="@zariffilm" data-tip="@zariffilm" data-tip-below aria-label="Zarif Film on Instagram, @zariffilm — read what they said"><img src="images/testimonials/zariffilm/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a><a class="oface" href="#voices" data-at="@ugurdemir" data-tip="@ugurdemir" data-tip-below aria-label="Uğur Demir on Instagram, @ugurdemir — read what they said"><img src="images/testimonials/ugurdemir/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a><a class="oface" href="#voices" data-at="@dugunumuzvar" data-tip="@dugunumuzvar" data-tip-below aria-label="Düğünümüz Var on Instagram, @dugunumuzvar — read what they said"><img src="images/testimonials/dugunumuzvar/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a></span>
           <span class="oproof__rate">
             <span class="oproof__score">
             <span class="stars" aria-hidden="true"><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg></span>
@@ -7545,6 +7559,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       document.body.appendChild(tipBox);
     }
     clearTimeout(tipHide);
+    /* still up from the thing before it? Then move it rather than fading it
+       out and back in — sweeping a row of faces was showing one frame of the
+       old bubble dying under every new one, and that reads as a stutter */
+    var live = tipBox.style.top !== '' && tipBox.style.top !== '-999px';
     /* a number in front of it when the thing has one — the three boxes on the
        band are a set, and which of the three is half of what you are asking */
     var n = el.getAttribute('data-tip-n');
@@ -7573,7 +7591,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     tipBox.style.top = Math.round(below ? r.bottom + 11
                                         : r.top - tipBox.offsetHeight - 11) + 'px';
     tipBox.style.setProperty('--point', Math.round(mid - left) + 'px');
-    requestAnimationFrame(function(){ tipBox.classList.add('is-on'); });
+    if(live) tipBox.classList.add('is-on');
+    else requestAnimationFrame(function(){ tipBox.classList.add('is-on'); });
   }
   function tipOff(){
     if(!tipBox) return;
