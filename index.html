@@ -2896,14 +2896,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    inside it read as a box in a box and cost the render its room. The render
    stands on the card's own ground, as large as the column will carry. */
 .prod__shot{
-  position:relative;display:block;aspect-ratio:5/7;overflow:hidden;border-radius:8px;
+  /* the frame is cut to the artwork's own shape (182x267 after the boxes were
+     trimmed to the box itself), so the render fills it instead of floating in
+     a frame with a different idea of what a box looks like */
+  position:relative;display:block;aspect-ratio:182/267;overflow:hidden;border-radius:8px;
 }
-/* even on all four sides. It was 8px top and bottom against 4px left and
-   right, which set the box off-centre in its own frame before the artwork
-   had a say — and the artwork, with its spine on one edge and its shadow on
-   the other, was never going to look centred inside an uneven one. */
+/* even on all four sides. The uneven part was never the CSS: every box file
+   carried 4px of empty pixels on its left and 16px on its right, so the box
+   sat left of centre before any rule ran. The files are trimmed to the box
+   now — 6px of halo either side, measured — and 2px here is all the frame
+   needs to keep the render off its own rounded corners. */
 .prod__shot img{width:100%;height:100%;object-fit:contain;object-position:center;
-  padding:3px;display:block}
+  padding:2px;display:block}
 /* three renders in the space of one: side by side, the middle one forward,
    so a pack of three reads as three */
 .prod__shot--set{display:flex;align-items:center;justify-content:center;gap:0}
@@ -3011,10 +3015,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      scroller says there is more under it. Twelve packs fill exactly three,
      so today nothing is cut and nothing scrolls — the half row appears the
      moment a thirteenth pack does. */
-  max-height:calc(70px * 3.5 + var(--s-3) * 3);overflow-y:auto;overscroll-behavior:contain;
+  max-height:calc(70px * 3.5 + var(--s-3) * 3 + 12px);overflow-y:auto;overscroll-behavior:contain;
   scrollbar-width:thin;scrollbar-color:var(--border-strong) transparent;
-  /* room for the bar so it never sits on a name */
-  padding-right:var(--s-2);margin-right:calc(var(--s-2) * -1);
+  /* room for the bar so it never sits on a name, and 6px above and below so a
+     row that lifts under the pointer keeps its own top line instead of having
+     it shaved off by the scroller's edge */
+  padding:6px var(--s-2) 6px 0;margin:-6px calc(var(--s-2) * -1) -6px 0;
 }
 .choices::-webkit-scrollbar{width:6px}
 .choices::-webkit-scrollbar-thumb{background:var(--border-strong);border-radius:var(--r-full)}
@@ -3178,7 +3184,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .choices.is-full .choice[aria-pressed="false"]{opacity:.42}
 .choices.is-full .choice[aria-pressed="false"]:hover{
   opacity:.62;transform:none;box-shadow:none;
-  border-color:var(--star);background:rgba(232,163,61,.06);
+  border-color:#E66C91;background:rgba(230,108,145,.09);
 }
 .choice b{
   display:block;padding-right:var(--s-6);line-height:var(--lh-snug);
@@ -3227,26 +3233,38 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    saving hangs under the button it belongs to rather than joining the row. */
 .ofoot{
   display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s-5) var(--s-6);
-  align-items:center;margin-top:var(--s-7);
+  /* the right column is a button row with the saving hung under it, so its
+     centre is lower than the button's. Both sides start together instead, and
+     the proof carries the button's own 48px so the two read as one line. */
+  align-items:start;margin-top:var(--s-7);
 }
-/* who has bought it and what they made of it, on one line: the faces, then
-   the score. Two lines of promises used to sit here and they were promises
+/* who has bought it and what they made of it: the faces, then the score over
+   the count. Two lines of promises used to sit here and they were promises
    the band above had already made. */
 .oproof{
   display:flex;align-items:center;gap:var(--s-4);flex-wrap:wrap;
-  font-size:var(--fs-3);line-height:var(--lh-normal);color:var(--fg-muted);
+  min-height:48px;                     /* the button's own height, so the two sides line up */
+  margin:0;font-size:var(--fs-3);line-height:var(--lh-normal);color:var(--fg-muted);
 }
+/* big enough to be faces rather than dots — 44px against the two lines beside
+   them, which measure about the same from the score's cap to the count's
+   baseline, so neither side of the pair overhangs the other */
 .oproof__faces{display:flex;flex:none}
 .oproof__faces img{
-  width:34px;height:34px;flex:none;border-radius:var(--r-full);object-fit:cover;
-  border:2px solid #171824;margin-left:-9px;background:var(--surface-sunken);
+  width:44px;height:44px;flex:none;border-radius:var(--r-full);object-fit:cover;
+  border:2px solid #171824;margin-left:-12px;background:var(--surface-sunken);
 }
 .oproof__faces img:first-child{margin-left:0}
-.oproof__rate{display:inline-flex;align-items:center;gap:var(--s-2);min-width:0}
+/* the score on top, what it is drawn from underneath */
+.oproof__rate{
+  display:inline-flex;flex-direction:column;align-items:flex-start;
+  gap:2px;min-width:0;
+}
+.oproof__score{display:inline-flex;align-items:center;gap:var(--s-2)}
 .oproof__rate .stars{display:inline-flex;align-items:center;gap:1px;flex:none;color:var(--star)}
-.oproof__rate .stars svg{width:13px;height:13px;flex:none}
-.oproof__rate b{color:var(--fg);font-size:var(--fs-4);font-weight:var(--fw-bold)}
-.oproof__n{white-space:nowrap}
+.oproof__rate .stars svg{width:15px;height:15px;flex:none}
+.oproof__rate b{color:var(--fg);font-size:var(--fs-5);font-weight:var(--fw-bold);line-height:1}
+.oproof__n{white-space:nowrap;font-size:var(--fs-2)}
 .oact{display:flex;flex-direction:column;align-items:flex-end;gap:var(--s-3)}
 /* what the offer is worth, under the button that takes it. Quiet on purpose:
    the button is the thing to press and a second bright object beside it would
@@ -4288,11 +4306,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
       <div class="ofoot">
         <p class="oproof">
-          <span class="oproof__faces" aria-hidden="true"><img src="images/testimonials/mucahitguney/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"><img src="images/testimonials/zariffilm/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"><img src="images/testimonials/ugurdemir/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"></span>
+          <span class="oproof__faces" aria-hidden="true"><img src="images/testimonials/mucahitguney/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.style.display='none'"><img src="images/testimonials/zariffilm/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.style.display='none'"><img src="images/testimonials/ugurdemir/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.style.display='none'"></span>
           <span class="oproof__rate">
+            <span class="oproof__score">
             <span class="stars" aria-hidden="true"><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg></span>
             <b class="tnum">4.8</b>
-            <span class="oproof__n tnum">&#183; 15,000+ reviews</span>
+            </span>
+            <span class="oproof__n tnum">15,000+ reviews</span>
             <span class="vh">, rated 4.8 out of 5 from more than 15,000 reviews</span>
           </span>
         </p>
