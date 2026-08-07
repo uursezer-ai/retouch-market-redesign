@@ -6752,35 +6752,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      the section, the cursor's own hint is the whole affordance, and below the
      breakpoint where the row is already two across there is nothing to
      toggle at all. */
-  var ZOOMABLE = '(min-width:1001px)';
+  /* The press on a picture used to widen the row to two across on a wide
+     screen. It opens the gallery now — the same gesture, a better answer, and
+     one that works on a phone, where the two-across never did. What is left
+     here is the cursor's own hint: it rides the pointer over anything that
+     opens, and the press itself is wired at the foot of the page, where the
+     gallery is. The .is-2up rules are still in the sheet and nothing reaches
+     them any more. */
   document.querySelectorAll('[data-zoomsec]').forEach(function(sec){
-    var open = false;
-    function live(){ return !window.matchMedia || window.matchMedia(ZOOMABLE).matches; }
-    /* the row widens under its own rule — the controller's only job is to
-       keep the indicator and the arrows honest while it does */
-    var zoomGo = null;
-    function set(on){
-      open = on;
-      sec.classList.toggle('is-2up', on);
-      if(on) hintOff();
-      window.dispatchEvent(new Event('resize'));
-      if(still) return;
-      /* the cards are still moving for the next half second, and everything
-         that measures them has to be told more than once */
-      clearTimeout(zoomGo);
-      var t0 = Date.now();
-      (function keep(){
-        window.dispatchEvent(new Event('resize'));
-        if(Date.now() - t0 < 520) zoomGo = setTimeout(keep, 80);
-      })();
-    }
-    /* the picture is what you want bigger, so it is the way in. A click and
-       not a drag: the split follows the pointer across this same surface, so
-       anything that travelled was someone comparing, not asking. */
     var target = sec.getAttribute('data-zoom-target') || '[data-compare]';
-
-    /* the hint rides the cursor while it is over something that opens, and
-       says nothing once it is open: the second press is the obvious one */
     var hint = document.createElement('span');
     hint.className = 'ziphint';
     hint.setAttribute('aria-hidden', 'true');
@@ -6789,7 +6769,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     function hintOff(){ hint.classList.remove('is-on'); }
     sec.addEventListener('pointermove', function(e){
       if(e.pointerType !== 'mouse') return hintOff();
-      if(sec.classList.contains('is-2up') || !live()) return hintOff();
+      if(window.RMGallery && RMGallery.isOpen()) return hintOff();
       if(!e.target.closest(target)) return hintOff();
       /* measured, so it never has to guess how wide it is */
       var w = hint.offsetWidth, h = hint.offsetHeight;
@@ -6802,25 +6782,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     }, {passive:true});
     sec.addEventListener('pointerleave', hintOff);
     window.addEventListener('scroll', hintOff, {passive:true});
-    /* dragged narrower than the breakpoint, the row is two across on its own
-       and the wide state has nothing left to mean */
-    if(window.matchMedia){
-      var mq = window.matchMedia(ZOOMABLE);
-      (mq.addEventListener ? mq.addEventListener.bind(mq, 'change') : mq.addListener.bind(mq))(
-        function(){ if(!live() && open) set(false); });
-    }
-    var from = null;
-    sec.addEventListener('pointerdown', function(e){
-      from = e.target.closest(target) ? {x:e.clientX, y:e.clientY} : null;
-    }, {passive:true});
-    sec.addEventListener('click', function(e){
-      var pic = e.target.closest(target);
-      if(!pic || !from) return;
-      from = (Math.abs(e.clientX - from.x) < 6 && Math.abs(e.clientY - from.y) < 6) ? from : null;
-      if(!from) return;
-      if(!live()) return;
-      set(!open);
-    });
   });
 
   /* ---- preset chips: one row of comparisons at a time ---- */
@@ -7868,6 +7829,125 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
        page stayed invisible. Content must never depend on this working. */
     setTimeout(function(){ targets.forEach(function(el){ el.classList.add('is-in'); }); }, 2500);
   }
+})();
+</script>
+
+<!-- ══════════ THE GALLERY ══════════
+     RMGallery 1.0, dropped in as shipped and not edited: it brings its own
+     CSS and its own DOM, and everything it owns is namespaced rmg. The page
+     only hands it items. -->
+<script src="rm-gallery.js"></script>
+<script>
+(function(){
+  if(!window.RMGallery) return;
+  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  /* ---- the page's own pictures, in the shape the gallery reads ---- */
+
+  /* a before/after frame is two images in one box: the first is the frame as
+     it came off the camera, the one inside .compare__after is the edit */
+  function baItems(panel){
+    return [].map.call(panel.querySelectorAll('[data-compare]'), function(c){
+      var before = c.querySelector(':scope > img.compare__img');
+      var after  = c.querySelector('.compare__after img');
+      if(!before || !after) return null;
+      return { type:'ba',
+               before: before.getAttribute('src'),
+               after:  after.getAttribute('src'),
+               alt:    before.getAttribute('alt') || '' };
+    }).filter(Boolean);
+  }
+  /* the deck says which pack it is showing, in its own label */
+  function baTitle(panel){
+    var deck = panel.querySelector('[data-badeck]');
+    return deck ? (deck.getAttribute('aria-label') || '').replace(/ before and after$/, '') : '';
+  }
+  /* a testimonial card carries five frames and shows one at a time */
+  function vItems(card){
+    return [].map.call(card.querySelectorAll('.vcard__shot img'), function(img){
+      return { type:'photo', src: img.getAttribute('src'), alt: img.getAttribute('alt') || '' };
+    });
+  }
+  function vTitle(card){
+    var n = card.querySelector('.vcard__n'), at = card.querySelector('.vcard__at');
+    return (n ? n.textContent.trim() : '') +
+           (at ? ' · ' + at.textContent.replace(/\s*·.*$/, '').trim() : '');
+  }
+  function indexOf(list, one){ return Math.max(0, [].indexOf.call(list, one)); }
+
+  /* ---- press a picture and it opens ----
+     The rule for what counts as a press is the one the page already used to
+     widen a row: a pointer that travelled was someone dragging the split or
+     pushing the deck, and only a press that stayed put is asking for this.
+     Unlike the two-across it replaces, it is not held to a wide screen — a
+     phone is where a bigger picture is worth the most.
+
+     On pointerup, not on click: a tap on a touch screen does not always
+     produce a click, and the click it does produce arrives after the gallery
+     is already up — where it would land on the overlay rather than on the
+     picture that was pressed. So the press is read from the pointer, and the
+     click that follows it is swallowed once. */
+  var PRESS = 6;
+  /* The gallery locks the body while it is up and puts the page back where it
+     was on the way out, with one scrollTo. This page asks for smooth scrolling
+     in its stylesheet, which turns that one call into a second and a half of
+     the whole page flying past. It lands in the right place either way — it
+     just should not be watched getting there. So scrolling goes straight for
+     as long as the gallery is open, and is handed back a frame after it shuts. */
+  var de = document.documentElement, straightGo = null;
+  function straight(){
+    de.style.scrollBehavior = 'auto';
+    clearTimeout(straightGo);
+    (function wait(){
+      if(RMGallery.isOpen()) return requestAnimationFrame(wait);
+      /* isOpen() turns false when the closing starts, and the page is put back
+         at the end of it — a frame's grace here would hand smooth scrolling
+         back before the one scroll that must not be smooth */
+      straightGo = setTimeout(function(){ de.style.scrollBehavior = ''; }, 800);
+    })();
+  }
+  function swallowNext(){
+    function eat(e){ e.stopPropagation(); e.preventDefault(); }
+    document.addEventListener('click', eat, true);
+    setTimeout(function(){ document.removeEventListener('click', eat, true); }, 0);
+  }
+  document.querySelectorAll('[data-zoomsec]').forEach(function(sec){
+    var from = null;
+    var pic = sec.getAttribute('data-zoom-target') || '[data-compare]';
+
+    function show(one){
+      var items, title, at = 0;
+      if(one.hasAttribute('data-compare')){
+        var panel = one.closest('.bapanel') || sec;
+        items = baItems(panel); title = baTitle(panel);
+        at = indexOf(panel.querySelectorAll('[data-compare]'), one);
+      } else {
+        items = vItems(one); title = vTitle(one);
+        var on = one.querySelector('.vcard__shot img.is-on');
+        if(on) at = indexOf(one.querySelectorAll('.vcard__shot img'), on);
+      }
+      if(!items.length) return false;
+      RMGallery.open(items, {title: title, startIndex: at, trigger: one});
+      straight();                       /* after it is up, or the wait ends before it starts */
+      return true;
+    }
+
+    sec.addEventListener('pointerdown', function(e){
+      from = e.target.closest(pic) ? {x:e.clientX, y:e.clientY, on:e.target.closest(pic)} : null;
+    }, {passive:true});
+    sec.addEventListener('pointercancel', function(){ from = null; }, {passive:true});
+    sec.addEventListener('pointerup', function(e){
+      var held = from; from = null;
+      if(!held) return;
+      if(Math.abs(e.clientX - held.x) >= PRESS || Math.abs(e.clientY - held.y) >= PRESS) return;
+      if(show(held.on)) swallowNext();
+    });
+    /* a keyboard's Enter arrives as a click with no pointer behind it */
+    sec.addEventListener('click', function(e){
+      var one = e.target.closest(pic);
+      if(one && e.detail === 0) show(one);
+    });
+  });
 })();
 </script>
 </body>
