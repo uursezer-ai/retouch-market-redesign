@@ -3527,6 +3527,44 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .totop.is-on{opacity:1;visibility:visible;transform:none}
 .totop:hover{box-shadow:var(--sh-3);border-color:var(--border-strong)}
 
+/* ── the signed-in rail ──────────────────────────────────────────
+   One column at the same edge the back-to-top button uses, holding the three
+   things a signed-in person reaches for from anywhere and, at its foot, the
+   way back up. It is the page's own card — surface, border, the second
+   shadow — and its buttons answer the pointer exactly the way the ones in
+   the bar do, because they are the same rule. */
+.urail{
+  position:fixed;right:var(--s-6);top:50%;transform:translateY(-50%);z-index:60;
+  display:flex;flex-direction:column;
+  border-radius:var(--r-panel);background:var(--surface);
+  border:1px solid var(--border);box-shadow:var(--sh-2);
+  padding:var(--s-1);
+}
+.urail[hidden]{display:none}
+.urail__b{
+  position:relative;display:grid;place-items:center;
+  width:44px;height:44px;border-radius:var(--r-control);color:var(--fg-body);
+  transition:background var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
+}
+.urail__b:hover{background:var(--surface-sunken);color:var(--fg)}
+.urail__b:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.urail__b svg{width:20px;height:20px;display:block}
+/* a hairline between them, drawn by the buttons themselves so the ends of
+   the column stay clean */
+.urail__b + .urail__b::before{
+  content:"";position:absolute;left:var(--s-2);right:var(--s-2);top:-1px;height:1px;
+  background:var(--border);
+}
+.urail__b:hover::before,.urail__b:hover + .urail__b::before{opacity:0}
+/* on a narrow screen it sits where the old button sat, and comes in from the
+   same corner rather than from the middle of the edge */
+@media (max-width:620px){
+  .urail{right:var(--s-4);top:auto;bottom:var(--s-4);transform:none}
+  .urail__b{width:40px;height:40px}
+}
+/* one or the other, never both: the rail carries its own way back to the top */
+[data-user="in"] .totop{display:none}
+
 /* ════════════════════════════════════════════════════════════════
    REVEAL — restrained, and only when JS + motion are welcome
    ════════════════════════════════════════════════════════════════ */
@@ -5435,6 +5473,42 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     <path d="M7 14V1.5M1.6 6.9L7 1.5l5.4 5.4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
   </svg>
 </button>
+
+<!-- ══════════ THE SIGNED-IN RAIL ══════════
+     Signed out, the page offers one thing at this edge: the way back to the
+     top. Signed in there are three more worth reaching from anywhere, and
+     they stand in one column with the way back at the foot of it — so the
+     button that was there before is still there, in the same corner, with
+     company. The marks are the page's own: the Installing panel's download,
+     the Questions panel's question, and the arrow the old button carried. -->
+<nav class="urail" id="userRail" aria-label="Your tools" hidden>
+  <a class="urail__b" href="#" data-tip="Collaboration" aria-label="Collaboration">
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="7.7" cy="7" r="2.9" stroke="currentColor" stroke-width="1.6"/>
+      <path d="M2.4 16.4c0-2.9 2.4-4.7 5.3-4.7s5.3 1.8 5.3 4.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M13.4 4.5a2.6 2.6 0 010 5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M14.6 11.9c1.8.4 3 1.9 3 4.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+    </svg>
+  </a>
+  <a class="urail__b" href="#install" data-tip="Download RM App" aria-label="Download the Retouch Market app">
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M10 2.6v9.1M6.4 8.4l3.6 3.6 3.6-3.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M3.2 13.4v2.2a1.8 1.8 0 001.8 1.8h10a1.8 1.8 0 001.8-1.8v-2.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+    </svg>
+  </a>
+  <a class="urail__b" href="#faq" data-tip="Support" aria-label="Support and questions">
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="10" cy="10" r="7.6" stroke="currentColor" stroke-width="1.7"/>
+      <path d="M7.9 7.9a2.15 2.15 0 114.05 1c-.35.65-1.2 1-1.65 1.55-.2.25-.3.55-.3.95" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="10" cy="14.1" r=".95" fill="currentColor"/>
+    </svg>
+  </a>
+  <button class="urail__b" type="button" data-tip="Top" data-rail-top aria-label="Back to top">
+    <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path d="M10 16.6V4.4M4.6 9.8L10 4.4l5.4 5.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+</nav>
 
 <script>
 (function(){
@@ -7580,6 +7654,57 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     window.scrollTo({top:0, behavior: still ? 'auto' : 'smooth'});
   });
   syncToTop();
+
+  /* ---- signed in, and what that changes at the right-hand edge ----
+     There is no session behind this page, so the state is a switch: the
+     account mark in the bar turns it on and off and it is remembered, which
+     is what a prototype needs to be looked at in both states. Everything
+     downstream reads one attribute on <html>, so wiring a real session later
+     means setting that attribute and deleting the switch.
+
+     Signed out: the back-to-top button, as before. Signed in: the rail, which
+     carries the same way back at its foot. */
+  (function(){
+    var rail = document.getElementById('userRail');
+    if(!rail) return;
+    var de = document.documentElement;
+    var key = 'rm-signed-in';
+    var mark = document.querySelector('.nav__icons a[aria-label="Log in"]');
+
+    function draw(){
+      var on = de.getAttribute('data-user') === 'in';
+      rail.hidden = !on;
+      if(mark){
+        mark.setAttribute('aria-label', on ? 'Your account — press to sign out' : 'Log in');
+        mark.setAttribute('data-tip', on ? 'Signed in' : 'Log in');
+      }
+      syncToTop();
+    }
+    function set(on){
+      de.setAttribute('data-user', on ? 'in' : 'out');
+      try { localStorage.setItem(key, on ? 'in' : 'out'); } catch(e){}
+      draw();
+    }
+    var saved = 'out';
+    try { saved = localStorage.getItem(key) || 'out'; } catch(e){}
+    set(saved === 'in');
+
+    if(mark) mark.addEventListener('click', function(e){
+      e.preventDefault();
+      set(de.getAttribute('data-user') !== 'in');
+    });
+
+    rail.querySelector('[data-rail-top]').addEventListener('click', function(){
+      window.scrollTo({top:0, behavior: still ? 'auto' : 'smooth'});
+    });
+    /* the same bubble every other mark on the page uses */
+    [].forEach.call(rail.querySelectorAll('[data-tip]'), function(el){
+      el.addEventListener('pointerenter', function(){ tipShow(el); });
+      el.addEventListener('pointerleave', tipOff);
+      el.addEventListener('focus', function(){ tipShow(el); });
+      el.addEventListener('blur', tipOff);
+    });
+  })();
 
   /* ---- rows of cards are dealt out ----
      One entrance for every row of cards on the page: the three sections that
