@@ -3641,7 +3641,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    field of padlocks that turns to keys wherever the pointer goes.
    ════════════════════════════════════════════════════════════════ */
 .wa{
-  --ink:#05130F;
+  --ink:#08090C;                      /* black, not a green black: the colour belongs on it, not in it */
   /* the same names the page uses, given the band's own values — the way the
      plugin band does it, so every component inside reads correctly without
      being told about this section at all */
@@ -3651,30 +3651,23 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   --px:50%; --py:38%;
   background:var(--ink);color:var(--fg-body);
 }
-/* ambient pair, drifting on its own. Held down from what it was: a band this
-   saturated sitting straight above the footer made the foot of the page read
-   as a spread of colours. The ground is dark and the green is what is on it —
-   the mark, the chips, the button — rather than the ground itself. */
+/* The ground is black. The two ambient washes that used to sit on it were
+   what turned the whole band green next to a footer that already carries
+   plenty, so they are gone — what is left of the light is the pool under the
+   pointer, which is not decoration: it is what turns the locks to keys. */
 .wa__sky{
   position:absolute;inset:-20% -10%;z-index:-4;pointer-events:none;
-  background:
-    radial-gradient(46% 52% at 12% 84%,rgba(30,190,125,.10) 0%,rgba(30,190,125,0) 70%),
-    radial-gradient(40% 44% at 86% 14%,rgba(16,150,140,.08) 0%,rgba(16,150,140,0) 72%);
   animation:bandDrift 34s var(--ease) infinite alternate;
 }
 /* two pools that follow the pointer */
 .wa__sky::before{
   content:"";position:absolute;inset:0;
   background:
-    radial-gradient(680px circle at var(--px) var(--py),rgba(36,200,130,.21),transparent 62%),
-    radial-gradient(560px circle at calc(var(--px) - 38%) calc(var(--py) + 38%),rgba(18,150,140,.13),transparent 64%);
+    radial-gradient(560px circle at var(--px) var(--py),rgba(36,200,130,.15),transparent 64%),
+    radial-gradient(420px circle at calc(var(--px) - 34%) calc(var(--py) + 34%),rgba(18,150,140,.07),transparent 66%);
 }
-/* and a blob that lags behind it */
-.wa__sky::after{
-  content:"";position:absolute;left:6%;top:16%;width:460px;height:460px;border-radius:50%;
-  background:rgb(30,190,125);opacity:.15;filter:blur(90px);
-  transform:translate(var(--gx,0px),var(--gy,0px));transition:transform .15s ease-out;
-}
+/* the blob that used to lag behind the pointer was the last of the wash, and
+   on a black ground it read as a stain rather than as light */
 @keyframes bandDrift{from{transform:translate3d(-1.5%,-1%,0)}to{transform:translate3d(1.5%,1%,0)}}
 
 /* ── the field of locks ───────────────────────────────────────────
@@ -3704,11 +3697,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .wa__scrim{
   position:absolute;inset:0;z-index:-1;pointer-events:none;
   background:radial-gradient(78% 94% at 50% 46%,
-    rgba(5,19,15,.84) 0%,
-    rgba(5,19,15,.68) 28%,
-    rgba(5,19,15,.36) 54%,
-    rgba(5,19,15,.12) 74%,
-    rgba(5,19,15,0) 90%);
+    rgba(8,9,12,.80) 0%,
+    rgba(8,9,12,.62) 28%,
+    rgba(8,9,12,.32) 54%,
+    rgba(8,9,12,.10) 74%,
+    rgba(8,9,12,0) 90%);
 }
 @media (hover:none){ .wa__keys{display:none} .wa__locks{-webkit-mask:none;mask:none} }
 
@@ -3729,12 +3722,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .wa__feats li{
   display:inline-flex;align-items:center;gap:var(--s-2);
   height:34px;padding:0 var(--s-4);border-radius:var(--r-full);
-  background:rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.08);
-  font-size:var(--fs-3);font-weight:var(--fw-medium);color:var(--fg-muted);
+  /* green on black: the tint and the edge are the same green as the mark, at
+     a tenth and a quarter of it, so three of them read as one family rather
+     than three colours */
+  background:rgba(59,224,138,.10);border:1px solid rgba(59,224,138,.26);
+  font-size:var(--fs-3);font-weight:var(--fw-medium);color:#CFEFE0;
   white-space:nowrap;
 }
-/* the one green on them, a step down from the heading's — a mark, not a light */
-.wa__feats svg{width:15px;height:15px;flex:none;color:#2FBE79}
+.wa__feats svg{width:15px;height:15px;flex:none;color:var(--em)}
 /* the closing call's own button, in the band's own colour — and answering
    the pointer the way every other button on this page does: one step darker,
    one step further off the page. It was going lighter, which nothing else
