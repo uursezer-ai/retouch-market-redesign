@@ -1954,6 +1954,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 #voices.is-2up .vcard{cursor:zoom-out}
 /* it rides the cursor, a little below and to the right, and flips to the
    other side rather than running off the edge of the window */
+/* ── the gallery's stage ──
+   RMGallery caps a picture at the stage's height, which fits anything bigger
+   than the stage and leaves anything smaller floating at its own size in the
+   middle of a black screen. The fit is worked out in JS at the foot of the
+   page — CSS alone cannot do it: given a definite height, max-width clamps
+   the width on its own and takes the picture's shape with it. All that is
+   needed here is to stop the component's ceiling fighting the measurement. */
+.rmg .rmg-frame img.base{max-height:none}
 .ziphint{
   position:fixed;left:0;top:0;z-index:70;pointer-events:none;
   display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
@@ -2279,6 +2287,29 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* hover scrub: sweeping across the image steps through that pack's samples,
    one segment of width per shot */
 .card__img{position:relative;aspect-ratio:4/5;overflow:hidden;background:var(--surface-sunken)}
+/* the window is the way into the gallery, and it says so: the cursor becomes
+   a lens over it, and a mark appears in its corner while the pointer is there
+   and nowhere else. The card around it is not the way in — pressing a name
+   or a price has never opened a picture and still does not. */
+/* the card's title link is stretched across the whole card, which put an
+   invisible sheet over the photograph. The window is lifted above it: the
+   picture belongs to the gallery, and every other part of the card still
+   belongs to the link. */
+.card__img{cursor:zoom-in;z-index:2}
+.card__full{
+  position:absolute;top:var(--s-3);right:var(--s-3);z-index:3;
+  display:grid;place-items:center;width:30px;height:30px;border-radius:9px;
+  background:rgba(6,12,22,.62);color:#fff;border:1px solid rgba(255,255,255,.26);
+  backdrop-filter:blur(6px);pointer-events:none;
+  opacity:0;transform:translateY(-3px) scale(.94);
+  transition:opacity var(--dur-1) var(--ease), transform var(--dur-1) var(--ease);
+}
+.card__full svg{width:15px;height:15px;display:block}
+.card__img:hover .card__full,.card__img:focus-within .card__full{
+  opacity:1;transform:none;
+}
+/* nothing hovers on a touch screen, and a mark that never leaves is clutter */
+@media (hover:none){.card__full{display:none}.card__img{cursor:default}}
 /* no crossfade: while two shots faded past each other the panel behind them
    showed through, and sweeping across read as a flicker. The swap is a hard
    cut now, which is what every storefront image scrubber does */
@@ -6752,15 +6783,35 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      the section, the cursor's own hint is the whole affordance, and below the
      breakpoint where the row is already two across there is nothing to
      toggle at all. */
-  /* The press on a picture used to widen the row to two across on a wide
-     screen. It opens the gallery now — the same gesture, a better answer, and
-     one that works on a phone, where the two-across never did. What is left
-     here is the cursor's own hint: it rides the pointer over anything that
-     opens, and the press itself is wired at the foot of the page, where the
-     gallery is. The .is-2up rules are still in the sheet and nothing reaches
-     them any more. */
+  var ZOOMABLE = '(min-width:1001px)';
   document.querySelectorAll('[data-zoomsec]').forEach(function(sec){
+    var open = false;
+    function live(){ return !window.matchMedia || window.matchMedia(ZOOMABLE).matches; }
+    /* the row widens under its own rule — the controller's only job is to
+       keep the indicator and the arrows honest while it does */
+    var zoomGo = null;
+    function set(on){
+      open = on;
+      sec.classList.toggle('is-2up', on);
+      if(on) hintOff();
+      window.dispatchEvent(new Event('resize'));
+      if(still) return;
+      /* the cards are still moving for the next half second, and everything
+         that measures them has to be told more than once */
+      clearTimeout(zoomGo);
+      var t0 = Date.now();
+      (function keep(){
+        window.dispatchEvent(new Event('resize'));
+        if(Date.now() - t0 < 520) zoomGo = setTimeout(keep, 80);
+      })();
+    }
+    /* the picture is what you want bigger, so it is the way in. A click and
+       not a drag: the split follows the pointer across this same surface, so
+       anything that travelled was someone comparing, not asking. */
     var target = sec.getAttribute('data-zoom-target') || '[data-compare]';
+
+    /* the hint rides the cursor while it is over something that opens, and
+       says nothing once it is open: the second press is the obvious one */
     var hint = document.createElement('span');
     hint.className = 'ziphint';
     hint.setAttribute('aria-hidden', 'true');
@@ -6769,7 +6820,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     function hintOff(){ hint.classList.remove('is-on'); }
     sec.addEventListener('pointermove', function(e){
       if(e.pointerType !== 'mouse') return hintOff();
-      if(window.RMGallery && RMGallery.isOpen()) return hintOff();
+      if(sec.classList.contains('is-2up') || !live()) return hintOff();
       if(!e.target.closest(target)) return hintOff();
       /* measured, so it never has to guess how wide it is */
       var w = hint.offsetWidth, h = hint.offsetHeight;
@@ -6782,6 +6833,25 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     }, {passive:true});
     sec.addEventListener('pointerleave', hintOff);
     window.addEventListener('scroll', hintOff, {passive:true});
+    /* dragged narrower than the breakpoint, the row is two across on its own
+       and the wide state has nothing left to mean */
+    if(window.matchMedia){
+      var mq = window.matchMedia(ZOOMABLE);
+      (mq.addEventListener ? mq.addEventListener.bind(mq, 'change') : mq.addListener.bind(mq))(
+        function(){ if(!live() && open) set(false); });
+    }
+    var from = null;
+    sec.addEventListener('pointerdown', function(e){
+      from = e.target.closest(target) ? {x:e.clientX, y:e.clientY} : null;
+    }, {passive:true});
+    sec.addEventListener('click', function(e){
+      var pic = e.target.closest(target);
+      if(!pic || !from) return;
+      from = (Math.abs(e.clientX - from.x) < 6 && Math.abs(e.clientY - from.y) < 6) ? from : null;
+      if(!from) return;
+      if(!live()) return;
+      set(!open);
+    });
   });
 
   /* ---- preset chips: one row of comparisons at a time ---- */
@@ -7833,76 +7903,46 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 </script>
 
 <!-- ══════════ THE GALLERY ══════════
-     RMGallery 1.0, dropped in as shipped and not edited: it brings its own
-     CSS and its own DOM, and everything it owns is namespaced rmg. The page
-     only hands it items. -->
+     RMGallery 1.0, dropped in as shipped: it brings its own CSS and its own
+     DOM, and everything it owns is namespaced rmg. The page only hands it
+     pictures.
+
+     It belongs to the shelf and nowhere else. The before/afters and the
+     testimonials keep the press they always had — that one widens the row to
+     two across, and it is a different thing to want. -->
 <script src="rm-gallery.js"></script>
 <script>
 (function(){
-  if(!window.RMGallery) return;
-  var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var grid = document.getElementById('presetGrid');
+  if(!grid || !window.RMGallery) return;
 
-  /* ---- the page's own pictures, in the shape the gallery reads ---- */
+  /* ---- what a card is holding ----
+     Four frames behind one window, one of them showing. The gallery gets all
+     four, opened at the one that was on screen when it was pressed. */
+  function shots(win){
+    return [].map.call(win.querySelectorAll('img'), function(img){
+      return { type:'photo', src: img.getAttribute('src'),
+               alt: img.getAttribute('alt') || '' };
+    }).filter(function(it){ return it.src; });
+  }
+  function nameOf(win){
+    var card = win.closest('.card');
+    var t = card && card.querySelector('.card__t');
+    return t ? t.textContent.trim() : '';
+  }
 
-  /* a before/after frame is two images in one box: the first is the frame as
-     it came off the camera, the one inside .compare__after is the edit */
-  function baItems(panel){
-    return [].map.call(panel.querySelectorAll('[data-compare]'), function(c){
-      var before = c.querySelector(':scope > img.compare__img');
-      var after  = c.querySelector('.compare__after img');
-      if(!before || !after) return null;
-      return { type:'ba',
-               before: before.getAttribute('src'),
-               after:  after.getAttribute('src'),
-               alt:    before.getAttribute('alt') || '' };
-    }).filter(Boolean);
-  }
-  /* the deck says which pack it is showing, in its own label */
-  function baTitle(panel){
-    var deck = panel.querySelector('[data-badeck]');
-    return deck ? (deck.getAttribute('aria-label') || '').replace(/ before and after$/, '') : '';
-  }
-  /* a testimonial card carries five frames and shows one at a time */
-  function vItems(card){
-    return [].map.call(card.querySelectorAll('.vcard__shot img'), function(img){
-      return { type:'photo', src: img.getAttribute('src'), alt: img.getAttribute('alt') || '' };
-    });
-  }
-  function vTitle(card){
-    var n = card.querySelector('.vcard__n'), at = card.querySelector('.vcard__at');
-    return (n ? n.textContent.trim() : '') +
-           (at ? ' · ' + at.textContent.replace(/\s*·.*$/, '').trim() : '');
-  }
-  function indexOf(list, one){ return Math.max(0, [].indexOf.call(list, one)); }
-
-  /* ---- press a picture and it opens ----
-     The rule for what counts as a press is the one the page already used to
-     widen a row: a pointer that travelled was someone dragging the split or
-     pushing the deck, and only a press that stayed put is asking for this.
-     Unlike the two-across it replaces, it is not held to a wide screen — a
-     phone is where a bigger picture is worth the most.
-
-     On pointerup, not on click: a tap on a touch screen does not always
-     produce a click, and the click it does produce arrives after the gallery
-     is already up — where it would land on the overlay rather than on the
-     picture that was pressed. So the press is read from the pointer, and the
-     click that follows it is swallowed once. */
-  var PRESS = 6;
-  /* The gallery locks the body while it is up and puts the page back where it
-     was on the way out, with one scrollTo. This page asks for smooth scrolling
-     in its stylesheet, which turns that one call into a second and a half of
-     the whole page flying past. It lands in the right place either way — it
-     just should not be watched getting there. So scrolling goes straight for
-     as long as the gallery is open, and is handed back a frame after it shuts. */
+  /* the gallery locks the body and puts the page back with one scrollTo on the
+     way out. This page asks for smooth scrolling in its stylesheet, which turns
+     that one call into a second and a half of the page flying past — it lands
+     in the right place either way, it just should not be watched getting
+     there. Straight while it is up, handed back once it has finished closing:
+     isOpen() turns false when the closing starts, not when it ends. */
   var de = document.documentElement, straightGo = null;
   function straight(){
     de.style.scrollBehavior = 'auto';
     clearTimeout(straightGo);
     (function wait(){
       if(RMGallery.isOpen()) return requestAnimationFrame(wait);
-      /* isOpen() turns false when the closing starts, and the page is put back
-         at the end of it — a frame's grace here would hand smooth scrolling
-         back before the one scroll that must not be smooth */
       straightGo = setTimeout(function(){ de.style.scrollBehavior = ''; }, 800);
     })();
   }
@@ -7911,43 +7951,107 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     document.addEventListener('click', eat, true);
     setTimeout(function(){ document.removeEventListener('click', eat, true); }, 0);
   }
-  document.querySelectorAll('[data-zoomsec]').forEach(function(sec){
-    var from = null;
-    var pic = sec.getAttribute('data-zoom-target') || '[data-compare]';
 
-    function show(one){
-      var items, title, at = 0;
-      if(one.hasAttribute('data-compare')){
-        var panel = one.closest('.bapanel') || sec;
-        items = baItems(panel); title = baTitle(panel);
-        at = indexOf(panel.querySelectorAll('[data-compare]'), one);
-      } else {
-        items = vItems(one); title = vTitle(one);
-        var on = one.querySelector('.vcard__shot img.is-on');
-        if(on) at = indexOf(one.querySelectorAll('.vcard__shot img'), on);
-      }
-      if(!items.length) return false;
-      RMGallery.open(items, {title: title, startIndex: at, trigger: one});
-      straight();                       /* after it is up, or the wait ends before it starts */
-      return true;
+  /* ---- every picture fits the stage, whatever size the file is ----
+     The component caps a picture at the stage's height, which brings a big
+     one down but leaves a small one at its own size in the middle of a black
+     screen. Neither can CSS finish the job: with a definite height, max-width
+     clamps the width by itself and a wide photograph on a narrow screen comes
+     out stretched. So the height is worked out from the picture's own shape —
+     the smaller of the stage's height and what its width allows — and written
+     on. Measured on the way in, whenever the slide changes, as each file
+     arrives, and when the window is resized. */
+  function fit(){
+    var stage = document.getElementById('rmg-viewport');
+    if(!stage) return;
+    var slide = document.querySelector('.rmg-slide');
+    var pad = slide ? parseFloat(getComputedStyle(slide).paddingLeft) * 2 : 0;
+    var maxW = stage.clientWidth - pad, maxH = stage.clientHeight;
+    if(!(maxW > 0 && maxH > 0)) return;
+    [].forEach.call(document.querySelectorAll('.rmg-frame img.base'), function(img){
+      if(!img.naturalWidth || !img.naturalHeight) return;
+      var h = Math.min(maxH, maxW * img.naturalHeight / img.naturalWidth);
+      img.style.height = Math.round(h) + 'px';
+      img.style.width = 'auto';
+    });
+  }
+  var watching = null;
+  function watch(){
+    fit();
+    requestAnimationFrame(fit);                     /* once the stage has been measured */
+    var count = document.getElementById('rmg-count');
+    if(count && !watching){
+      watching = new MutationObserver(fit);         /* the counter changes on every slide */
+      watching.observe(count, {childList:true, characterData:true, subtree:true});
+      document.querySelector('.rmg').addEventListener('load', fit, true);
+      window.addEventListener('resize', function(){ if(RMGallery.isOpen()) fit(); });
     }
+  }
 
-    sec.addEventListener('pointerdown', function(e){
-      from = e.target.closest(pic) ? {x:e.clientX, y:e.clientY, on:e.target.closest(pic)} : null;
-    }, {passive:true});
-    sec.addEventListener('pointercancel', function(){ from = null; }, {passive:true});
-    sec.addEventListener('pointerup', function(e){
-      var held = from; from = null;
-      if(!held) return;
-      if(Math.abs(e.clientX - held.x) >= PRESS || Math.abs(e.clientY - held.y) >= PRESS) return;
-      if(show(held.on)) swallowNext();
-    });
-    /* a keyboard's Enter arrives as a click with no pointer behind it */
-    sec.addEventListener('click', function(e){
-      var one = e.target.closest(pic);
-      if(one && e.detail === 0) show(one);
-    });
+  function show(win){
+    var items = shots(win);
+    if(!items.length) return false;
+    var on = win.querySelector('img.is-on');
+    var at = on ? Math.max(0, [].indexOf.call(win.querySelectorAll('img'), on)) : 0;
+    RMGallery.open(items, {title: nameOf(win), startIndex: at, trigger: win});
+    straight();
+    watch();
+    return true;
+  }
+
+  /* ---- the picture is the way in, not the card ----
+     Read from the pointer rather than from a click: a tap on a touch screen
+     does not reliably make one, and the click it does make arrives after the
+     gallery is up, where it would land on the overlay. The window also scrubs
+     under a dragging finger, so a pointer that travelled was someone looking
+     through the four, not asking for one of them. */
+  var PRESS = 6, from = null;
+  grid.addEventListener('pointerdown', function(e){
+    var win = e.target.closest('.card__img');
+    from = win ? {x:e.clientX, y:e.clientY, win:win} : null;
+  }, {passive:true});
+  grid.addEventListener('pointercancel', function(){ from = null; }, {passive:true});
+  grid.addEventListener('pointerup', function(e){
+    var held = from; from = null;
+    if(!held) return;
+    if(Math.abs(e.clientX - held.x) >= PRESS || Math.abs(e.clientY - held.y) >= PRESS) return;
+    if(show(held.win)) swallowNext();
   });
+  /* a keyboard's Enter arrives as a click with nothing behind it */
+  grid.addEventListener('click', function(e){
+    var win = e.target.closest('.card__img');
+    if(win && e.detail === 0) show(win);
+  });
+
+  /* ---- the mark in the corner, and the words at the pointer ----
+     The corner mark is drawn once per window and only shown while the pointer
+     is on it; the words ride the cursor, the way the before/afters already
+     say what a press will do. */
+  var FS = '<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 2.2H2.2V7"/><path d="M11 2.2h4.8V7"/><path d="M15.8 11v4.8H11"/><path d="M2.2 11v4.8H7"/></svg>';
+  [].forEach.call(grid.querySelectorAll('.card__img'), function(win){
+    win.insertAdjacentHTML('beforeend', '<span class="card__full" aria-hidden="true">' + FS + '</span>');
+  });
+
+  var hint = document.createElement('span');
+  hint.className = 'ziphint';
+  hint.setAttribute('aria-hidden', 'true');
+  hint.innerHTML = '<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="7.6" cy="7.6" r="5.6"/><path d="M11.7 11.7 16.2 16.2"/><path d="M4.9 7.6h5.4"/><path d="M7.6 4.9v5.4"/></svg>Full screen';
+  document.getElementById('presets').appendChild(hint);
+  function hintOff(){ hint.classList.remove('is-on'); }
+  grid.addEventListener('pointermove', function(e){
+    if(e.pointerType !== 'mouse') return hintOff();
+    if(RMGallery.isOpen()) return hintOff();
+    if(!e.target.closest('.card__img')) return hintOff();
+    var w = hint.offsetWidth, h = hint.offsetHeight;
+    var flip = e.clientX + 18 + w > window.innerWidth - 8;
+    hint.style.left = e.clientX + 'px';
+    hint.style.top = e.clientY + 'px';
+    hint.style.setProperty('--hx', (flip ? -(w + 18) : 18) + 'px');
+    hint.style.setProperty('--hy', (e.clientY + 20 + h > window.innerHeight ? -(h + 14) : 16) + 'px');
+    hint.classList.add('is-on');
+  }, {passive:true});
+  grid.addEventListener('pointerleave', hintOff);
+  window.addEventListener('scroll', hintOff, {passive:true});
 })();
 </script>
 </body>

@@ -318,7 +318,7 @@ const lb=document.getElementById('rmg-root'), track=document.getElementById('rmg
       zInBtn=document.getElementById('rmg-zin'), zOutBtn=document.getElementById('rmg-zout'),
       closeBtn=document.getElementById('rmg-close');
 
-const MAX_ZOOM=5.3, MIN_ZOOM=1, CLICK_ZOOM=3.45;  // 2.6 -> 3.45 ve 4 -> 5.3 (%33 artis)
+const MAX_ZOOM=5.3, MIN_ZOOM=1, CLICK_ZOOM=1.2;  // tiklamada %20 yaklasir (onceki 3.45 cok fazlaydi)
 const WHEEL_STEP=30, WHEEL_LOCK=120;           // esik ve kilit dusuruldu
 let items=[], idx=0, galleryTitle='', isOpen=false, trigger=null;
 let zoom=1, panX=0, panY=0, lqip=null;                 // aktif slaytın zoom durumu
