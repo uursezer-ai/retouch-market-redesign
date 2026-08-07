@@ -2944,9 +2944,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* Remove borrows the space the maker and the title were using rather than
    asking for a row of its own — a box you are about to drop does not need
    its own name read back to you */
-.prod__by,.prod__t{transition:opacity var(--dur-1) var(--ease)}
-.prod:hover .prod__by,.prod:hover .prod__t,
-.prod:focus-within .prod__by,.prod:focus-within .prod__t{opacity:0}
+.prod__by,.prod__t,.prod__no{transition:opacity var(--dur-1) var(--ease)}
+.prod:hover .prod__by,.prod:hover .prod__t,.prod:hover .prod__no,
+.prod:focus-within .prod__by,.prod:focus-within .prod__t,
+.prod:focus-within .prod__no{opacity:0}
 .prod__drop{
   position:absolute;left:var(--s-1);right:var(--s-1);top:var(--s-4);bottom:var(--s-1);z-index:2;
   height:48px;margin-block:auto;
@@ -2963,7 +2964,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .prod__drop-i{flex:none}
 /* nothing hovers on a touch screen, so there it keeps a row of its own */
 @media (hover:none){
-  .prod__by,.prod__t{opacity:1 !important}
+  .prod__by,.prod__t,.prod__no{opacity:1 !important}
   .prod__drop{position:static;inset:auto;margin-block:0;opacity:1;pointer-events:auto;margin-top:var(--s-3);height:48px}
 }
 .prod__body{position:relative;display:flex;flex-direction:column;gap:var(--s-2);min-width:0;padding:var(--s-4) var(--s-1) var(--s-1)}
@@ -3250,11 +3251,31 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    them, which measure about the same from the score's cap to the count's
    baseline, so neither side of the pair overhangs the other */
 .oproof__faces{display:flex;flex:none}
-.oproof__faces img{
-  width:44px;height:44px;flex:none;border-radius:var(--r-full);object-fit:cover;
-  border:2px solid #fff;margin-left:-12px;background:var(--surface-sunken);
+/* each face is the person, so each face is a way to what they said. Overlapped
+   they are a crowd; under the pointer the one you are looking at comes out of
+   the crowd whole — the same move the three plugin boxes make on the band. */
+.oface{
+  display:block;flex:none;border-radius:var(--r-full);margin-left:-12px;
+  transition:transform var(--dur-2) var(--ease), filter var(--dur-2) var(--ease);
 }
-.oproof__faces img:first-child{margin-left:0}
+.oface:first-child{margin-left:0}
+.oface:hover,.oface:focus-visible{
+  position:relative;z-index:2;
+  transform:translateY(-3px) scale(1.12);
+  filter:drop-shadow(0 10px 16px rgba(4,10,20,.55));
+}
+.oface:focus-visible{outline:2px solid var(--accent-fg);outline-offset:3px}
+.oproof__faces img{
+  display:block;
+  width:44px;height:44px;border-radius:var(--r-full);object-fit:cover;
+  /* the same hairline the buttons beside them wear, so the row of faces and
+     the row of controls are drawn by one hand */
+  border:1px solid var(--border-strong);background:var(--surface-sunken);
+}
+@media (prefers-reduced-motion:reduce){
+  .oface{transition:none}
+  .oface:hover,.oface:focus-visible{transform:none}
+}
 /* the score on top, what it is drawn from underneath */
 .oproof__rate{
   display:inline-flex;flex-direction:column;align-items:flex-start;
@@ -4306,7 +4327,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
       <div class="ofoot">
         <p class="oproof">
-          <span class="oproof__faces" aria-hidden="true"><img src="images/testimonials/mucahitguney/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.style.display='none'"><img src="images/testimonials/zariffilm/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.style.display='none'"><img src="images/testimonials/ugurdemir/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.style.display='none'"><img src="images/testimonials/dugunumuzvar/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.style.display='none'"><img src="images/testimonials/celalcanik/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.style.display='none'"><img src="images/testimonials/ekrulila/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.style.display='none'"></span>
+          <span class="oproof__faces"><a class="oface" href="#voices" data-at="@mucahitguney" data-tip="@mucahitguney" data-tip-below aria-label="Mücahit Güney on Instagram, @mucahitguney — read what they said"><img src="images/testimonials/mucahitguney/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a><a class="oface" href="#voices" data-at="@zariffilm" data-tip="@zariffilm" data-tip-below aria-label="Zarif Film on Instagram, @zariffilm — read what they said"><img src="images/testimonials/zariffilm/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a><a class="oface" href="#voices" data-at="@ugurdemir" data-tip="@ugurdemir" data-tip-below aria-label="Uğur Demir on Instagram, @ugurdemir — read what they said"><img src="images/testimonials/ugurdemir/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a><a class="oface" href="#voices" data-at="@dugunumuzvar" data-tip="@dugunumuzvar" data-tip-below aria-label="Düğünümüz Var on Instagram, @dugunumuzvar — read what they said"><img src="images/testimonials/dugunumuzvar/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a><a class="oface" href="#voices" data-at="@celalcanik" data-tip="@celalcanik" data-tip-below aria-label="Celal Canık on Instagram, @celalcanik — read what they said"><img src="images/testimonials/celalcanik/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a><a class="oface" href="#voices" data-at="@ekrulila" data-tip="@ekrulila" data-tip-below aria-label="Ekrulila on Instagram, @ekrulila — read what they said"><img src="images/testimonials/ekrulila/pp.webp" alt="" loading="lazy" width="44" height="44" onerror="this.closest('.oface').style.display='none'"></a></span>
           <span class="oproof__rate">
             <span class="oproof__score">
             <span class="stars" aria-hidden="true"><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg></span>
@@ -7562,11 +7583,29 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   window.addEventListener('scroll', tipOff, {passive:true});
 
   /* anything else that carries words for the pointer gets the same bubble */
-  document.querySelectorAll('.pbuy__art [data-tip]').forEach(function(el){
+  document.querySelectorAll('.pbuy__art [data-tip], .oproof__faces [data-tip]').forEach(function(el){
     el.addEventListener('pointerenter', function(){ tipShow(el); });
     el.addEventListener('pointerleave', tipOff);
     el.addEventListener('focus', function(){ tipShow(el); });
     el.addEventListener('blur', tipOff);
+  });
+
+  /* ---- a face under the offer is the person, not decoration ----
+     The bubble says whose it is; pressing it puts their card in front of you
+     rather than dropping you at the top of a section and leaving you to find
+     them. If their card is not on the page the anchor still does its job. */
+  document.querySelectorAll('.oproof__faces .oface[data-at]').forEach(function(a){
+    a.addEventListener('click', function(e){
+      var at = a.getAttribute('data-at'), card = null;
+      document.querySelectorAll('#voices .vcard').forEach(function(c){
+        var t = c.querySelector('.vcard__at');
+        if(!card && t && t.textContent.indexOf(at) === 0) card = c;
+      });
+      if(!card) return;
+      e.preventDefault();
+      tipOff();
+      card.scrollIntoView({behavior: 'smooth', block: 'center', inline: 'center'});
+    });
   });
 
   /* ---- the basket half of a preset chip ----
