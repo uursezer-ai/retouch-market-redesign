@@ -2898,22 +2898,33 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .prod__shot{
   position:relative;display:block;aspect-ratio:5/7;overflow:hidden;border-radius:8px;
 }
-.prod__shot img{width:100%;height:100%;object-fit:contain;
-  padding:var(--s-2) var(--s-1);display:block}
+/* even on all four sides. It was 8px top and bottom against 4px left and
+   right, which set the box off-centre in its own frame before the artwork
+   had a say — and the artwork, with its spine on one edge and its shadow on
+   the other, was never going to look centred inside an uneven one. */
+.prod__shot img{width:100%;height:100%;object-fit:contain;object-position:center;
+  padding:3px;display:block}
 /* three renders in the space of one: side by side, the middle one forward,
    so a pack of three reads as three */
 .prod__shot--set{display:flex;align-items:center;justify-content:center;gap:0}
 .prod__shot--set img{width:auto;height:82%;padding:0;flex:0 1 auto;min-width:0}
 .prod__shot--set img:nth-child(2){height:92%;z-index:1;margin-inline:-6%}
-/* top right, opposite the free mark, where a box render has nothing to show */
+/* at the end of the maker's line: a number is a fact about the bundle, not
+   about the photograph, and over the picture it was competing with the box */
+.prod__line{display:flex;align-items:center;gap:var(--s-3);min-width:0}
+.prod__line .prod__by{flex:1 1 auto;min-width:0}
 .prod__no{
-  position:absolute;right:2px;top:2px;z-index:2;
+  flex:none;
   font-size:var(--fs-1);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);
-  color:var(--n-500);
+  color:var(--n-500);font-variant-numeric:tabular-nums;
 }
-/* the free mark goes on the picture, where the eye lands first */
+/* on the card's own top edge, centred: a pill in a corner reads as a sticker
+   someone put there, and one straddling the frame reads as a label the card
+   is wearing. Off the picture, too — centred over the artwork it was sitting
+   on the packshot's own title. */
 .prod__badge{
-  position:absolute;left:6px;top:4px;z-index:3;padding:4px var(--s-3);border-radius:var(--r-full);
+  position:absolute;left:50%;transform:translateX(-50%);top:-11px;
+  z-index:4;padding:4px var(--s-3);border-radius:var(--r-full);white-space:nowrap;
   display:inline-flex;align-items:center;gap:5px;
   background:var(--accent);color:var(--fg-on-accent);border:1px solid rgba(255,255,255,.34);
   font-size:var(--fs-2);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
@@ -3084,7 +3095,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .prog{
   display:grid;grid-template-columns:minmax(0,1fr) auto;
   column-gap:var(--s-5);row-gap:var(--s-3);align-items:center;
-  margin:0 0 var(--s-4);
+  /* the bar and the shelf under it are two different things — at 16px they
+     read as one block with a line through it */
+  margin:0 0 var(--s-6);
 }
 .prog__line{
   grid-column:1;display:flex;align-items:baseline;gap:var(--s-3);
@@ -3147,7 +3160,26 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .choice__shot img{width:100%;height:100%;object-fit:contain;display:block}
 .choice__txt{min-width:0;flex:1 1 auto}
-.choice:hover{border-color:var(--border-strong)}
+/* the pointer gets an answer with some weight to it: the same lift the
+   packs above use, so a row of twelve reads as pressable rather than as a
+   list with a colour change on it */
+.choice{will-change:transform}
+.choice:hover{
+  border-color:var(--n-400);background:rgba(255,255,255,.06);
+  transform:translateY(-2px);
+  box-shadow:0 8px 18px -10px rgba(0,0,0,.6);
+}
+.choice:active{transform:translateY(0)}
+@media (prefers-reduced-motion:reduce){.choice,.choice:hover{transform:none}}
+/* full: there is no room for another until one comes out, and the ones you
+   could not add say so rather than inviting a press that will be refused.
+   They stay pressable — the refusal explains itself, and a control that
+   cannot be pressed cannot explain anything. */
+.choices.is-full .choice[aria-pressed="false"]{opacity:.42}
+.choices.is-full .choice[aria-pressed="false"]:hover{
+  opacity:.62;transform:none;box-shadow:none;
+  border-color:var(--star);background:rgba(232,163,61,.06);
+}
 .choice b{
   display:block;padding-right:var(--s-6);line-height:var(--lh-snug);
   font-size:var(--fs-3);font-weight:var(--fw-semibold);color:var(--fg);
@@ -3191,17 +3223,30 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 
 /* the price, and who else has paid it */
+/* the proof on one side, the way in on the other, meeting on one line. The
+   saving hangs under the button it belongs to rather than joining the row. */
 .ofoot{
-  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s-6);align-items:center;
-  margin-top:var(--s-6);
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--s-5) var(--s-6);
+  align-items:center;margin-top:var(--s-7);
 }
-.oproof{display:flex;align-items:center;gap:var(--s-4);font-size:var(--fs-2);line-height:var(--lh-normal);color:var(--fg-muted)}
+/* who has bought it and what they made of it, on one line: the faces, then
+   the score. Two lines of promises used to sit here and they were promises
+   the band above had already made. */
+.oproof{
+  display:flex;align-items:center;gap:var(--s-4);flex-wrap:wrap;
+  font-size:var(--fs-3);line-height:var(--lh-normal);color:var(--fg-muted);
+}
 .oproof__faces{display:flex;flex:none}
 .oproof__faces img{
-  width:30px;height:30px;flex:none;border-radius:var(--r-full);object-fit:cover;
-  border:2px solid #171824;margin-left:-8px;background:var(--surface-sunken);
+  width:34px;height:34px;flex:none;border-radius:var(--r-full);object-fit:cover;
+  border:2px solid #171824;margin-left:-9px;background:var(--surface-sunken);
 }
 .oproof__faces img:first-child{margin-left:0}
+.oproof__rate{display:inline-flex;align-items:center;gap:var(--s-2);min-width:0}
+.oproof__rate .stars{display:inline-flex;align-items:center;gap:1px;flex:none;color:var(--star)}
+.oproof__rate .stars svg{width:13px;height:13px;flex:none}
+.oproof__rate b{color:var(--fg);font-size:var(--fs-4);font-weight:var(--fw-bold)}
+.oproof__n{white-space:nowrap}
 .oact{display:flex;flex-direction:column;align-items:flex-end;gap:var(--s-3)}
 /* what the offer is worth, under the button that takes it. Quiet on purpose:
    the button is the thing to press and a second bright object beside it would
@@ -4244,7 +4289,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <div class="ofoot">
         <p class="oproof">
           <span class="oproof__faces" aria-hidden="true"><img src="images/testimonials/mucahitguney/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"><img src="images/testimonials/zariffilm/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"><img src="images/testimonials/ugurdemir/pp.webp" alt="" loading="lazy" width="30" height="30" onerror="this.style.display='none'"></span>
-          <span>Chosen by 10,000+ photographers<br>Instant download · every future release included</span>
+          <span class="oproof__rate">
+            <span class="stars" aria-hidden="true"><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg><svg viewBox="0 0 12 12" fill="currentColor" aria-hidden="true"><path d="M6 0l1.8 3.9 4.2.5-3.1 2.9.8 4.2L6 9.4 2.3 11.5l.8-4.2L0 4.4l4.2-.5z"/></svg></span>
+            <b class="tnum">4.8</b>
+            <span class="oproof__n tnum">&#183; 15,000+ reviews</span>
+            <span class="vh">, rated 4.8 out of 5 from more than 15,000 reviews</span>
+          </span>
         </p>
         <div class="oact">
           <span class="oact__row">
@@ -5830,6 +5880,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         progFill.style.setProperty('--pct', pct);
         var wasFull = prog.classList.contains('is-full');
         prog.classList.toggle('is-full', short === 0);
+        /* and the shelf under it dims what it can no longer take */
+        grid.classList.toggle('is-full', short === 0);
         /* the button you would have pressed wakes up, once, on the change */
         if(short === 0 && !wasFull){
           panel.classList.remove('is-done-now');
@@ -5926,14 +5978,18 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       var art = (p.imgs || [p.img]).map(function(src){
         return '<img src="' + esc(src) + '" alt="" loading="lazy" onerror="this.style.display=\'none\'">';
       }).join('');
-      f.appendChild(el('span', 'prod__shot' + (p.imgs ? ' prod__shot--set' : ''),
-        art +
-        '<span class="prod__no">' + pad(n + 1) + '</span>' +
-        (isFree ? '<span class="prod__badge">' + GIFT + 'Free</span>' : '')));
-      /* the name first, the maker under it: what you chose, then who made it */
+      f.appendChild(el('span', 'prod__shot' + (p.imgs ? ' prod__shot--set' : ''), art));
+      if(isFree) f.insertAdjacentHTML('beforeend',
+        '<span class="prod__badge">' + GIFT + 'Free</span>');
+      /* the name first, then the maker — and the place in the bundle at the end
+         of that line, where a number belongs: beside a name, not over a
+         picture it had nothing to do with */
       var body = el('figcaption', 'prod__body',
         '<h3 class="prod__t">' + esc(p.name) + '</h3>' +
-        '<span class="prod__by"><span class="avatar">' + esc(p.ini) + '</span><b>' + esc(p.by) + '</b></span>' +
+        '<span class="prod__line">' +
+          '<span class="prod__by"><span class="avatar">' + esc(p.ini) + '</span><b>' + esc(p.by) + '</b></span>' +
+          '<span class="prod__no">' + pad(n + 1) + '</span>' +
+        '</span>' +
         '<button class="prod__drop" type="button">' + SWAPMARK + 'Change</button>');
       var drop = body.querySelector('.prod__drop');
       drop.setAttribute('aria-label', 'Change ' + p.name + ' for another pack');
