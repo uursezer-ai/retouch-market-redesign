@@ -347,7 +347,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .langpick__code{font-variant-numeric:tabular-nums;letter-spacing:.02em}
 .langpick__menu{
   position:absolute;top:calc(100% + 6px);right:0;z-index:60;min-width:176px;padding:var(--s-1);
-  border-radius:var(--r-control);background:var(--surface);
+  border-radius:var(--r-control);
+  /* opaque, always. --surface is a 6% white wash on the dark grounds — right
+     for a card lying on one, wrong for a menu that has to cover what is under
+     it. Each ground names its own solid instead. */
+  background:var(--pop, var(--surface));
   border:1px solid var(--border);box-shadow:var(--sh-2);
 }
 .langpick__menu[hidden]{display:none}
@@ -3544,6 +3548,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    10 · FOOTER
    ════════════════════════════════════════════════════════════════ */
 .footer{border-top:1px solid var(--border);padding:var(--s-10) 0 var(--s-7)}
+/* the solid a menu opens onto here: the footer's own ground, one step up so
+   the menu still reads as standing on it rather than cut out of it */
+.footer,.offer2{--pop:#161B33}
 .footer__top{display:grid;grid-template-columns:minmax(0,1.6fr) repeat(3,minmax(0,1fr));gap:var(--s-8)}
 .footer__intro p{margin:var(--s-4) 0 var(--s-5);font-size:var(--fs-3);line-height:var(--lh-normal);color:var(--fg-muted);max-width:36ch}
 .social{display:flex;gap:var(--s-2);margin-bottom:var(--s-5)}
@@ -3641,7 +3648,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    field of padlocks that turns to keys wherever the pointer goes.
    ════════════════════════════════════════════════════════════════ */
 .wa{
-  --ink:#08090C;                      /* black, not a green black: the colour belongs on it, not in it */
+  --ink:#080C18;                      /* the footer's own ground: this band ends the page with it */
   /* the same names the page uses, given the band's own values — the way the
      plugin band does it, so every component inside reads correctly without
      being told about this section at all */
@@ -3651,10 +3658,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   --px:50%; --py:38%;
   background:var(--ink);color:var(--fg-body);
 }
-/* The ground is black. The two ambient washes that used to sit on it were
-   what turned the whole band green next to a footer that already carries
-   plenty, so they are gone — what is left of the light is the pool under the
-   pointer, which is not decoration: it is what turns the locks to keys. */
+/* The ground is the footer's own — this band is the last thing before it, and
+   a colour of its own there made the foot of the page read as two unrelated
+   rooms. The light in it is the page's accent rather than the brand's green:
+   the pool under the pointer, and the keys it turns the locks into. The green
+   is kept for what is actually WhatsApp's — the mark, the chips, the button. */
 .wa__sky{
   position:absolute;inset:-20% -10%;z-index:-4;pointer-events:none;
   animation:bandDrift 34s var(--ease) infinite alternate;
@@ -3663,8 +3671,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .wa__sky::before{
   content:"";position:absolute;inset:0;
   background:
-    radial-gradient(560px circle at var(--px) var(--py),rgba(36,200,130,.15),transparent 64%),
-    radial-gradient(420px circle at calc(var(--px) - 34%) calc(var(--py) + 34%),rgba(18,150,140,.07),transparent 66%);
+    radial-gradient(560px circle at var(--px) var(--py),rgba(99,91,255,.22),transparent 64%),
+    radial-gradient(420px circle at calc(var(--px) - 34%) calc(var(--py) + 34%),rgba(70,64,190,.12),transparent 66%);
 }
 /* the blob that used to lag behind the pointer was the last of the wash, and
    on a black ground it read as a stain rather than as light */
@@ -3680,13 +3688,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .wa__locks{
   z-index:-3;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='58' height='58' viewBox='0 0 58 58' fill='none' stroke='rgba(146,200,176,0.13)' stroke-width='1.4'%3E%3Crect x='22' y='27' width='14' height='11' rx='2.6'/%3E%3Cpath d='M25.4 27v-3.2a3.6 3.6 0 017.2 0V27' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='58' height='58' viewBox='0 0 58 58' fill='none' stroke='rgba(163,170,214,0.13)' stroke-width='1.4'%3E%3Crect x='22' y='27' width='14' height='11' rx='2.6'/%3E%3Cpath d='M25.4 27v-3.2a3.6 3.6 0 017.2 0V27' stroke-linecap='round'/%3E%3C/svg%3E");
   -webkit-mask:radial-gradient(230px circle at var(--px) var(--py),transparent 38%,#000 76%);
   mask:radial-gradient(230px circle at var(--px) var(--py),transparent 38%,#000 76%);
 }
 .wa__keys{
   z-index:-2;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='58' height='58' viewBox='0 0 58 58' fill='none' stroke='rgba(59,224,138,0.68)' stroke-width='1.65' stroke-linecap='round'%3E%3Ccircle cx='24' cy='29' r='4.2'/%3E%3Cpath d='M28.2 29H37M34.6 29v3.2M31.6 29v2.4'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='58' height='58' viewBox='0 0 58 58' fill='none' stroke='rgba(167,162,255,0.72)' stroke-width='1.65' stroke-linecap='round'%3E%3Ccircle cx='24' cy='29' r='4.2'/%3E%3Cpath d='M28.2 29H37M34.6 29v3.2M31.6 29v2.4'/%3E%3C/svg%3E");
   /* the same soft landing the page's grid has: full at the centre, a third at 40% */
   -webkit-mask:radial-gradient(230px circle at var(--px) var(--py),#000 0%,rgba(0,0,0,.35) 40%,transparent 72%);
   mask:radial-gradient(230px circle at var(--px) var(--py),#000 0%,rgba(0,0,0,.35) 40%,transparent 72%);
@@ -3697,11 +3705,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .wa__scrim{
   position:absolute;inset:0;z-index:-1;pointer-events:none;
   background:radial-gradient(78% 94% at 50% 46%,
-    rgba(8,9,12,.80) 0%,
-    rgba(8,9,12,.62) 28%,
-    rgba(8,9,12,.32) 54%,
-    rgba(8,9,12,.10) 74%,
-    rgba(8,9,12,0) 90%);
+    rgba(8,12,24,.80) 0%,
+    rgba(8,12,24,.62) 28%,
+    rgba(8,12,24,.32) 54%,
+    rgba(8,12,24,.10) 74%,
+    rgba(8,12,24,0) 90%);
 }
 @media (hover:none){ .wa__keys{display:none} .wa__locks{-webkit-mask:none;mask:none} }
 
@@ -5653,7 +5661,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
         </ul>
 
         <button class="btn btn--primary btn--lg cta__go wa__go" type="button" data-join>
-          <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M8.4 11.6a3.4 3.4 0 000 4.8l.7.7a3.4 3.4 0 004.8 0l2.4-2.4a3.4 3.4 0 000-4.8l-.7-.7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M11.6 8.4a3.4 3.4 0 000-4.8l-.7-.7a3.4 3.4 0 00-4.8 0L3.7 5.3a3.4 3.4 0 000 4.8l.7.7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+          <svg width="19" height="19" viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="8" cy="7.1" r="2.9" stroke="currentColor" stroke-width="1.7"/><path d="M2.9 16.5c0-2.9 2.3-4.7 5.1-4.7 1.5 0 2.8.5 3.7 1.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M13.6 4.6a2.6 2.6 0 010 5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><path d="M15.6 16.5v-4.4M13.4 14.3h4.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
           Topluluğa katıl
           <svg class="cta__go-arrow" width="17" height="12" viewBox="0 0 17 12" fill="none" aria-hidden="true"><path d="M1 6h14M10.6 1.2L15.4 6l-4.8 4.8" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
