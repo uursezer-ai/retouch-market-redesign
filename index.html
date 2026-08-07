@@ -866,6 +866,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .section__head h2{max-width:36ch}
 .section__head .lede{max-width:78ch}
 [id]{scroll-margin-top:calc(var(--nav-h) + var(--s-4))}
+/* A section's own top padding sits inside its box, so landing the box 16px
+   under the bar left the heading 80px under it — the jump looked like it had
+   overshot into empty space. The section's padding is taken off the offset,
+   which puts the first thing you read a steady 24px under the bar at every
+   width, since both are written in the same token. */
+.section[id]{scroll-margin-top:calc(var(--nav-h) + var(--s-6) - var(--section-y))}
 
 /* ════════════════════════════════════════════════════════════════
    4 · PLUGINS
@@ -2797,10 +2803,12 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    that leans against it. Same colours — it is meant to read as the same room
    at the other end of the page. */
 .offer2{background:var(--bg);border-top:1px solid var(--border);color:var(--fg-body)}
-/* jumped to from the nav and from the closing call, and this one is a
-   full-bleed dark band: the 16px every other anchor leaves under the bar
-   shows up here as a white sliver, so it lands flush against it */
-.offer2{scroll-margin-top:var(--nav-h)}
+/* jumped to from the nav and from the closing call. It used to land flush
+   against the bar so the 16px every other anchor left could not show up here
+   as a white sliver — but now that every section's own padding comes off the
+   offset, the landing is already inside the band and there is no sliver to
+   avoid. It takes the same rule as the rest, so all five jumps put what you
+   are meant to read the same distance under the bar. */
 .offer2,.footer{--px:50%;--py:40%}
 .offer2__glow{
   position:absolute;inset:-20% -10%;z-index:-1;pointer-events:none;
