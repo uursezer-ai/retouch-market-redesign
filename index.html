@@ -2969,7 +2969,6 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   display:inline-flex;align-items:center;gap:5px;
   background:var(--accent);color:var(--fg-on-accent);border:1px solid rgba(255,255,255,.34);
   font-size:var(--fs-2);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
-  animation:freePulse 2.4s var(--ease) infinite alternate;
 }
 /* Free! is a word, not a shout: the caps go, the mark and the price stay */
 .prod__badge{text-transform:none;letter-spacing:-.006em;font-size:var(--fs-3);padding:4px var(--s-4)}
@@ -2981,34 +2980,45 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   color:rgba(255,255,255,.72);text-decoration-thickness:1.5px;
   font-variant-numeric:tabular-nums;
 }
-/* the same gift the nav carries, filled in: the lid comes off and three bits
-   come up out of the box when the pointer is on it */
-.prod__gift{position:relative;flex:none;display:inline-grid;place-items:center;width:14px;height:14px}
-.prod__gift svg{width:14px;height:14px;transition:transform var(--dur-2) var(--ease)}
-.prod__glid{transform-box:fill-box;transform-origin:center;
-  transition:transform 300ms cubic-bezier(.2,1.5,.35,1)}
-.prod__badge:hover .prod__gift svg{transform:translateY(1px)}
-.prod__badge:hover .prod__glid{transform:translateY(-3.5px) rotate(-7deg)}
-.prod__gift i{
-  position:absolute;left:50%;top:1px;width:2.6px;height:2.6px;border-radius:var(--r-full);
-  background:currentColor;opacity:0;pointer-events:none;
+/* The pill used to breathe a ring of light in and out. It wears the card's
+   own travelling stroke instead — the same conic sweep on the same --ring,
+   on the same beat, so the pill and the box under it are lit by one light
+   rather than two. The lift the pulse carried stays, standing still. */
+.prod__badge{
+  box-shadow:0 8px 22px rgba(105,87,255,.46), 0 0 0 3px rgba(99,91,255,.18);
 }
-.prod__gift i:nth-of-type(1){--dx:-7px;--dy:-9px}
-.prod__gift i:nth-of-type(2){--dx:0px;--dy:-12px;width:3px;height:3px}
-.prod__gift i:nth-of-type(3){--dx:7px;--dy:-8px}
-.prod__badge:hover .prod__gift i{animation:giftPop 640ms cubic-bezier(.18,.72,.3,1)}
-.prod__gift i:nth-of-type(2){animation-delay:50ms}
-.prod__gift i:nth-of-type(3){animation-delay:100ms}
+.prod__badge::after{
+  content:"";position:absolute;inset:-1px;z-index:1;pointer-events:none;
+  border-radius:var(--r-full);padding:1.5px;
+  background:conic-gradient(from var(--ring),
+    rgba(255,255,255,0) 0deg, rgba(255,255,255,0) 178deg,
+    rgba(255,255,255,.5) 224deg, #FFFFFF 250deg, rgba(255,255,255,.45) 276deg,
+    rgba(255,255,255,0) 322deg, rgba(255,255,255,0) 360deg);
+  -webkit-mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask:linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite:exclude;
+  animation:freeRing 2.4s linear infinite;
+}
+/* the mark is the top bar's, and so is what it does when the pointer arrives:
+   the lid comes off and three bits come up out of the box. The nav's own
+   rules draw it — these only aim them at the pill and put it in its white. */
+.prod__gift.nav__gift svg{color:inherit}
+.prod__gift.nav__gift i{background:currentColor}
+.prod__badge:hover .nav__gift svg{transform:translateY(1px)}
+.prod__badge:hover .nav__lid{transform:translateY(-3.5px) rotate(-7deg)}
+.prod__badge:hover .nav__gift i{animation:giftPop 640ms cubic-bezier(.18,.72,.3,1)}
+.prod__badge:hover .nav__gift i:nth-of-type(2){animation-delay:50ms}
+.prod__badge:hover .nav__gift i:nth-of-type(3){animation-delay:100ms}
+/* on the pill, Change is not the offer — the pointer is on the word Free.
+   The card keeps its own name and number for as long as it is there. */
+.prod:has(.prod__badge:hover) .prod__drop{opacity:0;pointer-events:none}
+.prod:has(.prod__badge:hover) .prod__t,
+.prod:has(.prod__badge:hover) .prod__by,
+.prod:has(.prod__badge:hover) .prod__no{opacity:1}
 @media (prefers-reduced-motion:reduce){
-  .prod__gift svg,.prod__glid{transition:none}
-  .prod__badge:hover .prod__gift svg,.prod__badge:hover .prod__glid{transform:none}
-  .prod__badge:hover .prod__gift i{animation:none}
-}
-/* a ring that breathes outwards — the pill stays put, the light around it
-   does the moving, so nothing under it shifts */
-@keyframes freePulse{
-  from{box-shadow:0 8px 22px rgba(105,87,255,.46), 0 0 0 3px rgba(99,91,255,.26)}
-  to  {box-shadow:0 12px 32px rgba(105,87,255,.72), 0 0 0 10px rgba(99,91,255,.05)}
+  .prod__badge::after{animation:none}
+  .prod__badge:hover .nav__gift svg,.prod__badge:hover .nav__lid{transform:none}
+  .prod__badge:hover .nav__gift i{animation:none}
 }
 /* Remove borrows the space the maker and the title were using rather than
    asking for a row of its own — a box you are about to drop does not need
@@ -6096,13 +6106,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     go.addEventListener('blur', function(){ if(bought) bill(false); });
 
     var SWAPMARK = '<svg class="prod__drop-i" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 7.4h11.1M11.6 4.4l3 3M16.6 12.6H5.5M8.4 15.6l-3-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    /* the same mark the top bar carries, drawn the same way — one gift on the
+       page, not two that nearly match */
     var GIFT =
-      '<span class="prod__gift" aria-hidden="true">' +
-        '<svg viewBox="0 0 20 20" fill="currentColor">' +
-          '<path fill-rule="evenodd" d="M3.4 9.4v6.1a1.6 1.6 0 001.6 1.6h10a1.6 1.6 0 001.6-1.6V9.4zm5.55 0h2.1v7.7h-2.1z"/>' +
-          '<g class="prod__glid">' +
-            '<path fill-rule="evenodd" d="M3.1 5.9h13.8A1.1 1.1 0 0118 7v1.3a1.1 1.1 0 01-1.1 1.1H3.1A1.1 1.1 0 012 8.3V7a1.1 1.1 0 011.1-1.1zm5.85 0h2.1v3.5h-2.1z"/>' +
-            '<path d="M10 5.9S8.7 2.6 7 2.6a1.65 1.65 0 100 3.3zm0 0s1.3-3.3 3-3.3a1.65 1.65 0 110 3.3z"/>' +
+      '<span class="prod__gift nav__gift" aria-hidden="true">' +
+        '<svg viewBox="0 0 20 20" fill="none">' +
+          '<path class="nav__box" d="M3.4 9.4v6.1a1.6 1.6 0 001.6 1.6h10a1.6 1.6 0 001.6-1.6V9.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>' +
+          '<path class="nav__box" d="M10 9.4v7.7" stroke="currentColor" stroke-width="1.5"/>' +
+          '<g class="nav__lid">' +
+            '<rect x="2" y="5.9" width="16" height="3.5" rx="1.1" stroke="currentColor" stroke-width="1.5"/>' +
+            '<path d="M10 5.9v3.5" stroke="currentColor" stroke-width="1.5"/>' +
+            '<path d="M10 5.9S8.7 2.6 7 2.6a1.65 1.65 0 100 3.3zM10 5.9s1.3-3.3 3-3.3a1.65 1.65 0 110 3.3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>' +
           '</g>' +
         '</svg><i></i><i></i><i></i></span>';
     function box(id, n, isFree){
