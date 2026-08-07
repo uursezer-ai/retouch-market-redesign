@@ -806,7 +806,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 @media (prefers-reduced-motion:reduce){
   .topband__glow{animation:none}
-  .topband__glow::before,.topband__glow::after{display:none}
+  /* the pool stays: it is where the pointer is, not something moving by
+     itself. The blob is the layer that lags behind the pointer, so it goes. */
+  .topband__glow::after{display:none}
   .topband .slide__media{transform:none}
 }
 
@@ -3803,7 +3805,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   .offer2__glow,.cta__sky{animation:none}
   .pbuy__glow::before{animation:none}
   .pbuy__dots::before,.cta__sky::after{transition:none}
-  .offer2__glow::before,.offer2__glow::after{display:none}
+  .offer2__glow::after,.cta__sky::after{display:none}
   .offer2__grid{display:none}
   .prod.is-free,.prod.is-free::after,.prod.is-free .prod__badge,.pbuy__best{animation:none}
 }
@@ -7424,14 +7426,20 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      down. The band at the top and the offer at the foot are both marked, and
      each keeps its own eased position so leaving one leaves it settling. */
   [].forEach.call(document.querySelectorAll('[data-lit]'), function(band){
-    if(still) return;
     if(!(window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches)) return;
+    /* Motion turned down does not switch this off. The pool never moves on
+       its own — it moves only where a hand moves it, and a hand moving its
+       own pointer is the one kind of movement that setting is not asking to
+       be rid of. What goes is the lag: with motion down the light sits under
+       the pointer instead of easing towards it, so nothing carries on moving
+       after the hand has stopped. The bands' own drift stays off in CSS. */
+    var ease = still ? 1 : .08;
     var raf = 0, want = {x:50, y:40}, at = {x:50, y:40};
     function frame(){
       /* ease towards the pointer rather than snapping to it — the lag is what
          makes it read as light rather than as a cursor */
-      at.x += (want.x - at.x) * .08;
-      at.y += (want.y - at.y) * .08;
+      at.x += (want.x - at.x) * ease;
+      at.y += (want.y - at.y) * ease;
       var nx = (at.x - 50) / 50, ny = (at.y - 50) / 50;
       band.style.setProperty('--px', at.x.toFixed(2) + '%');
       band.style.setProperty('--py', at.y.toFixed(2) + '%');
