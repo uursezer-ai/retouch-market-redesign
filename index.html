@@ -695,17 +695,20 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     radial-gradient(46% 52% at 10% 84%, rgba(140,88,255,.26) 0%, rgba(140,88,255,0) 70%),
     radial-gradient(40% 44% at 84% 14%, rgba(56,92,235,.22) 0%, rgba(56,92,235,0) 72%);
 }
-/* the band at the foot of the page can drift; the one at the head cannot.
-   Whatever moves up there moves behind the first thing anyone reads, and it
-   is moving before they have even arrived. */
-.footer__glow{animation:bandDrift 34s var(--ease) infinite alternate}
-.topband__glow::before,.footer__glow::before{
+/* Neither band drifts now. The head band never could — whatever moves up
+   there moves behind the first thing anyone reads, before they have even
+   arrived. The foot of the page was allowed to, and carried the pointer's
+   light with it; it is the last thing on the page and reads better still, so
+   both of the moving layers below belong to the head band alone and the
+   footer keeps only the ambient pair above, which is a colour rather than a
+   motion. */
+.topband__glow::before{
   content:"";position:absolute;inset:0;
   background:
     radial-gradient(620px circle at var(--px) var(--py), rgba(92,72,255,.264), transparent 60%),
     radial-gradient(520px circle at calc(var(--px) - 38%) calc(var(--py) + 38%), rgba(39,98,220,.192), transparent 62%);
 }
-.topband__glow::after,.footer__glow::after{
+.topband__glow::after{
   content:"";position:absolute;right:7%;top:14%;
   width:460px;height:460px;border-radius:50%;
   background:rgb(92,70,255);opacity:.19;filter:blur(80px);
@@ -3659,63 +3662,20 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   --fg:#FFFFFF; --fg-body:#D3DAE8; --fg-muted:#9AA6BF;
   --accent-fg:#3BE08A; --border:rgba(255,255,255,.12);
   --em:#3BE08A; --em-deep:#25C173;
-  --px:50%; --py:38%;
-  background:var(--ink);color:var(--fg-body);
+  color:var(--fg-body);
 }
-/* The ground is the footer's own — this band is the last thing before it, and
-   a colour of its own there made the foot of the page read as two unrelated
-   rooms. The light in it is the page's accent rather than the brand's green:
-   the pool under the pointer, and the keys it turns the locks into. The green
-   is kept for what is actually WhatsApp's — the mark, the chips, the button. */
-.wa__sky{
-  position:absolute;inset:-20% -10%;z-index:-4;pointer-events:none;
-  animation:bandDrift 34s var(--ease) infinite alternate;
+/* ── the lattice, in the band's own mark ─────────────────────────
+   Everything that makes the ground and the light — the ambient pair, the
+   pool that follows the pointer, the parallax blob, the wash and the bed the
+   words sit on — is the closing call's, unchanged, and lives in .cta__sky /
+   .cta__spot / .cta::before / .cta::after further up this sheet. The one
+   thing this band says differently is what the pointer's circle is a lattice
+   of: the mark of the room it is inviting you into, in place of the dots.
+   Same tint, same alpha, same soft landing — a texture, not a wall. */
+.wa .cta__spot{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='38' height='38' viewBox='0 0 38 38'%3E%3Cg transform='translate(11 11) scale(0.667)' fill='rgba(178,172,255,0.40)'%3E%3Cpath d='M12.04 2.5A9.44 9.44 0 002.6 11.94c0 1.66.44 3.28 1.26 4.71L2.5 21.5l4.98-1.3a9.4 9.4 0 004.56 1.16h.01a9.44 9.44 0 000-18.86zm5.46 14.32c-.25.7-1.44 1.33-2.02 1.42-.52.08-1.17.11-1.89-.12-.43-.13-.99-.32-1.71-.63-3.02-1.3-4.99-4.34-5.14-4.54-.15-.2-1.23-1.62-1.23-3.1s.77-2.2 1.05-2.5c.27-.31.6-.38.8-.38h.57c.18.01.43-.7.67.51.25.6.84 2.06.92 2.21.07.15.12.33.02.53-.1.2-.15.32-.3.5-.15.18-.31.39-.45.53-.15.15-.3.31-.13.61.17.3.77 1.28 1.66 2.07 1.14 1.02 2.1 1.33 2.4 1.48.3.15.48.13.65-.07.17-.2.74-.87.94-1.17.2-.3.4-.25.67-.15.27.1 1.74.82 2.04.97.3.15.5.22.57.35.08.12.08.72-.17 1.42z'/%3E%3C/g%3E%3C/svg%3E");
+  background-size:38px 38px;
 }
-/* two pools that follow the pointer */
-.wa__sky::before{
-  content:"";position:absolute;inset:0;
-  background:
-    radial-gradient(560px circle at var(--px) var(--py),rgba(99,91,255,.22),transparent 64%),
-    radial-gradient(420px circle at calc(var(--px) - 34%) calc(var(--py) + 34%),rgba(70,64,190,.12),transparent 66%);
-}
-/* the blob that used to lag behind the pointer was the last of the wash, and
-   on a black ground it read as a stain rather than as light */
-@keyframes bandDrift{from{transform:translate3d(-1.5%,-1%,0)}to{transform:translate3d(1.5%,1%,0)}}
-
-/* ── the field of locks ───────────────────────────────────────────
-   Locked from end to end, and inside the circle under the pointer the locks
-   are keys. Two layers on one grid, each visible where the other is not.
-   As faint as the page's own dot grid: a texture, not a wall. */
-.wa__locks,.wa__keys{
-  position:absolute;inset:0;pointer-events:none;
-  background-size:58px 58px;background-position:center;
-}
-.wa__locks{
-  z-index:-3;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='58' height='58' viewBox='0 0 58 58' fill='none' stroke='rgba(163,170,214,0.13)' stroke-width='1.4'%3E%3Crect x='22' y='27' width='14' height='11' rx='2.6'/%3E%3Cpath d='M25.4 27v-3.2a3.6 3.6 0 017.2 0V27' stroke-linecap='round'/%3E%3C/svg%3E");
-  -webkit-mask:radial-gradient(230px circle at var(--px) var(--py),transparent 38%,#000 76%);
-  mask:radial-gradient(230px circle at var(--px) var(--py),transparent 38%,#000 76%);
-}
-.wa__keys{
-  z-index:-2;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='58' height='58' viewBox='0 0 58 58' fill='none' stroke='rgba(167,162,255,0.72)' stroke-width='1.65' stroke-linecap='round'%3E%3Ccircle cx='24' cy='29' r='4.2'/%3E%3Cpath d='M28.2 29H37M34.6 29v3.2M31.6 29v2.4'/%3E%3C/svg%3E");
-  /* the same soft landing the page's grid has: full at the centre, a third at 40% */
-  -webkit-mask:radial-gradient(230px circle at var(--px) var(--py),#000 0%,rgba(0,0,0,.35) 40%,transparent 72%);
-  mask:radial-gradient(230px circle at var(--px) var(--py),#000 0%,rgba(0,0,0,.35) 40%,transparent 72%);
-}
-/* the column the words stand in stays clear: the scrim is over both fields,
-   and comes down in four stops rather than two so it reads as a softening
-   rather than as a dark ellipse sitting in the middle */
-.wa__scrim{
-  position:absolute;inset:0;z-index:-1;pointer-events:none;
-  background:radial-gradient(78% 94% at 50% 46%,
-    rgba(8,12,24,.80) 0%,
-    rgba(8,12,24,.62) 28%,
-    rgba(8,12,24,.32) 54%,
-    rgba(8,12,24,.10) 74%,
-    rgba(8,12,24,0) 90%);
-}
-@media (hover:none){ .wa__keys{display:none} .wa__locks{-webkit-mask:none;mask:none} }
 
 /* the mark before the words, in both the eyebrow and the heading */
 .wa__eyebrow svg{width:13px;height:13px;flex:none;margin-right:var(--s-2)}
@@ -3813,8 +3773,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .auth__x:hover{background:var(--n-100);color:var(--n-900)}
 @media (prefers-reduced-motion:reduce){
-  .wa__sky,.auth,.auth__card{animation:none}
-  .wa__sky::after{transition:none}
+  .auth,.auth__card{animation:none}
 }
 
 /* one or the other, never both: the rail carries its own way back to the top */
@@ -3837,11 +3796,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    top of the sheet.
    ════════════════════════════════════════════════════════════════ */
 @media (prefers-reduced-motion:reduce){
-  .offer2__glow,.footer__glow,.cta__sky{animation:none}
+  .offer2__glow,.cta__sky{animation:none}
   .pbuy__glow::before{animation:none}
   .pbuy__dots::before,.cta__sky::after{transition:none}
-  .offer2__glow::before,.offer2__glow::after,
-  .footer__glow::before,.footer__glow::after{display:none}
+  .offer2__glow::before,.offer2__glow::after{display:none}
   .offer2__grid{display:none}
   .prod.is-free,.prod.is-free::after,.prod.is-free .prod__badge,.pbuy__best{animation:none}
 }
@@ -5656,11 +5614,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      is a door on our own site, not the group's address — the door checks the
      session and forwards. Turkish, like the closing call above it. -->
 <section class="section section--last" id="community" aria-labelledby="waTitle" lang="tr">
-  <div class="cta wa" data-wa data-lit data-reveal>
-    <span class="wa__sky" aria-hidden="true"></span>
-    <span class="wa__locks" aria-hidden="true"></span>
-    <span class="wa__keys" aria-hidden="true"></span>
-    <span class="wa__scrim" aria-hidden="true"></span>
+  <div class="cta wa pbuy--dark" data-wa data-lit data-reveal>
+    <span class="cta__sky" aria-hidden="true"></span>
+    <span class="cta__spot" aria-hidden="true"></span>
 
     <div class="wrap">
       <div class="cta__in">
@@ -5725,7 +5681,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
 
 <!-- ══════════ 14 · FOOTER ══════════ -->
-<footer class="footer" data-lit>
+<footer class="footer">
   <div class="footer__glow" aria-hidden="true"></div>
   <div class="wrap">
     <div class="footer__top">
