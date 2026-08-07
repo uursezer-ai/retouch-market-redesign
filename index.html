@@ -1968,6 +1968,13 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    the width on its own and takes the picture's shape with it. All that is
    needed here is to stop the component's ceiling fighting the measurement. */
 .rmg .rmg-frame img.base{max-height:none}
+/* the pointer describes the press it is about to make: a lens with a plus on
+   a picture at rest, a lens with a minus on one that is already close. The
+   component reaches for a grabbing hand there — true of a drag, but the press
+   is the commoner move and it is the one that lets go. The hand comes back
+   the moment something is actually being dragged. */
+.rmg .rmg-frame.is-zoomed{cursor:zoom-out}
+.rmg .rmg-frame.is-zoomed.is-panning{cursor:grabbing}
 .ziphint{
   position:fixed;left:0;top:0;z-index:70;pointer-events:none;
   display:inline-flex;align-items:center;gap:6px;white-space:nowrap;
@@ -2306,10 +2313,19 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   position:absolute;top:var(--s-3);right:var(--s-3);z-index:3;
   display:grid;place-items:center;width:30px;height:30px;border-radius:9px;
   background:rgba(6,12,22,.62);color:#fff;border:1px solid rgba(255,255,255,.26);
-  backdrop-filter:blur(6px);pointer-events:none;
+  backdrop-filter:blur(6px);cursor:zoom-in;
   opacity:0;transform:translateY(-3px) scale(.94);
-  transition:opacity var(--dur-1) var(--ease), transform var(--dur-1) var(--ease);
+  transition:opacity var(--dur-1) var(--ease), transform var(--dur-1) var(--ease),
+             background var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
 }
+/* and it answers the pointer itself, the way everything else on the page
+   does: pressing the mark is pressing the picture, so it takes the press
+   rather than letting it fall through */
+.card__img:hover .card__full:hover,.card__full:hover{
+  transform:scale(1.14);
+  background:rgba(6,12,22,.82);border-color:rgba(255,255,255,.55);
+}
+.card__img:active .card__full{transform:scale(1.04)}
 .card__full svg{width:15px;height:15px;display:block}
 .card__img:hover .card__full,.card__img:focus-within .card__full{
   opacity:1;transform:none;
@@ -8057,7 +8073,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   var hint = document.createElement('span');
   hint.className = 'ziphint';
   hint.setAttribute('aria-hidden', 'true');
-  hint.innerHTML = '<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="7.6" cy="7.6" r="5.6"/><path d="M11.7 11.7 16.2 16.2"/><path d="M4.9 7.6h5.4"/><path d="M7.6 4.9v5.4"/></svg>Full screen';
+  hint.innerHTML = FS + 'Full screen';   /* the corner's own mark, so the two say one thing */
   document.getElementById('presets').appendChild(hint);
   function hintOff(){ hint.classList.remove('is-on'); }
   grid.addEventListener('pointermove', function(e){
