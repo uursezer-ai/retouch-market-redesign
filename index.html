@@ -3651,25 +3651,28 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   --px:50%; --py:38%;
   background:var(--ink);color:var(--fg-body);
 }
-/* ambient pair, drifting on its own */
+/* ambient pair, drifting on its own. Held down from what it was: a band this
+   saturated sitting straight above the footer made the foot of the page read
+   as a spread of colours. The ground is dark and the green is what is on it —
+   the mark, the chips, the button — rather than the ground itself. */
 .wa__sky{
   position:absolute;inset:-20% -10%;z-index:-4;pointer-events:none;
   background:
-    radial-gradient(46% 52% at 12% 84%,rgba(30,190,125,.15) 0%,rgba(30,190,125,0) 70%),
-    radial-gradient(40% 44% at 86% 14%,rgba(16,150,140,.13) 0%,rgba(16,150,140,0) 72%);
+    radial-gradient(46% 52% at 12% 84%,rgba(30,190,125,.10) 0%,rgba(30,190,125,0) 70%),
+    radial-gradient(40% 44% at 86% 14%,rgba(16,150,140,.08) 0%,rgba(16,150,140,0) 72%);
   animation:bandDrift 34s var(--ease) infinite alternate;
 }
 /* two pools that follow the pointer */
 .wa__sky::before{
   content:"";position:absolute;inset:0;
   background:
-    radial-gradient(680px circle at var(--px) var(--py),rgba(36,200,130,.30),transparent 62%),
-    radial-gradient(560px circle at calc(var(--px) - 38%) calc(var(--py) + 38%),rgba(18,150,140,.20),transparent 64%);
+    radial-gradient(680px circle at var(--px) var(--py),rgba(36,200,130,.21),transparent 62%),
+    radial-gradient(560px circle at calc(var(--px) - 38%) calc(var(--py) + 38%),rgba(18,150,140,.13),transparent 64%);
 }
 /* and a blob that lags behind it */
 .wa__sky::after{
   content:"";position:absolute;left:6%;top:16%;width:460px;height:460px;border-radius:50%;
-  background:rgb(30,190,125);opacity:.24;filter:blur(90px);
+  background:rgb(30,190,125);opacity:.15;filter:blur(90px);
   transform:translate(var(--gx,0px),var(--gy,0px));transition:transform .15s ease-out;
 }
 @keyframes bandDrift{from{transform:translate3d(-1.5%,-1%,0)}to{transform:translate3d(1.5%,1%,0)}}
@@ -3714,9 +3717,24 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .wa__eyebrow{display:inline-flex;align-items:center}
 .wa__say svg{width:1.14em;height:1.14em;vertical-align:-.22em;margin-right:.28em;color:var(--em)}
 .wa__lede{margin:var(--s-3) 0 0;max-width:58ch;color:var(--fg-muted)}
-/* the three promises the plugin band draws, brought to the middle */
-.wa__feats{justify-content:center;margin-top:var(--s-6);color:var(--fg-body)}
-.wa__feats svg{color:var(--em)}
+/* the three promises, as chips. Ruled text put three more bright things in a
+   row right above a footer that already has plenty; a chip is one quiet dark
+   object with one green mark on it, so the band carries a single accent
+   instead of a spread of them. The geometry is the page's own: the full
+   radius, the control's own padding, the body size. */
+.wa__feats{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+  gap:var(--s-2);margin:var(--s-6) 0 0;padding:0;list-style:none;
+}
+.wa__feats li{
+  display:inline-flex;align-items:center;gap:var(--s-2);
+  height:34px;padding:0 var(--s-4);border-radius:var(--r-full);
+  background:rgba(0,0,0,.42);border:1px solid rgba(255,255,255,.08);
+  font-size:var(--fs-3);font-weight:var(--fw-medium);color:var(--fg-muted);
+  white-space:nowrap;
+}
+/* the one green on them, a step down from the heading's — a mark, not a light */
+.wa__feats svg{width:15px;height:15px;flex:none;color:#2FBE79}
 /* the closing call's own button, in the band's own colour — and answering
    the pointer the way every other button on this page does: one step darker,
    one step further off the page. It was going lighter, which nothing else
@@ -5633,7 +5651,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
         <p class="lede wa__lede">RetouchMarket&#8217;te olan bitenden herkesten önce haberdar ol.</p>
 
-        <ul class="pbuy__meta wa__feats">
+        <ul class="wa__feats">
           <li><svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M11 2L4.6 11.4h4.6L8.6 18l6.8-9.6h-4.6z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Ücretsiz workshop duyuruları</li>
           <li><svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2.2l2.4 4.9 5.4.8-3.9 3.8.9 5.4-4.8-2.5-4.8 2.5.9-5.4L2.2 7.9l5.4-.8z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>Yeni ürünlere erken erişim</li>
           <li><svg width="17" height="17" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M9.6 2H3.9A1.9 1.9 0 002 3.9v5.7c0 .5.2.98.56 1.34l6.5 6.5a1.9 1.9 0 002.68 0l5.02-5.02a1.9 1.9 0 000-2.68l-6.5-6.5A1.9 1.9 0 009.6 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><circle cx="6.5" cy="6.5" r="1.3" fill="currentColor"/></svg>Topluluğa özel indirimler</li>
