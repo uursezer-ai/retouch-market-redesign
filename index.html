@@ -3671,13 +3671,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    .cta__spot / .cta::before / .cta::after further up this sheet. The one
    thing this band says differently is what the pointer's circle is a lattice
    of: the mark of the room it is inviting you into, in place of the dots.
-   Spaced far wider than the dots are, because a filled mark carries several
-   times the ink a 1px dot does — at the dots' own 28px pitch the field read
-   as wallpaper. 78px apart, and a shade under the dots' alpha: about four
-   marks across the circle the pointer opens, which is a texture rather than
-   a pattern. */
+   Drawn in outline rather than filled, and spaced far wider than the dots
+   are: a mark this size carries many times the ink a 1px dot does, so at the
+   dots' own 28px pitch, filled, the field read as wallpaper. An outline at
+   78px puts about four marks across the circle the pointer opens, each one
+   a line rather than a shape — a texture rather than a pattern. The alpha is
+   higher than the filled one's was because a hairline needs it to show at
+   all; the ink on the ground is a fraction of what it was. */
 .wa .cta__spot{
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='78' height='78' viewBox='0 0 78 78'%3E%3Cg transform='translate(30 30) scale(0.75)' fill='rgba(178,172,255,0.32)'%3E%3Cpath d='M12.04 2.5A9.44 9.44 0 002.6 11.94c0 1.66.44 3.28 1.26 4.71L2.5 21.5l4.98-1.3a9.4 9.4 0 004.56 1.16h.01a9.44 9.44 0 000-18.86zm5.46 14.32c-.25.7-1.44 1.33-2.02 1.42-.52.08-1.17.11-1.89-.12-.43-.13-.99-.32-1.71-.63-3.02-1.3-4.99-4.34-5.14-4.54-.15-.2-1.23-1.62-1.23-3.1s.77-2.2 1.05-2.5c.27-.31.6-.38.8-.38h.57c.18.01.43-.7.67.51.25.6.84 2.06.92 2.21.07.15.12.33.02.53-.1.2-.15.32-.3.5-.15.18-.31.39-.45.53-.15.15-.3.31-.13.61.17.3.77 1.28 1.66 2.07 1.14 1.02 2.1 1.33 2.4 1.48.3.15.48.13.65-.07.17-.2.74-.87.94-1.17.2-.3.4-.25.67-.15.27.1 1.74.82 2.04.97.3.15.5.22.57.35.08.12.08.72-.17 1.42z'/%3E%3C/g%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='78' height='78' viewBox='0 0 78 78'%3E%3Cg transform='translate(30 30) scale(0.75)' fill='none' stroke='rgba(178,172,255,0.52)' stroke-width='1.6'%3E%3Cpath d='M12.04 2.5A9.44 9.44 0 002.6 11.94c0 1.66.44 3.28 1.26 4.71L2.5 21.5l4.98-1.3a9.4 9.4 0 004.56 1.16h.01a9.44 9.44 0 000-18.86zm5.46 14.32c-.25.7-1.44 1.33-2.02 1.42-.52.08-1.17.11-1.89-.12-.43-.13-.99-.32-1.71-.63-3.02-1.3-4.99-4.34-5.14-4.54-.15-.2-1.23-1.62-1.23-3.1s.77-2.2 1.05-2.5c.27-.31.6-.38.8-.38h.57c.18.01.43-.7.67.51.25.6.84 2.06.92 2.21.07.15.12.33.02.53-.1.2-.15.32-.3.5-.15.18-.31.39-.45.53-.15.15-.3.31-.13.61.17.3.77 1.28 1.66 2.07 1.14 1.02 2.1 1.33 2.4 1.48.3.15.48.13.65-.07.17-.2.74-.87.94-1.17.2-.3.4-.25.67-.15.27.1 1.74.82 2.04.97.3.15.5.22.57.35.08.12.08.72-.17 1.42z'/%3E%3C/g%3E%3C/svg%3E");
   background-size:78px 78px;
 }
 
