@@ -2940,7 +2940,39 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   font-size:var(--fs-2);font-weight:var(--fw-bold);letter-spacing:var(--tr-caps);text-transform:uppercase;
   animation:freePulse 2.4s var(--ease) infinite alternate;
 }
-.prod__badge svg{width:11px;height:11px;flex:none}
+/* Free! is a word, not a shout: the caps go, the mark and the price stay */
+.prod__badge{text-transform:none;letter-spacing:-.006em;font-size:var(--fs-3);padding:4px var(--s-4)}
+/* what the pack costs when it is not free, struck through beside it — the
+   number is the whole point of the badge and it is set to be read, not
+   whispered: the page's own on-accent white at two thirds */
+.prod__was{
+  font-size:var(--fs-2);font-weight:var(--fw-semibold);
+  color:rgba(255,255,255,.72);text-decoration-thickness:1.5px;
+  font-variant-numeric:tabular-nums;
+}
+/* the same gift the nav carries, filled in: the lid comes off and three bits
+   come up out of the box when the pointer is on it */
+.prod__gift{position:relative;flex:none;display:inline-grid;place-items:center;width:14px;height:14px}
+.prod__gift svg{width:14px;height:14px;transition:transform var(--dur-2) var(--ease)}
+.prod__glid{transform-box:fill-box;transform-origin:center;
+  transition:transform 300ms cubic-bezier(.2,1.5,.35,1)}
+.prod__badge:hover .prod__gift svg{transform:translateY(1px)}
+.prod__badge:hover .prod__glid{transform:translateY(-3.5px) rotate(-7deg)}
+.prod__gift i{
+  position:absolute;left:50%;top:1px;width:2.6px;height:2.6px;border-radius:var(--r-full);
+  background:currentColor;opacity:0;pointer-events:none;
+}
+.prod__gift i:nth-of-type(1){--dx:-7px;--dy:-9px}
+.prod__gift i:nth-of-type(2){--dx:0px;--dy:-12px;width:3px;height:3px}
+.prod__gift i:nth-of-type(3){--dx:7px;--dy:-8px}
+.prod__badge:hover .prod__gift i{animation:giftPop 640ms cubic-bezier(.18,.72,.3,1)}
+.prod__gift i:nth-of-type(2){animation-delay:50ms}
+.prod__gift i:nth-of-type(3){animation-delay:100ms}
+@media (prefers-reduced-motion:reduce){
+  .prod__gift svg,.prod__glid{transition:none}
+  .prod__badge:hover .prod__gift svg,.prod__badge:hover .prod__glid{transform:none}
+  .prod__badge:hover .prod__gift i{animation:none}
+}
 /* a ring that breathes outwards — the pill stays put, the light around it
    does the moving, so nothing under it shifts */
 @keyframes freePulse{
@@ -3271,13 +3303,21 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 }
 .oface:first-child{margin-left:0}
 /* the rest of the crowd stands back, so the one under the pointer is the
-   only one lit and there is nothing to read past */
-.oproof__faces:hover .oface,.oproof__faces:focus-within .oface{opacity:.34}
+   only one lit and there is nothing to read past.
+   Not :focus-within — a mouse click leaves focus on the face it pressed, and
+   that kept the whole row grey until something else was clicked. The keyboard
+   case asks for :focus-visible instead, in a rule of its own so a browser
+   without :has() still dims for the pointer. */
+.oproof__faces:hover .oface{opacity:.34}
+.oproof__faces:has(.oface:focus-visible) .oface{opacity:.34}
 .oproof__faces:hover .oface:hover,.oproof__faces .oface:focus-visible{
   position:relative;z-index:2;opacity:1;
   transform:translateY(-4px) scale(1.24);
   box-shadow:0 12px 22px -6px rgba(4,10,20,.7);
 }
+/* the dim above is written with :has(), which carries its argument's weight —
+   without this the keyboard's own face would be dimmed along with the rest */
+.oproof__faces:has(.oface:focus-visible) .oface:focus-visible{opacity:1}
 .oface:focus-visible{outline:2px solid var(--accent-fg);outline-offset:3px}
 .oproof__faces img{
   display:block;
@@ -6025,7 +6065,15 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     go.addEventListener('blur', function(){ if(bought) bill(false); });
 
     var SWAPMARK = '<svg class="prod__drop-i" width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M3.4 7.4h11.1M11.6 4.4l3 3M16.6 12.6H5.5M8.4 15.6l-3-3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-    var GIFT = '<svg viewBox="0 0 14 14" fill="currentColor" aria-hidden="true"><path d="M12.2 4.2h-1.6a2.2 2.2 0 00.3-1.1A2.1 2.1 0 007 1.9a2.1 2.1 0 00-3.9 1.2 2.2 2.2 0 00.3 1.1H1.8a.6.6 0 00-.6.6v1.9a.6.6 0 00.6.6h.3v5a.6.6 0 00.6.6h3.7V4.2zm-4.9 0H5.2a1.1 1.1 0 111.1-1.1zm.9 0V3.1a1.1 1.1 0 111.1 1.1zm-.7 8.7h3.7a.6.6 0 00.6-.6v-5h.3a.6.6 0 00.6-.6V4.8a.6.6 0 00-.6-.6H7.5z"/></svg>';
+    var GIFT =
+      '<span class="prod__gift" aria-hidden="true">' +
+        '<svg viewBox="0 0 20 20" fill="currentColor">' +
+          '<path fill-rule="evenodd" d="M3.4 9.4v6.1a1.6 1.6 0 001.6 1.6h10a1.6 1.6 0 001.6-1.6V9.4zm5.55 0h2.1v7.7h-2.1z"/>' +
+          '<g class="prod__glid">' +
+            '<path fill-rule="evenodd" d="M3.1 5.9h13.8A1.1 1.1 0 0118 7v1.3a1.1 1.1 0 01-1.1 1.1H3.1A1.1 1.1 0 012 8.3V7a1.1 1.1 0 011.1-1.1zm5.85 0h2.1v3.5h-2.1z"/>' +
+            '<path d="M10 5.9S8.7 2.6 7 2.6a1.65 1.65 0 100 3.3zm0 0s1.3-3.3 3-3.3a1.65 1.65 0 110 3.3z"/>' +
+          '</g>' +
+        '</svg><i></i><i></i><i></i></span>';
     function box(id, n, isFree){
       var p = PACKS[id];
       var f = el('figure', 'prod' + (isFree ? ' is-free' : '') + (p.first ? ' prod--plugin' : ''));
@@ -6035,7 +6083,8 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       }).join('');
       f.appendChild(el('span', 'prod__shot' + (p.imgs ? ' prod__shot--set' : ''), art));
       if(isFree) f.insertAdjacentHTML('beforeend',
-        '<span class="prod__badge">' + GIFT + 'Free</span>');
+        '<span class="prod__badge">' + GIFT + 'Free!' +
+        (p.price ? '<s class="prod__was">' + esc(p.price) + '</s>' : '') + '</span>');
       /* the name first, then the maker — and the place in the bundle at the end
          of that line, where a number belongs: beside a name, not over a
          picture it had nothing to do with */
