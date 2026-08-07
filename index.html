@@ -3652,7 +3652,11 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   /* the same names the page uses, given the band's own values — the way the
      plugin band does it, so every component inside reads correctly without
      being told about this section at all */
-  --fg:#FFFFFF; --fg-body:#C6DDD2; --fg-muted:#93B6A8;
+  /* the greys are the ones every other dark band on this page is written in.
+     They were tinted green, which made the sentence under the heading and the
+     line under the button read as a different kind of text from the one under
+     the bundle's heading — they are the same kind of text. */
+  --fg:#FFFFFF; --fg-body:#D3DAE8; --fg-muted:#9AA6BF;
   --accent-fg:#3BE08A; --border:rgba(255,255,255,.12);
   --em:#3BE08A; --em-deep:#25C173;
   --px:50%; --py:38%;
@@ -3717,7 +3721,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .wa__eyebrow svg{width:13px;height:13px;flex:none;margin-right:var(--s-2)}
 .wa__eyebrow{display:inline-flex;align-items:center}
 .wa__say svg{width:1.14em;height:1.14em;vertical-align:-.22em;margin-right:.28em;color:var(--em)}
-.wa__lede{margin:var(--s-3) 0 0;max-width:58ch;color:var(--fg-muted)}
+.wa__lede{margin:var(--s-3) 0 0;max-width:58ch;color:var(--fg-body)}
 /* the three promises, as chips. Ruled text put three more bright things in a
    row right above a footer that already has plenty; a chip is one quiet dark
    object with one green mark on it, so the band carries a single accent
@@ -3756,6 +3760,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
    one step further off the page. */
 .wa__go{background:var(--em);color:#05130F;box-shadow:0 10px 34px rgba(40,200,130,.40)}
 .wa__go:hover{background:var(--em-deep);box-shadow:0 14px 40px rgba(40,200,130,.52)}
+.wa .cta__note{color:var(--fg-body)}
 .wa .cta__note svg{color:var(--em)}
 @media (max-width:620px){ .wa__go{width:100%} }
 
