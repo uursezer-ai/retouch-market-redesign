@@ -2203,6 +2203,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .tipbox.is-below::before,.tipbox.is-below::after{top:auto;bottom:100%;border-top-color:transparent}
 .tipbox.is-below::before{border-bottom-color:var(--tip-edge)}
 .tipbox.is-below::after{border-bottom-color:var(--tip-fill);margin-top:0;margin-bottom:-1.5px}
+/* and beside it, pointing right, for anything living against the right edge
+   of the window — above a button in a column is above the button before it */
+.tipbox.is-left::before,.tipbox.is-left::after{
+  top:var(--point,50%);left:100%;bottom:auto;
+  transform:translateY(-50%);border-top-color:transparent;
+}
+.tipbox.is-left::before{border-left-color:var(--tip-edge)}
+.tipbox.is-left::after{border-left-color:var(--tip-fill);margin-top:0;margin-left:-1.5px}
 /* a number in front of the name, where the thing being named is one of a
    numbered set */
 /* and the count keeps the primary — it is the one thing in here that is
@@ -3528,27 +3536,48 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .totop:hover{box-shadow:var(--sh-3);border-color:var(--border-strong)}
 
 /* ── the signed-in rail ──────────────────────────────────────────
-   One column at the same edge the back-to-top button uses, holding the three
-   things a signed-in person reaches for from anywhere and, at its foot, the
-   way back up. It is the page's own card — surface, border, the second
-   shadow — and its buttons answer the pointer exactly the way the ones in
-   the bar do, because they are the same rule. */
+   One column against the right edge of the window, holding the three things
+   a signed-in person reaches for from anywhere and, at its foot, the way back
+   up. It wears the top bar's own glass — the same white at 82% over the same
+   blur — and it is only that until the pointer arrives, when it becomes a
+   solid card of the page's own surface. Its buttons are the bar's icon
+   buttons; under the pointer a mark takes the accent, which is the one colour
+   this page uses to mean "this is the live one". */
 .urail{
-  position:fixed;right:var(--s-6);top:50%;transform:translateY(-50%);z-index:60;
+  position:fixed;right:0;top:50%;transform:translateY(-50%);z-index:60;
   display:flex;flex-direction:column;
-  border-radius:var(--r-panel);background:var(--surface);
-  border:1px solid var(--border);box-shadow:var(--sh-2);
-  padding:var(--s-1);
+  border-radius:var(--r-panel) 0 0 var(--r-panel);
+  background:rgba(255,255,255,.82);
+  backdrop-filter:saturate(180%) blur(14px);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);
+  border:1px solid var(--border);border-right:0;
+  box-shadow:none;padding:var(--s-2) var(--s-1);
+  transition:background var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease),
+             border-color var(--dur-2) var(--ease);
+}
+.urail:hover,.urail:focus-within{
+  background:var(--surface);box-shadow:var(--sh-2);border-color:var(--border-strong);
 }
 .urail[hidden]{display:none}
+/* it turns up exactly where the button it replaces turned up — the same 700px
+   down the page — and comes in the same way, from the edge rather than from
+   nowhere. Until then it is not there to be pressed either. */
+.urail{
+  opacity:0;visibility:hidden;pointer-events:none;
+  transform:translate(14px, -50%);
+}
+.urail.is-on{opacity:1;visibility:visible;pointer-events:auto;transform:translate(0, -50%)}
+.urail{transition:background var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease),
+                  border-color var(--dur-2) var(--ease), opacity var(--dur-2) var(--ease),
+                  transform var(--dur-2) var(--ease), visibility var(--dur-2)}
 .urail__b{
   position:relative;display:grid;place-items:center;
-  width:44px;height:44px;border-radius:var(--r-control);color:var(--fg-body);
+  width:54px;height:54px;border-radius:var(--r-control);color:var(--fg-body);
   transition:background var(--dur-1) var(--ease), color var(--dur-1) var(--ease);
 }
-.urail__b:hover{background:var(--surface-sunken);color:var(--fg)}
+.urail__b:hover{background:var(--surface-sunken);color:var(--accent)}
 .urail__b:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
-.urail__b svg{width:20px;height:20px;display:block}
+.urail__b svg{width:24px;height:24px;display:block}
 /* a hairline between them, drawn by the buttons themselves so the ends of
    the column stay clean */
 .urail__b + .urail__b::before{
@@ -3559,8 +3588,10 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 /* on a narrow screen it sits where the old button sat, and comes in from the
    same corner rather than from the middle of the edge */
 @media (max-width:620px){
-  .urail{right:var(--s-4);top:auto;bottom:var(--s-4);transform:none}
-  .urail__b{width:40px;height:40px}
+  .urail{top:auto;bottom:var(--s-6);transform:translate(14px, 0)}
+  .urail.is-on{transform:translate(0, 0)}
+  .urail__b{width:46px;height:46px}
+  .urail__b svg{width:21px;height:21px}
 }
 /* one or the other, never both: the rail carries its own way back to the top */
 [data-user="in"] .totop{display:none}
@@ -5482,7 +5513,7 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
      company. The marks are the page's own: the Installing panel's download,
      the Questions panel's question, and the arrow the old button carried. -->
 <nav class="urail" id="userRail" aria-label="Your tools" hidden>
-  <a class="urail__b" href="#" data-tip="Collaboration" aria-label="Collaboration">
+  <a class="urail__b" href="#" data-tip="Collaboration" data-tip-left aria-label="Collaboration">
     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
       <circle cx="7.7" cy="7" r="2.9" stroke="currentColor" stroke-width="1.6"/>
       <path d="M2.4 16.4c0-2.9 2.4-4.7 5.3-4.7s5.3 1.8 5.3 4.7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
@@ -5490,20 +5521,20 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
       <path d="M14.6 11.9c1.8.4 3 1.9 3 4.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
     </svg>
   </a>
-  <a class="urail__b" href="#install" data-tip="Download RM App" aria-label="Download the Retouch Market app">
+  <a class="urail__b" href="#install" data-tip="Download RM App" data-tip-left aria-label="Download the Retouch Market app">
     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
       <path d="M10 2.6v9.1M6.4 8.4l3.6 3.6 3.6-3.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M3.2 13.4v2.2a1.8 1.8 0 001.8 1.8h10a1.8 1.8 0 001.8-1.8v-2.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
     </svg>
   </a>
-  <a class="urail__b" href="#faq" data-tip="Support" aria-label="Support and questions">
+  <a class="urail__b" href="#faq" data-tip="Support" data-tip-left aria-label="Support and questions">
     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
       <circle cx="10" cy="10" r="7.6" stroke="currentColor" stroke-width="1.7"/>
       <path d="M7.9 7.9a2.15 2.15 0 114.05 1c-.35.65-1.2 1-1.65 1.55-.2.25-.3.55-.3.95" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
       <circle cx="10" cy="14.1" r=".95" fill="currentColor"/>
     </svg>
   </a>
-  <button class="urail__b" type="button" data-tip="Top" data-rail-top aria-label="Back to top">
+  <button class="urail__b" type="button" data-tip="Top" data-tip-left data-rail-top aria-label="Back to top">
     <svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
       <path d="M10 16.6V4.4M4.6 9.8L10 4.4l5.4 5.4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
@@ -7648,7 +7679,14 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 
   /* ---- back to top ---- */
   var toTop = document.getElementById('toTop');
-  function syncToTop(){ toTop.classList.toggle('is-on', window.scrollY > 700); }
+  var userRail = document.getElementById('userRail');
+  /* one line decides when this edge of the window is live, so the button and
+     the rail that replaces it can never disagree about where that is */
+  function syncToTop(){
+    var past = window.scrollY > 700;
+    toTop.classList.toggle('is-on', past);
+    if(userRail) userRail.classList.toggle('is-on', past);
+  }
   window.addEventListener('scroll', syncToTop, {passive:true});
   toTop.addEventListener('click', function(){
     window.scrollTo({top:0, behavior: still ? 'auto' : 'smooth'});
@@ -7830,10 +7868,22 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
     var left = Math.max(8, Math.min(document.documentElement.clientWidth - 8 - w, mid - w / 2));
     tipBox.style.left = Math.round(left) + 'px';
     var below = el.hasAttribute('data-tip-below');
-    tipBox.classList.toggle('is-below', below);
-    tipBox.style.top = Math.round(below ? r.bottom + 11
-                                        : r.top - tipBox.offsetHeight - 11) + 'px';
-    tipBox.style.setProperty('--point', Math.round(mid - left) + 'px');
+    var beside = el.hasAttribute('data-tip-left');
+    tipBox.classList.toggle('is-below', below && !beside);
+    tipBox.classList.toggle('is-left', beside);
+    if(beside){
+      /* to the left of it and level with it: a column against the right edge
+         has nothing above each button but the button before it */
+      var h = tipBox.offsetHeight, midY = r.top + r.height / 2;
+      var top = Math.max(8, Math.min(document.documentElement.clientHeight - 8 - h, midY - h / 2));
+      tipBox.style.left = Math.round(Math.max(8, r.left - w - 12)) + 'px';
+      tipBox.style.top = Math.round(top) + 'px';
+      tipBox.style.setProperty('--point', Math.round(midY - top) + 'px');
+    } else {
+      tipBox.style.top = Math.round(below ? r.bottom + 11
+                                          : r.top - tipBox.offsetHeight - 11) + 'px';
+      tipBox.style.setProperty('--point', Math.round(mid - left) + 'px');
+    }
     if(live) tipBox.classList.add('is-on');
     else requestAnimationFrame(function(){ tipBox.classList.add('is-on'); });
   }
