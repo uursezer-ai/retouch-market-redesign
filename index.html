@@ -931,8 +931,17 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
   scrollbar-width:none;-ms-overflow-style:none;
   /* clear of the sticky bar, the same allowance the decks take */
   scroll-margin-top:calc(var(--nav-h) + var(--s-4));
-  /* the row's own rule, which the live tab's sits on top of */
-  padding:0;background:none;border:0;border-bottom:1px solid var(--border);border-radius:0;
+  /* The row's own rule, which the live tab's sits on top of — painted as a
+     background rather than as a border. This row is a horizontal scroller,
+     and a scroller clips its content to the padding box: a tab's rule pulled
+     down over a border on the container is cut in half by that clip, which
+     is why the live tab here was showing one pixel of accent with the row's
+     own grey underneath it while the install section's tabs showed two. As a
+     background the rule lives inside the padding box, the tab's own two
+     pixels land squarely on top of it, and the two sets of tabs are drawn
+     the same way to the pixel. */
+  padding:0;border:0;border-radius:0;
+  background:linear-gradient(var(--border),var(--border)) left bottom/100% 1px no-repeat;
 }
 .ptabs::-webkit-scrollbar{display:none}
 /* Positioned, so the visually-hidden text inside it is contained by the
@@ -948,8 +957,9 @@ h3{font-size:var(--fs-6);line-height:var(--lh-snug)}
 .os.ptabs button{
   padding:var(--s-4) var(--s-3);border-radius:0;
   font-size:var(--fs-4);letter-spacing:var(--tr-heading);
-  /* -1px so the live tab's rule lands on the row's own, not under it */
-  border-bottom:2px solid transparent;margin-bottom:-1px;
+  /* no negative margin: the row's rule is inside the padding box now, so the
+     tab's own two pixels already land on it rather than under it */
+  border-bottom:2px solid transparent;
   transition:color var(--dur-1) var(--ease), border-color var(--dur-1) var(--ease);
 }
 .os.ptabs button:hover{color:var(--fg)}
